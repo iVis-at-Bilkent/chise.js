@@ -9,12 +9,18 @@ var setFileContent = function (fileName) {
 //Handle keyboard events
 $(document).keydown(function (e) {
   if (e.which === 90 && e.ctrlKey) {
+    var autolock = cy.autolock();
+    cy.autolock(false);
     editorActionsManager.undo();
-    refreshUndoRedoButtonsStatus()
+    refreshUndoRedoButtonsStatus();
+    cy.autolock(autolock);
   }
   else if (e.which === 89 && e.ctrlKey) {
+    var autolock = cy.autolock();
+    cy.autolock(false);
     editorActionsManager.redo();
-    refreshUndoRedoButtonsStatus()
+    refreshUndoRedoButtonsStatus();
+    cy.autolock(autolock);
   }
 });
 
@@ -34,10 +40,6 @@ $(document).ready(function () {
 
   var sbgnProperties = new SBGNProperties({
     el: '#sbgn-properties-table'
-  });
-
-  var sbgnAddNodeProp = new AddNodeProperties({
-    el: '#sbgn-add-node-table'
   });
 
   $("body").on("change", "#file-input", function (e) {
@@ -119,6 +121,31 @@ $(document).ready(function () {
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
+  });
+
+  $('input:radio[name="sbgn-mode"]').change(function () {
+    window.mode = $(this).val();
+    cy.autolock(true);
+    cy.autounselectify(true);
+
+    $("#node-list").css("visibility", "hidden");
+    $("#edge-list").css("visibility", "hidden");
+    if (mode == "add-node-mode") {
+      $("#edge-list").css("float", "");
+      $("#node-list").css("float", "right");
+      $("#node-list").css("visibility", "visible");
+    }
+    else if (mode == "add-edge-mode") {
+      $("#node-list").css("float", "");
+      $("#edge-list").css("float", "right");
+      $("#edge-list").css("visibility", "visible");
+    }
+    else if (mode == "edit-mode") {
+      cy.autolock(false);
+    }
+    else if (mode == "selection-mode") {
+      cy.autounselectify(false);
+    }
   });
 
   $("#load-sample1").click(function (e) {
@@ -284,8 +311,8 @@ $(document).ready(function () {
     editorActionsManager._do(new RemoveHighlightsCommand());
     refreshUndoRedoButtonsStatus();
   });
-  
-  $("#make-compound-complex").click(function (e) {
+
+  $("#make-complex-icon").click(function (e) {
     var param = {
       firstTime: true,
       compundType: "complex",
@@ -294,8 +321,8 @@ $(document).ready(function () {
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
   });
-  
-  $("#make-compound-compartment").click(function (e) {
+
+  $("#make-compartment-icon").click(function (e) {
     var param = {
       firstTime: true,
       compundType: "compartment",
@@ -308,30 +335,10 @@ $(document).ready(function () {
   $("#layout-properties").click(function (e) {
     sbgnLayoutProp.render();
   });
-
-  $("#add-node").click(function (e) {
-    sbgnAddNodeProp.render();
-  });
   
-  $("#delete-selected-eles").click(function (e) {
+  $("#delete-selected-icon").click(function (e) {
     var selectedEles = cy.$(":selected");
     editorActionsManager._do(new RemoveElesCommand(selectedEles));
-    refreshUndoRedoButtonsStatus();
-  });
-
-  $("#add-edge").click(function (e) {
-    var selectedNodes = cy.$("node:selected");
-    if (selectedNodes.length != 2) {
-      alert("Exactly 2 nodes should be selected!!!");
-      return;
-    }
-    var param = {};
-    param.newEdge = {
-      source: selectedNodes[0].id(),
-      target: selectedNodes[1].id()
-    };
-    param.firstTime = true;
-    editorActionsManager._do(new AddEdgeCommand(param));
     refreshUndoRedoButtonsStatus();
   });
 
@@ -379,13 +386,19 @@ $(document).ready(function () {
   });
 
   $("#undo-last-action").click(function (e) {
+    var autolock = cy.autolock();
+    cy.autolock(false);
     editorActionsManager.undo();
     refreshUndoRedoButtonsStatus();
+    cy.autolock(autolock);
   });
 
   $("#redo-last-action").click(function (e) {
+    var autolock = cy.autolock();
+    cy.autolock(false);
     editorActionsManager.redo();
     refreshUndoRedoButtonsStatus();
+    cy.autolock(autolock);
   });
 
   $("#save-as-png").click(function (evt) {

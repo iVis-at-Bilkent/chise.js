@@ -148,8 +148,14 @@ body {
 
 #sbgn-info-content{
     margin: auto;
-    height: 25px;
+    /*height: 50px;*/
     width: 1000px;
+    overflow: auto !important;
+}
+
+#sbgn-select-mode{
+    margin: auto;
+     width: 1000px;
     overflow: auto !important;
 }
 
