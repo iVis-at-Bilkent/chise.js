@@ -4,7 +4,20 @@ var setFileContent = function (fileName) {
     span.removeChild(span.firstChild);
   }
   span.appendChild(document.createTextNode(fileName));
-}
+};
+
+var allHaveTheSameParent = function (nodes){
+  if(nodes.length == 0){
+    return true;
+  }
+  var firstParent = nodes[0].data("parent");
+  for(var i = 1; i < nodes.length; i++){
+    if(nodes[i].data("parent") != firstParent){
+      return false;
+    }
+  }
+  return true;
+};
 
 //Handle keyboard events
 $(document).keydown(function (e) {
@@ -313,20 +326,38 @@ $(document).ready(function () {
   });
 
   $("#make-complex-icon").click(function (e) {
+    var selectedNodes = cy.nodes(":selected");
+    if(selectedNodes.length == 0){
+      return;
+    }
+    if (!allHaveTheSameParent(selectedNodes)){
+      alert("All of the selected nodes should have the same parent!");
+      return;
+    }
+    
     var param = {
       firstTime: true,
       compundType: "complex",
-      nodesToMakeCompound: cy.nodes(":selected")
+      nodesToMakeCompound: selectedNodes
     };
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
   });
 
   $("#make-compartment-icon").click(function (e) {
+    var selectedNodes = cy.nodes(":selected");
+    if(selectedNodes.length == 0){
+      return;
+    }
+    if (!allHaveTheSameParent(selectedNodes)){
+      alert("All of the selected nodes should have the same parent!");
+      return;
+    }
+    
     var param = {
       firstTime: true,
       compundType: "compartment",
-      nodesToMakeCompound: cy.nodes(":selected")
+      nodesToMakeCompound: selectedNodes
     };
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
