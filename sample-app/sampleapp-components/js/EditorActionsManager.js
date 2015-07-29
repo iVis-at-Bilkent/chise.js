@@ -10,7 +10,7 @@ function addNode(param)
   var result;
   if (param.firstTime) {
     var newNode = param.newNode;
-    result = addRemoveUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
+    result = addRemoveUtilities.addNode(newNode.content, newNode.x, newNode.y, newNode.width, newNode.height);
   }
   else {
     result = addRemoveUtilities.restoreEles(param);
@@ -37,7 +37,7 @@ function addEdge(param)
   var result;
   if (param.firstTime) {
     var newEdge = param.newEdge;
-    result = addRemoveUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
+    result = addRemoveUtilities.addEdge(newEdge.source, newEdge.target);
   }
   else {
     result = addRemoveUtilities.restoreEles(param);

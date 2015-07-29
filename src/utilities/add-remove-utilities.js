@@ -1,13 +1,11 @@
 var addRemoveUtilities = {
-  addNode: function (x, y, sbgnclass) {
-    var width = 50;
-    var height = 50;
+  addNode: function (content, x, y, width, height) {
     var eles = cy.add({
       group: "nodes",
       data: {
         width: width,
         height: height,
-        sbgnclass: sbgnclass, 
+        sbgnclass: "terminal", //this will also be a parameter
         sbgnbbox: {
           h: height,
           w: width,
@@ -20,11 +18,10 @@ var addRemoveUtilities = {
       position: {
         x: x,
         y: y
+      },
+      css: {
+        content: content
       }
-//      ,
-//      css: {
-//        content: content
-//      }
     });
     cy.layout({
       name: 'preset'
@@ -42,13 +39,13 @@ var addRemoveUtilities = {
     cy.nodes().updateCompoundBounds();
     return removedEles;
   },
-  addEdge: function (source, target, sbgnclass) {
+  addEdge: function (source, target) {
     var eles = cy.add({
       group: "edges",
       data: {
         source: source,
         target: target,
-        sbgnclass: sbgnclass
+        sbgnclass: "logic arc"//this will be read as parameter
       }
     });
     cy.layout({
