@@ -18,6 +18,8 @@
         <link href="../lib/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="../lib/css/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
 
+        <link href="../lib/css/ddSlick.css" rel="stylesheet" type="text/css" />
+        
         <!-- Loading sample app css -->
         <link href="sampleapp-components/css/sbgn-viz.css" rel="stylesheet">
 
@@ -38,10 +40,10 @@
                             <ul class="dropdown-menu">
                                 <input id="file-input" type="file" style="display:none" />
                                 <li><a href="#" type="file" id="load-file">Load...</a></li>
-                                <li class="dropdown">
+                                <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Samples
-                                        <b class="right-caret"></b>
+                                        <!--<b class="right-caret"></b>-->
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" id="load-sample1">Activated STAT1alpha induction of the IRF1 gene</a></li>
@@ -54,10 +56,10 @@
                                     </ul>
                                 </li>
                                 <li><a href="#" id="save-as-sbgnml">Save...</a></li>
-                                <li class="dropdown">
+                                <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Save as Image 
-                                        <b class="right-caret"></b>
+                                        <!--<b class="right-caret"></b>-->
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a href="#" id="save-as-png">PNG</a></li>
@@ -87,16 +89,44 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#" id="hide-selected">Hide Selected</a></li>
-                                <li><a href="#" id="show-selected">Show Selected</a></li>
-                                <li><a href="#" id="show-all">Show All</a></li>
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Add Node
+                                        <!--<b class="right-caret"></b>-->
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Macromolecule</a></li>
+                                        <li><a href="#">Simple molecule</a></li>
+                                        <li><a href="#">Complex</a></li>
+                                        <li class="dropdown-submenu">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Process
+                                                <!--<b class="right-caret"></b>-->
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Process</a></li>
+                                                <li><a href="#">Omitted Process</a></li>
+                                                <li><a href="#">Uncertain Process</a></li>
+                                                <li><a href="#">Association</a></li>
+                                                <li><a href="#">Dissociation</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="dropdown-submenu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Hide/Show
+                                        <!--<b class="right-caret"></b>-->
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" id="hide-selected">Hide Selected</a></li>
+                                        <li><a href="#" id="show-selected">Show Selected</a></li>
+                                        <li><a href="#" id="show-all">Show All</a></li>
+                                    </ul>
+                                </li>
                                 <li class="divider"></li>
                                 <li><a href="#" id="delete-selected">Delete Selected</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" id="add-node">Add Node</a></li>
-                                <li><a href="#" id="add-edge">Add Edge</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" id="delete-selected-eles">Delete Selected Elements</a></li>
                                 <li class="divider"></li>
                                 <li class="disabled"><a href="#" id="undo-last-action" >Undo Last Action</a></li>
                                 <li class="disabled"><a href="#" id="redo-last-action" >Redo Last Action</a></li>
@@ -159,7 +189,43 @@
                 </tr>
             </table>
         </div>
-
+    
+        <div id="sbgn-select-mode">
+        <table width="100%" height="100%" align="center" valign="center">
+            <tr>
+                <label class="radio inline">
+                    <img id="new-file-icon" src="sampleapp-images/new.png" title="New File">
+                </label>
+                <label class="radio inline">
+                    <img id="load-icon" src="sampleapp-images/load.png" title="Load">
+                </label>
+                <label class="radio inline">
+                    <img id="save-icon" src="sampleapp-images/save.png" title="Save">
+                </label>
+                <label class="radio inline">
+                    <img id="select-icon" src="sampleapp-images/select.png" title="Select" >
+                </label>
+                <label class="radio inline">
+                    <select id="node-list" >
+                        <option data-imagesrc="sampleapp-images/macromolecule.png" value="macromolecule" selected="true">macromolecule</option>
+                        <option data-imagesrc="sampleapp-images/complex.png" value="complex">complex</option>
+                        <option data-imagesrc="sampleapp-images/compartment.png" value="compartment">compartment</option>
+                    </select>
+                </label>
+                <label class="radio inline">
+                    <select id="edge-list" >
+                        <option data-imagesrc="sampleapp-images/inhibition.png" value="inhibition">inhibition</option>
+                        <option data-imagesrc="sampleapp-images/consumption.png" value="consumption">consumption</option>
+                    </select>
+                </label>
+                <label class="radio inline">
+                    <img id="perform-layout-icon" src="sampleapp-images/layout-cose.png" title="Perform Layout" >
+                </label>
+            
+            </tr>
+        </table>
+    </div>
+    
         <div id="sbgn-network-container">
         </div>
 
@@ -169,10 +235,6 @@
     
         <div id="sbgn-properties-table" title="Properties" style="display: inline">
             <!-- sbgn properties table will be shown here -->
-        </div>
-    
-        <div id="sbgn-add-node-table" title="Add Node">
-            <!-- sbgn add node table will be shown here -->
         </div>
 
         <div id="biogene-container" style="display: none">
@@ -431,70 +493,6 @@
             </tr>
             </table>
         </script>
-        
-        <script type="text/template" id="add-node-template">
-            <table class="table-condensed layout-table">
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Content </span>
-            </td>
-            
-            <td>
-            <input id="add-node-content" type="text" class="input-small layout-text" value= <%= content %> >
-            </td>
-            </tr>
-            
-            <tr>
-            <td>
-            <span class="add-on layout-text"> X </span>
-            </td>
-            
-            <td>
-            <input id="add-node-x" type="text" class="input-small layout-text" value= <%= x %> >
-            </td>
-            </tr>
-    
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Y </span>
-            </td>
-            
-            <td>
-            <input id="add-node-y" type="text" class="input-small layout-text" value= <%= y %> >
-            </td>
-            </tr>
-    
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Width </span>
-            </td>
-            
-            <td>
-            <input id="add-node-width" type="text" class="input-small layout-text" value= <%= width %> >
-            </td>
-    
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Height </span>
-            </td>
-            
-            <td>
-            <input id="add-node-height" type="text" class="input-small layout-text" value= <%= height %> >
-            </td>
-            </tr>
-            </tr>
-    
-            <tr id="layout-buttons">
-            <td>
-            <button id="confirm-add-node" class="btn btn-default" >Add</button>
-            </td>
-            <td>
-            <button id="default-add-node" class="btn btn-default">Default</button>
-            </td>
-            </tr>
-            
-            </table>
-        </script>
 
         <!-- BioGeneView template for backbone.js -->
         <script type="text/template" id="biogene-template">
@@ -569,8 +567,10 @@
         <script src="../lib/js/cytoscape.min.js"></script>
         <script src="../lib/js/cytoscape.js-panzoom.js"></script>
         <script src="../lib/js/cytoscape.js-qtip.js"></script>
+        <script src="../lib/js/cytoscape-edgehandles.js"></script>
         <script src="../lib/js/FileSaver.js"></script>
         <script src="../lib/js/jquery.noty.packaged.min.js"></script>
+        <script src="../lib/js/jquery.dropdown.js"></script>
 
         <!-- Core SBGNViz components -->
         <script src="../src/sbgn-extensions/layout.cose2.js"></script>

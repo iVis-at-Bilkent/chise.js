@@ -28,16 +28,72 @@ $(document).ready(function () {
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
 
+  $('#node-list').ddslick();
+  $('#edge-list').ddslick();
+  
+  $('#select-icon').addClass('selectedType');
+  
+  $('#node-list').ddslick('disable');
+  $('#edge-list').ddslick('disable');
+  
+  $('#node-list').click(function (e) {
+    $(this).ddslick('enable');
+    $(this).addClass('selectedType');
+    
+    $('#select-icon').removeClass('selectedType');
+    
+    $('#edge-list').removeClass('selectedType');
+    $('#edge-list').ddslick('close');
+    $('#edge-list').ddslick('disable');
+    
+    window.mode = "add-node-mode";
+    cy.autolock(true);
+    cy.autounselectify(true);
+    
+    cy.edgehandles('drawoff');
+  });
+  
+  $('#edge-list').click(function (e) {
+    $(this).ddslick('enable');
+    $(this).addClass('selectedType');
+    
+    $('#select-icon').removeClass('selectedType');
+    
+    $('#node-list').removeClass('selectedType');
+    $('#node-list').ddslick('close');
+    $('#node-list').ddslick('disable');
+    
+    window.mode = "add-edge-mode";
+    cy.autolock(true);
+    cy.autounselectify(true);
+    
+	cy.edgehandles('drawon');
+  });
+  
+  $('#select-icon').click(function (e) {
+    $('#select-icon').addClass('selectedType');
+    
+    $('#edge-list').removeClass('selectedType');
+    $('#edge-list').ddslick('close');
+    $('#edge-list').ddslick('disable');
+    
+    $('#node-list').removeClass('selectedType');
+    $('#node-list').ddslick('close');
+    $('#node-list').ddslick('disable');
+    
+    window.mode = "selection-mode";
+    cy.autolock(false);
+    cy.autounselectify(false);
+    
+    cy.edgehandles('drawoff');
+  });
+
   var sbgnLayoutProp = new SBGNLayout({
     el: '#sbgn-layout-table'
   });
 
   var sbgnProperties = new SBGNProperties({
     el: '#sbgn-properties-table'
-  });
-
-  var sbgnAddNodeProp = new AddNodeProperties({
-    el: '#sbgn-add-node-table'
   });
 
   $("body").on("change", "#file-input", function (e) {
@@ -284,7 +340,7 @@ $(document).ready(function () {
     editorActionsManager._do(new RemoveHighlightsCommand());
     refreshUndoRedoButtonsStatus();
   });
-  
+
   $("#make-compound-complex").click(function (e) {
     var param = {
       firstTime: true,
@@ -294,7 +350,7 @@ $(document).ready(function () {
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
   });
-  
+
   $("#make-compound-compartment").click(function (e) {
     var param = {
       firstTime: true,
@@ -309,10 +365,6 @@ $(document).ready(function () {
     sbgnLayoutProp.render();
   });
 
-  $("#add-node").click(function (e) {
-    sbgnAddNodeProp.render();
-  });
-  
   $("#delete-selected-eles").click(function (e) {
     var selectedEles = cy.$(":selected");
     editorActionsManager._do(new RemoveElesCommand(selectedEles));
