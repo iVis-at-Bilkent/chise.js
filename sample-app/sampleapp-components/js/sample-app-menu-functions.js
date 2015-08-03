@@ -28,64 +28,30 @@ $(document).ready(function () {
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
 
-  $('#node-list').ddslick();
-  $('#edge-list').ddslick();
+  $('.add-node-menu-item').click(function (e) {
+    modeHandler.setAddNodeMode();
+    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
+    modeHandler.setSelectedIndexOfSelector("#node-list", $(this).attr('name'));
+  });
   
-  $('#select-icon').addClass('selectedType');
-  
-  $('#node-list').ddslick('disable');
-  $('#edge-list').ddslick('disable');
-  
+  $('.add-edge-menu-item').click(function (e) {
+    modeHandler.setAddNodeMode();
+    modeHandler.setSelectedMenuItem("add-edge-mode", $(this).attr('name'));
+    modeHandler.setSelectedIndexOfSelector("#edge-list", $(this).attr('name'));
+  });
+
+  modeHandler.initilize();
+
   $('#node-list').click(function (e) {
-    $(this).ddslick('enable');
-    $(this).addClass('selectedType');
-    
-    $('#select-icon').removeClass('selectedType');
-    
-    $('#edge-list').removeClass('selectedType');
-    $('#edge-list').ddslick('close');
-    $('#edge-list').ddslick('disable');
-    
-    window.mode = "add-node-mode";
-    cy.autolock(true);
-    cy.autounselectify(true);
-    
-    cy.edgehandles('drawoff');
+    modeHandler.setAddNodeMode();
   });
-  
+
   $('#edge-list').click(function (e) {
-    $(this).ddslick('enable');
-    $(this).addClass('selectedType');
-    
-    $('#select-icon').removeClass('selectedType');
-    
-    $('#node-list').removeClass('selectedType');
-    $('#node-list').ddslick('close');
-    $('#node-list').ddslick('disable');
-    
-    window.mode = "add-edge-mode";
-    cy.autolock(true);
-    cy.autounselectify(true);
-    
-	cy.edgehandles('drawon');
+    modeHandler.setAddEdgeMode();
   });
-  
+
   $('#select-icon').click(function (e) {
-    $('#select-icon').addClass('selectedType');
-    
-    $('#edge-list').removeClass('selectedType');
-    $('#edge-list').ddslick('close');
-    $('#edge-list').ddslick('disable');
-    
-    $('#node-list').removeClass('selectedType');
-    $('#node-list').ddslick('close');
-    $('#node-list').ddslick('disable');
-    
-    window.mode = "selection-mode";
-    cy.autolock(false);
-    cy.autounselectify(false);
-    
-    cy.edgehandles('drawoff');
+    modeHandler.setSelectionMode();
   });
 
   var sbgnLayoutProp = new SBGNLayout({

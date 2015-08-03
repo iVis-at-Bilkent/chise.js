@@ -89,30 +89,68 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
+                                <li><a href="#" id="select-edit">Select / Edit</a></li>
                                 <li class="dropdown-submenu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <a href="#" id="add-node-menu-option" class="dropdown-toggle" data-toggle="dropdown">
                                         Add Node
                                         <!--<b class="right-caret"></b>-->
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Macromolecule</a></li>
-                                        <li><a href="#">Simple molecule</a></li>
-                                        <li><a href="#">Complex</a></li>
+                                    <ul class="dropdown-menu" id="add-node-submenu">
+                                        <li><a href="#" class="add-node-menu-item" name="macromolecule">Macromolecule</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="simple-molecule">Simple molecule</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="complex">Complex</a></li>
                                         <li class="dropdown-submenu">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="process-menu-option">
                                                 Process
                                                 <!--<b class="right-caret"></b>-->
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="#">Process</a></li>
-                                                <li><a href="#">Omitted Process</a></li>
-                                                <li><a href="#">Uncertain Process</a></li>
-                                                <li><a href="#">Association</a></li>
-                                                <li><a href="#">Dissociation</a></li>
+                                                <li><a href="#" class="add-node-menu-item process-type" name="process" >Process</a></li>
+                                                <li><a href="#" class="add-node-menu-item process-type" name="omitted-process">Omitted Process</a></li>
+                                                <li><a href="#" class="add-node-menu-item process-type" name="uncertain-process">Uncertain Process</a></li>
+                                                <li><a href="#" class="add-node-menu-item process-type" name="association">Association</a></li>
+                                                <li><a href="#" class="add-node-menu-item process-type" name="dissociation">Dissociation</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#" class="add-node-menu-item" name="phenotype">Phenotype</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="compartment">Compartment</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="unspecified-entity">Unspecified entry</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="nucleic-acid-feature">Nucleic acid feature</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="source-and-sink">Source or sink</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="perturbing-agent">Perturbing agend</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="tag">Tag</a></li>
+                                        <li class="dropdown-submenu">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logical-operator-menu-option">
+                                                Logical operators
+                                                <!--<b class="right-caret"></b>-->
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="and">AND</a></li>
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="or">OR</a></li>
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="not">NOT</a></li>
                                             </ul>
                                         </li>
                                     </ul>
                                 </li>
+                                
+                                <li class="dropdown-submenu">
+                                    <a href="#" id="add-edge-menu-option" class="dropdown-toggle" data-toggle="dropdown">
+                                        Add Interaction 
+                                    </a>
+                                    <ul class="dropdown-menu" id="add-edge-submenu">
+                                        <li><a href="#" class="add-edge-menu-item" name="consumption">Consumption</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="production">Production</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="modulation">Modulation</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="stimulation">Simulation</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="catalysis">Catalysis</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="inhibition">Inhibition</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="necessary-stimulation">Necessary stimulation</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="logic-arc">Logic arc</a></li>
+                                    </ul>
+                                </li>
+                                
                                 <li class="divider"></li>
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -208,14 +246,34 @@
                 <label class="radio inline">
                     <select id="node-list" >
                         <option data-imagesrc="sampleapp-images/macromolecule.png" value="macromolecule" selected="true">macromolecule</option>
+                        <option value="simple-molecule">Simple molecule</option>
                         <option data-imagesrc="sampleapp-images/complex.png" value="complex">complex</option>
+                        <option value="process">Process</option>
+                        <option value="omitted-process">Omitted Process</option>
+                        <option value="uncertain-process">Uncertain Process</option>
+                        <option value="association">Association</option>
+                        <option value="phenotype">Phenotype</option>
                         <option data-imagesrc="sampleapp-images/compartment.png" value="compartment">compartment</option>
+                        <option value="unspecified-entity">Unspecified entity</option>
+                        <option value="nucleic-acid-feature">Nucleic acid feature</option>
+                        <option value="source-and-sink">Source and sink</option>
+                        <option value="perturbing-agent">Perturbing agent</option>
+                        <option value="tag">Tag</option>
+                        <option value="and">And</option>
+                        <option value="or">Or</option>
+                        <option value="not">Not</option>
                     </select>
                 </label>
                 <label class="radio inline">
                     <select id="edge-list" >
-                        <option data-imagesrc="sampleapp-images/inhibition.png" value="inhibition">inhibition</option>
                         <option data-imagesrc="sampleapp-images/consumption.png" value="consumption">consumption</option>
+                        <option value="production">production</option>
+                        <option value="modulation">modulation</option>
+                        <option value="stimulation">stimulation</option>
+                        <option value="catalysis">catalysis</option>
+                        <option data-imagesrc="sampleapp-images/inhibition.png" value="inhibition">inhibition</option>
+                        <option value="necessary-stimulation">necessary stimulation</option>
+                        <option value="logic-arc">logic arc</option>
                     </select>
                 </label>
                 <label class="radio inline">
@@ -585,6 +643,7 @@
         <script src="sampleapp-components/js/EditorActionsManager.js"></script>
         <script src="sampleapp-components/js/sample-app-cytoscape-sbgn.js"></script>
         <script src="sampleapp-components/js/sample-app-menu-functions.js"></script>
+        <script src="sampleapp-components/js/sample-app-mode-handler.js"></script>
         <script src="sampleapp-components/js/biogene-info.js"></script>
 
     </body>

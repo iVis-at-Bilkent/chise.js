@@ -442,7 +442,6 @@ var SBGNContainer = Backbone.View.extend({
       {
         window.cy = this;
         refreshPaddings();
-        window.mode = "selection-mode";
 
         //For adding edges interactively
         cy.edgehandles({
@@ -452,7 +451,8 @@ var SBGNContainer = Backbone.View.extend({
             param.newEdge = {
               source: sourceNode.id(),
               target: targetNodes[0].id(),
-              sbgnclass: $("#edge-list").data('ddslick').selectedData.value
+              sbgnclass: modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType]
+//              sbgnclass: $("#edge-list").data('ddslick').selectedData.value
             };
             param.firstTime = true;
             editorActionsManager._do(new AddEdgeCommand(param));
@@ -640,11 +640,12 @@ var SBGNContainer = Backbone.View.extend({
         });
 
         cy.on('tap', function (event) {
-          if (window.mode == "add-node-mode") {
+          if (modeHandler.mode == "add-node-mode") {
             var cyPosX = event.cyPosition.x;
             var cyPosY = event.cyPosition.y;
             var param = {};
-            var sbgnclass = $("#node-list").data('ddslick').selectedData.value;
+//            var sbgnclass = $("#node-list").data('ddslick').selectedData.value;
+            var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
             param.newNode = {
               x: cyPosX,
               y: cyPosY,
