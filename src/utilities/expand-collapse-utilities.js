@@ -1,18 +1,7 @@
 var expandCollapseUtilities = {
   //Some nodes are initilized as collapsed this method handles them
   initCollapsedNodes: function () {
-//    var orphans = cy.nodes().orphans();
-//    for (var i = 0; i < orphans.length; i++) {
-//      var root = orphans[i];
-//      this.collapseBottomUp(root);
-//    }
-    this.collapseGivenNodes(cy.nodes());
-  },
-  collapseGivenNodes: function (nodes) {
-    if(nodes == null || nodes.length == 0){
-      return;
-    }
-    var orphans = nodes.orphans();
+    var orphans = cy.nodes().orphans();
     for (var i = 0; i < orphans.length; i++) {
       var root = orphans[i];
       this.collapseBottomUp(root);
@@ -75,10 +64,6 @@ var expandCollapseUtilities = {
   },
   //collapse the given node without making incremental layout
   simpleCollapseNode: function (node) {
-    //Check if the node is already collapsed
-    if( node.css()['expanded-collapsed'] != null &&  node.css('expanded-collapsed') == 'collapsed'){
-      return;
-    }
     node.css('expanded-collapsed', 'collapsed');
 
     var children = node.children();
@@ -113,11 +98,6 @@ var expandCollapseUtilities = {
   },
   //collapse the given node then make incremental layout
   collapseNode: function (node) {
-    //Check if the node is already collapsed
-    if( node.css()['expanded-collapsed'] != null &&  node.css('expanded-collapsed') == 'collapsed'){
-      return;
-    }
-    
     this.simpleCollapseNode(node);
 
     $("#perform-incremental-layout").trigger("click");
