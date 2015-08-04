@@ -53,6 +53,10 @@ $(document).ready(function () {
   $('#select-icon').click(function (e) {
     modeHandler.setSelectionMode();
   });
+  
+  $('#select-edit').click(function (e) {
+    modeHandler.setSelectionMode();
+  });
 
   var sbgnLayoutProp = new SBGNLayout({
     el: '#sbgn-layout-table'
