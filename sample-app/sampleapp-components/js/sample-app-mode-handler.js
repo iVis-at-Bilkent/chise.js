@@ -1,7 +1,7 @@
 var modeHandler = {
   mode: "selection-mode",
   selectedNodeType: "macromolecule",
-  selectedEdgeType: "inhibition",
+  selectedEdgeType: "consumption",
   elementsHTMLNameToName: {
     //nodes
     "macromolecule": "macromolecule",
@@ -55,57 +55,64 @@ var modeHandler = {
     this.setSelectedMenuItem("selection-mode");
   },
   setAddNodeMode: function () {
-    $('#node-list').ddslick('enable');
-    $('#node-list').addClass('selectedType');
-//    $('#add-node-menu-item').addClass('selectedMenuItem');
+    if (modeHandler.mode != "add-node-mode") {
+      $('#node-list').ddslick('enable');
+      $('#node-list').addClass('selectedType');
 
-    $('#select-icon').removeClass('selectedType');
 
-    $('#edge-list').removeClass('selectedType');
-    $('#edge-list').ddslick('close');
-    $('#edge-list').ddslick('disable');
+      modeHandler.setSelectedMenuItem("add-node-mode", modeHandler.selectedNodeType);
+      modeHandler.mode = "add-node-mode";
 
-    modeHandler.mode = "add-node-mode";
-    cy.autolock(true);
-    cy.autounselectify(true);
+      $('#select-icon').removeClass('selectedType');
 
-    cy.edgehandles('drawoff');
+      $('#edge-list').removeClass('selectedType');
+      $('#edge-list').ddslick('close');
+      $('#edge-list').ddslick('disable');
+
+      cy.autolock(true);
+      cy.autounselectify(true);
+
+      cy.edgehandles('drawoff');
+    }
   },
   setAddEdgeMode: function () {
-    $('#edge-list').ddslick('enable');
-    $('#edge-list').addClass('selectedType');
-//    $('#add-edge-menu-item').addClass('selectedMenuItem');
+    if (modeHandler.mode != "add-edge-mode") {
+      $('#edge-list').ddslick('enable');
+      $('#edge-list').addClass('selectedType');
+      modeHandler.setSelectedMenuItem("add-edge-mode", modeHandler.selectedEdgeType);
+      modeHandler.mode = "add-edge-mode";
 
-    $('#select-icon').removeClass('selectedType');
+      $('#select-icon').removeClass('selectedType');
 
-    $('#node-list').removeClass('selectedType');
-    $('#node-list').ddslick('close');
-    $('#node-list').ddslick('disable');
+      $('#node-list').removeClass('selectedType');
+      $('#node-list').ddslick('close');
+      $('#node-list').ddslick('disable');
 
-    modeHandler.mode = "add-edge-mode";
-    cy.autolock(true);
-    cy.autounselectify(true);
+      cy.autolock(true);
+      cy.autounselectify(true);
 
-    cy.edgehandles('drawon');
+      cy.edgehandles('drawon');
+    }
   },
   setSelectionMode: function () {
-    $('#select-icon').addClass('selectedType');
-    modeHandler.setSelectedMenuItem("selection-mode");
-//    $('#select-edit').addClass('selectedMenuItem');
+    if (modeHandler.mode != "selection-mode") {
+      $('#select-icon').addClass('selectedType');
+      modeHandler.setSelectedMenuItem("selection-mode");
 
-    $('#edge-list').removeClass('selectedType');
-    $('#edge-list').ddslick('close');
-    $('#edge-list').ddslick('disable');
+      $('#edge-list').removeClass('selectedType');
+      $('#edge-list').ddslick('close');
+      $('#edge-list').ddslick('disable');
 
-    $('#node-list').removeClass('selectedType');
-    $('#node-list').ddslick('close');
-    $('#node-list').ddslick('disable');
+      $('#node-list').removeClass('selectedType');
+      $('#node-list').ddslick('close');
+      $('#node-list').ddslick('disable');
 
-    modeHandler.mode = "selection-mode";
-    cy.autolock(false);
-    cy.autounselectify(false);
+      modeHandler.mode = "selection-mode";
+      cy.autolock(false);
+      cy.autounselectify(false);
 
-    cy.edgehandles('drawoff');
+      cy.edgehandles('drawoff');
+    }
   },
   setSelectedIndexOfSelector: function (selector, name) {
     var index = $(selector + " li:has(input[value=" + name + "])").index();

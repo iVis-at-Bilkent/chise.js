@@ -29,14 +29,14 @@ $(document).ready(function () {
   })).render();
 
   $('.add-node-menu-item').click(function (e) {
-    modeHandler.setAddNodeMode();
-    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
+//    modeHandler.setAddNodeMode();
+//    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
     modeHandler.setSelectedIndexOfSelector("#node-list", $(this).attr('name'));
   });
   
   $('.add-edge-menu-item').click(function (e) {
-    modeHandler.setAddNodeMode();
-    modeHandler.setSelectedMenuItem("add-edge-mode", $(this).attr('name'));
+//    modeHandler.setAddEdgeMode();
+//    modeHandler.setSelectedMenuItem("add-edge-mode", $(this).attr('name'));
     modeHandler.setSelectedIndexOfSelector("#edge-list", $(this).attr('name'));
   });
 
@@ -274,7 +274,7 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
-  $("#delete-selected").click(function (e) {
+  $("#delete-selected-smart").click(function (e) {
     //sbgnFiltering.deleteSelected();
     var param = {
       firstTime: true
@@ -331,25 +331,9 @@ $(document).ready(function () {
     sbgnLayoutProp.render();
   });
 
-  $("#delete-selected-eles").click(function (e) {
+  $("#delete-selected-simple").click(function (e) {
     var selectedEles = cy.$(":selected");
     editorActionsManager._do(new RemoveElesCommand(selectedEles));
-    refreshUndoRedoButtonsStatus();
-  });
-
-  $("#add-edge").click(function (e) {
-    var selectedNodes = cy.$("node:selected");
-    if (selectedNodes.length != 2) {
-      alert("Exactly 2 nodes should be selected!!!");
-      return;
-    }
-    var param = {};
-    param.newEdge = {
-      source: selectedNodes[0].id(),
-      target: selectedNodes[1].id()
-    };
-    param.firstTime = true;
-    editorActionsManager._do(new AddEdgeCommand(param));
     refreshUndoRedoButtonsStatus();
   });
 

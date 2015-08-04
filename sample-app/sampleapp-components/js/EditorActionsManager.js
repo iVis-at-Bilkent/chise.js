@@ -362,10 +362,10 @@ var AddNodeCommand = function (newNode)
   return new Command(addNode, removeNodes, newNode);
 };
 
-var RemoveNodesCommand = function (nodesTobeDeleted)
-{
-  return new Command(removeNodes, restoreEles, nodesTobeDeleted);
-};
+//var RemoveNodesCommand = function (nodesTobeDeleted)
+//{
+//  return new Command(removeNodes, restoreEles, nodesTobeDeleted);
+//};
 
 var RemoveElesCommand = function (elesTobeDeleted)
 {
@@ -377,10 +377,10 @@ var AddEdgeCommand = function (newEdge)
   return new Command(addEdge, removeEdges, newEdge);
 };
 
-var RemoveEdgesCommand = function (edgesTobeDeleted)
-{
-  return new Command(removeEdges, restoreEles, edgesTobeDeleted);
-};
+//var RemoveEdgesCommand = function (edgesTobeDeleted)
+//{
+//  return new Command(removeEdges, restoreEles, edgesTobeDeleted);
+//};
 
 var ExpandNodeCommand = function (node) {
   return new Command(expandNode, undoExpandNode, node);
