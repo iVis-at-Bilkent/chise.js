@@ -66,6 +66,22 @@ function collapseNode(node) {
   return param;
 }
 
+function expandGivenNodes(nodes) {
+  var param = {};
+  param.nodes = nodes;
+  param.nodesData = getNodePositionsAndSizes();
+  expandCollapseUtilities.expandGivenNodes(nodes);
+  return param;
+}
+
+function collapseGivenNodes(nodes) {
+  var param = {};
+  param.nodes = nodes;
+  param.nodesData = getNodePositionsAndSizes();
+  expandCollapseUtilities.collapseGivenNodes(nodes);
+  return param;
+}
+
 function getNodePositionsAndSizes() {
   var positionsAndSizes = {};
   var nodes = cy.nodes();
@@ -95,12 +111,32 @@ function undoCollapseNode(param) {
   return result;
 }
 
+function undoExpandGivenNodes(param) {
+  var result = expandCollapseUtilities.simpleCollapseGivenNodes(param.nodes);
+  returnToPositionsAndSizes(param.nodesData);
+  return result;
+}
+
+function undoCollapseGivenNodes(param) {
+  var result = expandCollapseUtilities.simpleExpandGivenNodes(param.nodes);
+  returnToPositionsAndSizes(param.nodesData);
+  return result;
+}
+
 function simpleExpandNode(node) {
   return expandCollapseUtilities.simpleExpandNode(node);
 }
 
 function simpleCollapseNode(node) {
   return expandCollapseUtilities.simpleCollapseNode(node);
+}
+
+function simpleExpandGivenNodes(nodes) {
+  return expandCollapseUtilities.simpleExpandGivenNodes(nodes);
+}
+
+function simpleCollapseGivenNodes(nodes) {
+  return expandCollapseUtilities.simpleCollapseGivenNodes(nodes);
 }
 
 function performLayoutFunction(nodesData) {
@@ -396,6 +432,22 @@ var SimpleExpandNodeCommand = function (node) {
 
 var SimpleCollapseNodeCommand = function (node) {
   return new Command(simpleCollapseNode, simpleExpandNode, node);
+};
+
+var ExpandGivenNodesCommand = function (nodes) {
+  return new Command(expandGivenNodes, undoExpandGivenNodes, nodes);
+};
+
+var CollapseGivenNodesCommand = function (nodes) {
+  return new Command(collapseGivenNodes, undoCollapseGivenNodes, nodes);
+};
+
+var SimpleExpandGivenNodesCommand = function (nodes) {
+  return new Command(simpleExpandGivenNodes, simpleCollapseGivenNodes, nodes);
+};
+
+var SimpleCollapseGivenNodesCommand = function (nodes) {
+  return new Command(simpleCollapseGivenNodes, simpleExpandGivenNodes, nodes);
 };
 
 var PerformLayoutCommand = function (nodesData) {

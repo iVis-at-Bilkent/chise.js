@@ -33,7 +33,7 @@ $(document).ready(function () {
 //    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
     modeHandler.setSelectedIndexOfSelector("#node-list", $(this).attr('name'));
   });
-  
+
   $('.add-edge-menu-item').click(function (e) {
 //    modeHandler.setAddEdgeMode();
 //    modeHandler.setSelectedMenuItem("add-edge-mode", $(this).attr('name'));
@@ -339,6 +339,54 @@ $(document).ready(function () {
 
   $("#sbgn-properties").click(function (e) {
     sbgnProperties.render();
+  });
+
+  $("#collapse-selected").click(function (e) {
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new CollapseGivenNodesCommand(cy.nodes(":selected")));
+    else
+      editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes(":selected")));
+    refreshUndoRedoButtonsStatus();
+  });
+  
+  $("#expand-selected").click(function (e) {
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new ExpandGivenNodesCommand(cy.nodes(":selected")));
+    else
+      editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
+    refreshUndoRedoButtonsStatus();
+  });
+  
+  $("#collapse-all").click(function (e) {
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new CollapseGivenNodesCommand(cy.nodes()));
+    else
+      editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes()));
+    refreshUndoRedoButtonsStatus();
+  });
+  
+  $("#expand-all").click(function (e) {
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new ExpandGivenNodesCommand(cy.nodes()));
+    else
+      editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes()));
+    refreshUndoRedoButtonsStatus();
   });
 
   $("#perform-layout").click(function (e) {

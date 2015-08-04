@@ -378,6 +378,11 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'source-arrow-color': '#d67614',
           'target-arrow-color': '#d67614'
         })
+        .selector("node.collapsed")
+        .css({
+          'width': 60,
+          'height': 60
+        })
         .selector(".sbgn")
         .css({
           'compound-padding': 20,
