@@ -28,6 +28,20 @@ $(document).ready(function () {
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
 
+  $('#new-file-icon').click(function (e) {
+    setFileContent("new_file.sbgnml");
+
+    (new SBGNContainer({
+      el: '#sbgn-network-container',
+      model: {
+        cytoscapeJsGraph: {
+          nodes: [],
+          edges: []
+        }
+      }
+    })).render();
+  });
+
   $('.add-node-menu-item').click(function (e) {
 //    modeHandler.setAddNodeMode();
 //    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
@@ -393,6 +407,10 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
+  $("#perform-layout-icon").click(function (e) {
+    $("#perform-layout").trigger('click');
+  });
+
   $("#perform-layout").click(function (e) {
     var nodesData = {};
     var nodes = cy.nodes();
@@ -515,6 +533,10 @@ $(document).ready(function () {
   $("#load-file").click(function (evt) {
     $("#file-input").trigger('click');
   });
+  
+  $("#load-file-icon").click(function (evt) {
+    $("#load-file").trigger('click');
+  });
 
   $("#save-as-sbgnml").click(function (evt) {
     var sbgnmlText = jsonToSbgnml.createSbgnml();
@@ -524,6 +546,10 @@ $(document).ready(function () {
     });
     var filename = document.getElementById('file-name').innerHTML;
     saveAs(blob, filename);
+  });
+  
+  $("#save-icon").click(function (evt) {
+    $("#save-as-sbgnml").trigger('click');
   });
 
   $("body").on("click", ".biogene-info .expandable", function (evt) {
