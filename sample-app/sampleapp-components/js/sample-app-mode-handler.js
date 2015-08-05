@@ -69,6 +69,8 @@ var modeHandler = {
       $('#edge-list').ddslick('close');
       $('#edge-list').ddslick('disable');
 
+      modeHandler.autoEnableMenuItems(false);
+
       cy.autolock(true);
       cy.autounselectify(true);
 
@@ -87,6 +89,8 @@ var modeHandler = {
       $('#node-list').removeClass('selectedType');
       $('#node-list').ddslick('close');
       $('#node-list').ddslick('disable');
+
+      modeHandler.autoEnableMenuItems(false);
 
       cy.autolock(true);
       cy.autounselectify(true);
@@ -107,11 +111,43 @@ var modeHandler = {
       $('#node-list').ddslick('close');
       $('#node-list').ddslick('disable');
 
+      modeHandler.autoEnableMenuItems(true);
+
       modeHandler.mode = "selection-mode";
       cy.autolock(false);
       cy.autounselectify(false);
 
       cy.edgehandles('drawoff');
+    }
+  },
+  autoEnableMenuItems: function (enable) {
+    if (enable) {
+      $("#expand-selected").parent("li").removeClass("disabled");
+      $("#collapse-selected").parent("li").removeClass("disabled");
+      $("#expand-all").parent("li").removeClass("disabled");
+      $("#collapse-all").parent("li").removeClass("disabled");
+      $("#perform-layout").parent("li").removeClass("disabled");
+      $("#delete-selected-simple").parent("li").removeClass("disabled");
+      $("#delete-selected-smart").parent("li").removeClass("disabled");
+      $("#hide-selected").parent("li").removeClass("disabled");
+      $("#show-selected").parent("li").removeClass("disabled");
+      $("#show-all").parent("li").removeClass("disabled");
+      $("#make-compound-complex").parent("li").removeClass("disabled");
+      $("#make-compound-compartment").parent("li").removeClass("disabled");
+    }
+    else{
+      $("#expand-selected").parent("li").addClass("disabled");
+      $("#collapse-selected").parent("li").addClass("disabled");
+      $("#expand-all").parent("li").addClass("disabled");
+      $("#collapse-all").parent("li").addClass("disabled");
+      $("#perform-layout").parent("li").addClass("disabled");
+      $("#delete-selected-simple").parent("li").addClass("disabled");
+      $("#delete-selected-smart").parent("li").addClass("disabled");
+      $("#hide-selected").parent("li").addClass("disabled");
+      $("#show-selected").parent("li").addClass("disabled");
+      $("#show-all").parent("li").addClass("disabled");
+      $("#make-compound-complex").parent("li").addClass("disabled");
+      $("#make-compound-compartment").parent("li").addClass("disabled");
     }
   },
   setSelectedIndexOfSelector: function (selector, name) {

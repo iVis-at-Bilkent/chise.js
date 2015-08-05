@@ -530,8 +530,11 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('mouseover', 'node', function (event) {
           var node = this;
-
-          if (!node.mouseover) {
+          
+          if( modeHandler.mode != "selection-mode" ){
+            node.mouseover = false;
+          }
+          else if (!node.mouseover) {
             node.mouseover = true;
             //make preset layout to redraw the nodes
             cy.forceRender();
@@ -671,7 +674,8 @@ var SBGNContainer = Backbone.View.extend({
           var cyPosX = event.cyPosition.x;
           var cyPosY = event.cyPosition.y;
 
-          if (cyPosX >= node._private.data.expandcollapseStartX
+          if (  modeHandler.mode == "selection-mode"
+                  &&cyPosX >= node._private.data.expandcollapseStartX
                   && cyPosX <= node._private.data.expandcollapseEndX
                   && cyPosY >= node._private.data.expandcollapseStartY
                   && cyPosY <= node._private.data.expandcollapseEndY) {
