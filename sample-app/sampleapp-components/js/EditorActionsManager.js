@@ -82,6 +82,26 @@ function collapseGivenNodes(nodes) {
   return param;
 }
 
+function expandAllNodes() {
+  var param = {};
+  param.nodesData = getNodePositionsAndSizes();
+  param.expandStack = expandCollapseUtilities.expandAllNodes();
+  return param;
+}
+
+function simpleExpandAllNodes(){
+  return expandCollapseUtilities.simpleExpandAllNodes();
+}
+
+function collapseExpandedStack(expandedStack) {
+  return expandCollapseUtilities.collapseExpandedStack(expandedStack);
+}
+
+function undoExpandAllNodes(param){
+  expandCollapseUtilities.collapseExpandedStack(param.expandStack);
+  returnToPositionsAndSizes(param.nodesData);
+}
+
 function getNodePositionsAndSizes() {
   var positionsAndSizes = {};
   var nodes = cy.nodes();
@@ -448,6 +468,14 @@ var SimpleExpandGivenNodesCommand = function (nodes) {
 
 var SimpleCollapseGivenNodesCommand = function (nodes) {
   return new Command(simpleCollapseGivenNodes, simpleExpandGivenNodes, nodes);
+};
+
+var SimpleExpandAllNodesCommand = function () {
+  return new Command(simpleExpandAllNodes, collapseExpandedStack);
+};
+
+var ExpandAllNodesCommand = function () {
+  return new Command(expandAllNodes, undoExpandAllNodes);
 };
 
 var PerformLayoutCommand = function (nodesData) {

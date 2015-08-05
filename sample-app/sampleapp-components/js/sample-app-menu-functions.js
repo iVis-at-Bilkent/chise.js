@@ -387,9 +387,9 @@ $(document).ready(function () {
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
     }
     if (incrementalLayoutAfterExpandCollapse)
-      editorActionsManager._do(new ExpandGivenNodesCommand(cy.nodes()));
+      editorActionsManager._do(new ExpandAllNodesCommand());
     else
-      editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes()));
+      editorActionsManager._do(new SimpleExpandAllNodesCommand());
     refreshUndoRedoButtonsStatus();
   });
 

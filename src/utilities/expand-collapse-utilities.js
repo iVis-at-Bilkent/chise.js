@@ -15,6 +15,7 @@ var expandCollapseUtilities = {
       var root = orphans[i];
       this.collapseBottomUp(root);
     }
+    return nodes;
   },
   simpleExpandGivenNodes: function (nodes) {
     nodes.data("expand", true);
@@ -22,6 +23,45 @@ var expandCollapseUtilities = {
     for (var i = 0; i < orphans.length; i++) {
       var root = orphans[i];
       this.expandTopDown(root);
+    }
+    return nodes;
+  },
+  simpleExpandAllNodes: function () {
+    var nodes = cy.nodes();
+    var orphans = nodes.orphans();
+    var expandStack = [];
+    for (var i = 0; i < orphans.length; i++) {
+      var root = orphans[i];
+      this.expandAllTopDown(root, expandStack);
+    }
+    return expandStack;
+  },
+  expandAllNodes: function () {
+    var expandedStack = this.simpleExpandAllNodes();
+
+    $("#perform-incremental-layout").trigger("click");
+
+    /*
+     * return the nodes to undo the operation
+     */
+    return expandedStack;
+  },
+  collapseExpandedStack: function (expandedStack) {
+    while(expandedStack.length > 0){
+      var node = expandedStack.pop();
+      this.simpleCollapseNode(node);
+    }
+  },
+  expandAllTopDown: function(root, expandStack){
+    if(root._private.data.collapsedChildren != null)
+    {
+      expandStack.push(root);
+      this.simpleExpandNode(root);
+    }
+    var children = root.children();
+    for (var i = 0; i < children.length; i++) {
+      var node = children[i];
+      this.expandAllTopDown(node, expandStack);
     }
   },
   //Expand the given nodes perform incremental layout after expandation
