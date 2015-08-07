@@ -45,6 +45,9 @@ $(document).ready(function () {
   });
 
   $('.add-node-menu-item').click(function (e) {
+    if(!modeHandler.mode != "add-node-mode"){
+      modeHandler.setAddNodeMode();
+    }
     var value = $(this).attr('name');
     modeHandler.selectedNodeType = value;
     modeHandler.setSelectedIndexOfSelector("add-node-mode", value);
@@ -52,6 +55,9 @@ $(document).ready(function () {
   });
 
   $('.add-edge-menu-item').click(function (e) {
+    if(!modeHandler.mode != "add-edge-mode"){
+      modeHandler.setAddEdgeMode();
+    }
     var value = $(this).attr('name');
     modeHandler.selectedEdgeType = value;
     modeHandler.setSelectedIndexOfSelector("add-edge-mode", value);

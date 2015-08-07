@@ -63,7 +63,6 @@ var modeHandler = {
       modeHandler.mode = "add-edge-mode";
 
       $('#select-icon').removeClass('selectedType');
-
       $('#node-list').removeClass('selectedType');
 
       modeHandler.autoEnableMenuItems(false);
@@ -123,7 +122,7 @@ var modeHandler = {
   },
   setSelectedIndexOfSelector: function (mode, value) {
     if(mode == "add-node-mode"){
-      $(".selectedMenuItem").removeClass("selectedType");
+      $(".selectedType").removeClass("selectedType");
       $("#node-list").addClass("selectedType");
       $("#node-list li").show();
       var ele = $("#node-list [value=" + value + "]");
@@ -134,7 +133,7 @@ var modeHandler = {
       var text = $(ele).parent('a').parent('li').hide();
     }
     else if(mode == "add-edge-mode"){
-      $(".selectedMenuItem").removeClass("selectedType");
+      $(".selectedType").removeClass("selectedType");
       $("#edge-list").addClass("selectedType");
       $("#edge-list li").show();
       var ele = $("#edge-list [value=" + value + "]");
@@ -145,6 +144,7 @@ var modeHandler = {
       var text = $(ele).parent('a').parent('li').hide();
     }
   },
+  
   setSelectedMenuItem: function (mode, name) {
     $(".selectedMenuItem").removeClass("selectedMenuItem");
 
