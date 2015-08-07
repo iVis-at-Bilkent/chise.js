@@ -5,7 +5,7 @@ var modeHandler = {
   elementsHTMLNameToName: {
     //nodes
     "macromolecule": "macromolecule",
-    "simple-molecule": "simple molecule",
+    "simple-chemical": "simple chemical",
     "complex": "complex",
     "process": "process",
     "omitted-process": "omitted process",
