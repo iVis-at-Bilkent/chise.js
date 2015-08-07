@@ -264,37 +264,63 @@
                     <img id="select-icon" src="sampleapp-images/select.png" title="Select" >
                 </label>
                 <label class="radio inline">
-                    <select id="node-list" >
-                        <option data-imagesrc="sampleapp-images/macromolecule.png" value="macromolecule" selected="true">macromolecule</option>
-                        <option value="simple-molecule">Simple molecule</option>
-                        <option data-imagesrc="sampleapp-images/complex.png" value="complex">complex</option>
-                        <option value="process">Process</option>
-                        <option value="omitted-process">Omitted Process</option>
-                        <option value="uncertain-process">Uncertain Process</option>
-                        <option value="association">Association</option>
-                        <option value="phenotype">Phenotype</option>
-                        <option data-imagesrc="sampleapp-images/compartment.png" value="compartment">compartment</option>
-                        <option value="unspecified-entity">Unspecified entity</option>
-                        <option value="nucleic-acid-feature">Nucleic acid feature</option>
-                        <option value="source-and-sink">Source and sink</option>
-                        <option value="perturbing-agent">Perturbing agent</option>
-                        <option value="tag">Tag</option>
-                        <option value="and">And</option>
-                        <option value="or">Or</option>
-                        <option value="not">Not</option>
-                    </select>
+                    <div class="btn-group" role="group" id="node-list">
+                        <button id="node-list-set-mode-btn" type="button" class="btn" aria-haspopup="true" aria-expanded="false">
+                          <div style="width: 200px;">
+                          <img style="float: left;" id="sbgn-selected-node-img" src="sampleapp-images/macromolecule.png" class="sbgn-select-img"/><a style="float: left;text-decoration: none;" id="sbgn-selected-node-text">macromolecule</a>
+                          <!--<span style="float: right;" class="caret"></span>-->
+                          </div>
+                        </button>
+                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only"></span>
+                        </button>
+                        <ul id="node-list-menu" class="dropdown-menu" >
+                          <li class="sbgn-select-node-item" id="first-sbgn-select-node-item"><a href="#"><img src="sampleapp-images/macromolecule.png" class="sbgn-select-img" value="macromolecule"/>macromolecule</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/simple-molecule.png" class="sbgn-select-img" value="simple-molecule"/>simple molecule</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/complex.png" class="sbgn-select-img" value="complex"/>complex</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/process.png" class="sbgn-select-img" value="process"/>process</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/omitted-process.png" class="sbgn-select-img" value="omitted-process"/>omitted process</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/uncertain-process.png" class="sbgn-select-img" value="uncertain-process"/>uncertain process</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/association.png" class="sbgn-select-img" value="association"/>association</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/phenotype.png" class="sbgn-select-img" value="phenotype"/>phenotype</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/compartment.png" class="sbgn-select-img" value="compartment"/>compartment</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/unspecified-entity.png" class="sbgn-select-img" value="unspecified-entity"/>unspecified entity</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/nucleic-acid-feature.png" class="sbgn-select-img" value="nucleic-acid-feature"/>nucleic acid feature</a></li>
+                          
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/source-and-sink.png" class="sbgn-select-img" value="source-and-sink"/>source and sink</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/perturbing-agent.png" class="sbgn-select-img" value="perturbing-agent"/>perturbing agent</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/tag.png" class="sbgn-select-img" value="tag"/>tag</a></li>
+                          
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/and.png" class="sbgn-select-img" value="and"/>and</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/or.png" class="sbgn-select-img" value="or"/>or</a></li>
+                          <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/not.png" class="sbgn-select-img" value="not"/>not</a></li>
+                        </ul>
+                    </div>
                 </label>
                 <label class="radio inline">
-                    <select id="edge-list" >
-                        <option data-imagesrc="sampleapp-images/consumption.png" value="consumption">consumption</option>
-                        <option value="production">production</option>
-                        <option value="modulation">modulation</option>
-                        <option value="stimulation">stimulation</option>
-                        <option value="catalysis">catalysis</option>
-                        <option data-imagesrc="sampleapp-images/inhibition.png" value="inhibition">inhibition</option>
-                        <option value="necessary-stimulation">necessary stimulation</option>
-                        <option value="logic-arc">logic arc</option>
-                    </select>
+                    <div class="btn-group" role="group" id="edge-list">
+                        <button id="edge-list-set-mode-btn" type="button" class="btn" aria-haspopup="true" aria-expanded="false">
+                          <div style="width: 200px;">
+                          <img style="float: left;" id="sbgn-selected-edge-img" src="sampleapp-images/consumption.png" class="sbgn-select-img"/><a style="float: left;text-decoration: none;" id="sbgn-selected-edge-text">consumption</a>
+                          <!--<span style="float: right;" class="caret"></span>-->
+                          </div>
+                        </button>
+                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only"></span>
+                        </button>
+                        <ul id="edge-list-menu" class="dropdown-menu" >
+                          <li id="first-sbgn-select-edge-item" class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/consumption.png" class="sbgn-select-img" value="consumption"/>consumption</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/production.png" class="sbgn-select-img" value="production"/>production</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/modulation.png" class="sbgn-select-img" value="modulation"/>modulation</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/stimulation.png" class="sbgn-select-img" value="stimulation"/>stimulation</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/catalysis.png" class="sbgn-select-img" value="catalysis"/>catalysis</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/inhibition.png" class="sbgn-select-img" value="inhibition"/>inhibition</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/necessary-stimulation.png" class="sbgn-select-img" value="necessary-stimulation"/>necessary stimulation</a></li>
+                          <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/logic-arc.png" class="sbgn-select-img" value="logic-arc"/>logic arc</a></li>
+                        </ul>
+                    </div>
                 </label>
                 <label class="radio inline">
                     <img id="perform-layout-icon" src="sampleapp-images/layout-cose.png" title="Perform Layout" >

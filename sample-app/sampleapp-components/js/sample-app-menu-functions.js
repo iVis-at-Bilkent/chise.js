@@ -40,34 +40,62 @@ $(document).ready(function () {
         }
       }
     })).render();
+    
+    editorActionsManager.reset();
   });
 
   $('.add-node-menu-item').click(function (e) {
-//    modeHandler.setAddNodeMode();
-//    modeHandler.setSelectedMenuItem("add-node-mode", $(this).attr('name'));
-    modeHandler.setSelectedIndexOfSelector("#node-list", $(this).attr('name'));
+    var value = $(this).attr('name');
+    modeHandler.selectedNodeType = value;
+    modeHandler.setSelectedIndexOfSelector("add-node-mode", value);
+    modeHandler.setSelectedMenuItem("add-node-mode", value);
   });
 
   $('.add-edge-menu-item').click(function (e) {
-//    modeHandler.setAddEdgeMode();
-//    modeHandler.setSelectedMenuItem("add-edge-mode", $(this).attr('name'));
-    modeHandler.setSelectedIndexOfSelector("#edge-list", $(this).attr('name'));
+    var value = $(this).attr('name');
+    modeHandler.selectedEdgeType = value;
+    modeHandler.setSelectedIndexOfSelector("add-edge-mode", value);
+    modeHandler.setSelectedMenuItem("add-edge-mode", value);
   });
 
   modeHandler.initilize();
 
-  $('#node-list').click(function (e) {
-    modeHandler.setAddNodeMode();
+  $('.sbgn-select-node-item').click(function (e) {
+    if(!modeHandler.mode != "add-node-mode"){
+      modeHandler.setAddNodeMode();
+    }
+    var value = $('img', this).attr('value');
+    modeHandler.selectedNodeType = value;
+    modeHandler.setSelectedIndexOfSelector("add-node-mode", value);
+    modeHandler.setSelectedMenuItem("add-node-mode", value);
+  });
+  
+  $('.sbgn-select-edge-item').click(function (e) {
+    if(!modeHandler.mode != "add-edge-mode"){
+      modeHandler.setAddEdgeMode();
+    }
+    var value = $('img', this).attr('value');
+    modeHandler.selectedEdgeType = value;
+    modeHandler.setSelectedIndexOfSelector("add-edge-mode", value);
+    modeHandler.setSelectedMenuItem("add-edge-mode", value);
   });
 
-  $('#edge-list').click(function (e) {
-    modeHandler.setAddEdgeMode();
+  $('#node-list-set-mode-btn').click(function (e) {
+    if (modeHandler.mode != "add-node-mode") {
+      modeHandler.setAddNodeMode();
+    }
+  });
+
+  $('#edge-list-set-mode-btn').click(function (e) {
+    if (modeHandler.mode != "add-edge-mode") {
+      modeHandler.setAddEdgeMode();
+    }
   });
 
   $('#select-icon').click(function (e) {
     modeHandler.setSelectionMode();
   });
-  
+
   $('#select-edit').click(function (e) {
     modeHandler.setSelectionMode();
   });
@@ -370,7 +398,7 @@ $(document).ready(function () {
       editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
   });
-  
+
   $("#expand-selected").click(function (e) {
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
@@ -382,7 +410,7 @@ $(document).ready(function () {
       editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
   });
-  
+
   $("#collapse-all").click(function (e) {
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
@@ -394,7 +422,7 @@ $(document).ready(function () {
       editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes()));
     refreshUndoRedoButtonsStatus();
   });
-  
+
   $("#expand-all").click(function (e) {
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
@@ -408,7 +436,9 @@ $(document).ready(function () {
   });
 
   $("#perform-layout-icon").click(function (e) {
-    $("#perform-layout").trigger('click');
+    if(modeHandler.mode == "selection-mode"){
+     $("#perform-layout").trigger('click'); 
+    }
   });
 
   $("#perform-layout").click(function (e) {
@@ -533,7 +563,7 @@ $(document).ready(function () {
   $("#load-file").click(function (evt) {
     $("#file-input").trigger('click');
   });
-  
+
   $("#load-file-icon").click(function (evt) {
     $("#load-file").trigger('click');
   });
@@ -547,7 +577,7 @@ $(document).ready(function () {
     var filename = document.getElementById('file-name').innerHTML;
     saveAs(blob, filename);
   });
-  
+
   $("#save-icon").click(function (evt) {
     $("#save-as-sbgnml").trigger('click');
   });

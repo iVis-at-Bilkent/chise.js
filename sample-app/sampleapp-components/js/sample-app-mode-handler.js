@@ -32,33 +32,14 @@ var modeHandler = {
     "logic-arc": "logic arc"
   },
   initilize: function () {
-    $('#node-list').ddslick({
-      onSelected: function (data) {
-        modeHandler.selectedNodeType = data.selectedData.value;
-        modeHandler.setAddNodeMode();
-        modeHandler.setSelectedMenuItem("add-node-mode", data.selectedData.value);
-      }
-    });
-    $('#edge-list').ddslick({
-      onSelected: function (data) {
-        modeHandler.selectedEdgeType = data.selectedData.value;
-        modeHandler.setAddEdgeMode();
-        modeHandler.setSelectedMenuItem("add-edge-mode", data.selectedData.value);
-      }
-    });
-
     $('#select-icon').addClass('selectedType');
-
-    $('#node-list').ddslick('disable');
-    $('#edge-list').ddslick('disable');
-
+    $("#first-sbgn-select-node-item").hide();
+    $("#first-sbgn-select-edge-item").hide();
     this.setSelectedMenuItem("selection-mode");
   },
   setAddNodeMode: function () {
     if (modeHandler.mode != "add-node-mode") {
-      $('#node-list').ddslick('enable');
       $('#node-list').addClass('selectedType');
-
 
       modeHandler.setSelectedMenuItem("add-node-mode", modeHandler.selectedNodeType);
       modeHandler.mode = "add-node-mode";
@@ -66,8 +47,6 @@ var modeHandler = {
       $('#select-icon').removeClass('selectedType');
 
       $('#edge-list').removeClass('selectedType');
-      $('#edge-list').ddslick('close');
-      $('#edge-list').ddslick('disable');
 
       modeHandler.autoEnableMenuItems(false);
 
@@ -79,7 +58,6 @@ var modeHandler = {
   },
   setAddEdgeMode: function () {
     if (modeHandler.mode != "add-edge-mode") {
-      $('#edge-list').ddslick('enable');
       $('#edge-list').addClass('selectedType');
       modeHandler.setSelectedMenuItem("add-edge-mode", modeHandler.selectedEdgeType);
       modeHandler.mode = "add-edge-mode";
@@ -87,8 +65,6 @@ var modeHandler = {
       $('#select-icon').removeClass('selectedType');
 
       $('#node-list').removeClass('selectedType');
-      $('#node-list').ddslick('close');
-      $('#node-list').ddslick('disable');
 
       modeHandler.autoEnableMenuItems(false);
 
@@ -104,12 +80,7 @@ var modeHandler = {
       modeHandler.setSelectedMenuItem("selection-mode");
 
       $('#edge-list').removeClass('selectedType');
-      $('#edge-list').ddslick('close');
-      $('#edge-list').ddslick('disable');
-
       $('#node-list').removeClass('selectedType');
-      $('#node-list').ddslick('close');
-      $('#node-list').ddslick('disable');
 
       modeHandler.autoEnableMenuItems(true);
 
@@ -150,9 +121,25 @@ var modeHandler = {
       $("#make-compound-compartment").parent("li").addClass("disabled");
     }
   },
-  setSelectedIndexOfSelector: function (selector, name) {
-    var index = $(selector + " li:has(input[value=" + name + "])").index();
-    $(selector).ddslick('select', {index: index});
+  setSelectedIndexOfSelector: function (mode, value) {
+    if(mode == "add-node-mode"){
+      $("#node-list li").show();
+      var ele = $("#node-list [value=" + value + "]");
+      var text = $(ele).parent('a').text();
+      var src = $(ele).attr('src');
+      $('#sbgn-selected-node-text').text(text);
+      $('#sbgn-selected-node-img').attr('src', src);
+      var text = $(ele).parent('a').parent('li').hide();
+    }
+    else if(mode == "add-edge-mode"){
+      $("#edge-list li").show();
+      var ele = $("#edge-list [value=" + value + "]");
+      var text = $(ele).parent('a').text();
+      var src = $(ele).attr('src');
+      $('#sbgn-selected-edge-text').text(text);
+      $('#sbgn-selected-edge-img').attr('src', src);
+      var text = $(ele).parent('a').parent('li').hide();
+    }
   },
   setSelectedMenuItem: function (mode, name) {
     $(".selectedMenuItem").removeClass("selectedMenuItem");
