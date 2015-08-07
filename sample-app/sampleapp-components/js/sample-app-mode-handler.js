@@ -123,6 +123,8 @@ var modeHandler = {
   },
   setSelectedIndexOfSelector: function (mode, value) {
     if(mode == "add-node-mode"){
+      $(".selectedMenuItem").removeClass("selectedType");
+      $("#node-list").addClass("selectedType");
       $("#node-list li").show();
       var ele = $("#node-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
@@ -132,6 +134,8 @@ var modeHandler = {
       var text = $(ele).parent('a').parent('li').hide();
     }
     else if(mode == "add-edge-mode"){
+      $(".selectedMenuItem").removeClass("selectedType");
+      $("#edge-list").addClass("selectedType");
       $("#edge-list li").show();
       var ele = $("#edge-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
