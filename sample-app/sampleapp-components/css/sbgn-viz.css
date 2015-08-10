@@ -150,6 +150,7 @@ body {
 #sbgn-select-mode{
     margin: auto;
     width: 1000px;
+    margin-bottom: 10px;
     /*overflow: auto !important;*/
 }
 
