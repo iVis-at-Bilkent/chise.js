@@ -13,11 +13,12 @@ function dynamicResize()
 
   if (windowWidth > canvasWidth)
   {
-    $("#sbgn-network-container").width(windowWidth * 0.85);
-    $(".nav-menu").width(windowWidth * 0.85);
-    $(".navbar").width(windowWidth * 0.85);
+    $("#sbgn-network-container").width(windowWidth * 0.9 * 0.8);
+    $("#sbgn-inspector").width(windowWidth * 0.9 * 0.2);
+    $(".nav-menu").width(windowWidth * 0.9);
+    $(".navbar").width(windowWidth * 0.9);
 //    $("#sbgn-info-content").width(windowWidth * 0.85);
-    $("#sbgn-select-mode").width(windowWidth * 0.85);
+    $("#sbgn-select-mode").width(windowWidth * 0.9);
   }
 
   if (windowHeight > canvasHeight)

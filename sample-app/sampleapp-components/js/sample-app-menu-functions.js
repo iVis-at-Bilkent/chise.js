@@ -28,10 +28,6 @@ $(document).ready(function () {
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
 
-  $('.toggle-menu').jPushMenu({
-    closeOnClickOutside: false
-  });
-
   $('#new-file-icon').click(function (e) {
     setFileContent("new_file.sbgnml");
 
