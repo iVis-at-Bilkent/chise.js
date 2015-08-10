@@ -33,8 +33,8 @@ var modeHandler = {
   },
   initilize: function () {
     $('#select-icon').addClass('selectedType');
-    $("#first-sbgn-select-node-item").hide();
-    $("#first-sbgn-select-edge-item").hide();
+    $("#first-sbgn-select-node-item").addClass("selectedDDItem");
+    $("#first-sbgn-select-edge-item").addClass("selectedDDItem");
     this.setSelectedMenuItem("selection-mode");
   },
   setAddNodeMode: function () {
@@ -124,24 +124,26 @@ var modeHandler = {
     if(mode == "add-node-mode"){
       $(".selectedType").removeClass("selectedType");
       $("#node-list").addClass("selectedType");
-      $("#node-list li").show();
+      $("#node-list li").removeClass("selectedDDItem");;
       var ele = $("#node-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
       var src = $(ele).attr('src');
-      $('#sbgn-selected-node-text').text(text);
+      $("#node-list-set-mode-btn").attr("title", text);
+//      $('#sbgn-selected-node-text').text(text);
       $('#sbgn-selected-node-img').attr('src', src);
-      var text = $(ele).parent('a').parent('li').hide();
+      $(ele).parent('a').parent('li').addClass("selectedDDItem");
     }
     else if(mode == "add-edge-mode"){
       $(".selectedType").removeClass("selectedType");
       $("#edge-list").addClass("selectedType");
-      $("#edge-list li").show();
+      $("#edge-list li").removeClass("selectedDDItem");
       var ele = $("#edge-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
       var src = $(ele).attr('src');
-      $('#sbgn-selected-edge-text').text(text);
+      $("#edge-list-set-mode-btn").attr("title", text);
+//      $('#sbgn-selected-edge-text').text(text);
       $('#sbgn-selected-edge-img').attr('src', src);
-      var text = $(ele).parent('a').parent('li').hide();
+      $(ele).parent('a').parent('li').addClass("selectedDDItem");
     }
   },
   
