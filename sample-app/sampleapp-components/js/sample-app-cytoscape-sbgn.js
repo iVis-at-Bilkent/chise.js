@@ -16,7 +16,7 @@ function dynamicResize()
     $("#sbgn-network-container").width(windowWidth * 0.85);
     $(".nav-menu").width(windowWidth * 0.85);
     $(".navbar").width(windowWidth * 0.85);
-    $("#sbgn-info-content").width(windowWidth * 0.85);
+//    $("#sbgn-info-content").width(windowWidth * 0.85);
     $("#sbgn-select-mode").width(windowWidth * 0.85);
   }
 

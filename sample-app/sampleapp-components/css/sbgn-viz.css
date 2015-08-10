@@ -147,13 +147,6 @@ body {
     /*float: left;*/
 }
 
-#sbgn-info-content{
-    margin: auto;
-    /*height: 50px;*/
-    width: 1000px;
-    overflow: auto !important;
-}
-
 #sbgn-select-mode{
     margin: auto;
     width: 1000px;
@@ -161,13 +154,13 @@ body {
 }
 
 .sbgn-label{
-    float:right;
+    float:left;
     text-align: right;
     color: #0B9BCD !important;
 }
 
 .input-file{
-    float:left;
+    float:right;
     text-align: right;
     color: #d67614 !important;
     font-size: 12px !important;
