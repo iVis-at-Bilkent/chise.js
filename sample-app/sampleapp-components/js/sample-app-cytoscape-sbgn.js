@@ -461,6 +461,9 @@ var SBGNContainer = Backbone.View.extend({
             };
             param.firstTime = true;
             editorActionsManager._do(new AddEdgeCommand(param));
+            if($("#right-menu-nav").hasClass("menu-open") == false){
+              $("#right-menu-toggle-button").trigger("click");
+            }
             refreshUndoRedoButtonsStatus();
           }
         });
@@ -662,6 +665,9 @@ var SBGNContainer = Backbone.View.extend({
             param.firstTime = true;
 
             editorActionsManager._do(new AddNodeCommand(param));
+            if($("#right-menu-nav").hasClass("menu-open") == false){
+              $("#right-menu-toggle-button").trigger("click");
+            }
             refreshUndoRedoButtonsStatus();
           }
         });

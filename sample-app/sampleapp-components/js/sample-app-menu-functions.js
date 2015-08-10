@@ -28,6 +28,10 @@ $(document).ready(function () {
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
 
+  $('.toggle-menu').jPushMenu({
+    closeOnClickOutside: false
+  });
+
   $('#new-file-icon').click(function (e) {
     setFileContent("new_file.sbgnml");
 
@@ -40,12 +44,12 @@ $(document).ready(function () {
         }
       }
     })).render();
-    
+
     editorActionsManager.reset();
   });
 
   $('.add-node-menu-item').click(function (e) {
-    if(!modeHandler.mode != "add-node-mode"){
+    if (!modeHandler.mode != "add-node-mode") {
       modeHandler.setAddNodeMode();
     }
     var value = $(this).attr('name');
@@ -55,7 +59,7 @@ $(document).ready(function () {
   });
 
   $('.add-edge-menu-item').click(function (e) {
-    if(!modeHandler.mode != "add-edge-mode"){
+    if (!modeHandler.mode != "add-edge-mode") {
       modeHandler.setAddEdgeMode();
     }
     var value = $(this).attr('name');
@@ -67,7 +71,7 @@ $(document).ready(function () {
   modeHandler.initilize();
 
   $('.sbgn-select-node-item').click(function (e) {
-    if(!modeHandler.mode != "add-node-mode"){
+    if (!modeHandler.mode != "add-node-mode") {
       modeHandler.setAddNodeMode();
     }
     var value = $('img', this).attr('value');
@@ -75,9 +79,9 @@ $(document).ready(function () {
     modeHandler.setSelectedIndexOfSelector("add-node-mode", value);
     modeHandler.setSelectedMenuItem("add-node-mode", value);
   });
-  
+
   $('.sbgn-select-edge-item').click(function (e) {
-    if(!modeHandler.mode != "add-edge-mode"){
+    if (!modeHandler.mode != "add-edge-mode") {
       modeHandler.setAddEdgeMode();
     }
     var value = $('img', this).attr('value');
@@ -442,8 +446,8 @@ $(document).ready(function () {
   });
 
   $("#perform-layout-icon").click(function (e) {
-    if(modeHandler.mode == "selection-mode"){
-     $("#perform-layout").trigger('click'); 
+    if (modeHandler.mode == "selection-mode") {
+      $("#perform-layout").trigger('click');
     }
   });
 

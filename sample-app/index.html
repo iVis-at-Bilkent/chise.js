@@ -12,6 +12,9 @@
 
         <!-- Loading Bootstrap -->
         <link href="../lib/css/bootstrap.css" rel="stylesheet">
+        
+        <!-- Loading jPushMenu -->
+        <link href="../lib/css/jPushMenu.css" rel="stylesheet">
 
         <!-- Loading cytoscape.js plugins -->
         <link href="../lib/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css" />
@@ -315,10 +318,20 @@
                 <label class="radio inline">
                     <img id="perform-layout-icon" src="sampleapp-images/layout-cose.png" title="Perform Layout" >
                 </label>
-            
+                <label class="radio inline" style="float: right;">
+                    <button id="right-menu-toggle-button" type="button" class="toggle-menu menu-right  btn btn-default">☰</button>
+                </label>
             </tr>
         </table>
     </div>
+    
+    <nav id="right-menu-nav" style="background-color: gray; overflow: hidden; height: 500px; top: 50%; margin-top: -250px;" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right">
+	<table style="margin-top: 10px;">
+<!--            <tr>
+                <td style="font-size: 30px;">Width</td>
+            </tr>-->
+        </table>
+    </nav>
         
         <div id="sbgn-network-container">
         </div>
@@ -663,6 +676,7 @@
         <script src="../lib/js/cytoscape-edgehandles.js"></script>
         <script src="../lib/js/FileSaver.js"></script>
         <script src="../lib/js/jquery.noty.packaged.min.js"></script>
+        <script src="../lib/js/jPushMenu.js"></script>
 
         <!-- Core SBGNViz components -->
         <script src="../src/sbgn-extensions/layout.cose2.js"></script>
