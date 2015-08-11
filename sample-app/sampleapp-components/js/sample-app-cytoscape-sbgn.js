@@ -62,15 +62,16 @@ var handleSBGNInspector = function () {
     $("#sbgn-inspector").html(html);
     $("#inspector-apply-button").click(function () {
       if (type == "node") {
-        selected.css('border-color', $("#inspector-border-color").attr("value"));
+        selected.data('borderColor', $("#inspector-border-color").attr("value"));
+        selected.addClass('changeBorderColor');
         selected.css('background-color', $("#inspector-fill-color").attr("value"));
       }
       else {
         var lineColor = $("#inspector-line-color").attr("value");
-        selected.css('line-color', lineColor);
-        selected.css('source-arrow-color', lineColor);
-        selected.css('target-arrow-color', lineColor);
+        selected.data('lineColor', lineColor);
+        selected.addClass('changeLineColor');
       }
+      selected.unselect();
     });
   }
   else {
@@ -425,6 +426,26 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         .css({
           'width': 60,
           'height': 60
+        })
+        .selector("node.changeBorderColor")
+        .css({
+          'border-color': 'data(borderColor)'
+        })
+        .selector("node.changeBorderColor:selected")
+        .css({
+          'border-color': '#d67614'
+        })
+        .selector("edge.changeLineColor")
+        .css({
+          'line-color': 'data(lineColor)',
+          'source-arrow-color': 'data(lineColor)',
+          'target-arrow-color': 'data(lineColor)'
+        })
+        .selector("edge.changeLineColor:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
         })
         .selector(".sbgn")
         .css({
