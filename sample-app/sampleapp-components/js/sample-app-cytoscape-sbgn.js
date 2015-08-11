@@ -24,6 +24,7 @@ function dynamicResize()
   if (windowHeight > canvasHeight)
   {
     $("#sbgn-network-container").height(windowHeight * 0.85);
+    $("#sbgn-inspector").height(windowHeight * 0.85);
   }
 }
 
@@ -34,7 +35,48 @@ $(document).ready(function ()
   dynamicResize();
 });
 
-
+var handleSBGNInspector = function () {
+  var selectedEles = cy.elements(":selected");
+  if (selectedEles.length == 1) {
+    var selected = selectedEles[0];
+    var width = $("#sbgn-inspector").width() * 0.45;
+    var html = "<h3 style='text-align: center; color: blue;'>" + selected.id() + "</h3><table>";
+    var type;
+    if (selectedEles.nodes().length == 1) {
+      type = "node";
+      html += "<tr><td style='width: " + width + "px'>" + "border-color" + "</td><td>"
+              + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.css('border-color')
+              + "'/>" + "</td></tr>";
+      html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
+              + "<input id='inspector-fill-color' type='color' style='width: " + width + "px;' value='" + selected.css('background-color')
+              + "'/>" + "</td></tr>";
+    }
+    else {
+      type = "edge";
+      html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
+              + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.css('line-color')
+              + "'/>" + "</td></tr>";
+    }
+    html += "</table>";
+    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
+    $("#sbgn-inspector").html(html);
+    $("#inspector-apply-button").click(function () {
+      if (type == "node") {
+        selected.css('border-color', $("#inspector-border-color").attr("value"));
+        selected.css('background-color', $("#inspector-fill-color").attr("value"));
+      }
+      else {
+        var lineColor = $("#inspector-line-color").attr("value");
+        selected.css('line-color', lineColor);
+        selected.css('source-arrow-color', lineColor);
+        selected.css('target-arrow-color', lineColor);
+      }
+    });
+  }
+  else {
+    $("#sbgn-inspector").html("");
+  }
+}
 
 var makePresetLayout = function () {
   cy.layout({
@@ -532,8 +574,8 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('mouseover', 'node', function (event) {
           var node = this;
-          
-          if( modeHandler.mode != "selection-mode" ){
+
+          if (modeHandler.mode != "selection-mode") {
             node.mouseover = false;
           }
           else if (!node.mouseover) {
@@ -651,7 +693,16 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
+        cy.on('select', function (event) {
+          handleSBGNInspector();
+        });
+
+        cy.on('unselect', function (event) {
+          handleSBGNInspector();
+        });
+
         cy.on('tap', function (event) {
+          cy.nodes(":selected").length;
           if (modeHandler.mode == "add-node-mode") {
             var cyPosX = event.cyPosition.x;
             var cyPosY = event.cyPosition.y;
@@ -679,8 +730,8 @@ var SBGNContainer = Backbone.View.extend({
           var cyPosX = event.cyPosition.x;
           var cyPosY = event.cyPosition.y;
 
-          if (  modeHandler.mode == "selection-mode"
-                  &&cyPosX >= node._private.data.expandcollapseStartX
+          if (modeHandler.mode == "selection-mode"
+                  && cyPosX >= node._private.data.expandcollapseStartX
                   && cyPosX <= node._private.data.expandcollapseEndX
                   && cyPosY >= node._private.data.expandcollapseStartY
                   && cyPosY <= node._private.data.expandcollapseEndY) {

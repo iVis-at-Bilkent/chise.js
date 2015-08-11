@@ -65,9 +65,11 @@ var addRemoveUtilities = {
     return eles;
   },
   removeElesSimply: function (eles) {
+    cy.elements().unselect();
     return eles.remove();
   },
   removeEles: function (eles) {
+    cy.elements().unselect();
     var edges = eles.edges();
     var nodes = eles.nodes();
     var removedEles = this.removeEdges(edges);

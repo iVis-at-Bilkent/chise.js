@@ -5,6 +5,7 @@ var sbgnFiltering = {
     deleteSelected: function(){
         var allNodes = cy.nodes();
         var selectedNodes = cy.nodes(":selected");
+        cy.elements().unselect();
         var nodesToShow = this.expandRemainingNodes(selectedNodes, allNodes);
         var nodesNotToShow = allNodes.not(nodesToShow);
         var connectedEdges = nodesNotToShow.connectedEdges();
