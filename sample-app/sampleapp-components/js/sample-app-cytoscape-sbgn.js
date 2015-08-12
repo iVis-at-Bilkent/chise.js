@@ -41,9 +41,7 @@ var handleSBGNInspector = function () {
     var selected = selectedEles[0];
     var width = $("#sbgn-inspector").width() * 0.45;
     var html = "<h3 style='text-align: center; color: blue;'>" + selected.id() + "</h3><table>";
-    var type;
     if (selectedEles.nodes().length == 1) {
-      type = "node";
       html += "<tr><td style='width: " + width + "px'>" + "border-color" + "</td><td>"
               + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.css('border-color')
               + "'/>" + "</td></tr>";
@@ -52,26 +50,26 @@ var handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
     }
     else {
-      type = "edge";
       html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
               + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.css('line-color')
               + "'/>" + "</td></tr>";
     }
     html += "</table>";
-    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
+//    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
-    $("#inspector-apply-button").click(function () {
-      if (type == "node") {
-        selected.data('borderColor', $("#inspector-border-color").attr("value"));
-        selected.addClass('changeBorderColor');
-        selected.css('background-color', $("#inspector-fill-color").attr("value"));
-      }
-      else {
-        var lineColor = $("#inspector-line-color").attr("value");
-        selected.data('lineColor', lineColor);
-        selected.addClass('changeLineColor');
-      }
-      selected.unselect();
+    $("#inspector-border-color").on('change', function () {
+      selected.data('borderColor', $("#inspector-border-color").attr("value"));
+      selected.addClass('changeBorderColor');
+    });
+    
+    $("#inspector-fill-color").on('change', function () {
+      selected.css('background-color', $("#inspector-fill-color").attr("value"));
+    });
+    
+    $("#inspector-line-color").on('change', function () {
+      var lineColor = $("#inspector-line-color").attr("value");
+      selected.data('lineColor', lineColor);
+      selected.addClass('changeLineColor');
     });
   }
   else {
@@ -525,6 +523,9 @@ var SBGNContainer = Backbone.View.extend({
             };
             param.firstTime = true;
             editorActionsManager._do(new AddEdgeCommand(param));
+            modeHandler.setSelectionMode();
+            cy.edges()[cy.edges().length - 1].select();
+            
 //            if($("#right-menu-nav").hasClass("menu-open") == false){
 //              $("#right-menu-toggle-button").trigger("click");
 //            }
@@ -738,6 +739,8 @@ var SBGNContainer = Backbone.View.extend({
             param.firstTime = true;
 
             editorActionsManager._do(new AddNodeCommand(param));
+            modeHandler.setSelectionMode();
+            cy.nodes()[cy.nodes().length - 1].select();
 //            if($("#right-menu-nav").hasClass("menu-open") == false){
 //              $("#right-menu-toggle-button").trigger("click");
 //            }

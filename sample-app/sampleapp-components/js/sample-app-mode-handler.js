@@ -104,6 +104,9 @@ var modeHandler = {
       $("#show-all").parent("li").removeClass("disabled");
       $("#make-compound-complex").parent("li").removeClass("disabled");
       $("#make-compound-compartment").parent("li").removeClass("disabled");
+      $("#neighbors-of-selected").parent("li").removeClass("disabled");
+      $("#processes-of-selected").parent("li").removeClass("disabled");
+      $("#remove-highlights").parent("li").removeClass("disabled");
     }
     else{
       $("#expand-selected").parent("li").addClass("disabled");
@@ -118,6 +121,9 @@ var modeHandler = {
       $("#show-all").parent("li").addClass("disabled");
       $("#make-compound-complex").parent("li").addClass("disabled");
       $("#make-compound-compartment").parent("li").addClass("disabled");
+      $("#neighbors-of-selected").parent("li").addClass("disabled");
+      $("#processes-of-selected").parent("li").addClass("disabled");
+      $("#remove-highlights").parent("li").addClass("disabled");
     }
   },
   setSelectedIndexOfSelector: function (mode, value) {
