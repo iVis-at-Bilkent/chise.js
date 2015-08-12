@@ -41,6 +41,8 @@ var modeHandler = {
     if (modeHandler.mode != "add-node-mode") {
       $('#node-list').addClass('selectedType');
 
+      cy.elements().unselect();
+
       modeHandler.setSelectedMenuItem("add-node-mode", modeHandler.selectedNodeType);
       modeHandler.mode = "add-node-mode";
 
@@ -59,6 +61,9 @@ var modeHandler = {
   setAddEdgeMode: function () {
     if (modeHandler.mode != "add-edge-mode") {
       $('#edge-list').addClass('selectedType');
+      
+      cy.elements().unselect();
+      
       modeHandler.setSelectedMenuItem("add-edge-mode", modeHandler.selectedEdgeType);
       modeHandler.mode = "add-edge-mode";
 
