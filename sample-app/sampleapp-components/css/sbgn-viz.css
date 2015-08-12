@@ -257,3 +257,11 @@ body {
     float: left;
     cursor: pointer;
 }
+
+#node-list-set-mode-btn:focus {
+  outline: none;
+}
+
+#edge-list-set-mode-btn:focus {
+  outline: none;
+}
