@@ -29,6 +29,10 @@ $(document).ready(function () {
   })).render();
 
   $('#new-file-icon').click(function (e) {
+    $('#new-file').trigger("click");
+  });
+  
+  $('#new-file').click(function (e) {
     setFileContent("new_file.sbgnml");
 
     (new SBGNContainer({
