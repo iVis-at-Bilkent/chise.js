@@ -41,36 +41,58 @@ var handleSBGNInspector = function () {
     var selected = selectedEles[0];
     var width = $("#sbgn-inspector").width() * 0.45;
     var html = "<h3 style='text-align: center; color: blue;'>" + selected.id() + "</h3><table>";
+    var type;
     if (selectedEles.nodes().length == 1) {
+      type = "node";
       html += "<tr><td style='width: " + width + "px'>" + "border-color" + "</td><td>"
               + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.css('border-color')
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
               + "<input id='inspector-fill-color' type='color' style='width: " + width + "px;' value='" + selected.css('background-color')
               + "'/>" + "</td></tr>";
+      html += "<tr><td style='width: " + width + "px'>" + "border-width" + "</td><td>"
+              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + width + "px;' value='" + parseFloat(selected.css('border-width'))
+              + "'/>" + "</td></tr>";
     }
     else {
+      type = "edge";
       html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
               + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.css('line-color')
+              + "'/>" + "</td></tr>";
+
+      html += "<tr><td style='width: " + width + "px'>" + "width" + "</td><td>"
+              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + width + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
     }
     html += "</table>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
-    $("#inspector-border-color").on('change', function () {
-      selected.data('borderColor', $("#inspector-border-color").attr("value"));
-      selected.addClass('changeBorderColor');
-    });
-    
-    $("#inspector-fill-color").on('change', function () {
-      selected.css('background-color', $("#inspector-fill-color").attr("value"));
-    });
-    
-    $("#inspector-line-color").on('change', function () {
-      var lineColor = $("#inspector-line-color").attr("value");
-      selected.data('lineColor', lineColor);
-      selected.addClass('changeLineColor');
-    });
+
+    if (type == "node") {
+      $("#inspector-border-color").on('change', function () {
+        selected.data('borderColor', $("#inspector-border-color").attr("value"));
+        selected.addClass('changeBorderColor');
+      });
+
+      $("#inspector-fill-color").on('change', function () {
+        selected.css('background-color', $("#inspector-fill-color").attr("value"));
+      });
+
+      $("#inspector-border-width").on('input', function () {
+        selected.css('border-width', $("#inspector-border-width").attr("value"));
+      });
+    }
+    else {
+      $("#inspector-line-color").on('change', function () {
+        var lineColor = $("#inspector-line-color").attr("value");
+        selected.data('lineColor', lineColor);
+        selected.addClass('changeLineColor');
+      });
+      
+      $("#inspector-width").on('input', function () {
+        selected.css('width', $("#inspector-width").attr("value"));
+      });
+    }
   }
   else {
     $("#sbgn-inspector").html("");
@@ -537,7 +559,7 @@ var SBGNContainer = Backbone.View.extend({
             editorActionsManager._do(new AddEdgeCommand(param));
             modeHandler.setSelectionMode();
             cy.edges()[cy.edges().length - 1].select();
-            
+
 //            if($("#right-menu-nav").hasClass("menu-open") == false){
 //              $("#right-menu-toggle-button").trigger("click");
 //            }
