@@ -445,6 +445,18 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'source-arrow-color': '#d67614',
           'target-arrow-color': '#d67614'
         })
+        .selector('edge.changeLineColor.meta')
+        .css({
+          'line-color': '#C4C4C4',
+          'source-arrow-color': '#C4C4C4',
+          'target-arrow-color': '#C4C4C4'
+        })
+        .selector("edge.changeLineColor.meta:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
+        })
         .selector(".sbgn")
         .css({
           'compound-padding': 20,
