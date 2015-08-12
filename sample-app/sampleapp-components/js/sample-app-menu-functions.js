@@ -394,6 +394,12 @@ $(document).ready(function () {
   });
 
   $("#collapse-selected").click(function (e) {
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "collapse");
+
+    if (!thereIs) {
+      return;
+    }
+
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
@@ -406,6 +412,12 @@ $(document).ready(function () {
   });
 
   $("#expand-selected").click(function (e) {
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "expand");
+    
+    if(!thereIs){
+      return;
+    }
+    
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
@@ -418,20 +430,12 @@ $(document).ready(function () {
   });
 
   $("#collapse-all").click(function (e) {
-    var thereIs = false;
-    var nodes = cy.nodes(":visible");
-    for(var i = 0; i < nodes.length; i++){
-      var node = nodes[i];
-      if(node.children().length > 0){
-        thereIs = true;
-        break;
-      }
-    }
-    
-    if(!thereIs){
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":visible"), "collapse");
+
+    if (!thereIs) {
       return;
     }
-    
+
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
@@ -444,20 +448,12 @@ $(document).ready(function () {
   });
 
   $("#expand-all").click(function (e) {
-    var thereIs = false;
-    var nodes = cy.nodes(":visible");
-    for(var i = 0; i < nodes.length; i++){
-      var node = nodes[i];
-      if(node._private.data.collapsedChildren != null){
-        thereIs = true;
-        break;
-      }
-    }
-    
-    if(!thereIs){
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":visible"), "expand");
+
+    if (!thereIs) {
       return;
     }
-    
+
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
