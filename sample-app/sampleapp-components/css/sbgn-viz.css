@@ -162,7 +162,7 @@ body {
     /*float: right;*/
 }
 
-#sbgn-select-mode{
+#sbgn-toolbar{
     margin: auto;
     width: 1000px;
     margin-bottom: 10px;
@@ -248,4 +248,13 @@ body {
 
 .hidden-element {
     display:none !important;
+}
+
+.sbgn-toolbar-element {
+/*    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;*/
+    float: left;
+    cursor: pointer;
 }

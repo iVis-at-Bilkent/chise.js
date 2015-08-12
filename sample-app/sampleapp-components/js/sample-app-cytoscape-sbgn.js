@@ -18,7 +18,7 @@ function dynamicResize()
     $(".nav-menu").width(windowWidth * 0.9);
     $(".navbar").width(windowWidth * 0.9);
 //    $("#sbgn-info-content").width(windowWidth * 0.85);
-    $("#sbgn-select-mode").width(windowWidth * 0.9);
+    $("#sbgn-toolbar").width(windowWidth * 0.9);
   }
 
   if (windowHeight > canvasHeight)
