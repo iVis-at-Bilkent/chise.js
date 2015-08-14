@@ -31,7 +31,7 @@ $(document).ready(function () {
   $('#new-file-icon').click(function (e) {
     $('#new-file').trigger("click");
   });
-  
+
   $('#new-file').click(function (e) {
     setFileContent("new_file.sbgnml");
 
@@ -409,7 +409,10 @@ $(document).ready(function () {
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
     }
     if (incrementalLayoutAfterExpandCollapse)
-      editorActionsManager._do(new CollapseGivenNodesCommand(cy.nodes(":selected")));
+      editorActionsManager._do(new CollapseGivenNodesCommand({
+        nodes: cy.nodes(":selected"),
+        firstTime: true
+      }));
     else
       editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
@@ -417,17 +420,20 @@ $(document).ready(function () {
 
   $("#expand-selected").click(function (e) {
     var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "expand");
-    
-    if(!thereIs){
+
+    if (!thereIs) {
       return;
     }
-    
+
     if (window.incrementalLayoutAfterExpandCollapse == null) {
       window.incrementalLayoutAfterExpandCollapse =
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
     }
     if (incrementalLayoutAfterExpandCollapse)
-      editorActionsManager._do(new ExpandGivenNodesCommand(cy.nodes(":selected")));
+      editorActionsManager._do(new ExpandGivenNodesCommand({
+        nodes: cy.nodes(":selected"),
+        firstTime: true
+      }));
     else
       editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
@@ -445,7 +451,10 @@ $(document).ready(function () {
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
     }
     if (incrementalLayoutAfterExpandCollapse)
-      editorActionsManager._do(new CollapseGivenNodesCommand(cy.nodes()));
+      editorActionsManager._do(new CollapseGivenNodesCommand({
+        nodes: cy.nodes(),
+        firstTime: true
+      }));
     else
       editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes()));
     refreshUndoRedoButtonsStatus();
@@ -463,7 +472,9 @@ $(document).ready(function () {
               (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
     }
     if (incrementalLayoutAfterExpandCollapse)
-      editorActionsManager._do(new ExpandAllNodesCommand());
+      editorActionsManager._do(new ExpandAllNodesCommand({
+        firstTime: true
+      }));
     else
       editorActionsManager._do(new SimpleExpandAllNodesCommand());
     refreshUndoRedoButtonsStatus();

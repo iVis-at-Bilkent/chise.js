@@ -50,43 +50,85 @@ function removeEdges(edgesToBeDeleted)
   return addRemoveUtilities.removeEdges(edgesToBeDeleted);
 }
 
-function expandNode(node) {
-  var param = {};
-  param.node = node;
-  param.nodesData = getNodePositionsAndSizes();
-  expandCollapseUtilities.expandNode(node);
-  return param;
+function expandNode(param) {
+  var result = {
+    firstTime: false
+  };
+  var node = param.node;
+  result.node = node;
+  result.nodesData = getNodePositionsAndSizes();
+  if(param.firstTime){
+    expandCollapseUtilities.expandNode(node);
+  }
+  else {
+    expandCollapseUtilities.simpleExpandNode(node);
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
-function collapseNode(node) {
-  var param = {};
-  param.node = node;
-  param.nodesData = getNodePositionsAndSizes();
-  expandCollapseUtilities.collapseNode(node);
-  return param;
+function collapseNode(param) {
+  var result = {
+    firstTime: false
+  };
+  var node = param.node;
+  result.node = node;
+  result.nodesData = getNodePositionsAndSizes();
+  if(param.firstTime){
+    expandCollapseUtilities.collapseNode(node);
+  }
+  else {
+    expandCollapseUtilities.simpleCollapseNode(node);
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
-function expandGivenNodes(nodes) {
-  var param = {};
-  param.nodes = nodes;
-  param.nodesData = getNodePositionsAndSizes();
-  expandCollapseUtilities.expandGivenNodes(nodes);
-  return param;
+function expandGivenNodes(param) {
+  var nodes = param.nodes;
+  var result = {
+    firstTime: false
+  };
+  result.nodes = nodes;
+  result.nodesData = getNodePositionsAndSizes();
+  if(param.firstTime){
+    expandCollapseUtilities.expandGivenNodes(nodes);
+  }
+  else {
+    expandCollapseUtilities.simpleExpandGivenNodes(nodes);
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
-function collapseGivenNodes(nodes) {
-  var param = {};
-  param.nodes = nodes;
-  param.nodesData = getNodePositionsAndSizes();
-  expandCollapseUtilities.collapseGivenNodes(nodes);
-  return param;
+function collapseGivenNodes(param) {
+  var nodes = param.nodes;
+  var result = {};
+  result.nodes = nodes;
+  result.nodesData = getNodePositionsAndSizes();
+  if(param.firstTime){
+    expandCollapseUtilities.collapseGivenNodes(nodes);
+  }
+  else {
+    expandCollapseUtilities.simpleCollapseGivenNodes(nodes);
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
-function expandAllNodes() {
-  var param = {};
-  param.nodesData = getNodePositionsAndSizes();
-  param.expandStack = expandCollapseUtilities.expandAllNodes();
-  return param;
+function expandAllNodes(param) {
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  if(param.firstTime){
+    result.expandStack = expandCollapseUtilities.expandAllNodes();
+  }
+  else{
+    result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
 function simpleExpandAllNodes(){
@@ -98,8 +140,13 @@ function collapseExpandedStack(expandedStack) {
 }
 
 function undoExpandAllNodes(param){
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
   expandCollapseUtilities.collapseExpandedStack(param.expandStack);
   returnToPositionsAndSizes(param.nodesData);
+  return result;
 }
 
 function getNodePositionsAndSizes() {
@@ -120,25 +167,41 @@ function getNodePositionsAndSizes() {
 }
 
 function undoExpandNode(param) {
-  var result = expandCollapseUtilities.simpleCollapseNode(param.node);
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  result.node = expandCollapseUtilities.simpleCollapseNode(param.node);
   returnToPositionsAndSizes(param.nodesData);
   return result;
 }
 
 function undoCollapseNode(param) {
-  var result = expandCollapseUtilities.simpleExpandNode(param.node);
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  result.node = expandCollapseUtilities.simpleExpandNode(param.node);
   returnToPositionsAndSizes(param.nodesData);
   return result;
 }
 
 function undoExpandGivenNodes(param) {
-  var result = expandCollapseUtilities.simpleCollapseGivenNodes(param.nodes);
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  result.nodes = expandCollapseUtilities.simpleCollapseGivenNodes(param.nodes);
   returnToPositionsAndSizes(param.nodesData);
   return result;
 }
 
 function undoCollapseGivenNodes(param) {
-  var result = expandCollapseUtilities.simpleExpandGivenNodes(param.nodes);
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  result.nodes = expandCollapseUtilities.simpleExpandGivenNodes(param.nodes);
   returnToPositionsAndSizes(param.nodesData);
   return result;
 }
@@ -438,12 +501,12 @@ var AddEdgeCommand = function (newEdge)
 //  return new Command(removeEdges, restoreEles, edgesTobeDeleted);
 //};
 
-var ExpandNodeCommand = function (node) {
-  return new Command(expandNode, undoExpandNode, node);
+var ExpandNodeCommand = function (param) {
+  return new Command(expandNode, undoExpandNode, param);
 };
 
-var CollapseNodeCommand = function (node) {
-  return new Command(collapseNode, undoCollapseNode, node);
+var CollapseNodeCommand = function (param) {
+  return new Command(collapseNode, undoCollapseNode, param);
 };
 
 var SimpleExpandNodeCommand = function (node) {
@@ -454,12 +517,12 @@ var SimpleCollapseNodeCommand = function (node) {
   return new Command(simpleCollapseNode, simpleExpandNode, node);
 };
 
-var ExpandGivenNodesCommand = function (nodes) {
-  return new Command(expandGivenNodes, undoExpandGivenNodes, nodes);
+var ExpandGivenNodesCommand = function (param) {
+  return new Command(expandGivenNodes, undoExpandGivenNodes, param);
 };
 
-var CollapseGivenNodesCommand = function (nodes) {
-  return new Command(collapseGivenNodes, undoCollapseGivenNodes, nodes);
+var CollapseGivenNodesCommand = function (param) {
+  return new Command(collapseGivenNodes, undoCollapseGivenNodes, param);
 };
 
 var SimpleExpandGivenNodesCommand = function (nodes) {
@@ -474,8 +537,8 @@ var SimpleExpandAllNodesCommand = function () {
   return new Command(simpleExpandAllNodes, collapseExpandedStack);
 };
 
-var ExpandAllNodesCommand = function () {
-  return new Command(expandAllNodes, undoExpandAllNodes);
+var ExpandAllNodesCommand = function (param) {
+  return new Command(expandAllNodes, undoExpandAllNodes, param);
 };
 
 var PerformLayoutCommand = function (nodesData) {
