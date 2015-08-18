@@ -142,6 +142,7 @@ var fillInspectorStateAndInfos = function (node, width) {
     stateAndInfos.push(obj);
     relocateStateAndInfos(stateAndInfos);
     fillInspectorStateAndInfos(node, width);
+    cy.forceRender();
   });
 
   $("#inspector-add-unit-of-information").click(function () {
@@ -157,6 +158,7 @@ var fillInspectorStateAndInfos = function (node, width) {
     stateAndInfos.push(obj);
     relocateStateAndInfos(stateAndInfos);
     fillInspectorStateAndInfos(node, width);
+    cy.forceRender();
   });
 }
 
@@ -664,6 +666,33 @@ var SBGNContainer = Backbone.View.extend({
       {
         window.cy = this;
         refreshPaddings();
+
+        cy.noderesize({
+          handleColor: '#000000', // the colour of the handle and the line drawn from it
+          hoverDelay: 1, // time spend over a target node before it is considered a target selection
+          enabled: true, // whether to start the plugin in the enabled state
+          minNodeWidth: 30,
+          minNodeHeight: 30,
+          triangleSize: 10,
+          lines: 3,
+          padding: 5,
+          start: function (sourceNode) {
+            // fired when noderesize interaction starts (drag on handle)
+          },
+          complete: function (sourceNode, targetNodes, addedEntities) {
+            // fired when noderesize is done and entities are added
+          },
+          stop: function (sourceNode) {
+          }
+        });
+        
+        cy.noderesize({
+          enabled: false
+        });
+        
+        cy.noderesize({
+          enabled: true
+        });
 
         //For adding edges interactively
         cy.edgehandles({
