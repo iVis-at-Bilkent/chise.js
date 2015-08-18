@@ -685,14 +685,6 @@ var SBGNContainer = Backbone.View.extend({
           stop: function (sourceNode) {
           }
         });
-        
-        cy.noderesize({
-          enabled: false
-        });
-        
-        cy.noderesize({
-          enabled: true
-        });
 
         //For adding edges interactively
         cy.edgehandles({

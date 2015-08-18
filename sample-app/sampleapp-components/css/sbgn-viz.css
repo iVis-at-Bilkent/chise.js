@@ -230,7 +230,9 @@ body {
 }
 
 .selectedType {
-    box-shadow: 10px 10px 5px #888888;
+    /*box-shadow: 10px 10px 5px #888888;*/
+    border-style: solid;
+    border-width: 2px;
 }
 
 .selectedMenuItem {
@@ -250,9 +252,8 @@ body {
 }
 
 .sbgn-toolbar-element {
-    margin-left: 0px;
+    margin-left: 2px;
     margin-right: 0px;
-    padding-left: 0px;
     padding-right: 0px;
     float: left;
     cursor: pointer;
