@@ -35,40 +35,129 @@ $(document).ready(function ()
   dynamicResize();
 });
 
+var relocateStateAndInfos = function (stateAndInfos) {
+  var length = stateAndInfos.length;
+  if (length == 0) {
+    return;
+  }
+  else if (length == 1) {
+    stateAndInfos[0].bbox.x = 0;
+    stateAndInfos[0].bbox.y = -50;
+  }
+  else if (length == 2) {
+    stateAndInfos[0].bbox.x = 0;
+    stateAndInfos[0].bbox.y = -50;
+    
+    stateAndInfos[1].bbox.x = 0;
+    stateAndInfos[1].bbox.y = 50;
+  }
+  else if (length == 3) {
+    stateAndInfos[0].bbox.x = -25;
+    stateAndInfos[0].bbox.y = -50;
+    
+    stateAndInfos[1].bbox.x = 25;
+    stateAndInfos[1].bbox.y = -50;
+    
+    stateAndInfos[2].bbox.x = 0;
+    stateAndInfos[2].bbox.y = 50;
+  }
+  else {
+    stateAndInfos[0].bbox.x = -25;
+    stateAndInfos[0].bbox.y = -50;
+    
+    stateAndInfos[1].bbox.x = 25;
+    stateAndInfos[1].bbox.y = -50;
+    
+    stateAndInfos[2].bbox.x = -25;
+    stateAndInfos[2].bbox.y = 50;
+    
+    stateAndInfos[3].bbox.x = 25;
+    stateAndInfos[3].bbox.y = 50;
+  }
+};
+
 var fillInspectorStateAndInfos = function (node, width) {
+  //first empty the state variables and infos data in inspector
+  $("#inspector-state-variables").html("");
+  $("#inspector-unit-of-informations").html("");
   var stateAndInfos = node._private.data.sbgnstatesandinfos;
   for (var i = 0; i < stateAndInfos.length; i++) {
     var state = stateAndInfos[i];
     if (state.clazz == "state variable") {
-      $("#inspector-state-variables").append("<input type='text' class='just-added-inspector-state-variable-value inspector-state-variable-value' style='width: "
+      $("#inspector-state-variables").append("<div><input type='text' class='just-added-inspector-input inspector-state-variable-value' style='width: "
               + width / 5 + "px' value='" + state.state.value + "'/>"
               + "<span width='" + width / 5 + "'px>@</span>"
-              + "<input type='text' class='just-added-inspector-state-variable-variable inspector-state-variable-variable' style='width: "
+              + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
               + width / 2.5 + "px' value='" + state.state.variable
-              + "'/></td><td><img src='sampleapp-images/delete.png'><br>");
-      $(".just-added-inspector-state-variable-value").data("state", state);
-      $(".just-added-inspector-state-variable-value").removeClass("just-added-inspector-state-variable-value");
-      $(".inspector-state-variable-value").on('input', function(){
+              + "'/><img class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+
+      $(".inspector-state-variable-value").on('input', function () {
         $(this).data("state").state.value = $(this).attr('value');
         cy.forceRender();
       });
-      
-      $(".just-added-inspector-state-variable-variable").data("state", state);
-      $(".just-added-inspector-state-variable-variable").removeClass("just-added-inspector-state-variable-variable");
-      $(".inspector-state-variable-variable").on('input', function(){
+
+      $(".inspector-state-variable-variable").on('input', function () {
         $(this).data("state").state.variable = $(this).attr('value');
         cy.forceRender();
       });
     }
     else if (state.clazz == "unit of information") {
       var total = width / 5 + width / 5 + width / 2.5;
-      $("#inspector-unit-of-informations").append("<input type='text' style='width: "
+      $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
               + total + "px' value='" + state.label.text
-              + "'/></td><td><img src='sampleapp-images/delete.png'><br>");
+              + "'/><img class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+
+      $(".inspector-unit-of-information-label").on('input', function () {
+        $(this).data("state").label.text = $(this).attr('value');
+        cy.forceRender();
+      });
     }
+
+    $(".inspector-delete-state-and-info").unbind('click').click(function (event) {
+      var index = stateAndInfos.indexOf($(this).data("state"));
+      stateAndInfos.splice(index, 1);
+      fillInspectorStateAndInfos(node, width);
+      relocateStateAndInfos(stateAndInfos);
+      cy.forceRender();
+    });
+
+    $(".just-added-inspector-input").data("state", state);
+    $(".just-added-inspector-input").removeClass("just-added-inspector-input");
   }
-  $("#inspector-state-variables").append("<img src='sampleapp-images/add.png'/>");
-  $("#inspector-unit-of-informations").append("<img src='sampleapp-images/add.png'/>");
+  $("#inspector-state-variables").append("<img id='inspector-add-state-variable' src='sampleapp-images/add.png'/>");
+  $("#inspector-unit-of-informations").append("<img id='inspector-add-unit-of-information' src='sampleapp-images/add.png'/>");
+
+  $("#inspector-add-state-variable").click(function () {
+    var obj = {};
+    obj.clazz = "state variable";
+    
+    obj.state = {
+      value: "",
+      variable: ""
+    };
+    obj.bbox = {
+      w: 69,
+      h: 28
+    };
+    stateAndInfos.push(obj);
+    relocateStateAndInfos(stateAndInfos);
+    fillInspectorStateAndInfos(node, width);
+  });
+
+  $("#inspector-add-unit-of-information").click(function () {
+    var obj = {};
+    obj.clazz = "unit of information";
+    obj.label = {
+      text: ""
+    };
+    obj.bbox = {
+      w: 53,
+      h: 18
+    };
+    stateAndInfos.push(obj);
+    relocateStateAndInfos(stateAndInfos);
+    fillInspectorStateAndInfos(node, width);
+  });
 }
 
 var handleSBGNInspector = function () {
@@ -89,11 +178,11 @@ var handleSBGNInspector = function () {
       html += "<tr><td style='width: " + width + "px'>" + "border-width" + "</td><td>"
               + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + width + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
-      
-      html += "<tr><td style='width: " + width + "px'>" + "State Variables" + "</td>" 
+
+      html += "<tr><td style='width: " + width + "px'>" + "State Variables" + "</td>"
               + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
-      
-      html += "<tr><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>" 
+
+      html += "<tr><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
               + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
     }
     else {
@@ -131,12 +220,12 @@ var handleSBGNInspector = function () {
         selected.data('lineColor', lineColor);
         selected.addClass('changeLineColor');
       });
-      
+
       $("#inspector-width").on('input', function () {
         selected.css('width', $("#inspector-width").attr("value"));
       });
     }
-    }
+  }
   else {
     $("#sbgn-inspector").html("");
   }
@@ -146,14 +235,14 @@ var makePresetLayout = function () {
   cy.layout({
     name: "preset"
   });
-  };
+};
 
 /*
  * This function obtains the info label of the given node by
  * it's children info recursively
  */
 var getInfoLabel = function (node) {
-   /*    * Info label of a collapsed node cannot be changed if
+  /*    * Info label of a collapsed node cannot be changed if
    * the node is collapsed return the already existing info label of it
    */
   if (node._private.data.collapsedChildren != null) {
@@ -172,7 +261,8 @@ var getInfoLabel = function (node) {
   /*
    * Get the info label of the given node by it's children info recursively
    */
-    for (var i = 0; i < children.length; i++) {     var child = children[i];
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i];
     var childInfo = getInfoLabel(child);
 
     if (childInfo == null || childInfo == "") {
@@ -193,20 +283,23 @@ var getInfoLabel = function (node) {
  * This function create qtip for the given node
  */
 var nodeQtipFunction = function (node) {
-   /*    * Check the sbgnlabel of the node if it is not valid 
+  /*    * Check the sbgnlabel of the node if it is not valid 
    * then check the infolabel if it is also not valid do not show qtip
    */
   var label = node._private.data.sbgnlabel;
 
-    if (label == null || label == "")     label = getInfoLabel(node);
+  if (label == null || label == "")
+    label = getInfoLabel(node);
 
-    if (label == null || label == "")     return;
+  if (label == null || label == "")
+    return;
 
   node.qtip({
     content: function () {
       var contentHtml = "<b style='text-align:center;font-size:16px;'>" + label + "</b>";
       var sbgnstatesandinfos = node._private.data.sbgnstatesandinfos;
-        for (var i = 0; i < sbgnstatesandinfos.length; i++) {         var sbgnstateandinfo = sbgnstatesandinfos[i];
+      for (var i = 0; i < sbgnstatesandinfos.length; i++) {
+        var sbgnstateandinfo = sbgnstatesandinfos[i];
         if (sbgnstateandinfo.clazz == "state variable") {
           var value = sbgnstateandinfo.state.value;
           var variable = sbgnstateandinfo.state.variable;
@@ -235,9 +328,9 @@ var nodeQtipFunction = function (node) {
         height: 8
       }
     }
-    });
+  });
 
-  };
+};
 
 /*
  * This function refreshs the enabled-disabled status of undo-redo buttons.
@@ -268,7 +361,8 @@ var refreshPaddings = function () {
   var total = 0;
   var numOfSimples = 0;
 
-    for (var i = 0; i < nodes.length; i++) {     var theNode = nodes[i];
+  for (var i = 0; i < nodes.length; i++) {
+    var theNode = nodes[i];
     if (theNode.children() == null || theNode.children().length == 0) {
       var collapsedChildren = theNode._private.data.collapsedChildren;
       if (collapsedChildren == null || collapsedChildren.length == 0) {
@@ -282,7 +376,7 @@ var refreshPaddings = function () {
         total = result.total;
       }
     }
-    }
+  }
 
   var calc_padding = (compoundPadding / 100) * Math.floor(total / (2 * numOfSimples));
 
@@ -305,25 +399,28 @@ var refreshPaddings = function () {
 var printNodeInfo = function () {
   console.log("print node info");
   var nodes = cy.nodes();
-    for (var i = 0; i < nodes.length; i++) {     var node = nodes[i];
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
     console.log(node.data("id") + "\t" + node.data("parent"));
   }
   console.log("print edge info");
   var edges = cy.edges();
-    for (var i = 0; i < edges.length; i++) {     var edge = edges[i];
+  for (var i = 0; i < edges.length; i++) {
+    var edge = edges[i];
     console.log(edge.data("id") + "\t" + edge.data("source") + "\t" + edge.data("target"));
   }
 };
-  
+
 //get the style properties for the given selector
 var getStyleRules = function (selector) {
-    for (var i = 0; i < sbgnStyleSheet.length; i++) {     var currentStyle = sbgnStyleSheet[i];
+  for (var i = 0; i < sbgnStyleSheet.length; i++) {
+    var currentStyle = sbgnStyleSheet[i];
     if (currentStyle.selector == selector) {
       return currentStyle.properties;
     }
-    }
+  }
 };
-  
+
 /*
  * get the style rules for .sbgn selector and fill them into sbgnStyleRules map
  */
@@ -331,10 +428,11 @@ var getSBGNStyleRules = function () {
   if (window.sbgnStyleRules == null) {
     var styleRulesList = getStyleRules(".sbgn");
     window.sbgnStyleRules = {};
-      for (var i = 0; i < styleRulesList.length; i++) {       var rule = styleRulesList[i];
+    for (var i = 0; i < styleRulesList.length; i++) {
+      var rule = styleRulesList[i];
       window.sbgnStyleRules[rule.name] = rule.value;
     }
-    }
+  }
   return sbgnStyleRules;
 };
 
@@ -379,10 +477,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         .css({
           'border-color': '#d67614',
           'target-arrow-color': '#000',
-        'text-outline-color': '#000'         })
+          'text-outline-color': '#000'})
         .selector("node:active")
         .css({
-          'background-opacity': '0.7',           'overlay-color': '#d67614',
+          'background-opacity': '0.7', 'overlay-color': '#d67614',
           'overlay-padding': '14'
         })
         .selector("edge")
@@ -418,13 +516,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("edge:active")
         .css({
-          'background-opacity': '0.7',           'overlay-color': '#d67614',
+          'background-opacity': '0.7', 'overlay-color': '#d67614',
           'overlay-padding': '8'
         })
         .selector("core")
         .css({
           'selection-box-color': '#d67614',
-          'selection-box-opacity': '0.2',           'selection-box-border-color': '#d67614'
+          'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
         })
         .selector(".ui-cytoscape-edgehandles-source")
         .css({
@@ -511,7 +609,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'compound-padding': 20,
           'dynamic-label-size': 'regular',
           'fit-labels-to-nodes': 'true',
-        'incremental-layout-after-expand-collapse': 'true'         }); // end of sbgnStyleSheet
+          'incremental-layout-after-expand-collapse': 'true'}); // end of sbgnStyleSheet
 
 //get the sbgn style rules
 getSBGNStyleRules();
@@ -526,7 +624,7 @@ var NotyView = Backbone.View.extend({
     noty(this.model);
     return this;
   }
-  });
+});
 
 var SBGNContainer = Backbone.View.extend({
   cyStyle: sbgnStyleSheet,
@@ -545,9 +643,11 @@ var SBGNContainer = Backbone.View.extend({
 
     var positionMap = {};
     //add position information to data for preset layout
-      for (var i = 0; i < cytoscapeJsGraph.nodes.length; i++) {       var xPos = cytoscapeJsGraph.nodes[i].data.sbgnbbox.x;
+    for (var i = 0; i < cytoscapeJsGraph.nodes.length; i++) {
+      var xPos = cytoscapeJsGraph.nodes[i].data.sbgnbbox.x;
       var yPos = cytoscapeJsGraph.nodes[i].data.sbgnbbox.y;
-      positionMap[cytoscapeJsGraph.nodes[i].data.id] = {'x': xPos, 'y': yPos};     }
+      positionMap[cytoscapeJsGraph.nodes[i].data.id] = {'x': xPos, 'y': yPos};
+    }
 
     var cyOptions = {
       elements: cytoscapeJsGraph,
@@ -556,7 +656,7 @@ var SBGNContainer = Backbone.View.extend({
         name: 'preset',
         positions: positionMap
       },
-      showOverlay: false,       minZoom: 0.125,       maxZoom: 16,
+      showOverlay: false, minZoom: 0.125, maxZoom: 16,
       boxSelectionEnabled: true,
       motionBlur: true,
       wheelSensitivity: 0.1,
@@ -627,7 +727,7 @@ var SBGNContainer = Backbone.View.extend({
               y: mouseUpPosition.y - lastMouseDownPosition.y
             };
 
-            var nodes; 
+            var nodes;
             if (node.selected()) {
               nodes = cy.nodes(":visible").filter(":selected");
             }
@@ -638,7 +738,7 @@ var SBGNContainer = Backbone.View.extend({
 
             var param = {
               positionDiff: positionDiff,
-              nodes: nodes,               move: false
+              nodes: nodes, move: false
             };
             editorActionsManager._do(new MoveNodeCommand(param));
 
@@ -650,7 +750,8 @@ var SBGNContainer = Backbone.View.extend({
         cy.on('mouseover', 'node', function (event) {
           var node = this;
           if (modeHandler.mode != "selection-mode") {
-          node.mouseover = false;           }
+            node.mouseover = false;
+          }
           else if (!node.mouseover) {
             node.mouseover = true;
             //make preset layout to redraw the nodes
@@ -664,7 +765,7 @@ var SBGNContainer = Backbone.View.extend({
 
           node.qtipTimeOutFcn = setTimeout(function () {
             nodeQtipFunction(node);
-          }, 1000); 
+          }, 1000);
         });
 
         cy.on('mouseout', 'node', function (event) {
@@ -703,7 +804,8 @@ var SBGNContainer = Backbone.View.extend({
 
           cy.getElementById(node.id()).qtip({
             content: {
-                text: function (event, api) {                 $.ajax({
+              text: function (event, api) {
+                $.ajax({
                   type: "POST",
                   url: queryScriptURL,
                   async: true,
@@ -719,7 +821,8 @@ var SBGNContainer = Backbone.View.extend({
                                       model: queryResult.geneInfo[0]
                                     })).render();
                             var html = $('#biogene-container').html();
-                          api.set('content.text', html);                           }
+                            api.set('content.text', html);
+                          }
                           else {
                             api.set('content.text', "No additional information available &#013; for the selected node!");
                           }
@@ -857,7 +960,7 @@ var SBGNContainer = Backbone.View.extend({
     container.cy(cyOptions);
     return this;
   }
-  });
+});
 
 var SBGNLayout = Backbone.View.extend({
   defaultLayoutProperties: {
@@ -889,7 +992,10 @@ var SBGNLayout = Backbone.View.extend({
   },
   applyIncrementalLayout: function () {
     var options = _.clone(this.currentLayoutProperties);
-    options.randomize = false;     options.animate = false;     options.fit = false;     cy.elements().filter(':visible').layout(options);
+    options.randomize = false;
+    options.animate = false;
+    options.fit = false;
+    cy.elements().filter(':visible').layout(options);
   },
   render: function () {
     var self = this;
@@ -921,7 +1027,7 @@ var SBGNLayout = Backbone.View.extend({
 
     return this;
   }
-  });
+});
 
 var SBGNProperties = Backbone.View.extend({
   defaultSBGNProperties: {
