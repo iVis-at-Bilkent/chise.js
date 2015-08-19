@@ -46,6 +46,7 @@ $(document).ready(function () {
     })).render();
 
     editorActionsManager.reset();
+    handleSBGNInspector();
   });
 
   $('.add-node-menu-item').click(function (e) {
@@ -146,12 +147,22 @@ $(document).ready(function () {
     $.fancybox(
             _.template($("#node-legend-template").html(), {}),
             {
-              'autoDimensions': false,
-              'width': 420,
-              'height': 393,
+              'autoDimensions': true,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
+  });
+
+  $("#node-label-textbox").blur(function () {
+    $("#node-label-textbox").hide();
+    $("#node-label-textbox").data('node', undefined);
+    $("#node-label-textbox").attr('value', '');
+  });
+  
+  $("#node-label-textbox").on('input', function(){
+    var node = $(this).data('node');
+    node._private.data.sbgnlabel = $(this).attr('value');
+    cy.forceRender();
   });
 
   $("#edge-legend").click(function (e) {
@@ -208,6 +219,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample2").click(function (e) {
@@ -219,6 +232,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample3").click(function (e) {
@@ -230,6 +245,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample4").click(function (e) {
@@ -273,6 +290,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample5").click(function (e) {
@@ -284,6 +303,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample6").click(function (e) {
@@ -295,6 +316,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#load-sample7").click(function (e) {
@@ -306,6 +329,8 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
+    
+    handleSBGNInspector();
   });
 
   $("#hide-selected").click(function (e) {

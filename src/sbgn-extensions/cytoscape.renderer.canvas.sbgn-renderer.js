@@ -1997,9 +1997,8 @@
 
   $$.sbgn.drawStateAndInfos = function (node, context, centerX, centerY) {
     var stateAndInfos = node._private.data.sbgnstatesandinfos;
-    var stateCount = 0, infoCount = 0;
 
-    for (var i = 0; i < stateAndInfos.length; i++) {
+    for (var i = 0; i < stateAndInfos.length && i < 4; i++) {
       var state = stateAndInfos[i];
       var stateWidth = state.bbox.w;
       var stateHeight = state.bbox.h;
@@ -2010,7 +2009,7 @@
         'opacity': node._private.style['text-opacity'].value,
         'width': stateWidth, 'height': stateHeight};
 
-      if (state.clazz == "state variable" && stateCount < 2) {//draw ellipse
+      if (state.clazz == "state variable") {//draw ellipse
         //var stateLabel = state.state.value;
         $$.sbgn.drawEllipse(context, stateCenterX, stateCenterY,
                 stateWidth, stateHeight);
@@ -2018,11 +2017,10 @@
         textProp.state = state.state;
         $$.sbgn.drawStateText(context, textProp);
 
-        stateCount++;
         context.stroke();
 
       }
-      else if (state.clazz == "unit of information" && infoCount < 2) {//draw rectangle
+      else if (state.clazz == "unit of information") {//draw rectangle
         renderer.drawRoundRectangle(context,
                 stateCenterX, stateCenterY,
                 stateWidth, stateHeight,
@@ -2031,7 +2029,6 @@
         textProp.label = state.label.text;
         $$.sbgn.drawInfoText(context, textProp);
 
-        infoCount++;
         context.stroke();
       }
     }

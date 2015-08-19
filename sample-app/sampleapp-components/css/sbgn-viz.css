@@ -266,3 +266,20 @@ body {
 #edge-list-set-mode-btn:focus {
   outline: none;
 }
+
+#node-list-dd-button:focus {
+    outline: none;
+}
+
+#edge-list-dd-button:focus {
+    outline: none;
+}
+
+#node-label-textbox {
+    position: absolute;
+    top: 150px;
+    left: 150px;
+    z-index: 100;
+    display: none;
+    width: 100px;
+}

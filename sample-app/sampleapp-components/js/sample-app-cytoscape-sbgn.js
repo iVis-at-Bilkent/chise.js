@@ -47,30 +47,30 @@ var relocateStateAndInfos = function (stateAndInfos) {
   else if (length == 2) {
     stateAndInfos[0].bbox.x = 0;
     stateAndInfos[0].bbox.y = -50;
-    
+
     stateAndInfos[1].bbox.x = 0;
     stateAndInfos[1].bbox.y = 50;
   }
   else if (length == 3) {
     stateAndInfos[0].bbox.x = -25;
     stateAndInfos[0].bbox.y = -50;
-    
+
     stateAndInfos[1].bbox.x = 25;
     stateAndInfos[1].bbox.y = -50;
-    
+
     stateAndInfos[2].bbox.x = 0;
     stateAndInfos[2].bbox.y = 50;
   }
   else {
     stateAndInfos[0].bbox.x = -25;
     stateAndInfos[0].bbox.y = -50;
-    
+
     stateAndInfos[1].bbox.x = 25;
     stateAndInfos[1].bbox.y = -50;
-    
+
     stateAndInfos[2].bbox.x = -25;
     stateAndInfos[2].bbox.y = 50;
-    
+
     stateAndInfos[3].bbox.x = 25;
     stateAndInfos[3].bbox.y = 50;
   }
@@ -130,7 +130,7 @@ var fillInspectorStateAndInfos = function (node, width) {
   $("#inspector-add-state-variable").click(function () {
     var obj = {};
     obj.clazz = "state variable";
-    
+
     obj.state = {
       value: "",
       variable: ""
@@ -895,6 +895,7 @@ var SBGNContainer = Backbone.View.extend({
         });
 
         cy.on('tap', function (event) {
+          $("#node-label-textbox").blur();
           cy.nodes(":selected").length;
           if (modeHandler.mode == "add-node-mode") {
             var cyPosX = event.cyPosition.x;
@@ -918,8 +919,37 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
+        var tappedBefore = null;
+
+        cy.on('doubleTap', 'node', function (event) {
+          var node = this;
+          var containerPos = $(cy.container()).position();
+          var left = containerPos.left + this.renderedPosition().x;
+          left = left.toString() + 'px';
+          var top = containerPos.top + this.renderedPosition().y;
+          top = top.toString() + 'px';
+          $("#node-label-textbox").css('left', left);
+          $("#node-label-textbox").css('top', top);
+          $("#node-label-textbox").show();
+          $("#node-label-textbox").attr('value', this._private.data.sbgnlabel);
+          $("#node-label-textbox").data('node', this);
+          $("#node-label-textbox").focus();
+        });
+
         cy.on('tap', 'node', function (event) {
           var node = this;
+
+          var tappedNow = event.cyTarget;
+          setTimeout(function () {
+            tappedBefore = null;
+          }, 300);
+          if (tappedBefore === tappedNow) {
+            tappedNow.trigger('doubleTap');
+            tappedBefore = null;
+          } else {
+            tappedBefore = tappedNow;
+          }
+
           //Handle expand-collapse box
           var cyPosX = event.cyPosition.x;
           var cyPosY = event.cyPosition.y;
