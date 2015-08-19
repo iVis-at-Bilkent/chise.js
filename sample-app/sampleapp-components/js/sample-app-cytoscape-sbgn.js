@@ -89,7 +89,7 @@ var fillInspectorStateAndInfos = function (node, width) {
               + "<span width='" + width / 5 + "'px>@</span>"
               + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
               + width / 2.5 + "px' value='" + state.state.variable
-              + "'/><img class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").on('input', function () {
         $(this).data("state").state.value = $(this).attr('value');
@@ -105,7 +105,7 @@ var fillInspectorStateAndInfos = function (node, width) {
       var total = width / 5 + width / 5 + width / 2.5;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
               + total + "px' value='" + state.label.text
-              + "'/><img class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").on('input', function () {
         $(this).data("state").label.text = $(this).attr('value');

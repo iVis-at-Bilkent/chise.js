@@ -165,6 +165,7 @@ body {
 #sbgn-toolbar{
     margin: auto;
     width: 1000px;
+    height: 25px;
     margin-bottom: 10px;
     /*overflow: auto !important;*/
 }
@@ -232,7 +233,9 @@ body {
 .selectedType {
     /*box-shadow: 10px 10px 5px #888888;*/
     border-style: solid;
+    border-color: #0B9BCD;
     border-width: 2px;
+    border-radius: 5px;
 }
 
 .selectedMenuItem {
@@ -252,7 +255,7 @@ body {
 }
 
 .sbgn-toolbar-element {
-    margin-left: 2px;
+    margin-left: 4px;
     margin-right: 0px;
     padding-right: 0px;
     float: left;
