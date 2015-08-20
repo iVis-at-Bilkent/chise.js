@@ -922,21 +922,27 @@ var SBGNContainer = Backbone.View.extend({
         var tappedBefore = null;
 
         cy.on('doubleTap', 'node', function (event) {
-          var node = this;
-          var containerPos = $(cy.container()).position();
-          var left = containerPos.left + this.renderedPosition().x;
-          left -= $("#node-label-textbox").width() / 2;
-          left = left.toString() + 'px';
-          var top = containerPos.top + this.renderedPosition().y;
-          top -= $("#node-label-textbox").height() / 2;
-          top = top.toString() + 'px';
-          
-          $("#node-label-textbox").css('left', left);
-          $("#node-label-textbox").css('top', top);
-          $("#node-label-textbox").show();
-          $("#node-label-textbox").attr('value', this._private.data.sbgnlabel);
-          $("#node-label-textbox").data('node', this);
-          $("#node-label-textbox").focus();
+          if(modeHandler.mode == 'selection-mode'){
+            var node = this;
+            var containerPos = $(cy.container()).position();
+            var left = containerPos.left + this.renderedPosition().x;
+            left -= $("#node-label-textbox").width() / 2;
+            left = left.toString() + 'px';
+            var top = containerPos.top + this.renderedPosition().y;
+            top -= $("#node-label-textbox").height() / 2;
+            top = top.toString() + 'px';
+
+            $("#node-label-textbox").css('left', left);
+            $("#node-label-textbox").css('top', top);
+            $("#node-label-textbox").show();
+            var sbgnlabel = this._private.data.sbgnlabel;
+            if(sbgnlabel == null){
+                sbgnlabel = "";
+            }
+            $("#node-label-textbox").attr('value', sbgnlabel);
+            $("#node-label-textbox").data('node', this);
+            $("#node-label-textbox").focus();
+          }
         });
 
         cy.on('tap', 'node', function (event) {

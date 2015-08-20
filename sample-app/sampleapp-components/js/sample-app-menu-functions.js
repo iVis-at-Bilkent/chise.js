@@ -10,11 +10,12 @@ var setFileContent = function (fileName) {
 $(document).keydown(function (e) {
   if (e.which === 90 && e.ctrlKey) {
     editorActionsManager.undo();
-    refreshUndoRedoButtonsStatus()
+    refreshUndoRedoButtonsStatus();
+//    $(document.activeElement).attr("value");
   }
   else if (e.which === 89 && e.ctrlKey) {
     editorActionsManager.redo();
-    refreshUndoRedoButtonsStatus()
+    refreshUndoRedoButtonsStatus();
   }
 });
 
@@ -156,7 +157,7 @@ $(document).ready(function () {
   $("#node-label-textbox").blur(function () {
     $("#node-label-textbox").hide();
     $("#node-label-textbox").data('node', undefined);
-    $("#node-label-textbox").attr('value', '');
+//    $("#node-label-textbox").attr('value', '');
   });
   
   $("#node-label-textbox").on('input', function(){
