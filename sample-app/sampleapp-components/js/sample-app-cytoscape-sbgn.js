@@ -925,9 +925,12 @@ var SBGNContainer = Backbone.View.extend({
           var node = this;
           var containerPos = $(cy.container()).position();
           var left = containerPos.left + this.renderedPosition().x;
+          left -= $("#node-label-textbox").width() / 2;
           left = left.toString() + 'px';
           var top = containerPos.top + this.renderedPosition().y;
+          top -= $("#node-label-textbox").height() / 2;
           top = top.toString() + 'px';
+          
           $("#node-label-textbox").css('left', left);
           $("#node-label-textbox").css('top', top);
           $("#node-label-textbox").show();
