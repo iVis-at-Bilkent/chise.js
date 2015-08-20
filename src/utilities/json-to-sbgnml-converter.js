@@ -167,8 +167,12 @@ var jsonToSbgnml = {
 
     addStateAndInfoBbox : function(node, boxGlyph){
         boxBbox = boxGlyph.bbox;
-        var x = node._private.position.x + (boxBbox.x - boxBbox.w/2);
-        var y = node._private.position.y + (boxBbox.y - boxBbox.h/2);
+        
+        var x = boxBbox.x / 100 * node.width();
+        var y = boxBbox.y / 100 * node.height();
+        
+        x = node._private.position.x + (x - boxBbox.w/2);
+        y = node._private.position.y + (y - boxBbox.h/2);
         return "<bbox y='" + y + "' x='" + x + 
             "' w='" + boxBbox.w + "' h='" + boxBbox.h + "' />\n";
     },
