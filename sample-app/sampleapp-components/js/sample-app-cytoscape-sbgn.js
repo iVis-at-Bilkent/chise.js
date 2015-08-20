@@ -678,6 +678,11 @@ var SBGNContainer = Backbone.View.extend({
           padding: 5,
           start: function (sourceNode) {
             // fired when noderesize interaction starts (drag on handle)
+            var param = {
+              node: sourceNode,
+              firstTime: true
+            }
+            editorActionsManager._do(new ResizeNodeCommand(param));
           },
           complete: function (sourceNode, targetNodes, addedEntities) {
             // fired when noderesize is done and entities are added
@@ -701,10 +706,6 @@ var SBGNContainer = Backbone.View.extend({
             editorActionsManager._do(new AddEdgeCommand(param));
             modeHandler.setSelectionMode();
             cy.edges()[cy.edges().length - 1].select();
-
-//            if($("#right-menu-nav").hasClass("menu-open") == false){
-//              $("#right-menu-toggle-button").trigger("click");
-//            }
             refreshUndoRedoButtonsStatus();
           }
         });

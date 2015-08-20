@@ -23,7 +23,7 @@ function removeNodes(nodesToBeDeleted)
   return addRemoveUtilities.removeNodes(nodesToBeDeleted);
 }
 
-function removeEles(elesToBeRemoved){
+function removeEles(elesToBeRemoved) {
   return addRemoveUtilities.removeEles(elesToBeRemoved);
 }
 
@@ -57,7 +57,7 @@ function expandNode(param) {
   var node = param.node;
   result.node = node;
   result.nodesData = getNodePositionsAndSizes();
-  if(param.firstTime){
+  if (param.firstTime) {
     expandCollapseUtilities.expandNode(node);
   }
   else {
@@ -74,7 +74,7 @@ function collapseNode(param) {
   var node = param.node;
   result.node = node;
   result.nodesData = getNodePositionsAndSizes();
-  if(param.firstTime){
+  if (param.firstTime) {
     expandCollapseUtilities.collapseNode(node);
   }
   else {
@@ -91,7 +91,7 @@ function expandGivenNodes(param) {
   };
   result.nodes = nodes;
   result.nodesData = getNodePositionsAndSizes();
-  if(param.firstTime){
+  if (param.firstTime) {
     expandCollapseUtilities.expandGivenNodes(nodes);
   }
   else {
@@ -106,7 +106,7 @@ function collapseGivenNodes(param) {
   var result = {};
   result.nodes = nodes;
   result.nodesData = getNodePositionsAndSizes();
-  if(param.firstTime){
+  if (param.firstTime) {
     expandCollapseUtilities.collapseGivenNodes(nodes);
   }
   else {
@@ -121,17 +121,17 @@ function expandAllNodes(param) {
     firstTime: false
   };
   result.nodesData = getNodePositionsAndSizes();
-  if(param.firstTime){
+  if (param.firstTime) {
     result.expandStack = expandCollapseUtilities.expandAllNodes();
   }
-  else{
+  else {
     result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
     returnToPositionsAndSizes(param.nodesData);
   }
   return result;
 }
 
-function simpleExpandAllNodes(){
+function simpleExpandAllNodes() {
   return expandCollapseUtilities.simpleExpandAllNodes();
 }
 
@@ -139,7 +139,7 @@ function collapseExpandedStack(expandedStack) {
   return expandCollapseUtilities.collapseExpandedStack(expandedStack);
 }
 
-function undoExpandAllNodes(param){
+function undoExpandAllNodes(param) {
   var result = {
     firstTime: false
   };
@@ -464,6 +464,21 @@ function removeCompound(compoundToRemove) {
   return param;
 }
 
+function resizeNode(param) {
+  var result = {
+    firstTime: false
+  };
+  var node = param.node;
+  result.width = node.width();
+  result.height = node.height();
+  result.node = node;
+  if (!param.firstTime) {
+    node.data("width", param.width);
+    node.data("height", param.height);
+  }
+  return result;
+}
+
 /*
  *	Base command class
  * do: reference to the function that performs actual action for this command.
@@ -581,6 +596,10 @@ var RemoveHighlightsCommand = function () {
 
 var CreateCompundForSelectedNodesCommand = function (param) {
   return new Command(createCompoundForSelectedNodes, removeCompound, param);
+};
+
+var ResizeNodeCommand = function (param) {
+  return new Command(resizeNode, resizeNode, param);
 };
 
 /**
