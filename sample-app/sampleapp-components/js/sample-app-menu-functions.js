@@ -225,7 +225,6 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
     handleSBGNInspector();
   });
 

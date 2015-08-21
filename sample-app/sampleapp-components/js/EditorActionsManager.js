@@ -492,6 +492,46 @@ function changeNodeLabel(param) {
   return result;
 }
 
+function changeStateVariable(param) {
+  var result = {
+  };
+  var state = param.state;
+  var type = param.type;
+  result.state = state;
+  result.type = type;
+  result.valueOrVariable = state.state[type];
+  result.node = param.node;
+  result.width = param.width;
+
+  state.state[type] = param.valueOrVariable;
+  cy.forceRender();
+  
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+    fillInspectorStateAndInfos(param.node, param.width);
+  }
+
+  return result;
+}
+
+function changeUnitOfInformation(param) {
+  var result = {
+  };
+  var state = param.state;
+  result.state = state;
+  result.text = state.label.text;
+  result.node = param.node;
+  result.width = param.width;
+
+  state.label.text = param.text;
+  cy.forceRender();
+  
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+    fillInspectorStateAndInfos(param.node, param.width);
+  }
+
+  return result;
+}
+
 function addStateAndInfo(param) {
   var obj = param.obj;
   var node = param.node;
@@ -666,6 +706,14 @@ var AddStateAndInfoCommand = function (param) {
 
 var RemoveStateAndInfoCommand = function (param) {
   return new Command(removeStateAndInfo, addStateAndInfo, param);
+}
+
+var ChangeStateVariableCommand = function (param) {
+  return new Command(changeStateVariable, changeStateVariable, param);
+}
+
+var ChangeUnitOfInformationCommand = function (param) {
+  return new Command(changeUnitOfInformation, changeUnitOfInformation, param);
 }
 
 /**

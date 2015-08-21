@@ -91,14 +91,34 @@ var fillInspectorStateAndInfos = function (node, width) {
               + width / 2.5 + "px' value='" + state.state.variable
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
-      $(".inspector-state-variable-value").on('input', function () {
-        $(this).data("state").state.value = $(this).attr('value');
-        cy.forceRender();
+      $(".inspector-state-variable-value").on('change', function () {
+        var node = $(this).data('node');
+        var param = {
+          state: $(this).data("state"),
+          valueOrVariable: $(this).attr('value'),
+          type: 'value',
+          node: node,
+          width: width
+        };
+        editorActionsManager._do(new ChangeStateVariableCommand(param));
+        refreshUndoRedoButtonsStatus();
+//        $(this).data("state").state.value = $(this).attr('value');
+//        cy.forceRender();
       });
 
-      $(".inspector-state-variable-variable").on('input', function () {
-        $(this).data("state").state.variable = $(this).attr('value');
-        cy.forceRender();
+      $(".inspector-state-variable-variable").on('change', function () {
+        var node = $(this).data('node');
+        var param = {
+          state: $(this).data("state"),
+          valueOrVariable: $(this).attr('value'),
+          type: 'variable',
+          node: node,
+          width: width
+        };
+        editorActionsManager._do(new ChangeStateVariableCommand(param));
+        refreshUndoRedoButtonsStatus();
+//        $(this).data("state").state.variable = $(this).attr('value');
+//        cy.forceRender();
       });
     }
     else if (state.clazz == "unit of information") {
@@ -107,18 +127,22 @@ var fillInspectorStateAndInfos = function (node, width) {
               + total + "px' value='" + state.label.text
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
-      $(".inspector-unit-of-information-label").on('input', function () {
-        $(this).data("state").label.text = $(this).attr('value');
-        cy.forceRender();
+      $(".inspector-unit-of-information-label").on('change', function () {
+        var node = $(this).data('node');
+        var param = {
+          state: $(this).data("state"),
+          text: $(this).attr('value'),
+          node: node,
+          width: width
+        };
+        editorActionsManager._do(new ChangeUnitOfInformationCommand(param));
+        refreshUndoRedoButtonsStatus();
+//        $(this).data("state").label.text = $(this).attr('value');
+//        cy.forceRender();
       });
     }
 
     $(".inspector-delete-state-and-info").unbind('click').click(function (event) {
-//      var index = stateAndInfos.indexOf($(this).data("state"));
-//      stateAndInfos.splice(index, 1);
-//      fillInspectorStateAndInfos(node, width);
-//      relocateStateAndInfos(stateAndInfos);
-//      cy.forceRender();
       var param = {
         obj: $(this).data("state"),
         node: node,
@@ -145,10 +169,6 @@ var fillInspectorStateAndInfos = function (node, width) {
       w: 69,
       h: 28
     };
-//    stateAndInfos.push(obj);
-//    relocateStateAndInfos(stateAndInfos);
-//    fillInspectorStateAndInfos(node, width);
-//    cy.forceRender();
     var param = {
       obj: obj,
       node: node,
@@ -167,10 +187,6 @@ var fillInspectorStateAndInfos = function (node, width) {
       w: 53,
       h: 18
     };
-//    stateAndInfos.push(obj);
-//    relocateStateAndInfos(stateAndInfos);
-//    fillInspectorStateAndInfos(node, width);
-//    cy.forceRender();
     var param = {
       obj: obj,
       node: node,
