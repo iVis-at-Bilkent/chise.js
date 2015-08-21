@@ -479,16 +479,57 @@ function resizeNode(param) {
   return result;
 }
 
-function changeNodeLabel(param){
+function changeNodeLabel(param) {
   var result = {
   };
   var node = param.node;
   result.node = node;
   result.sbgnlabel = node._private.data.sbgnlabel;
-  
+
   node._private.data.sbgnlabel = param.sbgnlabel;
   cy.forceRender();
-  
+
+  return result;
+}
+
+function addStateAndInfo(param) {
+  var obj = param.obj;
+  var node = param.node;
+  var stateAndInfos = node._private.data.sbgnstatesandinfos;
+
+  stateAndInfos.push(obj);
+  relocateStateAndInfos(stateAndInfos);
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == node) {
+    fillInspectorStateAndInfos(node, param.width);
+  }
+  cy.forceRender();
+
+  var result = {
+    node: node,
+    width: param.width,
+    obj: obj
+  };
+  return result;
+}
+
+function removeStateAndInfo(param) {
+  var obj = param.obj;
+  var node = param.node;
+  var stateAndInfos = node._private.data.sbgnstatesandinfos;
+
+  var index = stateAndInfos.indexOf(obj);
+  stateAndInfos.splice(index, 1);
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == node) {
+    fillInspectorStateAndInfos(node, param.width);
+  }
+  relocateStateAndInfos(stateAndInfos);
+  cy.forceRender();
+
+  var result = {
+    node: node,
+    width: param.width,
+    obj: obj
+  };
   return result;
 }
 
@@ -618,6 +659,14 @@ var ResizeNodeCommand = function (param) {
 var ChangeNodeLabelCommand = function (param) {
   return new Command(changeNodeLabel, changeNodeLabel, param);
 };
+
+var AddStateAndInfoCommand = function (param) {
+  return new Command(addStateAndInfo, removeStateAndInfo, param);
+}
+
+var RemoveStateAndInfoCommand = function (param) {
+  return new Command(removeStateAndInfo, addStateAndInfo, param);
+}
 
 /**
  *  Description: A simple action manager that acts also as a undo-redo manager regarding Command Design Pattern

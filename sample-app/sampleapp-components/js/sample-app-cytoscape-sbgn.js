@@ -114,11 +114,17 @@ var fillInspectorStateAndInfos = function (node, width) {
     }
 
     $(".inspector-delete-state-and-info").unbind('click').click(function (event) {
-      var index = stateAndInfos.indexOf($(this).data("state"));
-      stateAndInfos.splice(index, 1);
-      fillInspectorStateAndInfos(node, width);
-      relocateStateAndInfos(stateAndInfos);
-      cy.forceRender();
+//      var index = stateAndInfos.indexOf($(this).data("state"));
+//      stateAndInfos.splice(index, 1);
+//      fillInspectorStateAndInfos(node, width);
+//      relocateStateAndInfos(stateAndInfos);
+//      cy.forceRender();
+      var param = {
+        obj: $(this).data("state"),
+        node: node,
+        width: width
+      };
+      editorActionsManager._do(new RemoveStateAndInfoCommand(param));
     });
 
     $(".just-added-inspector-input").data("state", state);
@@ -139,10 +145,16 @@ var fillInspectorStateAndInfos = function (node, width) {
       w: 69,
       h: 28
     };
-    stateAndInfos.push(obj);
-    relocateStateAndInfos(stateAndInfos);
-    fillInspectorStateAndInfos(node, width);
-    cy.forceRender();
+//    stateAndInfos.push(obj);
+//    relocateStateAndInfos(stateAndInfos);
+//    fillInspectorStateAndInfos(node, width);
+//    cy.forceRender();
+    var param = {
+      obj: obj,
+      node: node,
+      width: width
+    };
+    editorActionsManager._do(new AddStateAndInfoCommand(param));
   });
 
   $("#inspector-add-unit-of-information").click(function () {
@@ -155,10 +167,16 @@ var fillInspectorStateAndInfos = function (node, width) {
       w: 53,
       h: 18
     };
-    stateAndInfos.push(obj);
-    relocateStateAndInfos(stateAndInfos);
-    fillInspectorStateAndInfos(node, width);
-    cy.forceRender();
+//    stateAndInfos.push(obj);
+//    relocateStateAndInfos(stateAndInfos);
+//    fillInspectorStateAndInfos(node, width);
+//    cy.forceRender();
+    var param = {
+      obj: obj,
+      node: node,
+      width: width
+    };
+    editorActionsManager._do(new AddStateAndInfoCommand(param));
   });
 }
 
@@ -920,7 +938,7 @@ var SBGNContainer = Backbone.View.extend({
         var tappedBefore = null;
 
         cy.on('doubleTap', 'node', function (event) {
-          if(modeHandler.mode == 'selection-mode'){
+          if (modeHandler.mode == 'selection-mode') {
             var node = this;
             var containerPos = $(cy.container()).position();
             var left = containerPos.left + this.renderedPosition().x;
@@ -934,8 +952,8 @@ var SBGNContainer = Backbone.View.extend({
             $("#node-label-textbox").css('top', top);
             $("#node-label-textbox").show();
             var sbgnlabel = this._private.data.sbgnlabel;
-            if(sbgnlabel == null){
-                sbgnlabel = "";
+            if (sbgnlabel == null) {
+              sbgnlabel = "";
             }
             $("#node-label-textbox").attr('value', sbgnlabel);
             $("#node-label-textbox").data('node', this);
