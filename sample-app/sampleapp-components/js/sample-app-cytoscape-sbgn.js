@@ -683,6 +683,7 @@ var SBGNContainer = Backbone.View.extend({
               firstTime: true
             }
             editorActionsManager._do(new ResizeNodeCommand(param));
+            refreshUndoRedoButtonsStatus();
           },
           complete: function (sourceNode, targetNodes, addedEntities) {
             // fired when noderesize is done and entities are added
@@ -902,7 +903,6 @@ var SBGNContainer = Backbone.View.extend({
             var cyPosX = event.cyPosition.x;
             var cyPosY = event.cyPosition.y;
             var param = {};
-//            var sbgnclass = $("#node-list").data('ddslick').selectedData.value;
             var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
             param.newNode = {
               x: cyPosX,
@@ -913,9 +913,6 @@ var SBGNContainer = Backbone.View.extend({
             editorActionsManager._do(new AddNodeCommand(param));
             modeHandler.setSelectionMode();
             cy.nodes()[cy.nodes().length - 1].select();
-//            if($("#right-menu-nav").hasClass("menu-open") == false){
-//              $("#right-menu-toggle-button").trigger("click");
-//            }
             refreshUndoRedoButtonsStatus();
           }
         });

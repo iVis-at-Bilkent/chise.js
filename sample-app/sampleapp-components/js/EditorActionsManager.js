@@ -479,6 +479,19 @@ function resizeNode(param) {
   return result;
 }
 
+function changeNodeLabel(param){
+  var result = {
+  };
+  var node = param.node;
+  result.node = node;
+  result.sbgnlabel = node._private.data.sbgnlabel;
+  
+  node._private.data.sbgnlabel = param.sbgnlabel;
+  cy.forceRender();
+  
+  return result;
+}
+
 /*
  *	Base command class
  * do: reference to the function that performs actual action for this command.
@@ -600,6 +613,10 @@ var CreateCompundForSelectedNodesCommand = function (param) {
 
 var ResizeNodeCommand = function (param) {
   return new Command(resizeNode, resizeNode, param);
+};
+
+var ChangeNodeLabelCommand = function (param) {
+  return new Command(changeNodeLabel, changeNodeLabel, param);
 };
 
 /**

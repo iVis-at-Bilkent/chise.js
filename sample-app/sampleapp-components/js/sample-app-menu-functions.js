@@ -157,13 +157,18 @@ $(document).ready(function () {
   $("#node-label-textbox").blur(function () {
     $("#node-label-textbox").hide();
     $("#node-label-textbox").data('node', undefined);
-//    $("#node-label-textbox").attr('value', '');
   });
   
-  $("#node-label-textbox").on('input', function(){
+  $("#node-label-textbox").on('change', function(){
     var node = $(this).data('node');
-    node._private.data.sbgnlabel = $(this).attr('value');
-    cy.forceRender();
+    var param = {
+      node: node,
+      sbgnlabel: $(this).attr('value')
+    };
+    editorActionsManager._do(new ChangeNodeLabelCommand(param));
+    refreshUndoRedoButtonsStatus();
+//    node._private.data.sbgnlabel = $(this).attr('value');
+//    cy.forceRender();
   });
 
   $("#edge-legend").click(function (e) {
