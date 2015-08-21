@@ -203,7 +203,7 @@ var handleSBGNInspector = function () {
     if (selectedEles.nodes().length == 1) {
       type = "node";
       html += "<tr><td style='width: " + width + "px'>" + "border-color" + "</td><td>"
-              + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.css('border-color')
+              + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
               + "<input id='inspector-fill-color' type='color' style='width: " + width + "px;' value='" + selected.css('background-color')
@@ -221,7 +221,7 @@ var handleSBGNInspector = function () {
     else {
       type = "edge";
       html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
-              + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.css('line-color')
+              + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.data('lineColor')
               + "'/>" + "</td></tr>";
 
       html += "<tr><td style='width: " + width + "px'>" + "width" + "</td><td>"
@@ -236,7 +236,7 @@ var handleSBGNInspector = function () {
       fillInspectorStateAndInfos(selected, width);
       $("#inspector-border-color").on('change', function () {
         selected.data('borderColor', $("#inspector-border-color").attr("value"));
-        selected.addClass('changeBorderColor');
+//        selected.addClass('changeBorderColor');
       });
 
       $("#inspector-fill-color").on('change', function () {
@@ -251,7 +251,7 @@ var handleSBGNInspector = function () {
       $("#inspector-line-color").on('change', function () {
         var lineColor = $("#inspector-line-color").attr("value");
         selected.data('lineColor', lineColor);
-        selected.addClass('changeLineColor');
+//        selected.addClass('changeLineColor');
       });
 
       $("#inspector-width").on('input', function () {
@@ -268,6 +268,23 @@ var makePresetLayout = function () {
   cy.layout({
     name: "preset"
   });
+};
+
+var initilizeUnselectedDataOfElements = function() {
+  var nodes = cy.nodes();
+  var edges = cy.edges();
+  
+  for(var i = 0; i < nodes.length; i++){
+    var node = nodes[i];
+    node.data("borderColor", node.css('border-color'));
+    node.addClass('changeBorderColor');
+  }
+  
+  for(var i = 0; i < edges.length; i++){
+    var edge = edges[i];
+    edge.data("lineColor", edge.css('line-color'));
+    edge.addClass('changeLineColor');
+  }
 };
 
 /*
@@ -642,7 +659,8 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'compound-padding': 20,
           'dynamic-label-size': 'regular',
           'fit-labels-to-nodes': 'true',
-          'incremental-layout-after-expand-collapse': 'true'}); // end of sbgnStyleSheet
+          'incremental-layout-after-expand-collapse': 'true'
+        }); // end of sbgnStyleSheet
 
 //get the sbgn style rules
 getSBGNStyleRules();
@@ -697,6 +715,7 @@ var SBGNContainer = Backbone.View.extend({
       {
         window.cy = this;
         refreshPaddings();
+        initilizeUnselectedDataOfElements();
 
         cy.noderesize({
           handleColor: '#000000', // the colour of the handle and the line drawn from it
