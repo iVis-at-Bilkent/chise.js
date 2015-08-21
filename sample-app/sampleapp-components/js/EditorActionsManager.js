@@ -505,7 +505,7 @@ function changeStateVariable(param) {
 
   state.state[type] = param.valueOrVariable;
   cy.forceRender();
-  
+
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
     fillInspectorStateAndInfos(param.node, param.width);
   }
@@ -524,7 +524,7 @@ function changeUnitOfInformation(param) {
 
   state.label.text = param.text;
   cy.forceRender();
-  
+
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
     fillInspectorStateAndInfos(param.node, param.width);
   }
@@ -570,6 +570,55 @@ function removeStateAndInfo(param) {
     width: param.width,
     obj: obj
   };
+  return result;
+}
+
+function changeColorData(param) {
+  var result = {
+  };
+  var ele = param.ele;
+  result.dataType = param.dataType;
+  result.data = ele.data(param.dataType);
+  result.ele = ele;
+
+  ele.data(param.dataType, param.data);
+  cy.forceRender();
+
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
+    if (param.dataType == "borderColor"){
+      $("#inspector-border-color").attr("value", param.data);
+    }
+    else if (param.dataType == "lineColor"){
+      $("#inspector-line-color").attr("value", param.data);
+    }
+  }
+
+  return result;
+}
+
+function changeColorCss(param) {
+  var result = {
+  };
+  var ele = param.ele;
+  result.dataType = param.dataType;
+  result.data = ele.css(param.dataType);
+  result.ele = ele;
+
+  ele.css(param.dataType, param.data);
+  cy.forceRender();
+
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
+    if (param.dataType == "background-color"){
+      $("#inspector-fill-color").attr("value", param.data);
+    }
+    else if (param.dataType == "border-width"){
+      $("#inspector-border-width").attr("value", parseFloat(param.data));
+    }
+    else if (param.dataType == "width"){
+      $("#inspector-width").attr("value", parseFloat(param.data));
+    }
+  }
+
   return result;
 }
 
@@ -702,19 +751,27 @@ var ChangeNodeLabelCommand = function (param) {
 
 var AddStateAndInfoCommand = function (param) {
   return new Command(addStateAndInfo, removeStateAndInfo, param);
-}
+};
 
 var RemoveStateAndInfoCommand = function (param) {
   return new Command(removeStateAndInfo, addStateAndInfo, param);
-}
+};
 
 var ChangeStateVariableCommand = function (param) {
   return new Command(changeStateVariable, changeStateVariable, param);
-}
+};
 
 var ChangeUnitOfInformationCommand = function (param) {
   return new Command(changeUnitOfInformation, changeUnitOfInformation, param);
-}
+};
+
+var ChangeColorDataCommand = function (param) {
+  return new Command(changeColorData, changeColorData, param);
+};
+
+var ChangeColorCssCommand = function (param) {
+  return new Command(changeColorCss, changeColorCss, param);
+};
 
 /**
  *  Description: A simple action manager that acts also as a undo-redo manager regarding Command Design Pattern

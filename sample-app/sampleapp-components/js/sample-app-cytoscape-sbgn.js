@@ -235,27 +235,49 @@ var handleSBGNInspector = function () {
     if (type == "node") {
       fillInspectorStateAndInfos(selected, width);
       $("#inspector-border-color").on('change', function () {
-        selected.data('borderColor', $("#inspector-border-color").attr("value"));
-//        selected.addClass('changeBorderColor');
+        var param = {
+          ele: selected,
+          data: $("#inspector-border-color").attr("value"),
+          dataType: "borderColor"
+        };
+        editorActionsManager._do(new ChangeColorDataCommand(param));
       });
 
       $("#inspector-fill-color").on('change', function () {
-        selected.css('background-color', $("#inspector-fill-color").attr("value"));
+        var param = {
+          ele: selected,
+          data: $("#inspector-fill-color").attr("value"),
+          dataType: "background-color"
+        };
+        editorActionsManager._do(new ChangeColorCssCommand(param));
       });
 
       $("#inspector-border-width").on('input', function () {
-        selected.css('border-width', $("#inspector-border-width").attr("value"));
+        var param = {
+          ele: selected,
+          data: $("#inspector-border-width").attr("value"),
+          dataType: "border-width"
+        };
+        editorActionsManager._do(new ChangeColorCssCommand(param));
       });
     }
     else {
       $("#inspector-line-color").on('change', function () {
-        var lineColor = $("#inspector-line-color").attr("value");
-        selected.data('lineColor', lineColor);
-//        selected.addClass('changeLineColor');
+        var param = {
+          ele: selected,
+          data: $("#inspector-line-color").attr("value"),
+          dataType: "lineColor"
+        };
+        editorActionsManager._do(new ChangeColorDataCommand(param));
       });
 
       $("#inspector-width").on('input', function () {
-        selected.css('width', $("#inspector-width").attr("value"));
+        var param = {
+          ele: selected,
+          data: $("#inspector-width").attr("value"),
+          dataType: "width"
+        };
+        editorActionsManager._do(new ChangeColorCssCommand(param));
       });
     }
   }
