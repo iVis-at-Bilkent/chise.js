@@ -91,8 +91,7 @@ var fillInspectorStateAndInfos = function (node, width) {
               + width / 2.5 + "px' value='" + state.state.variable
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
-      $(".inspector-state-variable-value").on('change', function () {
-        var node = $(this).data('node');
+      $(".inspector-state-variable-value").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
           valueOrVariable: $(this).attr('value'),
@@ -106,8 +105,7 @@ var fillInspectorStateAndInfos = function (node, width) {
 //        cy.forceRender();
       });
 
-      $(".inspector-state-variable-variable").on('change', function () {
-        var node = $(this).data('node');
+      $(".inspector-state-variable-variable").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
           valueOrVariable: $(this).attr('value'),
@@ -127,8 +125,7 @@ var fillInspectorStateAndInfos = function (node, width) {
               + total + "px' value='" + state.label.text
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
-      $(".inspector-unit-of-information-label").on('change', function () {
-        var node = $(this).data('node');
+      $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
           text: $(this).attr('value'),
