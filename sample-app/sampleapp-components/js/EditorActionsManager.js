@@ -585,12 +585,7 @@ function changeStyleData(param) {
   cy.forceRender();
 
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
-    if (param.dataType == "borderColor"){
-      $("#inspector-border-color").attr("value", param.data);
-    }
-    else if (param.dataType == "lineColor"){
-      $("#inspector-line-color").attr("value", param.data);
-    }
+    handleSBGNInspector();
   }
 
   return result;
@@ -608,15 +603,7 @@ function changeStyleCss(param) {
   cy.forceRender();
 
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
-    if (param.dataType == "background-color"){
-      $("#inspector-fill-color").attr("value", param.data);
-    }
-    else if (param.dataType == "border-width"){
-      $("#inspector-border-width").attr("value", parseFloat(param.data));
-    }
-    else if (param.dataType == "width"){
-      $("#inspector-width").attr("value", parseFloat(param.data));
-    }
+    handleSBGNInspector();
   }
 
   return result;
