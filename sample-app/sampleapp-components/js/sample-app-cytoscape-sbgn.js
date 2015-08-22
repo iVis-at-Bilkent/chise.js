@@ -240,7 +240,7 @@ var handleSBGNInspector = function () {
           data: $("#inspector-border-color").attr("value"),
           dataType: "borderColor"
         };
-        editorActionsManager._do(new ChangeColorDataCommand(param));
+        editorActionsManager._do(new ChangeStyleDataCommand(param));
       });
 
       $("#inspector-fill-color").on('change', function () {
@@ -249,16 +249,16 @@ var handleSBGNInspector = function () {
           data: $("#inspector-fill-color").attr("value"),
           dataType: "background-color"
         };
-        editorActionsManager._do(new ChangeColorCssCommand(param));
+        editorActionsManager._do(new ChangeStyleCssCommand(param));
       });
 
-      $("#inspector-border-width").on('input', function () {
+      $("#inspector-border-width").bind('change').on('change', function () {
         var param = {
           ele: selected,
           data: $("#inspector-border-width").attr("value"),
           dataType: "border-width"
         };
-        editorActionsManager._do(new ChangeColorCssCommand(param));
+        editorActionsManager._do(new ChangeStyleCssCommand(param));
       });
     }
     else {
@@ -268,16 +268,16 @@ var handleSBGNInspector = function () {
           data: $("#inspector-line-color").attr("value"),
           dataType: "lineColor"
         };
-        editorActionsManager._do(new ChangeColorDataCommand(param));
+        editorActionsManager._do(new ChangeStyleDataCommand(param));
       });
 
-      $("#inspector-width").on('input', function () {
+      $("#inspector-width").bind('change').on('change', function () {
         var param = {
           ele: selected,
           data: $("#inspector-width").attr("value"),
           dataType: "width"
         };
-        editorActionsManager._do(new ChangeColorCssCommand(param));
+        editorActionsManager._do(new ChangeStyleCssCommand(param));
       });
     }
   }

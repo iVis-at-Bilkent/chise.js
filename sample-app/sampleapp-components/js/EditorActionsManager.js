@@ -573,7 +573,7 @@ function removeStateAndInfo(param) {
   return result;
 }
 
-function changeColorData(param) {
+function changeStyleData(param) {
   var result = {
   };
   var ele = param.ele;
@@ -596,7 +596,7 @@ function changeColorData(param) {
   return result;
 }
 
-function changeColorCss(param) {
+function changeStyleCss(param) {
   var result = {
   };
   var ele = param.ele;
@@ -765,12 +765,12 @@ var ChangeUnitOfInformationCommand = function (param) {
   return new Command(changeUnitOfInformation, changeUnitOfInformation, param);
 };
 
-var ChangeColorDataCommand = function (param) {
-  return new Command(changeColorData, changeColorData, param);
+var ChangeStyleDataCommand = function (param) {
+  return new Command(changeStyleData, changeStyleData, param);
 };
 
-var ChangeColorCssCommand = function (param) {
-  return new Command(changeColorCss, changeColorCss, param);
+var ChangeStyleCssCommand = function (param) {
+  return new Command(changeStyleCss, changeStyleCss, param);
 };
 
 /**
