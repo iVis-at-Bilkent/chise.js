@@ -292,17 +292,17 @@ var makePresetLayout = function () {
   });
 };
 
-var initilizeUnselectedDataOfElements = function() {
+var initilizeUnselectedDataOfElements = function () {
   var nodes = cy.nodes();
   var edges = cy.edges();
-  
-  for(var i = 0; i < nodes.length; i++){
+
+  for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     node.data("borderColor", node.css('border-color'));
     node.addClass('changeBorderColor');
   }
-  
-  for(var i = 0; i < edges.length; i++){
+
+  for (var i = 0; i < edges.length; i++) {
     var edge = edges[i];
     edge.data("lineColor", edge.css('line-color'));
     edge.addClass('changeLineColor');
@@ -375,10 +375,19 @@ var nodeQtipFunction = function (node) {
         if (sbgnstateandinfo.clazz == "state variable") {
           var value = sbgnstateandinfo.state.value;
           var variable = sbgnstateandinfo.state.variable;
-          contentHtml += "<div style='text-align:center;font-size:14px;'>" + value + "@" + variable + "</div>";
+          var stateLabel = (variable == null /*|| typeof stateVariable === undefined */) ? value :
+                  value + "@" + variable;
+          if (stateLabel == null) {
+            stateLabel = "";
+          }
+          contentHtml += "<div style='text-align:center;font-size:14px;'>" + stateLabel + "</div>";
         }
         else if (sbgnstateandinfo.clazz == "unit of information") {
-          contentHtml += "<div style='text-align:center;font-size:14px;'>" + sbgnstateandinfo.label.text + "</div>";
+          var stateLabel = sbgnstateandinfo.label.text;
+          if (stateLabel == null) {
+            stateLabel = "";
+          }
+          contentHtml += "<div style='text-align:center;font-size:14px;'>" + stateLabel + "</div>";
         }
       }
       return contentHtml;
