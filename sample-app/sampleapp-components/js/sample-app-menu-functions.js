@@ -6,6 +6,20 @@ var setFileContent = function (fileName) {
   span.appendChild(document.createTextNode(fileName));
 }
 
+var allHaveTheSameParent = function(nodes){
+  if(nodes.length == 0){
+    return true;
+  }
+  var parent = nodes[0].data("parent");
+  for(var i = 0; i < nodes.length; i++){
+    var node = nodes[i];
+    if(node.data("parent") != parent){
+      return false;
+    }
+  }
+  return true;
+}
+
 //Handle keyboard events
 $(document).keydown(function (e) {
   if (e.which === 90 && e.ctrlKey) {
@@ -158,8 +172,8 @@ $(document).ready(function () {
     $("#node-label-textbox").hide();
     $("#node-label-textbox").data('node', undefined);
   });
-  
-  $("#node-label-textbox").on('change', function(){
+
+  $("#node-label-textbox").on('change', function () {
     var node = $(this).data('node');
     var param = {
       node: node,
@@ -237,7 +251,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -250,7 +264,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -295,7 +309,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -308,7 +322,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -321,7 +335,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -334,7 +348,7 @@ $(document).ready(function () {
       el: '#sbgn-network-container',
       model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
     })).render();
-    
+
     handleSBGNInspector();
   });
 
@@ -394,20 +408,38 @@ $(document).ready(function () {
   });
 
   $("#make-compound-complex").click(function (e) {
+    var selected = cy.nodes(":selected").filter(function (i, element) {
+      var sbgnclass = element.data("sbgnclass")
+      if (sbgnclass == 'unspecified entity'
+              || sbgnclass == 'simple chemical'
+              || sbgnclass == 'macromolecule'
+              || sbgnclass == 'nucleic acid feature'
+              || sbgnclass == 'complex') {
+        return true;
+      }
+      return false;
+    });
+    if(selected.length == 0 || !allHaveTheSameParent(selected)){
+      return;
+    }
     var param = {
       firstTime: true,
       compundType: "complex",
-      nodesToMakeCompound: cy.nodes(":selected")
+      nodesToMakeCompound: selected
     };
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
   });
 
   $("#make-compound-compartment").click(function (e) {
+    var selected = cy.nodes(":selected");
+    if(selected.length == 0 || !allHaveTheSameParent(selected)){
+      return;
+    }
     var param = {
       firstTime: true,
       compundType: "compartment",
-      nodesToMakeCompound: cy.nodes(":selected")
+      nodesToMakeCompound: selected
     };
     editorActionsManager._do(new CreateCompundForSelectedNodesCommand(param));
     refreshUndoRedoButtonsStatus();
