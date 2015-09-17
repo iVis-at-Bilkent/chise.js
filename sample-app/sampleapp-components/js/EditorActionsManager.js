@@ -223,6 +223,10 @@ function simpleCollapseGivenNodes(nodes) {
 }
 
 function performLayoutFunction(nodesData) {
+  if(nodesData.firstTime){
+    delete nodesData.firstTime;
+    return nodesData;
+  }
   return returnToPositionsAndSizes(nodesData);
 }
 

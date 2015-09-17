@@ -524,8 +524,12 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'border-color': '#555',
           'background-color': '#f6f6f6',
           'font-size': 11,
-          'shape': 'data(sbgnclass)',
+//          'shape': 'data(sbgnclass)',
           'background-opacity': '0.5'
+        })
+        .selector("node[sbgnclass]")
+        .css({
+          'shape': 'data(sbgnclass)'
         })
         .selector("node[sbgnclass='complex']")
         .css({
@@ -549,7 +553,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         .css({
           'expanded-collapsed': 'expanded'
         })
-        .selector("node[sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
+        .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
         .css({
           'width': 'data(sbgnbbox.w)',
           'height': 'data(sbgnbbox.h)'
@@ -745,6 +749,7 @@ var SBGNContainer = Backbone.View.extend({
       ready: function ()
       {
         window.cy = this;
+        
         refreshPaddings();
         initilizeUnselectedDataOfElements();
 

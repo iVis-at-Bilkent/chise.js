@@ -538,6 +538,7 @@ $(document).ready(function () {
     cy.edges().data("porttarget", []);
 
     sbgnLayoutProp.applyLayout();
+    nodesData.firstTime = true;
     editorActionsManager._do(new PerformLayoutCommand(nodesData));
 
     refreshUndoRedoButtonsStatus();

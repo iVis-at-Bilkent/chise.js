@@ -21,10 +21,6 @@ var addRemoveUtilities = {
         x: x,
         y: y
       }
-//      ,
-//      css: {
-//        content: content
-//      }
     });
     cy.layout({
       name: 'preset'
