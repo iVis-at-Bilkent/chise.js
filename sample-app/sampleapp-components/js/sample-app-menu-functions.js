@@ -4,21 +4,7 @@ var setFileContent = function (fileName) {
     span.removeChild(span.firstChild);
   }
   span.appendChild(document.createTextNode(fileName));
-}
-
-var allHaveTheSameParent = function(nodes){
-  if(nodes.length == 0){
-    return true;
-  }
-  var parent = nodes[0].data("parent");
-  for(var i = 0; i < nodes.length; i++){
-    var node = nodes[i];
-    if(node.data("parent") != parent){
-      return false;
-    }
-  }
-  return true;
-}
+};
 
 //Handle keyboard events
 $(document).keydown(function (e) {
@@ -419,7 +405,8 @@ $(document).ready(function () {
       }
       return false;
     });
-    if(selected.length == 0 || !allHaveTheSameParent(selected)){
+    selected = sbgnElementUtilities.getRootsOfGivenNodes(selected);
+    if(selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)){
       return;
     }
     var param = {
@@ -433,9 +420,11 @@ $(document).ready(function () {
 
   $("#make-compound-compartment").click(function (e) {
     var selected = cy.nodes(":selected");
-    if(selected.length == 0 || !allHaveTheSameParent(selected)){
+    selected = sbgnElementUtilities.getRootsOfGivenNodes(selected);
+    if(selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)){
       return;
     }
+    
     var param = {
       firstTime: true,
       compundType: "compartment",
