@@ -148,7 +148,9 @@ $(document).ready(function () {
     $.fancybox(
             _.template($("#node-legend-template").html(), {}),
             {
-              'autoDimensions': true,
+              'autoDimensions': false,
+              'width': 420,
+              'height': 393,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });

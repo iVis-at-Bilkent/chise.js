@@ -31,5 +31,3 @@ var sbgnElementUtilities = {
     return true;
   }
 };
-
-
