@@ -17,7 +17,7 @@
         <link href="../lib/css/cytoscape.js-panzoom.css" rel="stylesheet" type="text/css" />
         <link href="../lib/css/font-awesome-4.0.3/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="../lib/css/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
-        
+
         <!-- Loading sample app css -->
         <link href="sampleapp-components/css/sbgn-viz.css" rel="stylesheet">
 
@@ -68,19 +68,6 @@
                             </ul>
                         </li>
 
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Layout 
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" id="perform-layout">Perform Layout</a></li>
-                                <li><a href="#" id="perform-incremental-layout" style="display: none"></a></li>
-                                <li><a href="#" id="layout-properties">Layout Properties...</a></li>
-                            </ul>
-                        </li>
-
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Edit 
@@ -95,7 +82,7 @@
                                     </a>
                                     <ul class="dropdown-menu" id="add-node-submenu">
                                         <li><a href="#" class="add-node-menu-item" name="macromolecule">Macromolecule</a></li>
-                                        <li><a href="#" class="add-node-menu-item" name="simple-chemical">Simple chemical</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="simple-chemical">Simple Chemical</a></li>
                                         <li><a href="#" class="add-node-menu-item" name="complex">Complex</a></li>
                                         <li class="dropdown-submenu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="process-menu-option">
@@ -112,25 +99,25 @@
                                         </li>
                                         <li><a href="#" class="add-node-menu-item" name="phenotype">Phenotype</a></li>
                                         <li><a href="#" class="add-node-menu-item" name="compartment">Compartment</a></li>
-                                        <li><a href="#" class="add-node-menu-item" name="unspecified-entity">Unspecified entry</a></li>
-                                        <li><a href="#" class="add-node-menu-item" name="nucleic-acid-feature">Nucleic acid feature</a></li>
-                                        <li><a href="#" class="add-node-menu-item" name="source-and-sink">Source or sink</a></li>
-                                        <li><a href="#" class="add-node-menu-item" name="perturbing-agent">Perturbing agend</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="unspecified-entity">Unspecified Entry</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="nucleic-acid-feature">Nucleic Acid Feature</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="source-and-sink">Source or Sink</a></li>
+                                        <li><a href="#" class="add-node-menu-item" name="perturbing-agent">Perturbing Agend</a></li>
                                         <li><a href="#" class="add-node-menu-item" name="tag">Tag</a></li>
                                         <li class="dropdown-submenu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="logical-operator-menu-option">
-                                                Logical operators
+                                                Logical Operators
                                                 <!--<b class="right-caret"></b>-->
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="and">AND</a></li>
-                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="or">OR</a></li>
-                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="not">NOT</a></li>
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="and">and</a></li>
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="or">or</a></li>
+                                                <li><a href="#" class="logical-operator-type add-node-menu-item" name="not">not</a></li>
                                             </ul>
                                         </li>
                                     </ul>
                                 </li>
-                                
+
                                 <li class="dropdown-submenu">
                                     <a href="#" id="add-edge-menu-option" class="dropdown-toggle" data-toggle="dropdown">
                                         Add Interaction 
@@ -143,23 +130,23 @@
                                         <li><a href="#" class="add-edge-menu-item" name="stimulation">Simulation</a></li>
                                         <li><a href="#" class="add-edge-menu-item" name="catalysis">Catalysis</a></li>
                                         <li><a href="#" class="add-edge-menu-item" name="inhibition">Inhibition</a></li>
-                                        <li><a href="#" class="add-edge-menu-item" name="necessary-stimulation">Necessary stimulation</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="necessary-stimulation">Necessary Stimulation</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#" class="add-edge-menu-item" name="logic-arc">Logic arc</a></li>
+                                        <li><a href="#" class="add-edge-menu-item" name="logic-arc">Logic Arc</a></li>
                                     </ul>
                                 </li>
-                                
+
                                 <li class="divider"></li>
                                 <li><a href="#" id="make-compound-complex" >Add Complex for Selected</a></li>
                                 <li><a href="#" id="make-compound-compartment" >Add Compartment for Selected</a></li>
-                                
+
                                 <li class="divider"></li>
-                                
+
                                 <li><a href="#" id="delete-selected-simple">Delete Selected Simple</a></li>
                                 <li><a href="#" id="delete-selected-smart">Delete Selected Smart</a></li>
-                                
+
                                 <li class="divider"></li>
-                                
+
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Hide/Show
@@ -171,9 +158,9 @@
                                         <li><a href="#" id="show-all">Show All</a></li>
                                     </ul>
                                 </li>
-                                
+
                                 <li class="divider"></li>
-                                
+
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Collapse/Expand
@@ -186,11 +173,11 @@
                                         <li><a href="#" id="expand-all">Expand All</a></li>
                                     </ul>
                                 </li>
-                                
+
                                 <li class="divider"></li>
                                 <li class="disabled"><a href="#" id="undo-last-action" >Undo</a></li>
                                 <li class="disabled"><a href="#" id="redo-last-action" >Redo</a></li>
-                                
+
                             </ul>
                         </li>
 
@@ -204,6 +191,18 @@
                                 <li><a href="#" id="processes-of-selected">Processes of Selected</a></li>
                                 <li><a href="#" id="remove-highlights">Remove Highlights</a></li>
 
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Layout 
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" id="perform-layout">Perform Layout</a></li>
+                                <li><a href="#" id="perform-incremental-layout" style="display: none"></a></li>
+                                <li><a href="#" id="layout-properties">Layout Properties...</a></li>
                             </ul>
                         </li>
 
@@ -235,78 +234,78 @@
                 </div>
             </nav>
         </div>
-    
+
         <div id="sbgn-toolbar" style="margin-top: 5px;">
-        <table width="100%" height="100%" align="center" valign="center">
-            <tr>
+            <table width="100%" height="100%" align="center" valign="center">
+                <tr>
                 <img id="new-file-icon" class="sbgn-toolbar-element" src="sampleapp-images/new.png" title="New File">
                 <img id="load-file-icon" class="sbgn-toolbar-element" src="sampleapp-images/load.png" title="Load">
                 <img id="save-icon" class="sbgn-toolbar-element" src="sampleapp-images/save.png" title="Save">
                 <img id="select-icon" class="sbgn-toolbar-element" src="sampleapp-images/select.png" title="Select" >
                 <div class="btn-group sbgn-toolbar-element" role="group" id="node-list">
-                    <button id="node-list-set-mode-btn" title="macromolecule" type="button" class="btn" aria-haspopup="true" aria-expanded="false">
-                      <div style="height: 20px;">
-                      <img style="float: left;" id="sbgn-selected-node-img" src="sampleapp-images/macromolecule.png" class="sbgn-select-img"/>
-                      <!--<span style="float: right;" class="caret"></span>-->
-                      </div>
+                    <button id="node-list-set-mode-btn" title="Macromolecule" type="button" class="btn" aria-haspopup="true" aria-expanded="false">
+                        <div style="height: 20px;">
+                            <img style="float: left;" id="sbgn-selected-node-img" src="sampleapp-images/macromolecule.png" class="sbgn-select-img"/>
+                            <!--<span style="float: right;" class="caret"></span>-->
+                        </div>
                     </button>
                     <button id="node-list-dd-button" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div style="height: 20px;">
-                        <span class="caret"></span>
-                        <span class="sr-only"></span>
+                            <span class="caret"></span>
+                            <span class="sr-only"></span>
                         </div>
                     </button>
                     <ul id="node-list-menu" class="dropdown-menu" >
-                      <li class="sbgn-select-node-item" id="first-sbgn-select-node-item"><a href="#"><img src="sampleapp-images/macromolecule.png" class="sbgn-select-img" value="macromolecule"/>macromolecule</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/simple-chemical.png" class="sbgn-select-img" value="simple-chemical"/>simple chemical</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/complex.png" class="sbgn-select-img" value="complex"/>complex</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/process.png" class="sbgn-select-img" value="process"/>process</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/omitted-process.png" class="sbgn-select-img" value="omitted-process"/>omitted process</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/uncertain-process.png" class="sbgn-select-img" value="uncertain-process"/>uncertain process</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/association.png" class="sbgn-select-img" value="association"/>association</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/phenotype.png" class="sbgn-select-img" value="phenotype"/>phenotype</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/compartment.png" class="sbgn-select-img" value="compartment"/>compartment</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/unspecified-entity.png" class="sbgn-select-img" value="unspecified-entity"/>unspecified entity</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/nucleic-acid-feature.png" class="sbgn-select-img" value="nucleic-acid-feature"/>nucleic acid feature</a></li>
+                        <li class="sbgn-select-node-item" id="first-sbgn-select-node-item"><a href="#"><img src="sampleapp-images/macromolecule.png" class="sbgn-select-img" value="macromolecule"/>Macromolecule</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/simple-chemical.png" class="sbgn-select-img" value="simple-chemical"/>Simple Chemical</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/complex.png" class="sbgn-select-img" value="complex"/>Complex</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/process.png" class="sbgn-select-img" value="process"/>Process</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/omitted-process.png" class="sbgn-select-img" value="omitted-process"/>Omitted Process</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/uncertain-process.png" class="sbgn-select-img" value="uncertain-process"/>Uncertain Process</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/association.png" class="sbgn-select-img" value="association"/>Association</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/phenotype.png" class="sbgn-select-img" value="phenotype"/>Phenotype</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/compartment.png" class="sbgn-select-img" value="compartment"/>Compartment</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/unspecified-entity.png" class="sbgn-select-img" value="unspecified-entity"/>Unspecified Entity</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/nucleic-acid-feature.png" class="sbgn-select-img" value="nucleic-acid-feature"/>Nucleic Acid Feature</a></li>
 
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/source-and-sink.png" class="sbgn-select-img" value="source-and-sink"/>source and sink</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/perturbing-agent.png" class="sbgn-select-img" value="perturbing-agent"/>perturbing agent</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/tag.png" class="sbgn-select-img" value="tag"/>tag</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/source-and-sink.png" class="sbgn-select-img" value="source-and-sink"/>Source and Sink</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/perturbing-agent.png" class="sbgn-select-img" value="perturbing-agent"/>Perturbing Agent</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/tag.png" class="sbgn-select-img" value="tag"/>Tag</a></li>
 
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/and.png" class="sbgn-select-img" value="and"/>and</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/or.png" class="sbgn-select-img" value="or"/>or</a></li>
-                      <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/not.png" class="sbgn-select-img" value="not"/>not</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/and.png" class="sbgn-select-img" value="and"/>and</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/or.png" class="sbgn-select-img" value="or"/>or</a></li>
+                        <li class="sbgn-select-node-item"><a href="#"><img src="sampleapp-images/not.png" class="sbgn-select-img" value="not"/>not</a></li>
                     </ul>
                 </div>
                 <div class="btn-group sbgn-toolbar-element" role="group" id="edge-list">
-                    <button id="edge-list-set-mode-btn" type="button" class="btn" title="consumption" aria-haspopup="true" aria-expanded="false">
-                      <div style="height: 20px;">
-                      <img style="float: left;" id="sbgn-selected-edge-img" src="sampleapp-images/consumption.png" class="sbgn-select-img"/>
-                      <!--<span style="float: right;" class="caret"></span>-->
-                      </div>
+                    <button id="edge-list-set-mode-btn" type="button" class="btn" title="Consumption" aria-haspopup="true" aria-expanded="false">
+                        <div style="height: 20px;">
+                            <img style="float: left;" id="sbgn-selected-edge-img" src="sampleapp-images/consumption.png" class="sbgn-select-img"/>
+                            <!--<span style="float: right;" class="caret"></span>-->
+                        </div>
                     </button>
                     <button id="edge-list-dd-button" type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div style="height: 20px;">
-                        <span class="caret"></span>
-                        <span class="sr-only"></span>
+                            <span class="caret"></span>
+                            <span class="sr-only"></span>
                         </div>
                     </button>
                     <ul id="edge-list-menu" class="dropdown-menu" >
-                      <li id="first-sbgn-select-edge-item" class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/consumption.png" class="sbgn-select-img" value="consumption"/>consumption</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/production.png" class="sbgn-select-img" value="production"/>production</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/modulation.png" class="sbgn-select-img" value="modulation"/>modulation</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/stimulation.png" class="sbgn-select-img" value="stimulation"/>stimulation</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/catalysis.png" class="sbgn-select-img" value="catalysis"/>catalysis</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/inhibition.png" class="sbgn-select-img" value="inhibition"/>inhibition</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/necessary-stimulation.png" class="sbgn-select-img" value="necessary-stimulation"/>necessary stimulation</a></li>
-                      <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/logic-arc.png" class="sbgn-select-img" value="logic-arc"/>logic arc</a></li>
+                        <li id="first-sbgn-select-edge-item" class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/consumption.png" class="sbgn-select-img" value="consumption"/>Consumption</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/production.png" class="sbgn-select-img" value="production"/>Production</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/modulation.png" class="sbgn-select-img" value="modulation"/>Modulation</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/stimulation.png" class="sbgn-select-img" value="stimulation"/>Stimulation</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/catalysis.png" class="sbgn-select-img" value="catalysis"/>Catalysis</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/inhibition.png" class="sbgn-select-img" value="inhibition"/>Inhibition</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/necessary-stimulation.png" class="sbgn-select-img" value="necessary-stimulation"/>Necessary Stimulation</a></li>
+                        <li class="sbgn-select-edge-item"><a href="#"><img src="sampleapp-images/logic-arc.png" class="sbgn-select-img" value="logic-arc"/>Logic Arc</a></li>
                     </ul>
                 </div>
                 <img id="perform-layout-icon" class="sbgn-toolbar-element" src="sampleapp-images/layout-cose.png" title="Perform Layout" >
-            </tr>
-        </table>
-    </div>
-        
+                </tr>
+            </table>
+        </div>
+
         <table id="sbgn-inspector-and-canvas">
             <tr>
                 <td>
@@ -322,7 +321,7 @@
         <div id="sbgn-layout-table" title="Layout Properties">
             <!-- sbgn layout table will be shown here -->
         </div>
-    
+
         <div id="sbgn-properties-table" title="Properties" style="display: inline">
             <!-- sbgn properties table will be shown here -->
         </div>
@@ -332,7 +331,7 @@
 
         <div id="box">
         </div>
-    
+
         <input id="node-label-textbox" type="text"></input>
 
         <!-- templates -->
@@ -494,7 +493,7 @@
             <input id="tile" type="checkbox" class="input-small layout-text" <% if (tile){ %> checked<%}%>>
             </td>
             </tr>
-    
+
             <tr>
             <td>
             <span class="add-on layout-text"> Animate </span>
@@ -517,7 +516,7 @@
             <td><br>
             </td>
             </tr>
-            
+
             <tr id="layout-buttons">
             <td>
             <button id="save-layout" class="btn btn-default" >Save</button>
@@ -528,24 +527,24 @@
             </tr>
             </table>
         </script>
-        
+
         <script type="text/template" id="sbgn-properties-template">
             <table class="table-condensed layout-table">
             <tr>
             <td>
             <span class="add-on layout-text"> Compound Padding </span>
             </td>
-            
+
             <td>
             <input id="compound-padding" type="text" class="input-small layout-text" value= <%= compoundPadding %> > %
             </td>
             </tr>
-    
+
             <tr>
             <td>
             <span class="add-on layout-text"> Label Size </span>
             </td>
-            
+
             <td>
             <select name="dynamic-label-size">
             <option id="dynamic-label-size_small" value="small" <% if (dynamicLabelSize == 'small'){ %> selected<%}%> > Small </option>
@@ -554,7 +553,7 @@
             </select>
             </td>
             </tr>
-    
+
             <tr>
             <td>
             <span class="add-on layout-text"> Fit Labels To Nodes </span>
@@ -564,7 +563,7 @@
             <input id="fit-labels-to-nodes" type="checkbox" class="input-small layout-text" <% if (fitLabelsToNodes){ %> checked<%}%>>
             </td>
             </tr>
-    
+
             <tr>
             <td>
             <span class="add-on layout-text"> Layout After Expand / Collapse </span>
@@ -574,7 +573,7 @@
             <input id="incremental-layout-after-expand-collapse" type="checkbox" class="input-small layout-text" <% if (incrementalLayoutAfterExpandCollapse){ %> checked<%}%>>
             </td>
             </tr>
-    
+
             <tr id="sbgn-buttons">
             <td>
             <button id="save-sbgn" class="btn btn-default" >Save</button>
