@@ -198,34 +198,42 @@ var handleSBGNInspector = function () {
   var width = $("#sbgn-inspector").width() * 0.45;
   if (selectedEles.length == 1) {
     var selected = selectedEles[0];
-    var html = "<h3 style='text-align: center; color: blue;'>" + selected.id() + "</h3><table>";
+    var title = selected.data("sbgnlabel");
+    if(title == null){
+      title = selected.data("sbgnclass");
+    }
+    var html = "<div style='text-align: center; color: black; font-weight: bold;'>" + title + "</div><table>";
     var type;
     if (selectedEles.nodes().length == 1) {
       type = "node";
-      html += "<tr><td style='width: " + width + "px'>" + "border-color" + "</td><td>"
-              + "<input id='inspector-border-color' type='color' style='width: " + width + "px;' value='" + selected.data('borderColor')
+      var buttonwidth = width;
+      if(buttonwidth > 50){
+        buttonwidth = 50;
+      }
+      html += "<tr><td style='width: " + width + "px'>" + "Border Color" + "</td><td>"
+              + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
-              + "<input id='inspector-fill-color' type='color' style='width: " + width + "px;' value='" + selected.css('background-color')
+      html += "<tr><td style='width: " + width + "px'>" + "Fill Color" + "</td><td>"
+              + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "border-width" + "</td><td>"
-              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + width + "px;' value='" + parseFloat(selected.css('border-width'))
+      html += "<tr><td style='width: " + width + "px'>" + "Border Width" + "</td><td>"
+              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
 
-      html += "<tr><td style='width: " + width + "px'>" + "State Variables" + "</td>"
+      html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "State Variables" + "</td>"
               + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
 
-      html += "<tr><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
+      html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
               + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
     }
     else {
       type = "edge";
-      html += "<tr><td style='width: " + width + "px'>" + "fill-color" + "</td><td>"
-              + "<input id='inspector-line-color' type='color' style='width: " + width + "px;' value='" + selected.data('lineColor')
+      html += "<tr><td style='width: " + width + "px'>" + "Fill Color" + "</td><td>"
+              + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
               + "'/>" + "</td></tr>";
 
-      html += "<tr><td style='width: " + width + "px'>" + "width" + "</td><td>"
-              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + width + "px;' value='" + parseFloat(selected.css('width'))
+      html += "<tr><td style='width: " + width + "px'>" + "Width" + "</td><td>"
+              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
     }
     html += "</table>";
