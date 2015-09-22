@@ -246,10 +246,11 @@ var handleSBGNInspector = function () {
 
         html += "<tr><td style='width: " + width + "px'>" + "Is Multimer" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
-        
+
         html += "<tr><td style='width: " + width + "px'>" + "Is Clone Marker" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
+
     }
     else {
       type = "edge";
@@ -262,19 +263,35 @@ var handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
     }
     html += "</table>";
+    html += "<div style='text-align: center;'><button style='align: center;' id='inspector-set-as-default-button'"
+            + ">Set As Default</button></div>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
 
     if (type == "node") {
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
         fillInspectorStateAndInfos(selected, width);
-        if(selected.data('sbgnclass').endsWith(' multimer')){
-          $('#inspector-is-multimer').attr('checked',true);
+        if (selected.data('sbgnclass').endsWith(' multimer')) {
+          $('#inspector-is-multimer').attr('checked', true);
         }
-        if(selected.data('sbgnclonemarker')){
-          $('#inspector-is-clone-marker').attr('checked',true);
+        if (selected.data('sbgnclonemarker')) {
+          $('#inspector-is-clone-marker').attr('checked', true);
         }
       }
+
+      $('#inspector-set-as-default-button').on('click', function () {
+        if (addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] == null) {
+          addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] = {};
+        }
+        var defaults = addRemoveUtilities.defaultsMap[selected.data('sbgnclass')];
+        defaults.width = selected.width();
+        defaults.height = selected.height();
+        defaults['border-width'] = selected.css('border-width');
+        defaults['border-color'] = selected.data('borderColor');
+        defaults['background-color'] = selected.css('background-color');
+        defaults['font-size'] = selected.css('font-size');
+        defaults['background-opacity'] = selected.css('background-opacity');
+      });
 
       $('#inspector-is-multimer').on('click', function () {
         var param = {
@@ -283,7 +300,7 @@ var handleSBGNInspector = function () {
         };
         editorActionsManager._do(new changeIsMultimerStatusCommand(param));
       });
-      
+
       $('#inspector-is-clone-marker').on('click', function () {
         var param = {
           makeCloneMarker: $('#inspector-is-clone-marker').attr('checked') == 'checked',
@@ -320,6 +337,15 @@ var handleSBGNInspector = function () {
       });
     }
     else {
+      $('#inspector-set-as-default-button').on('click', function () {
+        if (addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] == null) {
+          addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] = {};
+        }
+        var defaults = addRemoveUtilities.defaultsMap[selected.data('sbgnclass')];
+        defaults['line-color'] = selected.data('lineColor');
+        defaults['width'] = selected.css('width');
+      });
+      
       $("#inspector-line-color").on('change', function () {
         var param = {
           ele: selected,

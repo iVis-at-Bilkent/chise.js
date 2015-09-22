@@ -1,13 +1,23 @@
 var addRemoveUtilities = {
+  defaultsMap: {},
   addNode: function (x, y, sbgnclass) {
-    var width = 50;
-    var height = 50;
+    var defaultsMap = this.defaultsMap;
+    var defaults = defaultsMap[sbgnclass];
+    var width = defaults ? defaults.width : 50;
+    var height = defaults ? defaults.height : 50;
+    var css = defaults ? {
+      'border-width': defaults['border-width'],
+//      'border-color': defaults['border-color'],
+      'background-color': defaults['background-color'],
+      'font-size': defaults['font-size'],
+      'background-opacity': defaults['background-opacity']
+    } : {};
     var eles = cy.add({
       group: "nodes",
       data: {
         width: width,
         height: height,
-        sbgnclass: sbgnclass, 
+        sbgnclass: sbgnclass,
         sbgnbbox: {
           h: height,
           w: width,
@@ -17,6 +27,7 @@ var addRemoveUtilities = {
         sbgnstatesandinfos: [],
         ports: []
       },
+      css: css,
       position: {
         x: x,
         y: y
@@ -25,7 +36,13 @@ var addRemoveUtilities = {
     cy.layout({
       name: 'preset'
     });
-    return eles[eles.length - 1];
+    var newNode = eles[eles.length - 1];
+    if (defaults['border-color']) {
+      newNode.data('borderColor', defaults['border-color']);
+      newNode.addClass('changeBorderColor');
+    }
+
+    return newNode;
   },
   removeNodes: function (nodes) {
     var removedEles = nodes.connectedEdges().remove();
@@ -39,19 +56,31 @@ var addRemoveUtilities = {
     return removedEles;
   },
   addEdge: function (source, target, sbgnclass) {
+    var defaultsMap = this.defaultsMap;
+    var defaults = defaultsMap[sbgnclass];
+    var css = defaults ? {
+      'width': defaults['width']
+    } : {};
     var eles = cy.add({
       group: "edges",
       data: {
         source: source,
         target: target,
         sbgnclass: sbgnclass
-      }
+      },
+      css: css
     });
     cy.layout({
       name: 'preset'
     });
 
-    return eles[eles.length - 1];
+    var newEdge = eles[eles.length - 1];
+    if (defaults['line-color']) {
+      newEdge.data('lineColor', defaults['line-color']);
+      newEdge.addClass('changeLineColor');
+    }
+
+    return newEdge;
   },
   removeEdges: function (edges) {
     return edges.remove();
