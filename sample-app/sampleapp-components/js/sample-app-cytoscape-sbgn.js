@@ -35,6 +35,18 @@ $(document).ready(function ()
   dynamicResize();
 });
 
+//Returns true for unspecified entity, 
+//simple chemical, macromolecule, nucleic acid feature, and complexes
+//As they may have some specific node properties(state variables, units of information etc.)
+var isSpecialSBGNNodeClass = function (sbgnclass) {
+  if (sbgnclass == 'unspecified entity' || sbgnclass == 'simple chemical'
+          || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
+          || sbgnclass == 'complex') {
+    return true;
+  }
+  return false;
+};
+
 var relocateStateAndInfos = function (stateAndInfos) {
   var length = stateAndInfos.length;
   if (length == 0) {
@@ -222,12 +234,13 @@ var handleSBGNInspector = function () {
       html += "<tr><td style='width: " + width + "px'>" + "Border Width" + "</td><td>"
               + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
+      if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
+        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "State Variables" + "</td>"
+                + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
 
-      html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "State Variables" + "</td>"
-              + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
-
-      html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
-              + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
+        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
+                + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
+      }
     }
     else {
       type = "edge";
@@ -244,7 +257,10 @@ var handleSBGNInspector = function () {
     $("#sbgn-inspector").html(html);
 
     if (type == "node") {
-      fillInspectorStateAndInfos(selected, width);
+      if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
+        fillInspectorStateAndInfos(selected, width);
+      }
+
       $("#inspector-border-color").on('change', function () {
         var param = {
           ele: selected,
@@ -536,7 +552,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'background-color': '#f6f6f6',
           'font-size': 11,
 //          'shape': 'data(sbgnclass)',
-          'background-opacity': '0.5'
+          'background-opacity': 0.5
         })
         .selector("node[sbgnclass]")
         .css({
@@ -552,7 +568,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("node[sbgnclass='compartment']")
         .css({
-          'background-opacity': '0',
+          'background-opacity': 0,
           'background-color': '#FFFFFF',
           'content': 'data(sbgnlabel)',
           'text-valign': 'bottom',
@@ -576,7 +592,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'text-outline-color': '#000'})
         .selector("node:active")
         .css({
-          'background-opacity': '0.7', 'overlay-color': '#d67614',
+          'background-opacity': 0.7, 'overlay-color': '#d67614',
           'overlay-padding': '14'
         })
         .selector("edge")
@@ -612,7 +628,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("edge:active")
         .css({
-          'background-opacity': '0.7', 'overlay-color': '#d67614',
+          'background-opacity': 0.7, 'overlay-color': '#d67614',
           'overlay-padding': '8'
         })
         .selector("core")
