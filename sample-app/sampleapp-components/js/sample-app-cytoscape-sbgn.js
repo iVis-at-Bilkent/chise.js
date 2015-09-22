@@ -199,17 +199,20 @@ var handleSBGNInspector = function () {
   if (selectedEles.length == 1) {
     var selected = selectedEles[0];
     var title = selected.data("sbgnlabel");
-    if(title == null){
+    if (title == null) {
       title = selected.data("sbgnclass");
     }
+
+    var buttonwidth = width;
+    if (buttonwidth > 50) {
+      buttonwidth = 50;
+    }
+
     var html = "<div style='text-align: center; color: black; font-weight: bold;'>" + title + "</div><table>";
     var type;
     if (selectedEles.nodes().length == 1) {
       type = "node";
-      var buttonwidth = width;
-      if(buttonwidth > 50){
-        buttonwidth = 50;
-      }
+
       html += "<tr><td style='width: " + width + "px'>" + "Border Color" + "</td><td>"
               + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
@@ -757,7 +760,7 @@ var SBGNContainer = Backbone.View.extend({
       ready: function ()
       {
         window.cy = this;
-        
+
         refreshPaddings();
         initilizeUnselectedDataOfElements();
 
