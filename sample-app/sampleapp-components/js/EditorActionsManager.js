@@ -223,7 +223,7 @@ function simpleCollapseGivenNodes(nodes) {
 }
 
 function performLayoutFunction(nodesData) {
-  if(nodesData.firstTime){
+  if (nodesData.firstTime) {
     delete nodesData.firstTime;
     return nodesData;
   }
@@ -581,17 +581,32 @@ function changeIsMultimerStatus(param) {
   var node = param.node;
   var makeMultimer = param.makeMultimer;
   var sbgnclass = node.data('sbgnclass');
-  if(makeMultimer){
+  if (makeMultimer) {
     node.data('sbgnclass', sbgnclass + ' multimer');
   }
   else {
     node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
   }
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
-    $('#inspector-is-multimer').attr('checked',makeMultimer);
+    $('#inspector-is-multimer').attr('checked', makeMultimer);
   }
   var result = {
     makeMultimer: !makeMultimer,
+    node: node
+  };
+  return result;
+}
+
+function changeIsCloneMarkerStatus(param) {
+  var node = param.node;
+  var makeCloneMarker = param.makeCloneMarker;
+  node._private.data.sbgnclonemarker = makeCloneMarker?true:undefined;
+  cy.forceRender();
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+    $('#inspector-is-clone-marker').attr('checked', makeCloneMarker);
+  }
+  var result = {
+    makeCloneMarker: !makeCloneMarker,
     node: node
   };
   return result;
@@ -784,8 +799,12 @@ var ChangeStyleCssCommand = function (param) {
   return new Command(changeStyleCss, changeStyleCss, param);
 };
 
-var changeIsMultimerStatusCommand = function(param){
+var changeIsMultimerStatusCommand = function (param) {
   return new Command(changeIsMultimerStatus, changeIsMultimerStatus, param);
+};
+
+var changeIsCloneMarkerStatusCommand = function (param) {
+  return new Command(changeIsCloneMarkerStatus, changeIsCloneMarkerStatus, param);
 };
 
 /**

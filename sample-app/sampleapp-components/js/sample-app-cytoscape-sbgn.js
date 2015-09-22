@@ -246,6 +246,9 @@ var handleSBGNInspector = function () {
 
         html += "<tr><td style='width: " + width + "px'>" + "Is Multimer" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
+        
+        html += "<tr><td style='width: " + width + "px'>" + "Is Clone Marker" + "</td>"
+                + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
     }
     else {
@@ -268,21 +271,25 @@ var handleSBGNInspector = function () {
         if(selected.data('sbgnclass').endsWith(' multimer')){
           $('#inspector-is-multimer').attr('checked',true);
         }
+        if(selected.data('sbgnclonemarker')){
+          $('#inspector-is-clone-marker').attr('checked',true);
+        }
       }
 
       $('#inspector-is-multimer').on('click', function () {
-//        var sbgnclass = selected.data('sbgnclass');
-//        if(!$('#inspector-is-multimer').attr('checked')){
-//          selected.data('sbgnclass', sbgnclass.replace(' multimer', ''));
-//        }
-//        else {
-//          selected.data('sbgnclass', sbgnclass + ' multimer');
-//        }
         var param = {
-          makeMultimer: $('#inspector-is-multimer').attr('checked'),
+          makeMultimer: $('#inspector-is-multimer').attr('checked') == 'checked',
           node: selected
         };
         editorActionsManager._do(new changeIsMultimerStatusCommand(param));
+      });
+      
+      $('#inspector-is-clone-marker').on('click', function () {
+        var param = {
+          makeCloneMarker: $('#inspector-is-clone-marker').attr('checked') == 'checked',
+          node: selected
+        };
+        editorActionsManager._do(new changeIsCloneMarkerStatusCommand(param));
       });
 
       $("#inspector-border-color").on('change', function () {
