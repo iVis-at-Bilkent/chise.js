@@ -577,6 +577,26 @@ function removeStateAndInfo(param) {
   return result;
 }
 
+function changeIsMultimerStatus(param) {
+  var node = param.node;
+  var makeMultimer = param.makeMultimer;
+  var sbgnclass = node.data('sbgnclass');
+  if(makeMultimer){
+    node.data('sbgnclass', sbgnclass + ' multimer');
+  }
+  else {
+    node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+  }
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+    $('#inspector-is-multimer').attr('checked',makeMultimer);
+  }
+  var result = {
+    makeMultimer: !makeMultimer,
+    node: node
+  };
+  return result;
+}
+
 function changeStyleData(param) {
   var result = {
   };
@@ -762,6 +782,10 @@ var ChangeStyleDataCommand = function (param) {
 
 var ChangeStyleCssCommand = function (param) {
   return new Command(changeStyleCss, changeStyleCss, param);
+};
+
+var changeIsMultimerStatusCommand = function(param){
+  return new Command(changeIsMultimerStatus, changeIsMultimerStatus, param);
 };
 
 /**

@@ -41,7 +41,10 @@ $(document).ready(function ()
 var isSpecialSBGNNodeClass = function (sbgnclass) {
   if (sbgnclass == 'unspecified entity' || sbgnclass == 'simple chemical'
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-          || sbgnclass == 'complex') {
+          || sbgnclass == 'complex'
+          || sbgnclass == 'unspecified entity multimer' || sbgnclass == 'simple chemical multimer'
+          || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
+          || sbgnclass == 'complex multimer') {
     return true;
   }
   return false;
@@ -240,6 +243,9 @@ var handleSBGNInspector = function () {
 
         html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
+
+        html += "<tr><td style='width: " + width + "px'>" + "Is Multimer" + "</td>"
+                + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
       }
     }
     else {
@@ -259,7 +265,25 @@ var handleSBGNInspector = function () {
     if (type == "node") {
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
         fillInspectorStateAndInfos(selected, width);
+        if(selected.data('sbgnclass').endsWith(' multimer')){
+          $('#inspector-is-multimer').attr('checked',true);
+        }
       }
+
+      $('#inspector-is-multimer').on('click', function () {
+//        var sbgnclass = selected.data('sbgnclass');
+//        if(!$('#inspector-is-multimer').attr('checked')){
+//          selected.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+//        }
+//        else {
+//          selected.data('sbgnclass', sbgnclass + ' multimer');
+//        }
+        var param = {
+          makeMultimer: $('#inspector-is-multimer').attr('checked'),
+          node: selected
+        };
+        editorActionsManager._do(new changeIsMultimerStatusCommand(param));
+      });
 
       $("#inspector-border-color").on('change', function () {
         var param = {
