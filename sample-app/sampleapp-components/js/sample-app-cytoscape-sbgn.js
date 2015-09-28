@@ -280,12 +280,20 @@ var handleSBGNInspector = function () {
       }
 
       $('#inspector-set-as-default-button').on('click', function () {
-        if (addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] == null) {
-          addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] = {};
+        var multimer;
+        var sbgnclass = selected.data('sbgnclass');
+        if(sbgnclass.endsWith(' multimer')){
+          sbgnclass = sbgnclass.replace(' multimer', '');
+          multimer = true;
         }
-        var defaults = addRemoveUtilities.defaultsMap[selected.data('sbgnclass')];
+        if (addRemoveUtilities.defaultsMap[sbgnclass] == null) {
+          addRemoveUtilities.defaultsMap[sbgnclass] = {};
+        }
+        var defaults = addRemoveUtilities.defaultsMap[sbgnclass];
         defaults.width = selected.width();
         defaults.height = selected.height();
+        defaults.sbgnclonemarker = selected._private.data.sbgnclonemarker;
+        defaults.multimer = multimer;
         defaults['border-width'] = selected.css('border-width');
         defaults['border-color'] = selected.data('borderColor');
         defaults['background-color'] = selected.css('background-color');
@@ -660,6 +668,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'width': 1.5,
           'target-arrow-color': '#555',
           'source-arrow-color': '#555',
+//          'target-arrow-shape': 'data(sbgnclass)'
+        })
+        .selector("edge[sbgnclass='inhibition']")
+        .css({
           'target-arrow-shape': 'data(sbgnclass)'
         })
         .selector("edge[sbgnclass='inhibition']")

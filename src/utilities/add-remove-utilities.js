@@ -12,6 +12,11 @@ var addRemoveUtilities = {
       'font-size': defaults['font-size'],
       'background-opacity': defaults['background-opacity']
     } : {};
+    
+    if(defaults && defaults.multimer){
+      sbgnclass += " multimer";
+    }
+    
     var eles = cy.add({
       group: "nodes",
       data: {
@@ -37,11 +42,16 @@ var addRemoveUtilities = {
       name: 'preset'
     });
     var newNode = eles[eles.length - 1];
-    if (defaults['border-color']) {
+    if (defaults && defaults['border-color']) {
       newNode.data('borderColor', defaults['border-color']);
-      newNode.addClass('changeBorderColor');
     }
-
+    else {
+      newNode.data('borderColor', newNode.css('border-color'));
+    }
+    if (defaults && defaults['sbgnclonemarker']) {
+      newNode._private.data.sbgnclonemarker = defaults.sbgnclonemarker;
+    }
+    newNode.addClass('changeBorderColor');
     return newNode;
   },
   removeNodes: function (nodes) {
@@ -75,11 +85,13 @@ var addRemoveUtilities = {
     });
 
     var newEdge = eles[eles.length - 1];
-    if (defaults['line-color']) {
+    if (defaults && defaults['line-color']) {
       newEdge.data('lineColor', defaults['line-color']);
-      newEdge.addClass('changeLineColor');
     }
-
+    else {
+      newEdge.data('lineColor', newEdge.css('line-color'));
+    }
+    newEdge.addClass('changeLineColor');
     return newEdge;
   },
   removeEdges: function (edges) {
