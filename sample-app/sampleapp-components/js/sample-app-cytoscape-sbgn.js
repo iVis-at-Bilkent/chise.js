@@ -274,7 +274,7 @@ var handleSBGNInspector = function () {
     }
     html += "</table>";
     html += "<div style='text-align: center;'><button style='align: center;' id='inspector-set-as-default-button'"
-            + ">Set As Default</button></div>";
+            + ">Set as Default</button></div>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
 
