@@ -221,6 +221,10 @@ var handleSBGNInspector = function () {
       }
       else{
         title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        title = title.replace(' Of ', ' of ');
+        title = title.replace(' And ', ' and ');
+        title = title.replace(' Or ', ' or ');
+        title = title.replace(' Not ', ' not ');
       }
     }
 
@@ -247,7 +251,7 @@ var handleSBGNInspector = function () {
         html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>Unit Of Informations</font>" + "</td>"
+        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>Units Of Information</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
 
         html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Is Multimer</font>" + "</td>"
