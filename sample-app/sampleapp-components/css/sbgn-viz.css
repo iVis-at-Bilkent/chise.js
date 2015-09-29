@@ -159,8 +159,8 @@ body {
     width: 200px;
     overflow: auto !important;
     border-radius: 0.25em;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
     /*float: right;*/
 }
 

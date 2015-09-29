@@ -254,10 +254,10 @@ var handleSBGNInspector = function () {
         html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>Units Of Information</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Is Multimer</font>" + "</td>"
+        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Multimer</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Is Clone Marker</font>" + "</td>"
+        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cloned</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
 
