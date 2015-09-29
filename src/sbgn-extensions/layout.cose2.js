@@ -4559,7 +4559,7 @@
       });
 
       if (after.options.fit)
-        after.options.cy.fit(after.options.padding);
+        after.options.cy.fit(after.options.eles.nodes(), after.options.padding);
 
       //trigger layoutready when each node has had its position set at least once
       if (!ready) {
@@ -4597,7 +4597,7 @@
         });
 
         if (after.options.fit)
-          after.options.cy.fit(after.options.padding);
+          after.options.cy.fit(after.options.eles.nodes(), after.options.padding);
 
         if (!ready) {
           ready = true;
