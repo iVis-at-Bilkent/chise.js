@@ -216,6 +216,12 @@ var handleSBGNInspector = function () {
     var title = selected.data("sbgnlabel");
     if (title == null) {
       title = selected.data("sbgnclass");
+      if(title == 'and' || title == 'or' || title == 'not'){
+        title = title.toUpperCase();
+      }
+      else{
+        title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      }
     }
 
     var buttonwidth = width;
