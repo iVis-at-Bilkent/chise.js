@@ -228,37 +228,37 @@ var handleSBGNInspector = function () {
     if (selectedEles.nodes().length == 1) {
       type = "node";
 
-      html += "<tr><td style='width: " + width + "px'>" + "Border Color" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Border Color</font>" + "</td><td>"
               + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "Fill Color" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
               + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "Border Width" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Border Width</font>" + "</td><td>"
               + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
-        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "State Variables" + "</td>"
+        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "Unit Of Informations" + "</td>"
+        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>Unit Of Informations</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "Is Multimer" + "</td>"
+        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Is Multimer</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "Is Clone Marker" + "</td>"
+        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Is Clone Marker</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
 
     }
     else {
       type = "edge";
-      html += "<tr><td style='width: " + width + "px'>" + "Fill Color" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
               + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
               + "'/>" + "</td></tr>";
 
-      html += "<tr><td style='width: " + width + "px'>" + "Width" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Width</font>" + "</td><td>"
               + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
     }
