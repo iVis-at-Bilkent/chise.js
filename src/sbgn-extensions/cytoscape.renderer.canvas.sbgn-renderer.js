@@ -3046,8 +3046,6 @@
       var multimerPadding = nodeShapes["complex"].multimerPadding;
       var cloneMarker = node._private.data.sbgnclonemarker;
 
-      $$.sbgn.forceOpacityToOne(node, context);
-
       nodeShapes["complex"].points = $$.sbgn.generateComplexShapePoints(cornerLength,
               width, height);
 
@@ -3077,7 +3075,8 @@
       $$.sbgn.cloneMarker.complex(context, centerX, centerY,
               width, height, cornerLength, cloneMarker, false,
               node._private.style['background-opacity'].value);
-
+      
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawComplexStateAndInfo(context, node, stateAndInfos, centerX, centerY, width, height);
 
     },
@@ -3204,8 +3203,6 @@
       var cloneMarker = node._private.data.sbgnclonemarker;
       var padding = node._private.style["border-width"].pxValue;
 
-      $$.sbgn.forceOpacityToOne(node, context);
-
       //check whether sbgn class includes multimer substring or not
       if ($$.sbgn.isMultimer(node)) {
         //add multimer shape
@@ -3233,6 +3230,7 @@
               width, height, cloneMarker, false,
               node._private.style['background-opacity'].value);
 
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawStateAndInfos(node, context, centerX, centerY);
 
       var nodeProp = {'label': label, 'centerX': centerX, 'centerY': centerY,
@@ -3342,9 +3340,7 @@
       var cornerRadius = $$.math.getRoundRectangleRadius(width, height);
       var multimerPadding = nodeShapes["nucleic acid feature"].multimerPadding;
       var cloneMarker = node._private.data.sbgnclonemarker;
-
-      $$.sbgn.forceOpacityToOne(node, context);
-
+      
       //check whether sbgn class includes multimer substring or not
       if ($$.sbgn.isMultimer(node)) {
         //add multimer shape
@@ -3373,8 +3369,9 @@
 
       var nodeProp = {'label': label, 'centerX': centerX, 'centerY': centerY,
         'opacity': node._private.style['text-opacity'].value, 'width': node.width(), 'height': node.height()};
+      
       $$.sbgn.drawDynamicLabelText(context, nodeProp);
-
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawStateAndInfos(node, context, centerX, centerY);
     },
     drawPath: function (context, node) {
@@ -3473,9 +3470,7 @@
       var height = node.height();
       var label = node._private.data.sbgnlabel;
       var cloneMarker = node._private.data.sbgnclonemarker;
-
-      $$.sbgn.forceOpacityToOne(node, context);
-
+      
       renderer.drawPolygon(context,
               centerX, centerY,
               width, height,
@@ -3489,8 +3484,9 @@
 
       var nodeProp = {'label': label, 'centerX': centerX, 'centerY': centerY,
         'opacity': node._private.style['text-opacity'].value, 'width': node.width(), 'height': node.height()};
+      
       $$.sbgn.drawDynamicLabelText(context, nodeProp);
-
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawStateAndInfos(node, context, centerX, centerY);
     },
     drawPath: function (context, node) {
@@ -3572,8 +3568,6 @@
       var padding = node._private.style["border-width"].pxValue;
       var cloneMarker = node._private.data.sbgnclonemarker;
 
-      $$.sbgn.forceOpacityToOne(node, context);
-
       if ($$.sbgn.isMultimer(node)) {
         //add multimer shape
         $$.sbgn.drawSimpleChemical(context, centerX + multimerPadding,
@@ -3601,8 +3595,9 @@
 
       var nodeProp = {'label': label, 'centerX': centerX, 'centerY': centerY,
         'opacity': node._private.style['text-opacity'].value, 'width': node.width(), 'height': node.height()};
+      
       $$.sbgn.drawDynamicLabelText(context, nodeProp);
-
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawStateAndInfos(node, context, centerX, centerY);
     },
     drawPath: function (context, node) {
@@ -3850,9 +3845,7 @@
       var sbgnClass = node._private.data.sbgnclass;
       var label = node._private.data.sbgnlabel;
       var cloneMarker = node._private.data.sbgnclonemarker;
-
-      $$.sbgn.forceOpacityToOne(node, context);
-
+      
       $$.sbgn.drawEllipse(context, centerX, centerY, width, height);
 
       context.stroke();
@@ -3863,8 +3856,9 @@
 
       var nodeProp = {'label': label, 'centerX': centerX, 'centerY': centerY,
         'opacity': node._private.style['text-opacity'].value, 'width': node.width(), 'height': node.height()};
+      
       $$.sbgn.drawDynamicLabelText(context, nodeProp);
-
+      $$.sbgn.forceOpacityToOne(node, context);
       $$.sbgn.drawStateAndInfos(node, context, centerX, centerY);
 
     },
