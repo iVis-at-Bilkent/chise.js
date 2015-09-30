@@ -38,9 +38,7 @@ var addRemoveUtilities = {
         y: y
       }
     });
-    cy.layout({
-      name: 'preset'
-    });
+    
     var newNode = eles[eles.length - 1];
     if (defaults && defaults['border-color']) {
       newNode.data('borderColor', defaults['border-color']);
@@ -79,9 +77,6 @@ var addRemoveUtilities = {
         sbgnclass: sbgnclass
       },
       css: css
-    });
-    cy.layout({
-      name: 'preset'
     });
 
     var newEdge = eles[eles.length - 1];
