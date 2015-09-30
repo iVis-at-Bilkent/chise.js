@@ -11,6 +11,7 @@ var modeHandler = {
     "omitted-process": "omitted process",
     "uncertain-process": "uncertain process",
     "association": "association",
+    "dissociation": "dissociation",
     "phenotype": "phenotype",
     "compartment": "compartment",
     "unspecified-entity": "unspecified entity",
