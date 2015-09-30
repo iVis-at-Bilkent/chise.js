@@ -247,6 +247,9 @@ var handleSBGNInspector = function () {
       html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Border Width</font>" + "</td><td>"
               + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
+      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Opacity</font>" + "</td><td>"
+              + "<input id='inspector-background-opacity' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
+              + "'/>" + "</td></tr>";
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
         html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
@@ -335,6 +338,15 @@ var handleSBGNInspector = function () {
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
       });
+      
+      $("#inspector-background-opacity").on('change', function () {
+        var param = {
+          ele: selected,
+          data: $("#inspector-background-opacity").attr("value"),
+          dataType: "backgroundOpacity"
+        };
+        editorActionsManager._do(new ChangeStyleDataCommand(param));
+      });
 
       $("#inspector-fill-color").on('change', function () {
         var param = {
@@ -402,6 +414,9 @@ var initilizeUnselectedDataOfElements = function () {
     var node = nodes[i];
     node.data("borderColor", node.css('border-color'));
     node.addClass('changeBorderColor');
+    
+    node.data("backgroundOpacity", node.css('background-opacity'));
+    node.addClass('changeBackgroundOpacity');
   }
 
   for (var i = 0; i < edges.length; i++) {
@@ -762,6 +777,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         .css({
           'width': 60,
           'height': 60
+        })
+        .selector("node.changeBackgroundOpacity")
+        .css({
+          'background-opacity': 'data(backgroundOpacity)'
         })
         .selector("node.changeBorderColor")
         .css({
