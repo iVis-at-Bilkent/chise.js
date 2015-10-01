@@ -3967,7 +3967,7 @@
       var height = node.height();
       var padding = node._private.style['border-width'].pxValue / 2;
 
-      return nodeShapes['ellipse'].intersectLine(x1, y1, x2, y2, width,
+      return nodeShapes['ellipse'].intersectBox(x1, y1, x2, y2, width,
               height, centerX, centerY, padding);
     },
     checkPoint: function (x, y, node, threshold) {
