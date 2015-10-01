@@ -893,7 +893,7 @@ var SBGNContainer = Backbone.View.extend({
             var param = {
               node: sourceNode,
               firstTime: true
-            }
+            };
             editorActionsManager._do(new ResizeNodeCommand(param));
             refreshUndoRedoButtonsStatus();
           },
