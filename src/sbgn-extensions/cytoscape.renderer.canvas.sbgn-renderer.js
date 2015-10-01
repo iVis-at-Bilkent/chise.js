@@ -1896,7 +1896,7 @@
 
   $$.sbgn.drawLabelText = function (context, textProp) {
     textProp.color = "#0f0f0f";
-    textProp.font = "15px Arial";
+    textProp.font = "18px Arial";
     $$.sbgn.drawText(context, textProp);
   };
 

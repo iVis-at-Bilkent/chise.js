@@ -658,7 +658,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("node[sbgnclass='compartment']")
         .css({
-          'border-width': 1.5,
+          'border-width': 2.5,
           'background-opacity': 0,
           'background-color': '#FFFFFF',
           'content': 'data(sbgnlabel)',
@@ -696,7 +696,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'source-arrow-color': '#555',
 //          'target-arrow-shape': 'data(sbgnclass)'
         })
-        .selector("edge[sbgnclass='inhibition']")
+        .selector("edge[sbgnclass]")
         .css({
           'target-arrow-shape': 'data(sbgnclass)'
         })
