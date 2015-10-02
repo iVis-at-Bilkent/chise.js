@@ -1423,7 +1423,7 @@
 
     //if cardinality is zero, return here.
     var cardinality = edge._private.data.sbgncardinality;
-    if (cardinality == 0)
+    if (cardinality == 0 || cardinality == null)
       return;
 
     var carProp = $$.sbgn.cardinalityProperties();
@@ -1452,14 +1452,16 @@
 
     var dispX = x1 - x2;
     var dispY = y1 - y2;
-
+    
     var angle = Math.asin(dispY / (Math.sqrt(dispX * dispX + dispY * dispY)));
+    
     if (dispX < 0) {
       angle = angle + Math.PI / 2;
     } else {
       angle = -(Math.PI / 2 + angle);
     }
-
+    
+    
     context.translate(x1, y1);
     context.rotate(-angle);
 
@@ -1485,7 +1487,7 @@
 
     //if cardinality is zero, return here.
     var cardinality = edge._private.data.sbgncardinality;
-    if (cardinality <= 0)
+    if (cardinality <= 0 || cardinality == null)
       return;
 
     var carProp = $$.sbgn.cardinalityProperties();
@@ -1516,7 +1518,7 @@
     } else {
       angle = -(Math.PI / 2 + angle);
     }
-
+    
     context.translate(startX, startY);
     context.rotate(-angle);
 

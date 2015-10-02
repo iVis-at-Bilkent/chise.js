@@ -274,6 +274,12 @@ var handleSBGNInspector = function () {
       html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Width</font>" + "</td><td>"
               + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
+      if(selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production'){
+        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cardinality</font>" + "</td><td>"
+              + "<input id='inspector-cardinality' type='number' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('sbgncardinality'))
+              + "'/>" + "</td></tr>";
+      }
+      
     }
     html += "</table>";
     html += "<div style='text-align: center;'><button style='align: center;' id='inspector-set-as-default-button'"
@@ -381,6 +387,15 @@ var handleSBGNInspector = function () {
           ele: selected,
           data: $("#inspector-line-color").attr("value"),
           dataType: "lineColor"
+        };
+        editorActionsManager._do(new ChangeStyleDataCommand(param));
+      });
+      
+      $("#inspector-cardinality").bind('change').on('change', function () {
+        var param = {
+          ele: selected,
+          data: $("#inspector-cardinality").attr("value"),
+          dataType: "sbgncardinality"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
       });
