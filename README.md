@@ -126,12 +126,12 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
 
 Icons made by [Freepik](http://www.freepik.com), 
 [Daniel Bruce](http://www.flaticon.com/authors/daniel-bruce), 
-[http://www.flaticon.com/authors/tutsplus](TutsPlus),
-[http://www.flaticon.com/authors/robin-kylander](Robin Kylander),
-[http://www.flaticon.com/authors/catalin-fertu](Catalin Fertu),
-[http://www.flaticon.com/authors/yannick](Yannick),
-[http://www.flaticon.com](Flaticon) and licensed with 
-[http://creativecommons.org/licenses/by/3.0/](Creative Commons BY 3.0)
+[TutsPlus](http://www.flaticon.com/authors/tutsplus),
+[Robin Kylander](http://www.flaticon.com/authors/robin-kylander),
+[Catalin Fertu](http://www.flaticon.com/authors/catalin-fertu),
+[Yannick](http://www.flaticon.com/authors/yannick),
+[Flaticon](http://www.flaticon.com) and licensed with 
+[Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
 ## Team
 
