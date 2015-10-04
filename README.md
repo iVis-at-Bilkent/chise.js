@@ -124,6 +124,15 @@ Please cite the following when you use SBGNViz.js:
 
 M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[SBGNViz: a tool for visualization and complexity management of SBGN process description maps](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0128985)", PLoS ONE, 10(6), e0128985, 2015.
 
+Icons made by [Freepik](http://www.freepik.com), 
+[Daniel Bruce](http://www.flaticon.com/authors/daniel-bruce), 
+[http://www.flaticon.com/authors/tutsplus](TutsPlus),
+[http://www.flaticon.com/authors/robin-kylander](Robin Kylander),
+[http://www.flaticon.com/authors/catalin-fertu](Catalin Fertu),
+[http://www.flaticon.com/authors/yannick](Yannick),
+[http://www.flaticon.com](Flaticon) and licensed with 
+[http://creativecommons.org/licenses/by/3.0/](Creative Commons BY 3.0)
+
 ## Team
 
   * Mecit Sari, Ugur Dogrusoz, Istemi Bahceci, Ayhun Tekat, Metin Can Siper, M.Furkan Sahin, [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
