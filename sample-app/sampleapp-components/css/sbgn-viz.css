@@ -249,7 +249,7 @@ body {
 }
 
 .sbgn-select-img {
-    width: 30px;
+   margin-right: 2px;
 }
 
 .hidden-element {
@@ -287,4 +287,16 @@ body {
     z-index: 100;
     display: none;
     width: 100px;
+}
+
+.dd-list-href {
+    padding-left: 0px !important; 
+}
+
+#node-list-menu {
+    width: 170px;
+}
+
+#edge-list-menu {
+    width: 175px;
 }
