@@ -673,7 +673,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("node[sbgnclass='compartment']")
         .css({
-          'border-width': 2.5,
+          'border-width': 3.75,
           'background-opacity': 0,
           'background-color': '#FFFFFF',
           'content': 'data(sbgnlabel)',
