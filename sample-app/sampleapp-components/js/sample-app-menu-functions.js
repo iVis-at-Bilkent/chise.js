@@ -348,12 +348,20 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
+  $("#hide-selected-icon").click(function (e) {
+    $("#hide-selected").trigger('click');
+  });
+
   $("#show-selected").click(function (e) {
 //    sbgnFiltering.showSelected();
     var param = {};
     param.firstTime = true;
     editorActionsManager._do(new ShowSelectedCommand(param));
     refreshUndoRedoButtonsStatus();
+  });
+
+  $("#show-selected-icon").click(function (e) {
+    $("#show-selected").trigger('click');
   });
 
   $("#show-all").click(function (e) {
@@ -371,6 +379,10 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
+  $("#delete-selected-smart-icon").click(function (e) {
+    $("#delete-selected-smart").trigger('click');
+  });
+
   $("#neighbors-of-selected").click(function (e) {
 //    sbgnFiltering.highlightNeighborsofSelected();
     var param = {
@@ -378,6 +390,10 @@ $(document).ready(function () {
     };
     editorActionsManager._do(new HighlightNeighborsofSelectedCommand(param));
     refreshUndoRedoButtonsStatus();
+  });
+  
+  $("#highlight-neighbors-of-selected-icon").click(function (e) {
+    $("#neighbors-of-selected").trigger('click');
   });
 
   $("#processes-of-selected").click(function (e) {
@@ -408,7 +424,7 @@ $(document).ready(function () {
       return false;
     });
     selected = sbgnElementUtilities.getRootsOfGivenNodes(selected);
-    if(selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)){
+    if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
       return;
     }
     var param = {
@@ -423,10 +439,10 @@ $(document).ready(function () {
   $("#make-compound-compartment").click(function (e) {
     var selected = cy.nodes(":selected");
     selected = sbgnElementUtilities.getRootsOfGivenNodes(selected);
-    if(selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)){
+    if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
       return;
     }
-    
+
     var param = {
       firstTime: true,
       compundType: "compartment",
@@ -439,6 +455,10 @@ $(document).ready(function () {
   $("#layout-properties").click(function (e) {
     sbgnLayoutProp.render();
   });
+  
+  $("#layout-properties-icon").click(function (e) {
+    $("#layout-properties").trigger('click');
+  });
 
   $("#delete-selected-simple").click(function (e) {
     var selectedEles = cy.$(":selected");
@@ -446,8 +466,16 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
+  $("#delete-selected-simple-icon").click(function (e) {
+    $("#delete-selected-simple").trigger('click');
+  });
+
   $("#sbgn-properties").click(function (e) {
     sbgnProperties.render();
+  });
+
+  $("#properties-icon").click(function (e) {
+    $("#sbgn-properties").trigger('click');
   });
 
   $("#collapse-selected").click(function (e) {
@@ -471,6 +499,12 @@ $(document).ready(function () {
     refreshUndoRedoButtonsStatus();
   });
 
+  $("#collapse-selected-icon").click(function (e) {
+    if (modeHandler.mode == "selection-mode") {
+      $("#collapse-selected").trigger('click');
+    }
+  });
+
   $("#expand-selected").click(function (e) {
     var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "expand");
 
@@ -490,6 +524,12 @@ $(document).ready(function () {
     else
       editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
+  });
+
+  $("#expand-selected-icon").click(function (e) {
+    if (modeHandler.mode == "selection-mode") {
+      $("#expand-selected").trigger('click');
+    }
   });
 
   $("#collapse-all").click(function (e) {
@@ -587,6 +627,14 @@ $(document).ready(function () {
   $("#redo-last-action").click(function (e) {
     editorActionsManager.redo();
     refreshUndoRedoButtonsStatus();
+  });
+
+  $("#undo-icon").click(function (e) {
+    $("#undo-last-action").trigger('click');
+  });
+
+  $("#redo-icon").click(function (e) {
+    $("#redo-last-action").trigger('click');
   });
 
   $("#save-as-png").click(function (evt) {

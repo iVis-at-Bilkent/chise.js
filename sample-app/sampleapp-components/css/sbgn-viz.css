@@ -300,3 +300,11 @@ body {
 #edge-list-menu {
     width: 175px;
 }
+
+.menu-break-small {
+    min-width: 4px !important;
+}
+
+.menu-break-large {
+    min-width: 8px !important; 
+}
