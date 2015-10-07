@@ -4375,7 +4375,7 @@
               var posX = node.position('x');
               var posY = node.position('y');
               var h = node.height();
-
+              var dummy_parent_id = node.data('dummy_parent_id');
               var temp = node.parent()[0];
 
               while (temp != null) {
@@ -4391,7 +4391,8 @@
                 x: posX,
                 y: posY,
                 width: w,
-                height: h
+                height: h,
+                dummy_parent_id: dummy_parent_id
               });
             });
 
@@ -4445,7 +4446,11 @@
           var theChild = children[i];
           var children_of_children = childrenMap[theChild.id];
           var theNode;
-
+          
+          if(theChild.dummy_parent_id){
+            continue;
+          }
+          
           if (theChild.width != null
                   && theChild.height != null) {
             theNode = parent.add(new CoSENode(gm_t,
@@ -4582,6 +4587,12 @@
       var pData = e.message.pData;
       if (pData != null) {
         after.options.eles.nodes().positions(function (i, ele) {
+          if(ele.data('dummy_parent_id')){
+            return {
+              x: pData[ele.data('dummy_parent_id')].x,
+              y: pData[ele.data('dummy_parent_id')].y
+            };
+          }
           var theId = ele.data('id');
           var pNode = pData[theId];
           var temp = this;
@@ -4702,6 +4713,11 @@
             position: {x: Math.random() * this.options.cy.container().clientWidth,
               y: Math.random() * this.options.cy.container().clientHeight}
           });
+          
+          for(var i = 0; i < tempMemberGroups[p_id].length; i++){
+            tempMemberGroups[p_id][i].data('dummy_parent_id', dummyCompoundId);
+          }
+          
           this.options.eles = this.options.eles.union(this.options.cy.nodes()[this.options.cy.nodes().length - 1]);
           this.options.cy.nodes()[this.options.cy.nodes().length - 1].hide();
         }
@@ -4747,7 +4763,7 @@
       // Remove children of compounds 
       lCompoundNode.child = null;
     }
-
+    
     // Tile the removed children
     var tiledMemberPack = this.tileCompoundMembers(childGraphMap);
 
@@ -4759,7 +4775,7 @@
 
     for (var id in memberGroups) {
       var compoundNode = _CoSELayout.idToLNode[id];
-
+      
       tiledZeroDegreePack[id] = this.tileNodes(memberGroups[id]);
 
       // Set the width and height of the dummy compound as calculated
