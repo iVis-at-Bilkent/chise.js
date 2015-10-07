@@ -4446,11 +4446,11 @@
           var theChild = children[i];
           var children_of_children = childrenMap[theChild.id];
           var theNode;
-          
-          if(theChild.dummy_parent_id){
+
+          if (theChild.dummy_parent_id) {
             continue;
           }
-          
+
           if (theChild.width != null
                   && theChild.height != null) {
             theNode = parent.add(new CoSENode(gm_t,
@@ -4587,7 +4587,7 @@
       var pData = e.message.pData;
       if (pData != null) {
         after.options.eles.nodes().positions(function (i, ele) {
-          if(ele.data('dummy_parent_id')){
+          if (ele.data('dummy_parent_id')) {
             return {
               x: pData[ele.data('dummy_parent_id')].x,
               y: pData[ele.data('dummy_parent_id')].y
@@ -4659,13 +4659,13 @@
     _CoSELayout.toBeTiled[id] = true;
     return true;
   };
-  
-  _CoSELayout.prototype.getNodeDegree = function(node) {
+
+  _CoSELayout.prototype.getNodeDegree = function (node) {
     var id = node.id();
-    var edges = this.options.eles.edges().filter(function(i, ele){
+    var edges = this.options.eles.edges().filter(function (i, ele) {
       var source = ele.data('source');
       var target = ele.data('target');
-      if(source != target && (source == id || target == id) ){
+      if (source != target && (source == id || target == id)) {
         return true;
       }
     });
@@ -4680,7 +4680,7 @@
     // Find all zero degree nodes which aren't covered by a compound
     var zeroDegree = this.options.eles.nodes().filter(function (i, ele) {
 //      console.log(self.getNodeDegree(ele));
-      if (self.getNodeDegree(ele) == 0 && (ele.parent().length == 0 || (ele.parent().length > 0 && !self.getToBeTiled(ele.parent()[0])) ) )
+      if (self.getNodeDegree(ele) == 0 && (ele.parent().length == 0 || (ele.parent().length > 0 && !self.getToBeTiled(ele.parent()[0]))))
         return true;
       else
         return false;
@@ -4709,17 +4709,28 @@
           this.options.cy.add({
             group: "nodes",
             data: {id: dummyCompoundId, parent: p_id
-            },
-            position: {x: Math.random() * this.options.cy.container().clientWidth,
-              y: Math.random() * this.options.cy.container().clientHeight}
+            }
           });
           
-          for(var i = 0; i < tempMemberGroups[p_id].length; i++){
-            tempMemberGroups[p_id][i].data('dummy_parent_id', dummyCompoundId);
+          var dummy = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
+          this.options.eles = this.options.eles.union(dummy);
+          dummy.hide();
+
+          for (var i = 0; i < tempMemberGroups[p_id].length; i++) {
+            if(i == 0){
+              dummy.data('tempchildren', []);
+            }
+            var node = tempMemberGroups[p_id][i];
+            node.data('dummy_parent_id', dummyCompoundId);
+            this.options.cy.add({
+              group: "nodes",
+              data: {parent: dummyCompoundId, width: node.renderedWidth(), height: node.renderedHeight()
+              }
+            });
+            var tempchild = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
+            tempchild.hide();
+            dummy.data('tempchildren').push(tempchild);
           }
-          
-          this.options.eles = this.options.eles.union(this.options.cy.nodes()[this.options.cy.nodes().length - 1]);
-          this.options.cy.nodes()[this.options.cy.nodes().length - 1].hide();
         }
       }
     }
@@ -4763,7 +4774,7 @@
       // Remove children of compounds 
       lCompoundNode.child = null;
     }
-    
+
     // Tile the removed children
     var tiledMemberPack = this.tileCompoundMembers(childGraphMap);
 
@@ -4775,7 +4786,7 @@
 
     for (var id in memberGroups) {
       var compoundNode = _CoSELayout.idToLNode[id];
-      
+
       tiledZeroDegreePack[id] = this.tileNodes(memberGroups[id]);
 
       // Set the width and height of the dummy compound as calculated
@@ -4801,6 +4812,11 @@
 
       // Adjust the positions of nodes wrt its compound
       this.adjustLocations(tiledPack[i], compoundNode.rect.x, compoundNode.rect.y);
+
+      var tempchildren = compound.data('tempchildren');
+      for(var i = 0; i < tempchildren.length; i++){
+        tempchildren[i].remove();
+      }
 
       // Remove the dummy compound
       compound.remove();
