@@ -4371,10 +4371,10 @@
             function (i, node) {
               var nodeId = this._private.data.id;
               var parentId = node.parent().id();
-              var w = node.width();
+              var w = _CoSELayout.idToLNode[nodeId].rect.width;
               var posX = node.position('x');
               var posY = node.position('y');
-              var h = node.height();
+              var h = _CoSELayout.idToLNode[nodeId].rect.height;
               var dummy_parent_id = node.data('dummy_parent_id');
               var temp = node.parent()[0];
 
