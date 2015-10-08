@@ -133,10 +133,10 @@ var jsonToSbgnml = {
         var arcTarget = edge._private.data.porttarget;
         var arcSource = edge._private.data.portsource;
 
-        if (arcSource.length === 0) 
+        if (arcSource == null || arcSource.length === 0) 
             arcSource = edge._private.data.source;
 
-        if (arcTarget.length === 0) 
+        if (arcTarget == null || arcTarget.length === 0) 
             arcTarget = edge._private.data.target;
           
         var arcId = arcSource + "-" + arcTarget;
