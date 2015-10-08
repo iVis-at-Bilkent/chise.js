@@ -657,12 +657,18 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'background-color': '#f6f6f6',
           'font-size': 11,
 //          'shape': 'data(sbgnclass)',
-          'background-opacity': 0.5
+          'background-opacity': 0.5,
+          
         })
         .selector("node[sbgnclass]")
         .css({
           'shape': 'data(sbgnclass)'
         })
+//        .selector("node[!sbgnclass][width][height]")
+//        .css({
+//          'width': 'data(width)',
+//          'height': 'data(height)'
+//        })
         .selector("node[sbgnclass='complex']")
         .css({
           'background-color': '#F4F3EE',

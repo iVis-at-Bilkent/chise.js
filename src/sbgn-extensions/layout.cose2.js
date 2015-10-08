@@ -4724,11 +4724,13 @@
             node.data('dummy_parent_id', dummyCompoundId);
             this.options.cy.add({
               group: "nodes",
-              data: {parent: dummyCompoundId, width: node.renderedWidth(), height: node.renderedHeight()
+              data: {parent: dummyCompoundId, width: node.width(), height: node.height()
               }
             });
             var tempchild = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
             tempchild.hide();
+            tempchild.css('width', tempchild.data('width'));
+            tempchild.width();
             dummy.data('tempchildren').push(tempchild);
           }
         }
