@@ -4730,6 +4730,7 @@
             var tempchild = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
             tempchild.hide();
             tempchild.css('width', tempchild.data('width'));
+            tempchild.css('height', tempchild.data('height'));
             tempchild.width();
             dummy.data('tempchildren').push(tempchild);
           }
