@@ -4753,7 +4753,7 @@
     var compoundOrder = this.performDFSOnCompounds(options);
     _CoSELayout.compoundOrder = compoundOrder;
     this.processChildrenList(this.root, this.options.eles.nodes().orphans());
-
+    this.gm.getAllNodes();
     for (var i = 0; i < compoundOrder.length; i++) {
       // find the corresponding layout node
       var lCompoundNode = _CoSELayout.idToLNode[compoundOrder[i].id()];
@@ -4883,11 +4883,13 @@
       var node = nodes[i];
       var lNode = _CoSELayout.idToLNode[node.id()];
 
-      var owner = lNode.owner;
-      owner.remove(lNode);
-
-      this.gm.resetAllNodes();
-      this.gm.getAllNodes();
+//      var owner = lNode.owner;
+//      owner.remove(lNode);
+//
+//      console.log(lNode.id);
+//
+//      this.gm.resetAllNodes();
+//      this.gm.getAllNodes();
 
       layoutNodes.push(lNode);
     }
@@ -9507,6 +9509,7 @@
       'edges': []
     };
 
+    gm.resetAllNodes();
     var lnodes = gm.getAllNodes();
     for (var i = 0; i < lnodes.length; i++) {
       var lnode = lnodes[i];
@@ -9528,6 +9531,8 @@
         height: h,
         dummy_parent_id: dummy_parent_id
       });
+      
+      console.log(nodeId);
     }
 
     var ledges = gm.getAllEdges();
@@ -9899,7 +9904,6 @@
     var compoundOrder = this.performDFSOnCompounds(options);
     _CoSELayout.compoundOrder = compoundOrder;
     this.processChildrenList(this.root, this.options.eles.nodes().orphans());
-
     for (var i = 0; i < compoundOrder.length; i++) {
       // find the corresponding layout node
       var lCompoundNode = _CoSELayout.idToLNode[compoundOrder[i].id()];
@@ -10031,11 +10035,11 @@
       var node = nodes[i];
       var lNode = _CoSELayout.idToLNode[node.id()];
 
-      var owner = lNode.owner;
-      owner.remove(lNode);
-
-      this.gm.resetAllNodes();
-      this.gm.getAllNodes();
+//      var owner = lNode.owner;
+//      owner.remove(lNode);
+//
+//      this.gm.resetAllNodes();
+//      this.gm.getAllNodes();
 
       layoutNodes.push(lNode);
     }
