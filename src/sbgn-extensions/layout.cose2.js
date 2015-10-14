@@ -4646,6 +4646,16 @@
     return true;
   };
 
+  _CoSELayout.prototype.getNodeDegreeWithChildren = function (node) {
+    var degree = this.getNodeDegree(node);
+    var children = node.children();
+    for(var i = 0; i < children.length; i++){
+      var child = children[i];
+      degree += this.getNodeDegreeWithChildren(child);
+    }
+    return degree;
+  };
+
   _CoSELayout.prototype.getNodeDegree = function (node) {
     var id = node.id();
     var edges = this.options.eles.edges().filter(function (i, ele) {
@@ -4658,74 +4668,6 @@
     return edges.length;
   };
 
-  _CoSELayout.prototype.groupZeroDegreeMembers = function () {
-    // array of [parent_id x oneDegreeNode_id] 
-    var tempMemberGroups = [];
-    var memberGroups = [];
-    var self = this;
-    // Find all zero degree nodes which aren't covered by a compound
-    var zeroDegree = this.options.eles.nodes().filter(function (i, ele) {
-//      console.log(self.getNodeDegree(ele));
-      if (self.getNodeDegree(ele) == 0 && (ele.parent().length == 0 || (ele.parent().length > 0 && !self.getToBeTiled(ele.parent()[0]))))
-        return true;
-      else
-        return false;
-    });
-
-    // Create a map of parent node and its zero degree members
-    for (var i = 0; i < zeroDegree.length; i++)
-    {
-      var node = zeroDegree[i];
-      var p_id = node.parent().id();
-
-      if (typeof tempMemberGroups[p_id] === "undefined")
-        tempMemberGroups[p_id] = [];
-
-      tempMemberGroups[p_id] = tempMemberGroups[p_id].concat(node);
-    }
-
-    // If there are at least two nodes at a level, create a dummy compound for them
-    for (var p_id in tempMemberGroups) {
-      if (tempMemberGroups[p_id].length > 1) {
-        var dummyCompoundId = "DummyCompound_" + p_id;
-        memberGroups[dummyCompoundId] = tempMemberGroups[p_id];
-
-        // Create a dummy compound
-        if (this.options.cy.getElementById(dummyCompoundId).empty()) {
-          this.options.cy.add({
-            group: "nodes",
-            data: {id: dummyCompoundId, parent: p_id
-            }
-          });
-
-          var dummy = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
-          this.options.eles = this.options.eles.union(dummy);
-          dummy.hide();
-
-          for (var i = 0; i < tempMemberGroups[p_id].length; i++) {
-            if (i == 0) {
-              dummy.data('tempchildren', []);
-            }
-            var node = tempMemberGroups[p_id][i];
-            node.data('dummy_parent_id', dummyCompoundId);
-            this.options.cy.add({
-              group: "nodes",
-              data: {parent: dummyCompoundId, width: node.width(), height: node.height()
-              }
-            });
-            var tempchild = this.options.cy.nodes()[this.options.cy.nodes().length - 1];
-            tempchild.hide();
-            tempchild.css('width', tempchild.data('width'));
-            tempchild.css('height', tempchild.data('height'));
-            tempchild.width();
-            dummy.data('tempchildren').push(tempchild);
-          }
-        }
-      }
-    }
-
-    return memberGroups;
-  };
 
   _CoSELayout.prototype.performDFSOnCompounds = function (options) {
     var compoundOrder = [];
@@ -4862,65 +4804,6 @@
     }
 
     return tiledMemberPack;
-  };
-
-  _CoSELayout.prototype.tileNodes = function (nodes) {
-    var organization = {
-      rows: [],
-      rowWidth: [],
-      rowHeight: [],
-      compoundMargin: 10,
-      width: 20,
-      height: 20,
-      verticalPadding: 10,
-      horizontalPadding: 10
-    };
-
-    var layoutNodes = [];
-
-    // Get layout nodes
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var lNode = _CoSELayout.idToLNode[node.id()];
-
-//      var owner = lNode.owner;
-//      owner.remove(lNode);
-//
-//      console.log(lNode.id);
-//
-//      this.gm.resetAllNodes();
-//      this.gm.getAllNodes();
-
-      layoutNodes.push(lNode);
-    }
-
-    // Sort the nodes in ascending order of their areas
-    layoutNodes.sort(function (n1, n2) {
-      if (n1.rect.width * n1.rect.height > n2.rect.width * n2.rect.height)
-        return -1;
-      if (n1.rect.width * n1.rect.height < n2.rect.width * n2.rect.height)
-        return 1;
-      return 0;
-    });
-
-    // Create the organization -> tile members
-    for (var i = 0; i < layoutNodes.length; i++) {
-      var lNode = layoutNodes[i];
-
-      if (organization.rows.length == 0) {
-        this.insertNodeToRow(organization, lNode, 0);
-      }
-      else if (this.canAddHorizontal(organization, lNode.rect.width, lNode.rect.height)) {
-        this.insertNodeToRow(organization, lNode, this.getShortestRowIndex(organization));
-      }
-      else {
-        this.insertNodeToRow(organization, lNode, organization.rows.length);
-      }
-
-      this.shiftToLastRow(organization);
-    }
-
-    return organization;
   };
 
   _CoSELayout.prototype.insertNodeToRow = function (organization, node, rowIndex) {
@@ -9531,8 +9414,6 @@
         height: h,
         dummy_parent_id: dummy_parent_id
       });
-      
-      console.log(nodeId);
     }
 
     var ledges = gm.getAllEdges();
@@ -10035,11 +9916,14 @@
       var node = nodes[i];
       var lNode = _CoSELayout.idToLNode[node.id()];
 
-//      var owner = lNode.owner;
-//      owner.remove(lNode);
-//
-//      this.gm.resetAllNodes();
-//      this.gm.getAllNodes();
+      if (!node.data('dummy_parent_id')) {
+        var owner = lNode.owner;
+        owner.remove(lNode);
+
+        this.gm.resetAllNodes();
+        this.gm.getAllNodes();
+      }
+
 
       layoutNodes.push(lNode);
     }
