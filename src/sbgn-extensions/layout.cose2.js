@@ -9698,7 +9698,7 @@
     var self = this;
     // Find all zero degree nodes which aren't covered by a compound
     var zeroDegree = this.options.eles.nodes().filter(function (i, ele) {
-      if (self.getNodeDegree(ele) == 0 && (ele.parent().length == 0 || (ele.parent().length > 0 && !self.getToBeTiled(ele.parent()[0]))))
+      if (self.getNodeDegreeWithChildren(ele) == 0 && (ele.parent().length == 0 || (ele.parent().length > 0 && !self.getToBeTiled(ele.parent()[0]))))
         return true;
       else
         return false;
@@ -10080,6 +10080,16 @@
     return add_to_row_ratio < add_new_row_ratio;
   };
 
+
+  _CoSELayout.prototype.getNodeDegreeWithChildren = function (node) {
+    var degree = this.getNodeDegree(node);
+    var children = node.children();
+    for(var i = 0; i < children.length; i++){
+      var child = children[i];
+      degree += this.getNodeDegreeWithChildren(child);
+    }
+    return degree;
+  };
 
   //If moving the last node from the longest row and adding it to the last
   //row makes the bounding box smaller, do it.
