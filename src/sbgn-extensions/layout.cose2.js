@@ -4569,6 +4569,8 @@
       after.cy.one('layoutstop', after.options.stop);
       after.cy.trigger('layoutstop');
       t1.stop();
+      
+      after.options.eles.nodes().removeData('dummy_parent_id');
     });
 
     t1.on('message', function (e) {
