@@ -4245,7 +4245,6 @@
   CoSEConstants.DEFAULT_RADIAL_SEPARATION = FDLayoutConstants.DEFAULT_EDGE_LENGTH;
   CoSEConstants.DEFAULT_COMPONENT_SEPERATION = 60;
 
-  _CoSELayout.allChildren = [];
   _CoSELayout.idToLNode = {};
   _CoSELayout.toBeTiled = {};
 
@@ -4372,7 +4371,7 @@
     for (var i = 0; i < lnodes.length; i++) {
       var lnode = lnodes[i];
       var nodeId = lnode.id;
-      var cyNode = cy.getElementById(nodeId);
+      var cyNode = this.options.cy.getElementById(nodeId);
       var parentId = cyNode.data('parent');
       var w = lnode.rect.width;
       var posX = lnode.rect.x;
@@ -4396,7 +4395,7 @@
     for (var i = 0; i < ledges.length; i++) {
       var ledge = ledges[i];
       var edgeId = ledge.id;
-      var cyEdge = cy.getElementById(edgeId);
+      var cyEdge = this.options.cy.getElementById(edgeId);
       var srcNodeId = cyEdge.source().id();
       var tgtNodeId = cyEdge.target().id();
       pData[ 'edges' ].push({
