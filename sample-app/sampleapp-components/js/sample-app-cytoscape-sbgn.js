@@ -392,9 +392,13 @@ var handleSBGNInspector = function () {
       });
       
       $("#inspector-cardinality").bind('change').on('change', function () {
+        var data = $("#inspector-cardinality").attr("value");
+        if(parseInt(data) != data){
+          return;
+        }
         var param = {
           ele: selected,
-          data: $("#inspector-cardinality").attr("value"),
+          data: data,
           dataType: "sbgncardinality"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
