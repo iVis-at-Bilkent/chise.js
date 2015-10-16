@@ -164,6 +164,12 @@ body {
     /*float: right;*/
 }
 
+.inside-menu {
+    border: 1px solid #ddd;
+    border-radius: 0.25em;
+    float: left;
+}
+
 #sbgn-toolbar{
     margin: auto;
     width: 1000px;
@@ -307,4 +313,8 @@ body {
 
 .menu-break-large {
     min-width: 8px !important; 
+}
+
+.sbgn-select-img {
+    margin-right: 5px;
 }

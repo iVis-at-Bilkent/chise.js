@@ -410,6 +410,10 @@ $(document).ready(function () {
     editorActionsManager._do(new RemoveHighlightsCommand());
     refreshUndoRedoButtonsStatus();
   });
+  
+  $('#remove-highlights-icon').click(function (e) {
+    $('#remove-highlights').trigger("click");
+  });
 
   $("#make-compound-complex").click(function (e) {
     var selected = cy.nodes(":selected").filter(function (i, element) {
