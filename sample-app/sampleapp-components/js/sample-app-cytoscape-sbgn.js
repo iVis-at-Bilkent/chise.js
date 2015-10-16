@@ -393,7 +393,7 @@ var handleSBGNInspector = function () {
       
       $("#inspector-cardinality").bind('change').on('change', function () {
         var data = $("#inspector-cardinality").attr("value");
-        if(parseInt(data) != data){
+        if(parseInt(data) != data || data < 0){
           return;
         }
         var param = {
