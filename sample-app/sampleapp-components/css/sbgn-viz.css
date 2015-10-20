@@ -168,6 +168,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 0.25em;
     float: left;
+    padding: 2px;
 }
 
 #sbgn-toolbar{
