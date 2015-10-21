@@ -169,12 +169,15 @@ body {
     border-radius: 0.25em;
     float: left;
     padding: 2px;
+    height: 30px;
+    display: inline-block !important;
+    vertical-align: middle !important;
 }
 
 #sbgn-toolbar{
     margin: auto;
     width: 1000px;
-    height: 25px;
+    height: 30px;
     margin-bottom: 10px;
     /*overflow: auto !important;*/
 }
@@ -269,6 +272,9 @@ body {
     padding-right: 0px;
     float: left;
     cursor: pointer;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #node-list-set-mode-btn:focus {
