@@ -272,9 +272,9 @@ body {
     padding-right: 0px;
     float: left;
     cursor: pointer;
-    position: relative;
+/*    position: relative;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%);*/
 }
 
 #node-list-set-mode-btn:focus {
