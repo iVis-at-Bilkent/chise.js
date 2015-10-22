@@ -15,10 +15,11 @@ function dynamicResize()
   {
     $("#sbgn-network-container").width(windowWidth * 0.9 * 0.8);
     $("#sbgn-inspector").width(windowWidth * 0.9 * 0.2);
-    $(".nav-menu").width(windowWidth * 0.9);
-    $(".navbar").width(windowWidth * 0.9);
+    var w = $("#sbgn-inspector-and-canvas").width();
+    $(".nav-menu").width(w);
+    $(".navbar").width(w);
 //    $("#sbgn-info-content").width(windowWidth * 0.85);
-    $("#sbgn-toolbar").width(windowWidth * 0.9);
+    $("#sbgn-toolbar").width(w);
   }
 
   if (windowHeight > canvasHeight)
