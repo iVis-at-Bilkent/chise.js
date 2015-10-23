@@ -277,7 +277,7 @@ var handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
       if(selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production'){
         html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cardinality</font>" + "</td><td>"
-              + "<input id='inspector-cardinality' type='number' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('sbgncardinality'))
+              + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('sbgncardinality'))
               + "'/>" + "</td></tr>";
       }
       
@@ -393,9 +393,10 @@ var handleSBGNInspector = function () {
       });
       
       $("#inspector-cardinality").bind('change').on('change', function () {
-        var data = $("#inspector-cardinality").attr("value");
-        if(parseInt(data) != data || data < 0){
-          return;
+        var data = Math.round($("#inspector-cardinality").attr("value"));
+        
+        if(data < 0){
+          data = 0;
         }
         var param = {
           ele: selected,

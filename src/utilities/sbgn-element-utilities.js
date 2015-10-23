@@ -1,4 +1,34 @@
 var sbgnElementUtilities = {
+  //the list of the element classes handled by the tool
+  handledElements: {
+    "macromolecule": true,
+    "simple chemical": true,
+    "complex": true,
+    "process": true,
+    "omitted process": true,
+    "uncertain process": true,
+    "association": true,
+    "dissociation": true,
+    "phenotype": true,
+    "compartment": true,
+    "unspecified entity": true,
+    "nucleic acid feature": true,
+    "source and sink": true,
+    "perturbing agent": true,
+    "tag": true,
+    "and": true,
+    "or": true,
+    "not": true,
+    //edges
+    "consumption": true,
+    "production": true,
+    "modulation": true,
+    "stimulation": true,
+    "catalysis": true,
+    "inhibition": true,
+    "necessary stimulation": true,
+    "logic arc": true
+  },
   //this method returns the nodes whose parent is not in given nodes
   getRootsOfGivenNodes: function (nodes) {
     var parentMap = {};
@@ -29,34 +59,5 @@ var sbgnElementUtilities = {
       }
     }
     return true;
-  },
-  handledElements: {
-    "macromolecule": true,
-    "simple chemical": true,
-    "complex": true,
-    "process": true,
-    "omitted process": true,
-    "uncertain process": true,
-    "association": true,
-    "dissociation": true,
-    "phenotype": true,
-    "compartment": true,
-    "unspecified entity": true,
-    "nucleic acid feature": true,
-    "source and sink": true,
-    "perturbing agent": true,
-    "tag": true,
-    "and": true,
-    "or": true,
-    "not": true,
-    //edges
-    "consumption": true,
-    "production": true,
-    "modulation": true,
-    "stimulation": true,
-    "catalysis": true,
-    "inhibition": true,
-    "necessary stimulation": true,
-    "logic arc": true
   }
 };
