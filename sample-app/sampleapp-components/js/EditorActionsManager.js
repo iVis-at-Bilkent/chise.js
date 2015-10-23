@@ -308,7 +308,7 @@ function hideSelected(param) {
   else {
     sbgnFiltering.showJustGivenNodes(param.nodesToShow);
   }
-  clearDraws();
+  clearDrawsOfNodeResize();
   return currentNodes;
 }
 
