@@ -272,10 +272,18 @@ body {
     margin-right: 0px;
     padding-right: 0px;
     float: left;
-    cursor: pointer;
-/*    position: relative;
-    top: 50%;
-    transform: translateY(-50%);*/
+    cursor: pointer; 
+}
+
+img.sbgn-toolbar-element {
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+    
+
+img.sbgn-toolbar-element:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100);
 }
 
 #node-list-set-mode-btn:focus {
