@@ -162,6 +162,7 @@ var fillInspectorStateAndInfos = function (node, width) {
         width: width
       };
       editorActionsManager._do(new RemoveStateAndInfoCommand(param));
+      refreshUndoRedoButtonsStatus();
     });
 
     $(".just-added-inspector-input").data("state", state);
@@ -188,6 +189,7 @@ var fillInspectorStateAndInfos = function (node, width) {
       width: width
     };
     editorActionsManager._do(new AddStateAndInfoCommand(param));
+    refreshUndoRedoButtonsStatus();
   });
 
   $("#inspector-add-unit-of-information").click(function () {
@@ -206,6 +208,7 @@ var fillInspectorStateAndInfos = function (node, width) {
       width: width
     };
     editorActionsManager._do(new AddStateAndInfoCommand(param));
+    refreshUndoRedoButtonsStatus();
   });
 }
 
@@ -331,6 +334,7 @@ var handleSBGNInspector = function () {
           node: selected
         };
         editorActionsManager._do(new changeIsMultimerStatusCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $('#inspector-is-clone-marker').on('click', function () {
@@ -339,6 +343,7 @@ var handleSBGNInspector = function () {
           node: selected
         };
         editorActionsManager._do(new changeIsCloneMarkerStatusCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $("#inspector-border-color").on('change', function () {
@@ -348,6 +353,7 @@ var handleSBGNInspector = function () {
           dataType: "borderColor"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
       
       $("#inspector-background-opacity").on('change', function () {
@@ -357,6 +363,7 @@ var handleSBGNInspector = function () {
           dataType: "backgroundOpacity"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $("#inspector-fill-color").on('change', function () {
@@ -366,6 +373,7 @@ var handleSBGNInspector = function () {
           dataType: "background-color"
         };
         editorActionsManager._do(new ChangeStyleCssCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $("#inspector-border-width").bind('change').on('change', function () {
@@ -375,6 +383,7 @@ var handleSBGNInspector = function () {
           dataType: "border-width"
         };
         editorActionsManager._do(new ChangeStyleCssCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
     }
     else {
@@ -394,6 +403,7 @@ var handleSBGNInspector = function () {
           dataType: "lineColor"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
       
       $("#inspector-cardinality").bind('change').on('change', function () {
@@ -412,6 +422,7 @@ var handleSBGNInspector = function () {
           dataType: "sbgncardinality"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $("#inspector-width").bind('change').on('change', function () {
@@ -421,6 +432,7 @@ var handleSBGNInspector = function () {
           dataType: "width"
         };
         editorActionsManager._do(new ChangeStyleCssCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
     }
   }
