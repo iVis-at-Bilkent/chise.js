@@ -276,8 +276,12 @@ var handleSBGNInspector = function () {
               + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
       if(selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production'){
+        var cardinality = selected.data('sbgncardinality');
+        if(cardinality <= 0){
+          cardinality = undefined;
+        }
         html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cardinality</font>" + "</td><td>"
-              + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('sbgncardinality'))
+              + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
               + "'/>" + "</td></tr>";
       }
       
