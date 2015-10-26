@@ -400,6 +400,10 @@ var handleSBGNInspector = function () {
         var data = Math.round($("#inspector-cardinality").attr("value"));
         
         if(data < 0){
+          if(selected.data('sbgncardinality') == 0){
+            handleSBGNInspector();
+            return;
+          }
           data = 0;
         }
         var param = {
