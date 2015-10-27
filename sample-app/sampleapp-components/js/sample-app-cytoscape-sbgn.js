@@ -242,40 +242,40 @@ var handleSBGNInspector = function () {
     if (selectedEles.nodes().length == 1) {
       type = "node";
 
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Border Color</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Border Color</font>" + "</td><td>"
               + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
               + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Border Width</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Border Width</font>" + "</td><td>"
               + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Opacity</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Fill Opacity</font>" + "</td><td>"
               + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
               + "'/>" + "</td></tr>";
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
-        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>State Variables</font>" + "</td>"
+        html += "<tr style='border-bottom: 1px solid black; border-top: 1px solid black;'><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr style='border: 1px solid #ddd;'><td style='width: " + width + "px'>" + "<font size='2'>Units Of Information</font>" + "</td>"
+        html += "<tr style='border-bottom: 1px solid black;'><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='width: '" + width + "'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Multimer</font>" + "</td>"
+        html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Multimer</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
 
-        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cloned</font>" + "</td>"
+        html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Cloned</font>" + "</td>"
                 + "<td style='width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
 
     }
     else {
       type = "edge";
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Fill Color</font>" + "</td><td>"
               + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
               + "'/>" + "</td></tr>";
 
-      html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Width</font>" + "</td><td>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Width</font>" + "</td><td>"
               + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
       if(selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production'){
@@ -283,7 +283,7 @@ var handleSBGNInspector = function () {
         if(cardinality <= 0){
           cardinality = undefined;
         }
-        html += "<tr><td style='width: " + width + "px'>" + "<font size='2'>Cardinality</font>" + "</td><td>"
+        html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 2px;'>" + "<font size='2'>Cardinality</font>" + "</td><td>"
               + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
               + "'/>" + "</td></tr>";
       }
