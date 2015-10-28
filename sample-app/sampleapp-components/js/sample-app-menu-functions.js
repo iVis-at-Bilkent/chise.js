@@ -418,14 +418,7 @@ $(document).ready(function () {
   $("#make-compound-complex").click(function (e) {
     var selected = cy.nodes(":selected").filter(function (i, element) {
       var sbgnclass = element.data("sbgnclass")
-      if (sbgnclass == 'unspecified entity'
-              || sbgnclass == 'simple chemical'
-              || sbgnclass == 'macromolecule'
-              || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex') {
-        return true;
-      }
-      return false;
+      return isEPNClass(sbgnclass);
     });
     selected = sbgnElementUtilities.getRootsOfGivenNodes(selected);
     if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
