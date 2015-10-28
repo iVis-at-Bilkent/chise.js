@@ -130,6 +130,7 @@ Icons made by [Freepik](http://www.freepik.com),
 [Robin Kylander](http://www.flaticon.com/authors/robin-kylander),
 [Catalin Fertu](http://www.flaticon.com/authors/catalin-fertu),
 [Yannick](http://www.flaticon.com/authors/yannick),
+[Icon Works](http://www.flaticon.com/authors/icon-works),
 [Flaticon](http://www.flaticon.com) and licensed with 
 [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
