@@ -639,26 +639,24 @@ var refreshPaddings = function () {
 };
 
 var isEPNClass = function (sbgnclass) {
-    if (sbgnclass == 'unspecified entity'
+    return (sbgnclass == 'unspecified entity'
             || sbgnclass == 'simple chemical'
             || sbgnclass == 'macromolecule'
             || sbgnclass == 'nucleic acid feature'
-            || sbgnclass == 'complex') {
-        return true;
-    }
-    return false;
+            || sbgnclass == 'complex');
 };
 
 var isPNClass = function (sbgnclass) {
-    if (sbgnclass == 'process'
+    return (sbgnclass == 'process'
             || sbgnclass == 'omitted process'
             || sbgnclass == 'uncertain process'
             || sbgnclass == 'association'
-            || sbgnclass == 'dissociation') {
-        return true;
-    }
-    return false;
+            || sbgnclass == 'dissociation');
 };
+
+var isLogicalOperator = function(sbgnclass){
+    return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not');
+}
 
 /*
  * This is a debugging function
@@ -983,11 +981,58 @@ var SBGNContainer = Backbone.View.extend({
                     complete: function (sourceNode, targetNodes, addedEntities) {
                         // fired when edgehandles is done and entities are added
                         var param = {};
+                        var source = sourceNode.id();
+                        var target = targetNodes[0].id();
+                        var sourceClass = sourceNode.data('sbgnclass');
+                        var targetClass = targetNodes[0].data('sbgnclass');
+                        var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
+                        
+                        if(sbgnclass == 'consumption' || sbgnclass == 'modulation' 
+                                || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
+                                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation'){
+                            if(!isEPNClass(sourceClass) || !isPNClass(targetClass)){
+                                if(isPNClass(sourceClass) && isEPNClass(targetClass)){
+                                    //If just the direction is not valid reverse the direction
+                                    var temp = source;
+                                    source = target;
+                                    target = temp;
+                                }
+                                else{
+                                    return;
+                                }
+                            }
+                        }
+                        else if(sbgnclass == 'production'){
+                            if(!isPNClass(sourceClass) || !isEPNClass(targetClass)){
+                                if(isEPNClass(sourceClass) && isPNClass(targetClass)){
+                                    //If just the direction is not valid reverse the direction
+                                    var temp = source;
+                                    source = target;
+                                    target = temp;
+                                }
+                                else{
+                                    return;
+                                }
+                            }
+                        }
+                        else if(sbgnclass == 'logic arc'){
+                            if(!isEPNClass(sourceClass) || !isLogicalOperator(targetClass)){
+                                if(isLogicalOperator(sourceClass) && isEPNClass(targetClass)){
+                                    //If just the direction is not valid reverse the direction
+                                    var temp = source;
+                                    source = target;
+                                    target = temp;
+                                }
+                                else{
+                                    return;
+                                }
+                            }
+                        }
+                        
                         param.newEdge = {
-                            source: sourceNode.id(),
-                            target: targetNodes[0].id(),
-                            sbgnclass: modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType]
-//              sbgnclass: $("#edge-list").data('ddslick').selectedData.value
+                            source: source,
+                            target: target,
+                            sbgnclass: sbgnclass
                         };
                         param.firstTime = true;
                         editorActionsManager._do(new AddEdgeCommand(param));
