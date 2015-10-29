@@ -239,7 +239,7 @@ var handleSBGNInspector = function () {
             buttonwidth = 50;
         }
 
-        var html = "<div style='text-align: center; color: black; font-weight: bold;'>" + title + "</div><table>";
+        var html = "<div style='text-align: center; color: black; font-weight: bold; margin-bottom: 5px;'>" + title + "</div><table cellpadding='0' cellspacing='0'>";
         var type;
         if (selectedEles.nodes().length == 1) {
             type = "node";
@@ -257,15 +257,15 @@ var handleSBGNInspector = function () {
                     + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
                     + "'/>" + "</td></tr>";
             if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
-                html += "<tr><td colspan='2'><hr width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+                html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                         + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
                 
-                html += "<tr><td colspan='2'><hr width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+                html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                         + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
                 
-                html += "<tr><td colspan='2'><hr width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+                html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Multimer</font>" + "</td>"
                         + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
 
@@ -295,9 +295,9 @@ var handleSBGNInspector = function () {
 
         }
         html += "</table>";
-        html += "<div style='text-align: center;'><button style='align: center;' id='inspector-set-as-default-button'"
+        html += "<div style='text-align: center; margin-top: 5px;'><button style='align: center;' id='inspector-set-as-default-button'"
                 + ">Set as Default</button></div>";
-        html += "<hr width='" + $("#sbgn-inspector").width() + "'>";
+        html += "<hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
         $("#sbgn-inspector").html(html);
 
