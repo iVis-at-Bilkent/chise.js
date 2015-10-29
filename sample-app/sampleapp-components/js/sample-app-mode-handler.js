@@ -30,7 +30,8 @@ var modeHandler = {
     "catalysis": "catalysis",
     "inhibition": "inhibition",
     "necessary-stimulation": "necessary stimulation",
-    "logic-arc": "logic arc"
+    "logic-arc": "logic arc",
+    "equivalence-arc": "equivalence arc"
   },
   initilize: function () {
     $('#select-icon').addClass('selectedType');

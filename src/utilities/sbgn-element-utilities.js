@@ -1,34 +1,15 @@
 var sbgnElementUtilities = {
   //the list of the element classes handled by the tool
-  handledElements: {
-    "macromolecule": true,
-    "simple chemical": true,
-    "complex": true,
-    "process": true,
-    "omitted process": true,
-    "uncertain process": true,
-    "association": true,
-    "dissociation": true,
-    "phenotype": true,
-    "compartment": true,
-    "unspecified entity": true,
-    "nucleic acid feature": true,
-    "source and sink": true,
-    "perturbing agent": true,
-    "tag": true,
-    "and": true,
-    "or": true,
-    "not": true,
-    //edges
-    "consumption": true,
-    "production": true,
-    "modulation": true,
-    "stimulation": true,
-    "catalysis": true,
-    "inhibition": true,
-    "necessary stimulation": true,
-    "logic arc": true
-  },
+  handledElements: {'unspecified entity': true, 'simple chemical': true, 'macromolecule': true,
+    'nucleic acid feature': true, 'perturbing agent': true, 'source and sink': true,
+    'complex': true, 'process': true, 'omitted process': true, 'uncertain process': true,
+    'association': true, 'dissociation': true, 'phenotype': true,
+    'tag': true, 'consumption': true, 'production': true, 'modulation': true,
+    'stimulation': true, 'catalysis': true, 'inhibition': true, 'necessary stimulation': true,
+    'logic arc': true, 'equivalence arc': true, 'and operator': true,
+    'or operator': true, 'not operator': true, 'and': true, 'or': true, 'not': true,
+    'nucleic acid feature multimer': true, 'macromolecule multimer': true,
+    'simple chemical multimer': true, 'complex multimer': true, 'compartment': true},
   //this method returns the nodes whose parent is not in given nodes
   getRootsOfGivenNodes: function (nodes) {
     var parentMap = {};

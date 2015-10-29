@@ -656,7 +656,11 @@ var isPNClass = function (sbgnclass) {
 
 var isLogicalOperator = function(sbgnclass){
     return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not');
-}
+};
+
+var convenientToEquivalence = function(sbgnclass){
+    return (sbgnclass == 'tag' || sbgnclass == 'terminal');
+};
 
 /*
  * This is a debugging function
@@ -1026,6 +1030,12 @@ var SBGNContainer = Backbone.View.extend({
                                 else{
                                     return;
                                 }
+                            }
+                        }
+                        else if(sbgnclass == 'equivalence arc'){
+                            if(!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
+                                    && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))){
+                                return;
                             }
                         }
                         
