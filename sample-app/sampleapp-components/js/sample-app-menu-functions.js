@@ -19,6 +19,12 @@ $(document).keydown(function (e) {
   }
 });
 
+$("#node-label-textbox").keydown(function (e) {
+  if (e.which === 13) {
+    $("#node-label-textbox").blur();
+  }
+});
+
 $(document).ready(function () {
   var xmlObject = loadXMLDoc('samples/activated_stat1alpha_induction_of_the_irf1_gene.xml');
 

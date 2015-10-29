@@ -494,6 +494,10 @@ function changeNodeLabel(param) {
   node._private.data.sbgnlabel = param.sbgnlabel;
   cy.forceRender();
 
+  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+    handleSBGNInspector();
+  }
+
   return result;
 }
 

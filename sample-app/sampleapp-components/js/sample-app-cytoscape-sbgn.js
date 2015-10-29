@@ -218,20 +218,26 @@ var handleSBGNInspector = function () {
     if (selectedEles.length == 1) {
         var selected = selectedEles[0];
         var title = selected.data("sbgnlabel");
+
+        var classInfo = selected.data("sbgnclass");
+        if (classInfo == 'and' || classInfo == 'or' || classInfo == 'not') {
+            classInfo = classInfo.toUpperCase();
+        }
+        else {
+            classInfo = classInfo.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+            classInfo = classInfo.replace(' Of ', ' of ');
+            classInfo = classInfo.replace(' And ', ' and ');
+            classInfo = classInfo.replace(' Or ', ' or ');
+            classInfo = classInfo.replace(' Not ', ' not ');
+        }
+
         if (title == null) {
-            title = selected.data("sbgnclass");
-            if (title == 'and' || title == 'or' || title == 'not') {
-                title = title.toUpperCase();
-            }
-            else {
-                title = title.replace(/\w\S*/g, function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                });
-                title = title.replace(' Of ', ' of ');
-                title = title.replace(' And ', ' and ');
-                title = title.replace(' Or ', ' or ');
-                title = title.replace(' Not ', ' not ');
-            }
+            title = classInfo;
+        }
+        else {
+            title += ":" + classInfo;
         }
 
         var buttonwidth = width;
@@ -260,11 +266,11 @@ var handleSBGNInspector = function () {
                 html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                         + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
-                
+
                 html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                         + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
-                
+
                 html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
                 html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Multimer</font>" + "</td>"
                         + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
@@ -654,11 +660,11 @@ var isPNClass = function (sbgnclass) {
             || sbgnclass == 'dissociation');
 };
 
-var isLogicalOperator = function(sbgnclass){
+var isLogicalOperator = function (sbgnclass) {
     return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not');
 };
 
-var convenientToEquivalence = function(sbgnclass){
+var convenientToEquivalence = function (sbgnclass) {
     return (sbgnclass == 'tag' || sbgnclass == 'terminal');
 };
 
@@ -990,55 +996,55 @@ var SBGNContainer = Backbone.View.extend({
                         var sourceClass = sourceNode.data('sbgnclass');
                         var targetClass = targetNodes[0].data('sbgnclass');
                         var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
-                        
-                        if(sbgnclass == 'consumption' || sbgnclass == 'modulation' 
+
+                        if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
                                 || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-                                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation'){
-                            if(!isEPNClass(sourceClass) || !isPNClass(targetClass)){
-                                if(isPNClass(sourceClass) && isEPNClass(targetClass)){
+                                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
+                            if (!isEPNClass(sourceClass) || !isPNClass(targetClass)) {
+                                if (isPNClass(sourceClass) && isEPNClass(targetClass)) {
                                     //If just the direction is not valid reverse the direction
                                     var temp = source;
                                     source = target;
                                     target = temp;
                                 }
-                                else{
+                                else {
                                     return;
                                 }
                             }
                         }
-                        else if(sbgnclass == 'production'){
-                            if(!isPNClass(sourceClass) || !isEPNClass(targetClass)){
-                                if(isEPNClass(sourceClass) && isPNClass(targetClass)){
+                        else if (sbgnclass == 'production') {
+                            if (!isPNClass(sourceClass) || !isEPNClass(targetClass)) {
+                                if (isEPNClass(sourceClass) && isPNClass(targetClass)) {
                                     //If just the direction is not valid reverse the direction
                                     var temp = source;
                                     source = target;
                                     target = temp;
                                 }
-                                else{
+                                else {
                                     return;
                                 }
                             }
                         }
-                        else if(sbgnclass == 'logic arc'){
-                            if(!isEPNClass(sourceClass) || !isLogicalOperator(targetClass)){
-                                if(isLogicalOperator(sourceClass) && isEPNClass(targetClass)){
+                        else if (sbgnclass == 'logic arc') {
+                            if (!isEPNClass(sourceClass) || !isLogicalOperator(targetClass)) {
+                                if (isLogicalOperator(sourceClass) && isEPNClass(targetClass)) {
                                     //If just the direction is not valid reverse the direction
                                     var temp = source;
                                     source = target;
                                     target = temp;
                                 }
-                                else{
+                                else {
                                     return;
                                 }
                             }
                         }
-                        else if(sbgnclass == 'equivalence arc'){
-                            if(!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
-                                    && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))){
+                        else if (sbgnclass == 'equivalence arc') {
+                            if (!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
+                                    && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
                                 return;
                             }
                         }
-                        
+
                         param.newEdge = {
                             source: source,
                             target: target,
