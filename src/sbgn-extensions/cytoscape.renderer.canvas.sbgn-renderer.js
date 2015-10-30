@@ -662,7 +662,7 @@
         self.strokeStyle(context, 255, 255, 255, 1);
 
         self.drawArrowShape(edge, prefix, context,
-                arrowClearFill, style['width'].pxValue * 2.5, style[prefix + '-arrow-shape'].value,
+                arrowClearFill, style['width'].pxValue * 4, style[prefix + '-arrow-shape'].value,
                 x, y, dispX, dispY
                 );
 
@@ -674,7 +674,7 @@
       self.strokeStyle(context, color[0], color[1], color[2], style.opacity.value);
 
       self.drawArrowShape(edge, prefix, context,
-              arrowFill, style['width'].pxValue * 2.5, style[prefix + '-arrow-shape'].value,
+              arrowFill, style['width'].pxValue * 4, style[prefix + '-arrow-shape'].value,
               x, y, dispX, dispY
               );
     }
