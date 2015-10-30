@@ -331,6 +331,10 @@ img.sbgn-toolbar-element:hover {
     width: 175px;
 }
 
+#align-menu {
+    width: 200px;
+}
+
 .menu-break-small {
     min-width: 4px !important;
 }
