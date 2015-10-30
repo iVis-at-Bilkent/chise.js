@@ -302,6 +302,14 @@ img.sbgn-toolbar-element:hover {
     outline: none;
 }
 
+#align-button:focus {
+    outline: none;
+}
+
+#align-dd-button:focus {
+    outline: none;
+}
+
 #node-label-textbox {
     position: absolute;
     top: 150px;

@@ -118,7 +118,7 @@ $(document).ready(function () {
         modeHandler.setSelectionMode();
     });
 
-    $('#allign-horizontal-top').click(function (e) {
+    $('#align-horizontal-top').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -141,7 +141,11 @@ $(document).ready(function () {
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
     });
     
-    $('#allign-horizontal-middle').click(function (e) {
+    $("#align-horizontal-top-icon").click(function (e) {
+        $("#align-horizontal-top").trigger('click');
+    });
+    
+    $('#align-horizontal-middle').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -164,7 +168,11 @@ $(document).ready(function () {
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
     });
     
-    $('#allign-horizontal-bottom').click(function (e) {
+    $("#align-horizontal-middle-icon").click(function (e) {
+        $("#align-horizontal-middle").trigger('click');
+    });
+    
+    $('#align-horizontal-bottom').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -187,7 +195,11 @@ $(document).ready(function () {
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
     });
     
-    $('#allign-vertical-left').click(function (e) {
+    $("#align-horizontal-bottom-icon").click(function (e) {
+        $("#align-horizontal-bottom").trigger('click');
+    });
+    
+    $('#align-vertical-left').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -210,7 +222,11 @@ $(document).ready(function () {
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
     });
     
-    $('#allign-vertical-center').click(function (e) {
+    $("#align-vertical-left-icon").click(function (e) {
+        $("#align-vertical-left").trigger('click');
+    });
+    
+    $('#align-vertical-center').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -233,7 +249,11 @@ $(document).ready(function () {
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
     });
     
-    $('#allign-vertical-right').click(function (e) {
+    $("#align-vertical-center-icon").click(function (e) {
+        $("#align-vertical-center").trigger('click');
+    });
+    
+    $('#align-vertical-right').click(function (e) {
         var selectedNodes = sbgnElementUtilities.getRootsOfGivenNodes(cy.nodes(":selected").filter(":visible"));
         if (selectedNodes.length <= 1) {
             return;
@@ -254,6 +274,10 @@ $(document).ready(function () {
 
         nodesData.firstTime = true;
         editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    });
+
+    $("#align-vertical-right-icon").click(function (e) {
+        $("#align-vertical-right").trigger('click');
     });
 
     var sbgnLayoutProp = new SBGNLayout({
