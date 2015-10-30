@@ -51,6 +51,21 @@ var isSpecialSBGNNodeClass = function (sbgnclass) {
     return false;
 };
 
+var getNodesData = function () {
+    var nodesData = {};
+    var nodes = cy.nodes();
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        nodesData[node.id()] = {
+            width: node.width(),
+            height: node.height(),
+            x: node.position("x"),
+            y: node.position("y")
+        };
+    }
+    return nodesData;
+};
+
 var relocateStateAndInfos = function (stateAndInfos) {
     var length = stateAndInfos.length;
     if (length == 0) {

@@ -222,7 +222,7 @@ function simpleCollapseGivenNodes(nodes) {
   return expandCollapseUtilities.simpleCollapseGivenNodes(nodes);
 }
 
-function performLayoutFunction(nodesData) {
+function returnToPositionsAndSizesConditionally(nodesData) {
   if (nodesData.firstTime) {
     delete nodesData.firstTime;
     return nodesData;
@@ -730,8 +730,8 @@ var ExpandAllNodesCommand = function (param) {
   return new Command(expandAllNodes, undoExpandAllNodes, param);
 };
 
-var PerformLayoutCommand = function (nodesData) {
-  return new Command(performLayoutFunction, returnToPositionsAndSizes, nodesData);
+var ReturnToPositionsAndSizesCommand = function (nodesData) {
+  return new Command(returnToPositionsAndSizesConditionally, returnToPositionsAndSizes, nodesData);
 };
 
 var MoveNodeCommand = function (param) {

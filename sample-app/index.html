@@ -148,7 +148,18 @@
                                 <li><a href="#" id="delete-selected-smart">Delete Selected Smart</a></li>
 
                                 <li class="divider"></li>
+                                <li class="disabled"><a href="#" id="undo-last-action" >Undo</a></li>
+                                <li class="disabled"><a href="#" id="redo-last-action" >Redo</a></li>
 
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                View 
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
                                 <li class="dropdown-submenu">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Hide/Show
@@ -175,14 +186,42 @@
                                         <li><a href="#" id="expand-all">Expand All</a></li>
                                     </ul>
                                 </li>
-
+                                
                                 <li class="divider"></li>
-                                <li class="disabled"><a href="#" id="undo-last-action" >Undo</a></li>
-                                <li class="disabled"><a href="#" id="redo-last-action" >Redo</a></li>
-
+                                
+                                <li class="dropdown-submenu">
+                                    <a href="#" id="add-node-menu-option" class="dropdown-toggle" data-toggle="dropdown">
+                                        Allign
+                                        <!--<b class="right-caret"></b>-->
+                                    </a>
+                                    <ul class="dropdown-menu" id="add-node-submenu">
+                                        <li class="dropdown-submenu">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Horizontal
+                                                <!--<b class="right-caret"></b>-->
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" id="allign-horizontal-top">Top</a></li>
+                                                <li><a href="#" id="allign-horizontal-middle">Middle</a></li>
+                                                <li><a href="#" id="allign-horizontal-bottom">Bottom</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown-submenu">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                Vertical
+                                                <!--<b class="right-caret"></b>-->
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#" id="allign-vertical-left">Left</a></li>
+                                                <li><a href="#" id="allign-vertical-center">Center</a></li>
+                                                <li><a href="#" id="allign-vertical-right">Right</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
-
+                        
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 Highlight 
@@ -317,17 +356,19 @@
                 <img id="delete-selected-smart-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/deletesmart.png" title="Delete Selected Smart" >
                 
                 <div class="menu-break-small sbgn-toolbar-element">&nbsp</div>
+                <img id="undo-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/undo.png" title="Undo" >
+                <img id="redo-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/redo.png" title="Redo" >
+                
+                </div>
+                
+                <div class="menu-break-large sbgn-toolbar-element">&nbsp</div>
+                <div class="inside-menu">
                 <img id="hide-selected-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/hideselected.png" title="Hide Selected" >
                 <img id="show-selected-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/showselected.png" title="Show Selected" >
                 
                 <div class="menu-break-small sbgn-toolbar-element">&nbsp</div>
                 <img id="collapse-selected-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/collapseselected.png" title="Collapse Selected" >
-                <img id="expand-selected-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/expandselected.png" title="Expand Selected" >    
-                
-                <div class="menu-break-small sbgn-toolbar-element">&nbsp</div>
-                <img id="undo-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/undo.png" title="Undo" >
-                <img id="redo-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/redo.png" title="Redo" >
-                
+                <img id="expand-selected-icon" class="sbgn-toolbar-element" src="sampleapp-images/toolbar-icons/expandselected.png" title="Expand Selected" >
                 </div>
                 
                 <div class="menu-break-large sbgn-toolbar-element">&nbsp</div>
