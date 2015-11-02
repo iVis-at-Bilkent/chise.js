@@ -125,9 +125,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonTopY = selectedNodes[0].position("y") - selectedNodes[0].height() / 2;
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonTopY = modelNode.position("y") - modelNode.height() / 2;
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosY = node.position('y');
             var newPosY = commonTopY + node.height() / 2;
@@ -152,9 +153,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonMiddleY = selectedNodes[0].position("y");
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonMiddleY = modelNode.position("y");
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosY = node.position('y');
             var newPosY = commonMiddleY;
@@ -179,9 +181,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonBottomY = selectedNodes[0].position("y") + selectedNodes[0].height() / 2;
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonBottomY = modelNode.position("y") + modelNode.height() / 2;
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosY = node.position('y');
             var newPosY = commonBottomY - node.height() / 2;
@@ -206,9 +209,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonLeftX = selectedNodes[0].position("x") - selectedNodes[0].width() / 2;
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonLeftX = modelNode.position("x") - modelNode.width() / 2;
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosX = node.position('x');
             var newPosX = commonLeftX + node.width() / 2;
@@ -233,9 +237,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonCenterX = selectedNodes[0].position("x");
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonCenterX = modelNode.position("x");
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosX = node.position('x');
             var newPosX = commonCenterX
@@ -260,9 +265,10 @@ $(document).ready(function () {
         }
         var nodesData = getNodesData();
         
-        var commonRightX = selectedNodes[0].position("x") + selectedNodes[0].width() / 2;
+        var modelNode = window.firstSelectedNode?firstSelectedNode:selectedNodes[0];
+        var commonRightX = modelNode.position("x") + modelNode.width() / 2;
         
-        for(var i = 1; i < selectedNodes.length; i++){
+        for(var i = 0; i < selectedNodes.length; i++){
             var node = selectedNodes[i];
             var oldPosX = node.position('x');
             var newPosX = commonRightX - node.width() / 2;
