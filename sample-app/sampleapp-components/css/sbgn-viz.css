@@ -260,7 +260,7 @@ body {
 
 .sbgn-select-img {
    margin-left: 2px;
-   margin-right: 2px;
+   margin-right: 5px;
 }
 
 .hidden-element {
@@ -324,11 +324,11 @@ img.sbgn-toolbar-element:hover {
 }
 
 #node-list-menu {
-    width: 170px;
+    width: 180px;
 }
 
 #edge-list-menu {
-    width: 175px;
+    width: 185px;
 }
 
 #align-menu {
@@ -341,8 +341,4 @@ img.sbgn-toolbar-element:hover {
 
 .menu-break-large {
     min-width: 8px !important; 
-}
-
-.sbgn-select-img {
-    margin-right: 5px;
 }
