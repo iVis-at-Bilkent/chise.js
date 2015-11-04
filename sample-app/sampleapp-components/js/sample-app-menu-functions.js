@@ -572,6 +572,9 @@ $(document).ready(function () {
 
   $("#search-by-label-icon").click(function (e) {
     var text = $("#search-by-label-text-box").val().toLowerCase();
+    if(text.length == 0){
+      return;
+    }
     cy.nodes().unselect();
 
     var nodesToSelect = cy.nodes(":visible").filter(function (i, ele) {
