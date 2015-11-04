@@ -141,7 +141,7 @@ var modeHandler = {
       var ele = $("#node-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
       var src = $(ele).attr('src');
-      $("#node-list-set-mode-btn").attr("title", text);
+      $("#node-list-set-mode-btn").attr("title", "Create " + text);
 //      $('#sbgn-selected-node-text').text(text);
       $('#sbgn-selected-node-img').attr('src', src);
       $(ele).parent('a').parent('li').addClass("selectedDDItem");
@@ -153,7 +153,7 @@ var modeHandler = {
       var ele = $("#edge-list [value=" + value + "]");
       var text = $(ele).parent('a').text();
       var src = $(ele).attr('src');
-      $("#edge-list-set-mode-btn").attr("title", text);
+      $("#edge-list-set-mode-btn").attr("title", "Create " + text);
 //      $('#sbgn-selected-edge-text').text(text);
       $('#sbgn-selected-edge-img').attr('src', src);
       $(ele).parent('a').parent('li').addClass("selectedDDItem");
