@@ -600,6 +600,9 @@ $(document).ready(function () {
     }
   });
 
+  $("#highlight-search-menu-item").click(function (e) {
+    $("#search-by-label-text-box").focus();
+  });
 
   $("#processes-of-selected").click(function (e) {
 //    sbgnFiltering.highlightProcessesOfSelected();
