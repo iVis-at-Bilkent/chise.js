@@ -177,11 +177,12 @@ body {
 #search-by-label-text-box {
     width: 75px;
     border-radius: 0.25em;
+    border-color: #ddd;
 }
 
-#search-by-label-text-box:focus {
+/*#search-by-label-text-box:focus {
     outline-color: #ddd;
-}
+}*/
 
 #sbgn-toolbar{
     margin: auto;
