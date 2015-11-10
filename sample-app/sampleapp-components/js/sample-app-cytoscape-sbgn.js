@@ -232,7 +232,10 @@ var handleSBGNInspector = function () {
   var width = $("#sbgn-inspector").width() * 0.45;
   if (selectedEles.length == 1) {
     var selected = selectedEles[0];
-    var title = selected.data("sbgnlabel");
+    var sbgnlabel = selected.data("sbgnlabel");
+    if (sbgnlabel == null) {
+      sbgnlabel = "";
+    }
 
     var classInfo = selected.data("sbgnclass");
     if (classInfo == 'and' || classInfo == 'or' || classInfo == 'not') {
@@ -248,12 +251,14 @@ var handleSBGNInspector = function () {
       classInfo = classInfo.replace(' Not ', ' not ');
     }
 
-    if (title == null) {
-      title = classInfo;
-    }
-    else {
-      title += ":" + classInfo;
-    }
+    var title = classInfo;
+
+//    if (title == null) {
+//      title = classInfo;
+//    }
+//    else {
+//      title += ":" + classInfo;
+//    }
 
     var buttonwidth = width;
     if (buttonwidth > 50) {
@@ -265,6 +270,9 @@ var handleSBGNInspector = function () {
     if (selectedEles.nodes().length == 1) {
       type = "node";
 
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
+              + "<input id='inspector-label' type='text' style='width: " + width + "px;' value='" + sbgnlabel
+              + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
@@ -380,6 +388,15 @@ var handleSBGNInspector = function () {
           dataType: "borderColor"
         };
         editorActionsManager._do(new ChangeStyleDataCommand(param));
+        refreshUndoRedoButtonsStatus();
+      });
+
+      $("#inspector-label").on('change', function () {
+        var param = {
+          node: selected,
+          sbgnlabel: $(this).attr('value')
+        };
+        editorActionsManager._do(new ChangeNodeLabelCommand(param));
         refreshUndoRedoButtonsStatus();
       });
 
