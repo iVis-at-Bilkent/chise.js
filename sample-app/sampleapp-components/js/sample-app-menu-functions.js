@@ -8,15 +8,24 @@ var setFileContent = function (fileName) {
 
 //Handle keyboard events
 $(document).keydown(function (e) {
-  if (e.which === 90 && e.ctrlKey) {
-    editorActionsManager.undo();
-    refreshUndoRedoButtonsStatus();
+  if (e.ctrlKey) {
+    window.ctrlKeyDown = true;
+    if (e.which === 90) {
+      editorActionsManager.undo();
+      refreshUndoRedoButtonsStatus();
 //    $(document.activeElement).attr("value");
+    }
+    else if (e.which === 89) {
+      editorActionsManager.redo();
+      refreshUndoRedoButtonsStatus();
+    }
   }
-  else if (e.which === 89 && e.ctrlKey) {
-    editorActionsManager.redo();
-    refreshUndoRedoButtonsStatus();
-  }
+});
+
+$(document).keyup(function (e) {
+  window.ctrlKeyDown = null;
+//  $("#sbgn-network-container").removeClass("target-cursor");
+  disableDragAndDropMode();
 });
 
 $("#node-label-textbox").keydown(function (e) {
@@ -572,7 +581,7 @@ $(document).ready(function () {
 
   $("#search-by-label-icon").click(function (e) {
     var text = $("#search-by-label-text-box").val().toLowerCase();
-    if(text.length == 0){
+    if (text.length == 0) {
       return;
     }
     cy.nodes().unselect();

@@ -147,6 +147,10 @@ body {
     /*float: left;*/
 }
 
+.target-cursor {
+    cursor: url('../../sampleapp-images/drag-target.png'), pointer;
+}
+
 #sbgn-inspector-and-canvas {
     margin: auto;
     overflow: auto !important;

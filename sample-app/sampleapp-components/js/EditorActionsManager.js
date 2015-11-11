@@ -414,6 +414,25 @@ function removeHighlights() {
   result.firstTime = false;
   return result;
 }
+
+function changeParent(param){
+  var node = param.node;
+  var oldParentId = node._private.data.parent;
+  var newParentId = param.newParentId;
+  var nodesData = param.nodesData;
+  var result = {
+    node: node,
+    newParentId: oldParentId
+  };
+  
+  result.nodesData = getNodesData();
+  addRemoveUtilities.changeParent(node, oldParentId, newParentId);
+  cy.nodes().updateCompoundBounds();
+  returnToPositionsAndSizesConditionally(nodesData);
+
+  return result;
+}
+
 /*
  * This method assumes that param.nodesToMakeCompound contains at least one node
  * and all of the nodes including in it have the same parent
@@ -810,6 +829,10 @@ var changeIsMultimerStatusCommand = function (param) {
 
 var changeIsCloneMarkerStatusCommand = function (param) {
   return new Command(changeIsCloneMarkerStatus, changeIsCloneMarkerStatus, param);
+};
+
+var changeParentCommand = function (param) {
+  return new Command(changeParent, changeParent, param);
 };
 
 /**

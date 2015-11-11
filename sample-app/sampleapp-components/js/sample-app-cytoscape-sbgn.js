@@ -36,6 +36,21 @@ $(document).ready(function ()
   dynamicResize();
 });
 
+var enableDragAndDropMode = function () {
+  window.dragAndDropModeEnabled = true;
+  $("#sbgn-network-container").addClass("target-cursor");
+  cy.autolock(true);
+  cy.autounselectify(true);
+};
+
+var disableDragAndDropMode = function () {
+  window.dragAndDropModeEnabled = null;
+  window.nodeToDragAndDrop = null;
+  $("#sbgn-network-container").removeClass("target-cursor");
+  cy.autolock(false);
+  cy.autounselectify(false);
+};
+
 //Returns true for unspecified entity, 
 //simple chemical, macromolecule, nucleic acid feature, and complexes
 //As they may have some specific node properties(state variables, units of information etc.)
@@ -1104,12 +1119,51 @@ var SBGNContainer = Backbone.View.extend({
 
         var lastMouseDownNodeInfo = null;
         cy.on("mousedown", "node", function () {
-          lastMouseDownNodeInfo = {};
-          lastMouseDownNodeInfo.lastMouseDownPosition = {
-            x: this.position("x"),
-            y: this.position("y")
-          };
-          lastMouseDownNodeInfo.node = this;
+          var self = this;
+          if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
+            enableDragAndDropMode();
+            window.nodeToDragAndDrop = self;
+          }
+          else {
+            lastMouseDownNodeInfo = {};
+            lastMouseDownNodeInfo.lastMouseDownPosition = {
+              x: this.position("x"),
+              y: this.position("y")
+            };
+            lastMouseDownNodeInfo.node = this;
+          }
+        });
+
+        cy.on("mouseup", function (event) {
+          var self = event.cyTarget;
+          if (window.dragAndDropModeEnabled) {
+            var nodesData = getNodesData();
+            nodesData.firstTime = true;
+            var newParentId;
+            if(self != cy){
+              newParentId = self._private.data.id;
+            }
+            var node = window.nodeToDragAndDrop;
+            
+            if(newParentId && self.data("sbgnclass") != "complex" && self.data("sbgnclass") != "compartment"){
+              return;
+            }
+            
+            if(newParentId && self.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))){
+              return;
+            }
+            
+            disableDragAndDropMode();
+            if(node._private.data.parent == newParentId || node._private.data.parent == node.id()){
+              return;
+            }
+            var param = {
+              newParentId: newParentId,
+              node: node,
+              nodesData: nodesData
+            };
+            editorActionsManager._do(new changeParentCommand(param));
+          }
         });
 
         cy.on("mouseup", "node", function () {
