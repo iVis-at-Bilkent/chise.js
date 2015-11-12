@@ -415,18 +415,47 @@ function removeHighlights() {
   return result;
 }
 
-function changeParent(param){
+function changeParent(param) {
   var node = param.node;
   var oldParentId = node._private.data.parent;
-  var newParentId = param.newParentId;
+  var oldParent = node.parent()[0];
+  var newParent = param.newParent;
   var nodesData = param.nodesData;
   var result = {
     node: node,
-    newParentId: oldParentId
+    newParent: oldParent
   };
-  
+
   result.nodesData = getNodesData();
-  addRemoveUtilities.changeParent(node, oldParentId, newParentId);
+  
+  if(param.posX && param.posY){
+    node.position({
+      x: param.posX,
+      y: param.posY
+    });
+  }
+
+  //If new parent is not null some checks should be performed
+  if (newParent) {
+    //check if the node was the anchestor of it's new parent 
+    var wasAnchestorOfNewParent = false;
+    var temp = newParent.parent()[0];
+    while (temp != null) {
+      if (temp == node) {
+        wasAnchestorOfNewParent = true;
+        break;
+      }
+      temp = temp.parent()[0];
+    }
+    //if so firstly remove the parent from inside of the node
+    if (wasAnchestorOfNewParent) {
+      addRemoveUtilities.changeParent(newParent, newParent._private.data.parent, node._private.data.parent);
+      oldParentId = node._private.data.parent;
+    }
+  }
+
+  //Change the parent of the node
+  addRemoveUtilities.changeParent(node, oldParentId, newParent ? newParent._private.data.id : undefined);
   cy.nodes().updateCompoundBounds();
   returnToPositionsAndSizesConditionally(nodesData);
 
@@ -624,7 +653,7 @@ function changeIsMultimerStatus(param) {
 function changeIsCloneMarkerStatus(param) {
   var node = param.node;
   var makeCloneMarker = param.makeCloneMarker;
-  node._private.data.sbgnclonemarker = makeCloneMarker?true:undefined;
+  node._private.data.sbgnclonemarker = makeCloneMarker ? true : undefined;
   cy.forceRender();
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
     $('#inspector-is-clone-marker').attr('checked', makeCloneMarker);

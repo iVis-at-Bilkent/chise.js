@@ -1,4 +1,7 @@
-
+//Override String endsWith method for IE
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
 
 function dynamicResize()
 {
@@ -1139,34 +1142,39 @@ var SBGNContainer = Backbone.View.extend({
           if (window.dragAndDropModeEnabled) {
             var nodesData = getNodesData();
             nodesData.firstTime = true;
-            var newParentId;
+            var newParent;
             if(self != cy){
-              newParentId = self._private.data.id;
+              newParent = self;
             }
             var node = window.nodeToDragAndDrop;
             
-            if(newParentId && self.data("sbgnclass") != "complex" && self.data("sbgnclass") != "compartment"){
+            if(newParent && self.data("sbgnclass") != "complex" && self.data("sbgnclass") != "compartment"){
               return;
             }
             
-            if(newParentId && self.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))){
+            if(newParent && self.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))){
               return;
             }
             
             disableDragAndDropMode();
-            if(node._private.data.parent == newParentId || node._private.data.parent == node.id()){
+            if(node.parent()[0] == newParent || node._private.data.parent == node.id()){
               return;
             }
             var param = {
-              newParentId: newParentId,
+              newParent: newParent,
               node: node,
-              nodesData: nodesData
+              nodesData: nodesData,
+              posX: event.cyPosition.x,
+              posY: event.cyPosition.y
             };
             editorActionsManager._do(new changeParentCommand(param));
           }
         });
 
         cy.on("mouseup", "node", function () {
+          if(window.dragAndDropModeEnabled){
+            return;
+          }
           if (lastMouseDownNodeInfo == null) {
             return;
           }
