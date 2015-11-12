@@ -169,7 +169,7 @@ var fillInspectorStateAndInfos = function (node, width) {
       });
     }
     else if (state.clazz == "unit of information") {
-      var total = width / 5 + width / 5 + width / 2.5;
+      var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
               + total + "px' value='" + state.label.text
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
@@ -289,7 +289,7 @@ var handleSBGNInspector = function () {
       type = "node";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-label' type='text' style='width: " + width + "px;' value='" + sbgnlabel
+              + "<input id='inspector-label' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
