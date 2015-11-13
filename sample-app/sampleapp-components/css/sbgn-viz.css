@@ -180,13 +180,16 @@ body {
 
 #search-by-label-text-box {
     width: 75px;
-    border-radius: 0.25em;
+    border-radius: 5px;
     border-color: #ddd;
+    outline-offset: 50px;
 }
 
-/*#search-by-label-text-box:focus {
-    outline-color: #ddd;
-}*/
+#search-by-label-text-box:focus {
+    box-shadow: 0 0 2pt 0.5pt #5AB2F6;
+    /*outline-color: #5AB2F6;*/
+    outline: none;
+}
 
 #sbgn-toolbar{
     margin: auto;
