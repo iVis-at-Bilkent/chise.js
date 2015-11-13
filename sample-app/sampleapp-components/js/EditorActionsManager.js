@@ -416,6 +416,13 @@ function removeHighlights() {
 }
 
 function changeParent(param) {
+  //If there is an inner param firstly call the function with it
+  //Inner param is created if the change parent operation requires 
+  //another change parent operation in it.
+  if(param.innerParam){
+    changeParent(param.innerParam);
+  }
+  
   var node = param.node;
   var oldParentId = node._private.data.parent;
   var oldParent = node.parent()[0];
@@ -427,13 +434,6 @@ function changeParent(param) {
   };
 
   result.nodesData = getNodesData();
-  
-  if(param.posX && param.posY){
-    node.position({
-      x: param.posX,
-      y: param.posY
-    });
-  }
 
   //If new parent is not null some checks should be performed
   if (newParent) {
@@ -449,13 +449,31 @@ function changeParent(param) {
     }
     //if so firstly remove the parent from inside of the node
     if (wasAnchestorOfNewParent) {
+      var parentOfNewParent = newParent.parent()[0];
       addRemoveUtilities.changeParent(newParent, newParent._private.data.parent, node._private.data.parent);
       oldParentId = node._private.data.parent;
+      //We have an internal change parent operation to redo this operation 
+      //we need an inner param to call the function with it at the beginning
+      result.innerParam = {
+        node: newParent,
+        newParent: parentOfNewParent,
+        nodesData: {
+          firstTime: true
+        }
+      };
     }
   }
 
   //Change the parent of the node
   addRemoveUtilities.changeParent(node, oldParentId, newParent ? newParent._private.data.id : undefined);
+  
+  if(param.posX && param.posY){
+    node.position({
+      x: param.posX,
+      y: param.posY
+    });
+  }
+  
   cy.nodes().updateCompoundBounds();
   returnToPositionsAndSizesConditionally(nodesData);
 

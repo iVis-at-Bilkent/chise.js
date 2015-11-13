@@ -148,7 +148,7 @@ body {
 }
 
 .target-cursor {
-    cursor: url('../../sampleapp-images/drag-target.png'), pointer;
+    cursor: url(../../sampleapp-images/drag-target.cur), pointer;
 }
 
 #sbgn-inspector-and-canvas {
