@@ -110,19 +110,23 @@ var addRemoveUtilities = {
   },
   changeParent: function (nodes, oldParentId, newParentId) {
     var removedNodes = this.removeNodes(nodes);
-
+    
     for (var i = 0; i < removedNodes.length; i++) {
       var removedNode = removedNodes[i];
       var parentId = removedNode._private.data.parent;
 
       //Just alter the parent id of the nodesToMakeCompound
-      if (parentId != oldParentId) {
+      if (parentId != oldParentId || removedNode._private.data.source) {
         continue;
       }
 
       removedNode._private.data.parent = newParentId;
+      if(removedNode._private.parent){
+        delete removedNode._private.parent;
+      }
     }
 
     cy.add(removedNodes);
+//    removedNodes.restore();
   }
 };
