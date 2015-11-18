@@ -681,15 +681,15 @@ var refreshPaddings = function () {
 
   var calc_padding = (compoundPadding / 100) * Math.floor(total / (2 * numOfSimples));
 
-  if (calc_padding < 10) {
-    calc_padding = 10;
+  if (calc_padding < 15) {
+    calc_padding = 15;
   }
 
   var complexesAndCompartments = cy.$("node[sbgnclass='complex'], node[sbgnclass='compartment']");
-  complexesAndCompartments.css('padding-left', calc_padding + 8);
-  complexesAndCompartments.css('padding-right', calc_padding + 8);
-  complexesAndCompartments.css('padding-top', calc_padding + 8);
-  complexesAndCompartments.css('padding-bottom', calc_padding + 8);
+  complexesAndCompartments.css('padding-left', calc_padding);
+  complexesAndCompartments.css('padding-right', calc_padding);
+  complexesAndCompartments.css('padding-top', calc_padding);
+  complexesAndCompartments.css('padding-bottom', calc_padding);
   //To refresh the nodes on the screen apply the preset layout
   makePresetLayout();
 };
