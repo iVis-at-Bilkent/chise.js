@@ -1936,8 +1936,9 @@
     var stateValue = textProp.state.value;
     var stateVariable = textProp.state.variable;
 
-    var stateLabel = (stateVariable == null /*|| typeof stateVariable === undefined */) ? stateValue :
-            stateValue + "@" + stateVariable;
+    var stateLabel = stateValue + (stateVariable
+                                    ? "@" + stateVariable
+                                    : "");
 
     var fontSize = parseInt(textProp.height / 1.5);
 
