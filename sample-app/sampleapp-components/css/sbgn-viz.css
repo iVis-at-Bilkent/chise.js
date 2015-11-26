@@ -360,6 +360,6 @@ img.sbgn-toolbar-element:hover {
     min-width: 8px !important;
 }
 
-input {
+input, button {
     font-size: 12px !important;
 }
