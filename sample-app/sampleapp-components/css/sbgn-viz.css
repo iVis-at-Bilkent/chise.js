@@ -357,5 +357,9 @@ img.sbgn-toolbar-element:hover {
 }
 
 .menu-break-large {
-    min-width: 8px !important; 
+    min-width: 8px !important;
+}
+
+input {
+    font-size: 12px !important;
 }
