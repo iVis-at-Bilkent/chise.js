@@ -25,6 +25,7 @@ function textToXmlObject(text) {
 ;
 
 var sbgnmlToJson = {
+  handledNodes: {},
   getAllCompartments: function (xmlObject) {
     var compartments = [];
     $(xmlObject).find("glyph[class='compartment']").each(function () {
@@ -193,6 +194,7 @@ var sbgnmlToJson = {
     if (!sbgnElementUtilities.handledElements[$(ele).attr('class')]) {
       return;
     }
+    this.handledNodes[$(ele).attr('id')] = true;
     var self = this;
     //add complex nodes here
     if ($(ele).attr('class') === 'complex' || $(ele).attr('class') === 'submap') {
@@ -248,6 +250,11 @@ var sbgnmlToJson = {
     }
     
     var self = this;
+    var sourceAndTarget = self.getArcSourceAndTarget(ele, xmlObject);
+    if(!this.handledNodes[sourceAndTarget.source] || !this.handledNodes[sourceAndTarget.target]){
+      return;
+    }
+    
     var edgeObj = new Object();
 
     edgeObj.id = $(ele).attr('id');
@@ -263,8 +270,6 @@ var sbgnmlToJson = {
         }
       });
     }
-
-    var sourceAndTarget = self.getArcSourceAndTarget(ele, xmlObject);
 
     edgeObj.source = sourceAndTarget.source;
     edgeObj.target = sourceAndTarget.target;
