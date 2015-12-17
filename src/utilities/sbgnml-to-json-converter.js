@@ -25,7 +25,7 @@ function textToXmlObject(text) {
 ;
 
 var sbgnmlToJson = {
-  handledNodes: {},
+  insertedNodes: {},
   getAllCompartments: function (xmlObject) {
     var compartments = [];
     $(xmlObject).find("glyph[class='compartment']").each(function () {
@@ -194,7 +194,7 @@ var sbgnmlToJson = {
     if (!sbgnElementUtilities.handledElements[$(ele).attr('class')]) {
       return;
     }
-    this.handledNodes[$(ele).attr('id')] = true;
+    this.insertedNodes[$(ele).attr('id')] = true;
     var self = this;
     //add complex nodes here
     if ($(ele).attr('class') === 'complex' || $(ele).attr('class') === 'submap') {
@@ -251,7 +251,7 @@ var sbgnmlToJson = {
     
     var self = this;
     var sourceAndTarget = self.getArcSourceAndTarget(ele, xmlObject);
-    if(!this.handledNodes[sourceAndTarget.source] || !this.handledNodes[sourceAndTarget.target]){
+    if(!this.insertedNodes[sourceAndTarget.source] || !this.insertedNodes[sourceAndTarget.target]){
       return;
     }
     
