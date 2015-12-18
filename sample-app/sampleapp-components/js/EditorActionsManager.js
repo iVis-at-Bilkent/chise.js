@@ -547,6 +547,8 @@ function resizeNode(param) {
     node.data("width", param.width);
     node.data("height", param.height);
   }
+  node._private.data.sbgnbbox.w = node.width();
+  node._private.data.sbgnbbox.h = node.height();
   return result;
 }
 

@@ -1033,6 +1033,8 @@ var SBGNContainer = Backbone.View.extend({
             // fired when noderesize is done and entities are added
           },
           stop: function (sourceNode) {
+            sourceNode._private.data.sbgnbbox.w = sourceNode.width();
+            sourceNode._private.data.sbgnbbox.h = sourceNode.height();
           }
         });
 
