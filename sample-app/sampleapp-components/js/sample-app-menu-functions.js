@@ -6,6 +6,21 @@ var setFileContent = function (fileName) {
   span.appendChild(document.createTextNode(fileName));
 };
 
+var beforePerformLayout = function(){
+  cy.nodes().removeData("ports");
+  cy.edges().removeData("portsource");
+  cy.edges().removeData("porttarget");
+
+  cy.nodes().data("ports", []);
+  cy.edges().data("portsource", []);
+  cy.edges().data("porttarget", []);
+
+  cy.edges().removeData('weights');
+  cy.edges().removeData('distances');
+  
+  cy.edges().css('curve-style', 'bezier');
+};
+
 //Handle keyboard events
 $(document).keydown(function (e) {
   if (e.ctrlKey) {
@@ -35,14 +50,52 @@ $("#node-label-textbox").keydown(function (e) {
 });
 
 $(document).ready(function () {
-  var xmlObject = loadXMLDoc('samples/activated_stat1alpha_induction_of_the_irf1_gene.xml');
+  var xmlObject = loadXMLDoc('samples/CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
 
-  setFileContent("activated_stat1alpha_induction_of_the_irf1_gene.sbgnml");
+  setFileContent("CaM-CaMK_dependent_signaling_to_the_nucleus.sbgnml");
 
   (new SBGNContainer({
     el: '#sbgn-network-container',
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
+    
+  document.getElementById("ctx-add-bend-point").addEventListener("contextmenu",function(event){
+      event.preventDefault();
+  },false);
+  
+  document.getElementById("ctx-remove-bend-point").addEventListener("contextmenu",function(event){
+      event.preventDefault();
+  },false);
+
+  $('.ctx-bend-operation').click(function (e) {
+    $('.ctx-bend-operation').css('display', 'none');
+  });
+
+  $('#ctx-add-bend-point').click(function (e) {
+    var edge = sbgnBendPointUtilities.currentCtxEdge;
+    var param = {
+      edge: edge,
+      weights: edge.data('weights')?[].concat(edge.data('weights')):edge.data('weights'),
+      distances: edge.data('distances')?[].concat(edge.data('distances')):edge.data('distances')
+    };
+    
+    sbgnBendPointUtilities.addBendPoint();
+    editorActionsManager._do(new changeBendPointsCommand(param));
+    refreshUndoRedoButtonsStatus();
+  });
+  
+  $('#ctx-remove-bend-point').click(function (e) {
+    var edge = sbgnBendPointUtilities.currentCtxEdge;
+    var param = {
+      edge: edge,
+      weights: [].concat(edge.data('weights')),
+      distances: [].concat(edge.data('distances'))
+    };
+    
+    sbgnBendPointUtilities.removeBendPoint();
+    editorActionsManager._do(new changeBendPointsCommand(param));
+    refreshUndoRedoButtonsStatus();
+  });
 
   $('#new-file-icon').click(function (e) {
     $('#new-file').trigger("click");
@@ -402,6 +455,18 @@ $(document).ready(function () {
   });
 
   $("#load-sample1").click(function (e) {
+    var xmlObject = loadXMLDoc('samples/CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
+
+    setFileContent("CaM-CaMK_dependent_signaling_to_the_nucleus.sbgnml");
+
+    (new SBGNContainer({
+      el: '#sbgn-network-container',
+      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
+    })).render();
+    handleSBGNInspector();
+  });
+
+  $("#load-sample2").click(function (e) {
     var xmlObject = loadXMLDoc('samples/activated_stat1alpha_induction_of_the_irf1_gene.xml');
 
     setFileContent("activated_stat1alpha_induction_of_the_irf1_gene.sbgnml");
@@ -413,7 +478,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample2").click(function (e) {
+  $("#load-sample3").click(function (e) {
     var xmlObject = loadXMLDoc('samples/glycolysis.xml');
 
     setFileContent("glycolysis.sbgnml");
@@ -426,7 +491,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample3").click(function (e) {
+  $("#load-sample4").click(function (e) {
     var xmlObject = loadXMLDoc('samples/mapk_cascade.xml');
 
     setFileContent("mapk_cascade.sbgnml");
@@ -439,7 +504,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample4").click(function (e) {
+  $("#load-sample5").click(function (e) {
     var xmlObject = loadXMLDoc('samples/polyq_proteins_interference.xml');
 
     $("#quick-help").click(function (e) {
@@ -484,7 +549,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample5").click(function (e) {
+  $("#load-sample6").click(function (e) {
     var xmlObject = loadXMLDoc('samples/insulin-like_growth_factor_signaling.xml');
 
     setFileContent("insulin-like_growth_factor_signaling.sbgnml");
@@ -497,7 +562,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample6").click(function (e) {
+  $("#load-sample7").click(function (e) {
     var xmlObject = loadXMLDoc('samples/atm_mediated_phosphorylation_of_repair_proteins.xml');
 
     setFileContent("atm_mediated_phosphorylation_of_repair_proteins.sbgnml");
@@ -510,7 +575,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample7").click(function (e) {
+  $("#load-sample8").click(function (e) {
     var xmlObject = loadXMLDoc('samples/vitamins_b6_activation_to_pyridoxal_phosphate.xml');
 
     setFileContent("vitamins_b6_activation_to_pyridoxal_phosphatesbgnml");
@@ -799,13 +864,7 @@ $(document).ready(function () {
   $("#perform-layout").click(function (e) {
     var nodesData = getNodesData();
 
-    cy.nodes().removeData("ports");
-    cy.edges().removeData("portsource");
-    cy.edges().removeData("porttarget");
-
-    cy.nodes().data("ports", []);
-    cy.edges().data("portsource", []);
-    cy.edges().data("porttarget", []);
+    beforePerformLayout();
 
     sbgnLayoutProp.applyLayout();
     nodesData.firstTime = true;
@@ -815,14 +874,7 @@ $(document).ready(function () {
   });
 
   $("#perform-incremental-layout").click(function (e) {
-    cy.nodes().removeData("ports");
-    cy.edges().removeData("portsource");
-    cy.edges().removeData("porttarget");
-
-    cy.nodes().data("ports", []);
-    cy.edges().data("portsource", []);
-    cy.edges().data("porttarget", []);
-
+    beforePerformLayout();
     sbgnLayoutProp.applyIncrementalLayout();
   });
 

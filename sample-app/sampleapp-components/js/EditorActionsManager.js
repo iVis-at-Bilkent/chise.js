@@ -419,10 +419,10 @@ function changeParent(param) {
   //If there is an inner param firstly call the function with it
   //Inner param is created if the change parent operation requires 
   //another change parent operation in it.
-  if(param.innerParam){
+  if (param.innerParam) {
     changeParent(param.innerParam);
   }
-  
+
   var node = param.node;
   var oldParentId = node._private.data.parent;
   var oldParent = node.parent()[0];
@@ -466,14 +466,14 @@ function changeParent(param) {
 
   //Change the parent of the node
   addRemoveUtilities.changeParent(node, oldParentId, newParent ? newParent._private.data.id : undefined);
-  
-  if(param.posX && param.posY){
+
+  if (param.posX && param.posY) {
     node.position({
       x: param.posX,
       y: param.posY
     });
   }
-  
+
   cy.nodes().updateCompoundBounds();
   returnToPositionsAndSizesConditionally(nodesData);
 
@@ -547,6 +547,7 @@ function resizeNode(param) {
     node.data("width", param.width);
     node.data("height", param.height);
   }
+  
   node._private.data.sbgnbbox.w = node.width();
   node._private.data.sbgnbbox.h = node.height();
   return result;
@@ -560,7 +561,9 @@ function changeNodeLabel(param) {
   result.sbgnlabel = node._private.data.sbgnlabel;
 
   node._private.data.sbgnlabel = param.sbgnlabel;
-  cy.forceRender();
+  
+  node.removeClass('changeContent');
+  node.addClass('changeContent');
 
   if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
     handleSBGNInspector();
@@ -718,6 +721,32 @@ function changeStyleCss(param) {
     handleSBGNInspector();
   }
 
+  return result;
+}
+
+function changeBendPoints(param){
+  var edge = param.edge;
+  var result = {
+    edge: edge,
+    weights: param.set?edge.data('weights'):param.weights,
+    distances: param.set?edge.data('distances'):param.distances,
+    set: true//As the result will not be used for the first function call params should be used to set the data
+  };
+  
+  //Check if we need to set the weights and distances by the param values
+  if(param.set) {
+    param.weights?edge.data('weights', param.weights):edge.removeData('weights');
+    param.distances?edge.data('distances', param.distances):edge.removeData('distances');
+    
+    //refresh the curve style as the number of bend point would be changed by the previous operation
+    if(param.weights){
+      edge.css('curve-style', 'segments');
+    }
+    else {
+      edge.css('curve-style', 'bezier');
+    }
+  }
+  
   return result;
 }
 
@@ -882,6 +911,10 @@ var changeIsCloneMarkerStatusCommand = function (param) {
 
 var changeParentCommand = function (param) {
   return new Command(changeParent, changeParent, param);
+};
+
+var changeBendPointsCommand = function (param) {
+  return new Command(changeBendPoints, changeBendPoints, param);
 };
 
 /**

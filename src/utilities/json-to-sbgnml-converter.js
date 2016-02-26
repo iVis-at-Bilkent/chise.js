@@ -35,7 +35,7 @@ var jsonToSbgnml = {
 
             if(node.parent().isParent()){
                 var parent = node.parent();
-                sbgnmlText = sbgnmlText + " compartmentRef='" + node._private.data.id + "'";
+                sbgnmlText = sbgnmlText + " compartmentRef='" + node._private.data.parent + "'";
             }
 
             sbgnmlText = sbgnmlText + " >\n";
@@ -149,6 +149,14 @@ var jsonToSbgnml = {
         sbgnmlText = sbgnmlText + "<start y='" + edge._private.rscratch.startY + "' x='" +
             edge._private.rscratch.startX + "'/>\n";
 
+        var segpts = edge._private.rscratch.segpts;
+        for(var i = 0; segpts && i < segpts.length; i = i + 2){
+          var bendX = segpts[i];
+          var bendY = segpts[i + 1];
+          
+          sbgnmlText = sbgnmlText + "<next y='" + bendY + "' x='" + bendX + "'/>\n";
+        }
+
         sbgnmlText = sbgnmlText + "<end y='" + edge._private.rscratch.endY + "' x='" +
             edge._private.rscratch.endX + "'/>\n";
 
@@ -182,8 +190,8 @@ var jsonToSbgnml = {
 
         var ports = node._private.data.ports;
         for(var i = 0 ; i < ports.length ; i++){
-            var x = node._private.position.x + ports[i].x;
-            var y = node._private.position.y + ports[i].y;
+            var x = node._private.position.x + ports[i].x * node.width() / 100;
+            var y = node._private.position.y + ports[i].y * node.height() / 100;
 
             sbgnmlText = sbgnmlText + "<port id='" + ports[i].id + 
                 "' y='" + y + "' x='" + x + "' />\n";
