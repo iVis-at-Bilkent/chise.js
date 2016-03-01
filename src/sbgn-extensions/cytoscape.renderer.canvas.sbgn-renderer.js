@@ -353,8 +353,8 @@
   };
 
   $$.sbgn.drawStateText = function (context, textProp) {
-    var stateValue = textProp.state.value;
-    var stateVariable = textProp.state.variable;
+    var stateValue = stringAfterValueCheck(textProp.state.value);
+    var stateVariable = stringAfterValueCheck(textProp.state.variable);
 
     var stateLabel = stateValue + (stateVariable
             ? "@" + stateVariable
@@ -385,11 +385,15 @@
     var oldOpacity = context.globalAlpha;
     context.globalAlpha = textProp.opacity;
     var text;
+    
+    textProp.label = stringAfterValueCheck(textProp.label);
+    
     if (truncate == false) {
       text = textProp.label;
     } else {
       text = truncateText(textProp, context.font);
     }
+    
     context.fillText(text, textProp.centerX, textProp.centerY);
     context.fillStyle = oldStyle;
     context.font = oldFont;
@@ -505,7 +509,7 @@
 
         context.fill();
 
-        textProp.label = state.label.text;
+        textProp.label = stringAfterValueCheck(state.label.text);
         $$.sbgn.drawInfoText(context, textProp);
 
         context.stroke();

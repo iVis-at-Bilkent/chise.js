@@ -39,6 +39,10 @@ $(document).ready(function ()
   dynamicResize();
 });
 
+var stringAfterValueCheck = function(value){
+  return value?value:'';
+};
+
 var enableDragAndDropMode = function () {
   window.dragAndDropModeEnabled = true;
   $("#sbgn-network-container").addClass("target-cursor");
@@ -157,15 +161,16 @@ var fillInspectorStateAndInfos = function (node, width) {
   //first empty the state variables and infos data in inspector
   $("#inspector-state-variables").html("");
   $("#inspector-unit-of-informations").html("");
+  
   var stateAndInfos = node._private.data.sbgnstatesandinfos;
   for (var i = 0; i < stateAndInfos.length; i++) {
     var state = stateAndInfos[i];
     if (state.clazz == "state variable") {
       $("#inspector-state-variables").append("<div><input type='text' class='just-added-inspector-input inspector-state-variable-value' style='width: "
-          + width / 5 + "px' value='" + state.state.value + "'/>"
+          + width / 5 + "px' value='" + stringAfterValueCheck(state.state.value) + "'/>"
           + "<span width='" + width / 5 + "'px>@</span>"
           + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
-          + width / 2.5 + "px' value='" + state.state.variable
+          + width / 2.5 + "px' value='" + stringAfterValueCheck(state.state.variable)
           + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
@@ -199,7 +204,7 @@ var fillInspectorStateAndInfos = function (node, width) {
     else if (state.clazz == "unit of information") {
       var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
-          + total + "px' value='" + state.label.text
+          + total + "px' value='" + stringAfterValueCheck(state.label.text)
           + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
