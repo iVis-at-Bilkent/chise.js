@@ -302,6 +302,11 @@ function restoreSelected(eles) {
 
 function hideSelected(param) {
   var currentNodes = cy.nodes(":visible");
+  
+  if(currentNodes.length == 0){
+    return;
+  }
+  
   if (param.firstTime) {
     sbgnFiltering.hideSelected();
   }
@@ -346,13 +351,22 @@ function highlightSelected(param) {
       //mark that there was no highlighted element
       result.allElementsWasNotHighlighted = true;
     }
+    
     var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
+    
+    if(param.elesToHighlight){
+      elementsToHighlight = param.elesToHighlight;
+    }
+    
+    //If elementsToHighlight is undefined it will be calculated in the function else it
+    //will be directly used in the function
     if (param.highlightNeighboursofSelected) {
-      elementsToHighlight = sbgnFiltering.highlightNeighborsofSelected();
+      elementsToHighlight = sbgnFiltering.highlightNeighborsofSelected(elementsToHighlight);
     }
     else if (param.highlightProcessesOfSelected) {
-      elementsToHighlight = sbgnFiltering.highlightProcessesOfSelected();
+      elementsToHighlight = sbgnFiltering.highlightProcessesOfSelected(elementsToHighlight);
     }
+    
     elementsToHighlight = elementsToHighlight.not(alreadyHighlighted);
   }
   else {

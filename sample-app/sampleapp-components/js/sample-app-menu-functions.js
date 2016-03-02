@@ -619,7 +619,10 @@ $(document).ready(function () {
   });
 
   $("#delete-selected-smart").click(function (e) {
-    //sbgnFiltering.deleteSelected();
+    if(cy.$(":selected").length == 0){
+      return;
+    }
+    
     var param = {
       firstTime: true
     };
@@ -632,9 +635,17 @@ $(document).ready(function () {
   });
 
   $("#neighbors-of-selected").click(function (e) {
-//    sbgnFiltering.highlightNeighborsofSelected();
+    var elesToHighlight = sbgnFiltering.getNeighborsofSelected();
+    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
+    
+    if(elesToHighlight.not(alreadyHighlighted).length == 0)
+    {
+      return;
+    }
+    
     var param = {
-      firstTime: true
+      firstTime: true,
+      elesToHighlight: elesToHighlight
     };
     editorActionsManager._do(new HighlightNeighborsofSelectedCommand(param));
     refreshUndoRedoButtonsStatus();
@@ -682,9 +693,17 @@ $(document).ready(function () {
   });
 
   $("#processes-of-selected").click(function (e) {
-//    sbgnFiltering.highlightProcessesOfSelected();
+    var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
+    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
+    
+    if(elesToHighlight.not(alreadyHighlighted).length == 0)
+    {
+      return;
+    }
+    
     var param = {
-      firstTime: true
+      firstTime: true,
+      elesToHighlight: elesToHighlight
     };
     editorActionsManager._do(new HighlightProcessesOfSelectedCommand(param));
     refreshUndoRedoButtonsStatus();
@@ -692,6 +711,9 @@ $(document).ready(function () {
 
   $("#remove-highlights").click(function (e) {
 //    sbgnFiltering.removeHighlights();
+    if (sbgnFiltering.isAllElementsAreNotHighlighted()){
+      return;
+    }
     editorActionsManager._do(new RemoveHighlightsCommand());
     refreshUndoRedoButtonsStatus();
   });
@@ -744,6 +766,11 @@ $(document).ready(function () {
 
   $("#delete-selected-simple").click(function (e) {
     var selectedEles = cy.$(":selected");
+    
+    if(selectedEles.length == 0){
+      return;
+    }
+    
     editorActionsManager._do(new RemoveElesCommand(selectedEles));
     refreshUndoRedoButtonsStatus();
   });

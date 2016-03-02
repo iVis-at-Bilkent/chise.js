@@ -36,23 +36,45 @@ var sbgnFiltering = {
         this.removeFilter();     
     },
 
-    highlightNeighborsofSelected: function(){
+    highlightNeighborsofSelected: function(nodesToHighlight){
+//        var selectedEles = cy.elements(":selected");
+//        selectedEles = selectedEles.add(selectedEles.parents("node[sbgnclass='complex']"));
+//        selectedEles = selectedEles.add(selectedEles.descendants());
+//        var neighborhoodEles = selectedEles.neighborhood();
+//        var nodesToHighlight = selectedEles.add(neighborhoodEles);
+//        nodesToHighlight = nodesToHighlight.add(nodesToHighlight.descendants());
+        if(!nodesToHighlight){
+          nodesToHighlight = this.getNeighborsofSelected();
+        }
+        nodesToHighlight.data("highlighted", 'true');
+        this.highlightGraph(nodesToHighlight.nodes(), nodesToHighlight.edges());
+        return nodesToHighlight;
+    },
+
+    highlightProcessesOfSelected: function(selectedEles){
+//        var selectedEles = cy.elements(":selected");
+//        selectedEles = this.expandNodes(selectedEles);
+        if(!selectedEles){
+          selectedEles = this.getProcessesOfSelected();
+        }
+        selectedEles.data("highlighted", 'true');
+        this.highlightGraph(selectedEles.nodes(), selectedEles.edges());
+        return selectedEles;
+    },
+    
+    getNeighborsofSelected: function(){
         var selectedEles = cy.elements(":selected");
         selectedEles = selectedEles.add(selectedEles.parents("node[sbgnclass='complex']"));
         selectedEles = selectedEles.add(selectedEles.descendants());
         var neighborhoodEles = selectedEles.neighborhood();
         var nodesToHighlight = selectedEles.add(neighborhoodEles);
         nodesToHighlight = nodesToHighlight.add(nodesToHighlight.descendants());
-        nodesToHighlight.data("highlighted", 'true');
-        this.highlightGraph(nodesToHighlight.nodes(), nodesToHighlight.edges());
         return nodesToHighlight;
     },
 
-    highlightProcessesOfSelected: function(){
+    getProcessesOfSelected: function(){
         var selectedEles = cy.elements(":selected");
         selectedEles = this.expandNodes(selectedEles);
-        selectedEles.data("highlighted", 'true');
-        this.highlightGraph(selectedEles.nodes(), selectedEles.edges());
         return selectedEles;
     },
 
