@@ -949,6 +949,8 @@ function EditorActionsManager()
     //_do function returns the parameters for undo function
     command.undoparams = command._do(command.params);
     this.undoStack.push(command);
+    
+    refreshEmptyComplexesOrCompartments();
   };
 
   /*
@@ -967,6 +969,8 @@ function EditorActionsManager()
       lastCommand.params = result;
     }
     this.redoStack.push(lastCommand);
+    
+    refreshEmptyComplexesOrCompartments();
   };
 
   /*
@@ -980,6 +984,8 @@ function EditorActionsManager()
     }
     var lastCommand = this.redoStack.pop();
     this._do(lastCommand);
+    
+    refreshEmptyComplexesOrCompartments();
   };
 
   /*

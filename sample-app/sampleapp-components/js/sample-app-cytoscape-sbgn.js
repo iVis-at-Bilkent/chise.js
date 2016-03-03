@@ -39,8 +39,19 @@ $(document).ready(function ()
   dynamicResize();
 });
 
-var stringAfterValueCheck = function(value){
-  return value?value:'';
+var stringAfterValueCheck = function (value) {
+  return value ? value : '';
+};
+
+var refreshEmptyComplexesOrCompartments = function () {
+  cy.nodes().removeClass('emptyComplexOrCompartment');
+  cy.nodes("[sbgnclass='complex'],[sbgnclass='compartment']").filter( function(i, ele){
+    if(ele.children().length == 0 && ele.data('expanded-collapsed') != 'collapsed'){
+      return true;
+    }
+    
+    return false;
+  }).addClass('emptyComplexOrCompartment');
 };
 
 var enableDragAndDropMode = function () {
@@ -63,11 +74,11 @@ var disableDragAndDropMode = function () {
 //As they may have some specific node properties(state variables, units of information etc.)
 var isSpecialSBGNNodeClass = function (sbgnclass) {
   if (sbgnclass == 'unspecified entity' || sbgnclass == 'simple chemical'
-      || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-      || sbgnclass == 'complex'
-      || sbgnclass == 'unspecified entity multimer' || sbgnclass == 'simple chemical multimer'
-      || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-      || sbgnclass == 'complex multimer') {
+          || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
+          || sbgnclass == 'complex'
+          || sbgnclass == 'unspecified entity multimer' || sbgnclass == 'simple chemical multimer'
+          || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
+          || sbgnclass == 'complex multimer') {
     return true;
   }
   return false;
@@ -161,17 +172,17 @@ var fillInspectorStateAndInfos = function (node, width) {
   //first empty the state variables and infos data in inspector
   $("#inspector-state-variables").html("");
   $("#inspector-unit-of-informations").html("");
-  
+
   var stateAndInfos = node._private.data.sbgnstatesandinfos;
   for (var i = 0; i < stateAndInfos.length; i++) {
     var state = stateAndInfos[i];
     if (state.clazz == "state variable") {
       $("#inspector-state-variables").append("<div><input type='text' class='just-added-inspector-input inspector-state-variable-value' style='width: "
-          + width / 5 + "px' value='" + stringAfterValueCheck(state.state.value) + "'/>"
-          + "<span width='" + width / 5 + "'px>@</span>"
-          + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
-          + width / 2.5 + "px' value='" + stringAfterValueCheck(state.state.variable)
-          + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+              + width / 5 + "px' value='" + stringAfterValueCheck(state.state.value) + "'/>"
+              + "<span width='" + width / 5 + "'px>@</span>"
+              + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
+              + width / 2.5 + "px' value='" + stringAfterValueCheck(state.state.variable)
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
         var param = {
@@ -204,8 +215,8 @@ var fillInspectorStateAndInfos = function (node, width) {
     else if (state.clazz == "unit of information") {
       var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
-          + total + "px' value='" + stringAfterValueCheck(state.label.text)
-          + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+              + total + "px' value='" + stringAfterValueCheck(state.label.text)
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
         var param = {
@@ -322,28 +333,28 @@ var handleSBGNInspector = function () {
       type = "node";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-label' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-label' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
+              + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
+              + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
+              + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Width</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
+              + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Opacity</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
+              + "'/>" + "</td></tr>";
       if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
         html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
-            + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
+                + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
 
         html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
-            + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
+                + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
       }
       var multimerCheck = canBeMultimer(selected.data('sbgnclass'));
       var clonedCheck = canBeCloned(selected.data('sbgnclass'));
@@ -354,37 +365,37 @@ var handleSBGNInspector = function () {
 
       if (multimerCheck) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Multimer</font>" + "</td>"
-            + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
+                + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-multimer'></td></tr>";
       }
 
       if (clonedCheck) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Cloned</font>" + "</td>"
-            + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
+                + "<td style='padding-left: 5px; width: '" + width + "'><input type='checkbox' id='inspector-is-clone-marker'></td></tr>";
       }
     }
     else {
       type = "edge";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
+              + "'/>" + "</td></tr>";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-          + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
-          + "'/>" + "</td></tr>";
+              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
+              + "'/>" + "</td></tr>";
       if (selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production') {
         var cardinality = selected.data('sbgncardinality');
         if (cardinality <= 0) {
           cardinality = undefined;
         }
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Cardinality</font>" + "</td><td style='padding-left: 5px;'>"
-            + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
-            + "'/>" + "</td></tr>";
+                + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
+                + "'/>" + "</td></tr>";
       }
 
     }
     html += "</table>";
     html += "<div style='text-align: center; margin-top: 5px;'><button style='align: center;' id='inspector-set-as-default-button'"
-        + ">Set as Default</button></div>";
+            + ">Set as Default</button></div>";
     html += "<hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
@@ -448,7 +459,7 @@ var handleSBGNInspector = function () {
         //trigger the change in the node's background image
         cy.startBatch();
         selected
-            .data('sbgnclonemarker', clonemarker ? true : false);
+                .data('sbgnclonemarker', clonemarker ? true : false);
         cy.endBatch();
         if (selected.data('sbgnclonemarker') == false) {
           selected._private.data.sbgnclonemarker = undefined;
@@ -652,7 +663,7 @@ var nodeQtipFunction = function (node) {
           var value = sbgnstateandinfo.state.value;
           var variable = sbgnstateandinfo.state.variable;
           var stateLabel = (variable == null /*|| typeof stateVariable === undefined */) ? value :
-              value + "@" + variable;
+                  value + "@" + variable;
           if (stateLabel == null) {
             stateLabel = "";
           }
@@ -709,12 +720,12 @@ var refreshUndoRedoButtonsStatus = function () {
   }
 };
 
-var calculatePaddings = function(paddingPercent) {
+var calculatePaddings = function (paddingPercent) {
   //As default use the compound padding value
-  if(!paddingPercent){
+  if (!paddingPercent) {
     paddingPercent = parseInt(sbgnStyleRules['compound-padding'], 10);
   }
-  
+
   var nodes = cy.nodes();
   var total = 0;
   var numOfSimples = 0;
@@ -741,7 +752,7 @@ var calculatePaddings = function(paddingPercent) {
   if (calc_padding < 15) {
     calc_padding = 15;
   }
-  
+
   return calc_padding;
 };
 
@@ -750,7 +761,7 @@ var calculateCompoundPaddings = calculatePaddings;
 
 var refreshPaddings = function () {
   var calc_padding = calculateCompoundPaddings();
-  
+
   var nodes = cy.nodes();
   nodes.css('padding-left', 0);
   nodes.css('padding-right', 0);
@@ -769,18 +780,18 @@ var refreshPaddings = function () {
 
 var isEPNClass = function (sbgnclass) {
   return (sbgnclass == 'unspecified entity'
-      || sbgnclass == 'simple chemical'
-      || sbgnclass == 'macromolecule'
-      || sbgnclass == 'nucleic acid feature'
-      || sbgnclass == 'complex');
+          || sbgnclass == 'simple chemical'
+          || sbgnclass == 'macromolecule'
+          || sbgnclass == 'nucleic acid feature'
+          || sbgnclass == 'complex');
 };
 
 var isPNClass = function (sbgnclass) {
   return (sbgnclass == 'process'
-      || sbgnclass == 'omitted process'
-      || sbgnclass == 'uncertain process'
-      || sbgnclass == 'association'
-      || sbgnclass == 'dissociation');
+          || sbgnclass == 'omitted process'
+          || sbgnclass == 'uncertain process'
+          || sbgnclass == 'association'
+          || sbgnclass == 'dissociation');
 };
 
 var isLogicalOperator = function (sbgnclass) {
@@ -825,9 +836,9 @@ var getCyShape = function (ele) {
     return 'polygon';
   }
   if (shape == 'source and sink' || shape == 'nucleic acid feature' || shape == 'dissociation'
-      || shape == 'macromolecule' || shape == 'simple chemical' || shape == 'complex'
-      || shape == 'unspecified entity' || shape == 'process' || shape == 'omitted process' 
-      || shape == 'uncertain process' || shape == 'association') {
+          || shape == 'macromolecule' || shape == 'simple chemical' || shape == 'complex'
+          || shape == 'unspecified entity' || shape == 'process' || shape == 'omitted process'
+          || shape == 'uncertain process' || shape == 'association') {
     return shape;
   }
   return 'ellipse';
@@ -882,15 +893,17 @@ var truncateText = function (textProp, font) {
 
 var getElementContent = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
+  var truncate = true;
+  
   if (sbgnclass.endsWith(' multimer')) {
     sbgnclass = sbgnclass.replace(' multimer', '');
   }
 
   var content = "";
   if (sbgnclass == 'macromolecule' || sbgnclass == 'simple chemical'
-      || sbgnclass == 'phenotype' || sbgnclass == 'compartment'
-      || sbgnclass == 'unspecified entity' || sbgnclass == 'nucleic acid feature'
-      || sbgnclass == 'perturbing agent' || sbgnclass == 'tag') {
+          || sbgnclass == 'phenotype' || sbgnclass == 'compartment'
+          || sbgnclass == 'unspecified entity' || sbgnclass == 'nucleic acid feature'
+          || sbgnclass == 'perturbing agent' || sbgnclass == 'tag' || sbgnclass == 'complex') {
     content = ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
   }
   else if (sbgnclass == 'and') {
@@ -956,251 +969,249 @@ var getDynamicLabelTextSize = function (ele) {
 };
 
 var sbgnStyleSheet = cytoscape.stylesheet()
-    .selector("node")
-    .css({
-      'border-width': 1.5,
-      'border-color': '#555',
-      'background-color': '#f6f6f6',
-      'font-size': 11,
+        .selector("node")
+        .css({
+          'border-width': 1.5,
+          'border-color': '#555',
+          'background-color': '#f6f6f6',
+          'font-size': 11,
 //          'shape': 'data(sbgnclass)',
-      'background-opacity': 0.5,
-    })
-    .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
-    .css({
-      'background-image': 'sampleapp-images/clone_bg.png',
-      'background-position-x': '50%',
-      'background-position-y': '100%',
-      'background-width': '100%',
-      'background-height': '25%',
-      'background-fit': 'none',
-      'background-image-opacity': function (ele) {
-        return ele._private.style['background-opacity'].value;
-      }
-    })
-    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
-    .css({
+          'background-opacity': 0.5,
+        })
+        .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
+        .css({
+          'background-image': 'sampleapp-images/clone_bg.png',
+          'background-position-x': '50%',
+          'background-position-y': '100%',
+          'background-width': '100%',
+          'background-height': '25%',
+          'background-fit': 'none',
+          'background-image-opacity': function (ele) {
+            return ele._private.style['background-opacity'].value;
+          }
+        })
+        .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
+        .css({
 //          'content': 'data(sbgnlabel)',
-      'content': function (ele) {
-        return getElementContent(ele);
-      },
-      'text-valign': 'center',
-      'text-halign': 'center',
-      'font-size': function (ele) {
-        return getLabelTextSize(ele);
-      }
-    })
-    .selector("node[sbgnclass]")
-    .css({
-      'shape': function (ele) {
-        return getCyShape(ele);
-      }
-    })
-    .selector("node[sbgnclass='perturbing agent']")
-    .css({
-      'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
-    })
-    .selector("node[sbgnclass='association']")
-    .css({
-      'background-color': '#6B6B6B'
-    })
-    .selector("node[sbgnclass='tag']")
-    .css({
-      'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
-    })
-    .selector("node[sbgnclass='complex']")
-    .css({
-      'background-color': '#F4F3EE',
-      'text-valign': 'bottom',
-      'text-halign': 'center',
-      'font-size': '16'
-    })
-    .selector("node[sbgnclass='compartment']")
-    .css({
-      'border-width': 3.75,
-      'background-opacity': 0,
-      'background-color': '#FFFFFF',
-      'content': 'data(sbgnlabel)',
-      'text-valign': 'bottom',
-      'text-halign': 'center',
-      'font-size': '16'
-    })
-    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
-    .css({
-      'width': 'data(sbgnbbox.w)',
-      'height': 'data(sbgnbbox.h)'
-    })
-    .selector("node:selected")
-    .css({
-      'border-color': '#d67614',
-      'target-arrow-color': '#000',
-      'text-outline-color': '#000'})
-    .selector("node:active")
-    .css({
-      'background-opacity': 0.7, 'overlay-color': '#d67614',
-      'overlay-padding': '14'
-    })
-    .selector("edge")
-    .css({
-      'curve-style': 'bezier',
-      'line-color': '#555',
-      'target-arrow-fill': 'hollow',
-      'source-arrow-fill': 'hollow',
-      'width': 1.5,
-      'target-arrow-color': '#555',
-      'source-arrow-color': '#555',
+          'content': function (ele) {
+            return getElementContent(ele);
+          },
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': function (ele) {
+            return getLabelTextSize(ele);
+          }
+        })
+        .selector("node[sbgnclass]")
+        .css({
+          'shape': function (ele) {
+            return getCyShape(ele);
+          }
+        })
+        .selector("node[sbgnclass='perturbing agent']")
+        .css({
+          'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
+        })
+        .selector("node[sbgnclass='association']")
+        .css({
+          'background-color': '#6B6B6B'
+        })
+        .selector("node[sbgnclass='tag']")
+        .css({
+          'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
+        })
+        .selector("node[sbgnclass='complex']")
+        .css({
+          'background-color': '#F4F3EE',
+          'text-valign': 'bottom',
+          'text-halign': 'center',
+          'font-size': '16'
+        })
+        .selector("node[sbgnclass='compartment']")
+        .css({
+          'border-width': 3.75,
+          'background-opacity': 0,
+          'background-color': '#FFFFFF',
+          'content': 'data(sbgnlabel)',
+          'text-valign': 'bottom',
+          'text-halign': 'center',
+          'font-size': '16'
+        })
+        .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
+        .css({
+          'width': 'data(sbgnbbox.w)',
+          'height': 'data(sbgnbbox.h)'
+        })
+        .selector("node:selected")
+        .css({
+          'border-color': '#d67614',
+          'target-arrow-color': '#000',
+          'text-outline-color': '#000'})
+        .selector("node:active")
+        .css({
+          'background-opacity': 0.7, 'overlay-color': '#d67614',
+          'overlay-padding': '14'
+        })
+        .selector("edge")
+        .css({
+          'curve-style': 'bezier',
+          'line-color': '#555',
+          'target-arrow-fill': 'hollow',
+          'source-arrow-fill': 'hollow',
+          'width': 1.5,
+          'target-arrow-color': '#555',
+          'source-arrow-color': '#555',
 //          'target-arrow-shape': 'data(sbgnclass)'
-    })
-    .selector("edge[distances][weights]")
-    .css({
-      'curve-style': 'segments',
-      'segment-distances': function(ele){
-        return sbgnBendPointUtilities.getSegmentDistancesString(ele);
-      },
-      'segment-weights': function(ele){
-        return sbgnBendPointUtilities.getSegmentWeightsString(ele);
-      }
-    })
-    .selector("edge[sbgnclass]")
-    .css({
-      'target-arrow-shape': function (ele) {
-        return getCyArrowShape(ele);
-      }
-    })
-    .selector("edge[sbgnclass='inhibition']")
-    .css({
-      'target-arrow-fill': 'filled'
-    })
-    .selector("edge[sbgnclass='consumption']")
-    .css({
-//      'text-background-opacity': 1,
-//      'text-background-color': 'white',
-//      'text-background-shape': 'roundrectangle',
-//      'text-border-color': '#000',
-//      'text-border-width': 1,
-//      'text-border-opacity': 1,
-//      'label': function (ele) {
-//        var cardinality = ele.data('sbgncardinality');
-//        return cardinality == null || cardinality == 0 ? '' : cardinality;
-//      }
-      'line-style': 'consumption'
-    })
-    .selector("edge[sbgnclass='production']")
-    .css({
-      'target-arrow-fill': 'filled',
-      'line-style': 'production'
-    })
-    .selector("edge:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
-    .selector("edge:active")
-    .css({
-      'background-opacity': 0.7, 'overlay-color': '#d67614',
-      'overlay-padding': '8'
-    })
-    .selector("core")
-    .css({
-      'selection-box-color': '#d67614',
-      'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
-    })
-    .selector(".ui-cytoscape-edgehandles-source")
-    .css({
-      'border-color': '#5CC2ED',
-      'border-width': 3
-    })
-    .selector(".ui-cytoscape-edgehandles-target, node.ui-cytoscape-edgehandles-preview")
-    .css({
-      'background-color': '#5CC2ED'
-    })
-    .selector("edge.ui-cytoscape-edgehandles-preview")
-    .css({
-      'line-color': '#5CC2ED'
-    })
-    .selector("node.ui-cytoscape-edgehandles-preview, node.intermediate")
-    .css({
-      'shape': 'rectangle',
-      'width': 15,
-      'height': 15
-    })
-    .selector('edge.not-highlighted')
-    .css({
-      'opacity': 0.3,
-      'text-opacity': 0.3,
-      'background-opacity': 0.3
-    })
-    .selector('node.not-highlighted')
-    .css({
-      'border-opacity': 0.3,
-      'text-opacity': 0.3,
-      'background-opacity': 0.3
-    })
-    .selector('edge.meta')
-    .css({
-      'line-color': '#C4C4C4',
-      'source-arrow-color': '#C4C4C4',
-      'target-arrow-color': '#C4C4C4'
-    })
-    .selector("edge.meta:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
-    .selector("node.collapsed")
-    .css({
-      'width': 60,
-      'height': 60
-    })
-    .selector("node.changeBackgroundOpacity")
-    .css({
-      'background-opacity': 'data(backgroundOpacity)'
-    })
-    .selector("node.changeLabelTextSize")
-    .css({
-      'font-size': function (ele) {
-        return getLabelTextSize(ele);
-      }
-    })
-    .selector("node.changeContent")
-    .css({
-      'content': function (ele) {
-        return getElementContent(ele);
-      }
-    })
-    .selector("node.changeBorderColor")
-    .css({
-      'border-color': 'data(borderColor)'
-    })
-    .selector("node.changeBorderColor:selected")
-    .css({
-      'border-color': '#d67614'
-    })
-    .selector("edge.changeLineColor")
-    .css({
-      'line-color': 'data(lineColor)',
-      'source-arrow-color': 'data(lineColor)',
-      'target-arrow-color': 'data(lineColor)'
-    })
-    .selector("edge.changeLineColor:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
-    .selector('edge.changeLineColor.meta')
-    .css({
-      'line-color': '#C4C4C4',
-      'source-arrow-color': '#C4C4C4',
-      'target-arrow-color': '#C4C4C4'
-    })
-    .selector("edge.changeLineColor.meta:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    });
+        })
+        .selector("edge[distances][weights]")
+        .css({
+          'curve-style': 'segments',
+          'segment-distances': function (ele) {
+            return sbgnBendPointUtilities.getSegmentDistancesString(ele);
+          },
+          'segment-weights': function (ele) {
+            return sbgnBendPointUtilities.getSegmentWeightsString(ele);
+          }
+        })
+        .selector("edge[sbgnclass]")
+        .css({
+          'target-arrow-shape': function (ele) {
+            return getCyArrowShape(ele);
+          }
+        })
+        .selector("edge[sbgnclass='inhibition']")
+        .css({
+          'target-arrow-fill': 'filled'
+        })
+        .selector("edge[sbgnclass='consumption']")
+        .css({
+          'line-style': 'consumption'
+        })
+        .selector("edge[sbgnclass='production']")
+        .css({
+          'target-arrow-fill': 'filled',
+          'line-style': 'production'
+        })
+        .selector("edge:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
+        })
+        .selector("edge:active")
+        .css({
+          'background-opacity': 0.7, 'overlay-color': '#d67614',
+          'overlay-padding': '8'
+        })
+        .selector("core")
+        .css({
+          'selection-box-color': '#d67614',
+          'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
+        })
+        .selector(".ui-cytoscape-edgehandles-source")
+        .css({
+          'border-color': '#5CC2ED',
+          'border-width': 3
+        })
+        .selector(".ui-cytoscape-edgehandles-target, node.ui-cytoscape-edgehandles-preview")
+        .css({
+          'background-color': '#5CC2ED'
+        })
+        .selector("edge.ui-cytoscape-edgehandles-preview")
+        .css({
+          'line-color': '#5CC2ED'
+        })
+        .selector("node.ui-cytoscape-edgehandles-preview, node.intermediate")
+        .css({
+          'shape': 'rectangle',
+          'width': 15,
+          'height': 15
+        })
+        .selector('edge.not-highlighted')
+        .css({
+          'opacity': 0.3,
+          'text-opacity': 0.3,
+          'background-opacity': 0.3
+        })
+        .selector("node.emptyComplexOrCompartment")
+        .css({
+          'width': 60,
+          'height': 60,
+          'content': function (ele) {
+            return ele.data('sbgnlabel')?ele.data('sbgnlabel'):'';
+          }
+        })
+        .selector('node.not-highlighted')
+        .css({
+          'border-opacity': 0.3,
+          'text-opacity': 0.3,
+          'background-opacity': 0.3
+        })
+        .selector('edge.meta')
+        .css({
+          'line-color': '#C4C4C4',
+          'source-arrow-color': '#C4C4C4',
+          'target-arrow-color': '#C4C4C4'
+        })
+        .selector("edge.meta:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
+        })
+        .selector("node.collapsed")
+        .css({
+          'width': 60,
+          'height': 60
+        })
+        .selector("node.changeBackgroundOpacity")
+        .css({
+          'background-opacity': 'data(backgroundOpacity)'
+        })
+        .selector("node.changeLabelTextSize")
+        .css({
+          'font-size': function (ele) {
+            return getLabelTextSize(ele);
+          }
+        })
+        .selector("node.changeContent")
+        .css({
+          'content': function (ele) {
+            return getElementContent(ele);
+          }
+        })
+        .selector("node.changeBorderColor")
+        .css({
+          'border-color': 'data(borderColor)'
+        })
+        .selector("node.changeBorderColor:selected")
+        .css({
+          'border-color': '#d67614'
+        })
+        .selector("edge.changeLineColor")
+        .css({
+          'line-color': 'data(lineColor)',
+          'source-arrow-color': 'data(lineColor)',
+          'target-arrow-color': 'data(lineColor)'
+        })
+        .selector("edge.changeLineColor:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
+        })
+        .selector('edge.changeLineColor.meta')
+        .css({
+          'line-color': '#C4C4C4',
+          'source-arrow-color': '#C4C4C4',
+          'target-arrow-color': '#C4C4C4'
+        })
+        .selector("edge.changeLineColor.meta:selected")
+        .css({
+          'line-color': '#d67614',
+          'source-arrow-color': '#d67614',
+          'target-arrow-color': '#d67614'
+        });
 // end of sbgnStyleSheet
 
 var NotyView = Backbone.View.extend({
@@ -1259,13 +1270,14 @@ var SBGNContainer = Backbone.View.extend({
         for (var i = 0; i < edges.length; i++) {
           var edge = edges[i];
           var result = sbgnBendPointUtilities.convertToRelativeBendPositions(edge);
-          
-          if(result.distances.length > 0){
+
+          if (result.distances.length > 0) {
             edge.data('weights', result.weights);
             edge.data('distances', result.distances);
           }
         }
 
+        refreshEmptyComplexesOrCompartments();
         refreshPaddings();
         initilizeUnselectedDataOfElements();
 
@@ -1310,8 +1322,8 @@ var SBGNContainer = Backbone.View.extend({
             var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
 
             if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
-                || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
+                    || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
+                    || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
               if (!isEPNClass(sourceClass) || !isPNClass(targetClass)) {
                 if (isPNClass(sourceClass) && isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
@@ -1352,7 +1364,7 @@ var SBGNContainer = Backbone.View.extend({
             }
             else if (sbgnclass == 'equivalence arc') {
               if (!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
-                  && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
+                      && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
                 return;
               }
             }
@@ -1450,7 +1462,7 @@ var SBGNContainer = Backbone.View.extend({
             y: node.position("y")
           };
           if (mouseUpPosition.x != lastMouseDownPosition.x ||
-              mouseUpPosition.y != lastMouseDownPosition.y) {
+                  mouseUpPosition.y != lastMouseDownPosition.y) {
             var positionDiff = {
               x: mouseUpPosition.x - lastMouseDownPosition.x,
               y: mouseUpPosition.y - lastMouseDownPosition.y
@@ -1509,22 +1521,22 @@ var SBGNContainer = Backbone.View.extend({
         cy.on('cxttap', 'edge', function (event) {
           var edge = this;
           var containerPos = $(cy.container()).position();
-          
+
           var left = containerPos.left + event.cyRenderedPosition.x;
           left = left.toString() + 'px';
-          
-          var top = containerPos.top +  event.cyRenderedPosition.y;
+
+          var top = containerPos.top + event.cyRenderedPosition.y;
           top = top.toString() + 'px';
 
 //          var ctxMenu = document.getElementById("edge-ctx-menu");
 //          ctxMenu.style.display = "block";
 //          ctxMenu.style.left = left;
 //          ctxMenu.style.top = top;
-          
+
           $('.ctx-bend-operation').css('display', 'none');
-          
+
           var selectedBendIndex = cytoscape.sbgn.getContainingBendShapeIndex(event.cyPosition.x, event.cyPosition.y, edge);
-          if(selectedBendIndex == -1){
+          if (selectedBendIndex == -1) {
             $('#ctx-add-bend-point').css('display', 'block');
             sbgnBendPointUtilities.currentCtxPos = event.cyPosition;
             ctxMenu = document.getElementById("ctx-add-bend-point");
@@ -1534,72 +1546,72 @@ var SBGNContainer = Backbone.View.extend({
             sbgnBendPointUtilities.currentBendIndex = selectedBendIndex;
             ctxMenu = document.getElementById("ctx-remove-bend-point");
           }
-          
+
           ctxMenu.style.display = "block";
           ctxMenu.style.left = left;
           ctxMenu.style.top = top;
-          
+
           sbgnBendPointUtilities.currentCtxEdge = edge;
         });
-        
+
         var movedBendIndex;
         var movedBendEdge;
         var moveBendParam;
-        
+
         cy.on('tapstart', 'edge', function (event) {
           var edge = this;
           movedBendEdge = edge;
-          
+
           moveBendParam = {
             edge: edge,
-            weights: edge.data('weights')?[].concat(edge.data('weights')):edge.data('weights'),
-            distances: edge.data('distances')?[].concat(edge.data('distances')):edge.data('distances')
+            weights: edge.data('weights') ? [].concat(edge.data('weights')) : edge.data('weights'),
+            distances: edge.data('distances') ? [].concat(edge.data('distances')) : edge.data('distances')
           };
-          
+
           var cyPosX = event.cyPosition.x;
           var cyPosY = event.cyPosition.y;
 
-          if(edge._private.selected){
+          if (edge._private.selected) {
             var index = cytoscape.sbgn.getContainingBendShapeIndex(cyPosX, cyPosY, edge);
-            if(index != -1){
+            if (index != -1) {
               movedBendIndex = index;
               cy.panningEnabled(false);
               cy.boxSelectionEnabled(false);
             }
           }
         });
-        
+
         cy.on('tapdrag', function (event) {
           var edge = movedBendEdge;
-          
-          if(movedBendEdge === undefined || movedBendIndex === undefined){
+
+          if (movedBendEdge === undefined || movedBendIndex === undefined) {
             return;
           }
-          
+
           var weights = edge.data('weights');
           var distances = edge.data('distances');
-          
+
           var relativeBendPosition = sbgnBendPointUtilities.convertToRelativeBendPosition(edge, event.cyPosition);
           weights[movedBendIndex] = relativeBendPosition.weight;
           distances[movedBendIndex] = relativeBendPosition.distance;
-          
+
           edge.data('weights', weights);
           edge.data('distances', distances);
         });
-        
+
         cy.on('tapend', 'edge', function (event) {
           var edge = movedBendEdge;
-          
-          if(moveBendParam !== undefined && edge.data('weights') 
-                  && edge.data('weights').toString() != moveBendParam.weights.toString()){
+
+          if (moveBendParam !== undefined && edge.data('weights')
+                  && edge.data('weights').toString() != moveBendParam.weights.toString()) {
             editorActionsManager._do(new changeBendPointsCommand(moveBendParam));
             refreshUndoRedoButtonsStatus();
           }
-          
+
           movedBendIndex = undefined;
           movedBendEdge = undefined;
           moveBendParam = undefined;
-          
+
           cy.panningEnabled(true);
           cy.boxSelectionEnabled(true);
         });
@@ -1615,7 +1627,7 @@ var SBGNContainer = Backbone.View.extend({
 
           var geneClass = node._private.data.sbgnclass;
           if (geneClass != 'macromolecule' && geneClass != 'nucleic acid feature' &&
-              geneClass != 'unspecified entity')
+                  geneClass != 'unspecified entity')
             return;
 
           var queryScriptURL = "sampleapp-components/php/BioGeneQuery.php";
@@ -1623,11 +1635,11 @@ var SBGNContainer = Backbone.View.extend({
 
           // set the query parameters
           var queryParams =
-              {
-                query: geneName,
-                org: "human",
-                format: "json",
-              };
+                  {
+                    query: geneName,
+                    org: "human",
+                    format: "json",
+                  };
 
           cy.getElementById(node.id()).qtip({
             content: {
@@ -1638,24 +1650,24 @@ var SBGNContainer = Backbone.View.extend({
                   async: true,
                   data: queryParams,
                 })
-                    .then(function (content) {
-                      queryResult = JSON.parse(content);
-                      if (queryResult.count > 0 && queryParams.query != "" && typeof queryParams.query != 'undefined')
-                      {
-                        var info = (new BioGeneView(
-                            {
-                              el: '#biogene-container',
-                              model: queryResult.geneInfo[0]
-                            })).render();
-                        var html = $('#biogene-container').html();
-                        api.set('content.text', html);
-                      }
-                      else {
-                        api.set('content.text', "No additional information available &#013; for the selected node!");
-                      }
-                    }, function (xhr, status, error) {
-                      api.set('content.text', "Error retrieving data: " + error);
-                    });
+                        .then(function (content) {
+                          queryResult = JSON.parse(content);
+                          if (queryResult.count > 0 && queryParams.query != "" && typeof queryParams.query != 'undefined')
+                          {
+                            var info = (new BioGeneView(
+                                    {
+                                      el: '#biogene-container',
+                                      model: queryResult.geneInfo[0]
+                                    })).render();
+                            var html = $('#biogene-container').html();
+                            api.set('content.text', html);
+                          }
+                          else {
+                            api.set('content.text', "No additional information available &#013; for the selected node!");
+                          }
+                        }, function (xhr, status, error) {
+                          api.set('content.text', "Error retrieving data: " + error);
+                        });
                 api.set('content.title', node._private.data.sbgnlabel);
                 return _.template($("#loading-small-template").html());
               }
@@ -1714,7 +1726,7 @@ var SBGNContainer = Backbone.View.extend({
           $('.ctx-bend-operation').css('display', 'none');
           $("#node-label-textbox").blur();
           cy.nodes(":selected").length;
-          
+
           if (modeHandler.mode == "add-node-mode") {
             var cyPosX = event.cyPosition.x;
             var cyPosY = event.cyPosition.y;
@@ -1778,16 +1790,16 @@ var SBGNContainer = Backbone.View.extend({
           var cyPosY = event.cyPosition.y;
 
           if (modeHandler.mode == "selection-mode"
-              && cyPosX >= node._private.data.expandcollapseStartX
-              && cyPosX <= node._private.data.expandcollapseEndX
-              && cyPosY >= node._private.data.expandcollapseStartY
-              && cyPosY <= node._private.data.expandcollapseEndY) {
+                  && cyPosX >= node._private.data.expandcollapseStartX
+                  && cyPosX <= node._private.data.expandcollapseEndX
+                  && cyPosY >= node._private.data.expandcollapseStartY
+                  && cyPosY <= node._private.data.expandcollapseEndY) {
             selectAgain = cy.filter(":selected");
             cancelSelection = true;
             var expandedOrcollapsed = this.data('expanded-collapsed');
 
             var incrementalLayoutAfterExpandCollapse =
-                (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+                    (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
 
             if (expandedOrcollapsed == 'expanded') {
 //              expandCollapseUtilities.collapseNode(this);
@@ -1847,10 +1859,10 @@ var SBGNLayout = Backbone.View.extend({
     tile: true,
     animate: true,
     randomize: true,
-    tilingPaddingVertical: function() {
+    tilingPaddingVertical: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10));
     },
-    tilingPaddingHorizontal: function() {
+    tilingPaddingHorizontal: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-horizontal'], 10));
     }
   },
@@ -1858,11 +1870,11 @@ var SBGNLayout = Backbone.View.extend({
   initialize: function () {
     var self = this;
     self.copyProperties();
-    
+
     var templateProperties = _.clone(self.currentLayoutProperties);
     templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
     templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
-    
+
     self.template = _.template($("#layout-settings-template").html(), templateProperties);
   },
   copyProperties: function () {
@@ -1882,11 +1894,11 @@ var SBGNLayout = Backbone.View.extend({
   },
   render: function () {
     var self = this;
-    
+
     var templateProperties = _.clone(self.currentLayoutProperties);
     templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
     templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
-    
+
     self.template = _.template($("#layout-settings-template").html(), templateProperties);
     $(self.el).html(self.template);
 
@@ -1903,23 +1915,23 @@ var SBGNLayout = Backbone.View.extend({
       self.currentLayoutProperties.tile = document.getElementById("tile").checked;
       self.currentLayoutProperties.animate = document.getElementById("animate").checked;
       self.currentLayoutProperties.randomize = !document.getElementById("incremental").checked;
-      
+
       sbgnStyleRules['tiling-padding-vertical'] = Number(document.getElementById("tiling-padding-vertical").value);
       sbgnStyleRules['tiling-padding-horizontal'] = Number(document.getElementById("tiling-padding-horizontal").value);
-      
+
       $(self.el).dialog('close');
     });
 
     $("#default-layout").die("click").live("click", function (evt) {
       self.copyProperties();
-      
+
       sbgnStyleRules['tiling-padding-vertical'] = defaultSbgnStyleRules['tiling-padding-vertical'];
       sbgnStyleRules['tiling-padding-horizontal'] = defaultSbgnStyleRules['tiling-padding-horizontal'];
-      
+
       var templateProperties = _.clone(self.currentLayoutProperties);
       templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
       templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
-      
+
       self.template = _.template($("#layout-settings-template").html(), templateProperties);
       $(self.el).html(self.template);
     });
@@ -1961,7 +1973,7 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.dynamicLabelSize = $('select[name="dynamic-label-size"] option:selected').val();
       self.currentSBGNProperties.fitLabelsToNodes = document.getElementById("fit-labels-to-nodes").checked;
       self.currentSBGNProperties.incrementalLayoutAfterExpandCollapse =
-          document.getElementById("incremental-layout-after-expand-collapse").checked;
+              document.getElementById("incremental-layout-after-expand-collapse").checked;
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -1982,7 +1994,7 @@ var SBGNProperties = Backbone.View.extend({
       }
 
       sbgnStyleRules['incremental-layout-after-expand-collapse'] =
-          '' + self.currentSBGNProperties.incrementalLayoutAfterExpandCollapse;
+              '' + self.currentSBGNProperties.incrementalLayoutAfterExpandCollapse;
 
       $(self.el).dialog('close');
     });
