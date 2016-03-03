@@ -1725,8 +1725,9 @@ var SBGNContainer = Backbone.View.extend({
         });
 
         cy.on('tap', function (event) {
+          $('input').blur();
           $('.ctx-bend-operation').css('display', 'none');
-          $("#node-label-textbox").blur();
+//          $("#node-label-textbox").blur();
           cy.nodes(":selected").length;
 
           if (modeHandler.mode == "add-node-mode") {
