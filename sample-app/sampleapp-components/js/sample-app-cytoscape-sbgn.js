@@ -893,7 +893,9 @@ var truncateText = function (textProp, font) {
 
 var getElementContent = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
-  var truncate = true;
+  if(sbgnclass == 'complex'){
+    console.log('complex');
+  }
   
   if (sbgnclass.endsWith(' multimer')) {
     sbgnclass = sbgnclass.replace(' multimer', '');
@@ -903,8 +905,11 @@ var getElementContent = function (ele) {
   if (sbgnclass == 'macromolecule' || sbgnclass == 'simple chemical'
           || sbgnclass == 'phenotype' || sbgnclass == 'compartment'
           || sbgnclass == 'unspecified entity' || sbgnclass == 'nucleic acid feature'
-          || sbgnclass == 'perturbing agent' || sbgnclass == 'tag' || sbgnclass == 'complex') {
+          || sbgnclass == 'perturbing agent' || sbgnclass == 'tag') {
     content = ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
+  }
+  else if(sbgnclass == 'complex'){
+    content = ele.data('sbgnlabel') && ele.children().length == 0 ? ele.data('sbgnlabel') : "";
   }
   else if (sbgnclass == 'and') {
     content = 'AND';
@@ -927,7 +932,7 @@ var getElementContent = function (ele) {
 
   var textProp = {
     label: content,
-    width: ele.data('width') ? ele.data('width') : ele.data('sbgnbbox').w
+    width: ele.css('width') ? parseFloat(ele.css('width')) : ele.data('sbgnbbox').w
   };
 
   var font = getLabelTextSize(ele) + "px Arial";
@@ -1135,10 +1140,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         })
         .selector("node.emptyComplexOrCompartment")
         .css({
-          'width': 60,
-          'height': 60,
+          'width': 36,
+          'height': 36,
           'content': function (ele) {
-            return ele.data('sbgnlabel')?ele.data('sbgnlabel'):'';
+            return getElementContent(ele);
           }
         })
         .selector('node.not-highlighted')
