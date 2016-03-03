@@ -893,9 +893,6 @@ var truncateText = function (textProp, font) {
 
 var getElementContent = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
-  if(sbgnclass == 'complex'){
-    console.log('complex');
-  }
   
   if (sbgnclass.endsWith(' multimer')) {
     sbgnclass = sbgnclass.replace(' multimer', '');
