@@ -735,8 +735,8 @@ var calculatePaddings = function (paddingPercent) {
     if (theNode.children() == null || theNode.children().length == 0) {
       var collapsedChildren = theNode._private.data.collapsedChildren;
       if (collapsedChildren == null || collapsedChildren.length == 0) {
-        total += Number(theNode._private.data.sbgnbbox.w);
-        total += Number(theNode._private.data.sbgnbbox.h);
+        total += Number(theNode.width());
+        total += Number(theNode.height());
         numOfSimples++;
       }
       else {
