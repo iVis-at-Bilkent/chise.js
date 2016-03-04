@@ -589,7 +589,12 @@ $(document).ready(function () {
   });
 
   $("#hide-selected").click(function (e) {
-//    sbgnFiltering.hideSelected();
+    var selectedEles = cy.$(":selected");
+    
+    if(selectedEles.length == 0){
+      return;
+    }
+    
     var param = {};
     param.firstTime = true;
     editorActionsManager._do(new HideSelectedCommand(param));
@@ -602,6 +607,10 @@ $(document).ready(function () {
 
   $("#show-selected").click(function (e) {
 //    sbgnFiltering.showSelected();
+    if(cy.nodes(":selected").length == cy.nodes(':visible').length) {
+      return;
+    }
+
     var param = {};
     param.firstTime = true;
     editorActionsManager._do(new ShowSelectedCommand(param));
@@ -614,6 +623,10 @@ $(document).ready(function () {
 
   $("#show-all").click(function (e) {
 //    sbgnFiltering.showAll();
+    if(cy.nodes().length == cy.nodes(':visible').length) {
+      return;
+    }
+
     editorActionsManager._do(new ShowAllCommand());
     refreshUndoRedoButtonsStatus();
   });
