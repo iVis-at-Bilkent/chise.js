@@ -927,9 +927,11 @@ var getElementContent = function (ele) {
     content = 'O';
   }
 
+  var textWidth = ele.css('width') ? parseFloat(ele.css('width')) : ele.data('sbgnbbox').w;
+
   var textProp = {
     label: content,
-    width: ele.css('width') ? parseFloat(ele.css('width')) : ele.data('sbgnbbox').w
+    width: sbgnclass==('complex'||'compartment')?textWidth * 3:textWidth
   };
 
   var font = getLabelTextSize(ele) + "px Arial";
