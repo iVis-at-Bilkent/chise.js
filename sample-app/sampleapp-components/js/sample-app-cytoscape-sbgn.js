@@ -69,14 +69,20 @@ var disableDragAndDropMode = function () {
   cy.autounselectify(false);
 };
 
-//Returns true for unspecified entity, 
-//simple chemical, macromolecule, nucleic acid feature, and complexes
-//As they may have some specific node properties(state variables, units of information etc.)
-var isSpecialSBGNNodeClass = function (sbgnclass) {
-  if (sbgnclass == 'unspecified entity' || sbgnclass == 'simple chemical'
+var canHaveCloneMarker = function(sbgnclass) {
+   if (sbgnclass == 'simple chemical'
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-          || sbgnclass == 'complex'
-          || sbgnclass == 'unspecified entity multimer' || sbgnclass == 'simple chemical multimer'
+          || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
+          || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
+          || sbgnclass == 'complex multimer') {
+    return true;
+  }
+  return false;
+};
+
+var canHaveStateVariable = function(sbgnclass) {
+   if (sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
+          || sbgnclass == 'complex' 
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
           || sbgnclass == 'complex multimer') {
     return true;
@@ -347,15 +353,18 @@ var handleSBGNInspector = function () {
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Opacity</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
               + "'/>" + "</td></tr>";
-      if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
+      if (canHaveStateVariable(selected.data('sbgnclass'))) {
         html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
-
+      }
+      
+      if (canHaveCloneMarker(selected.data('sbgnclass'))) {
         html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
       }
+      
       var multimerCheck = canBeMultimer(selected.data('sbgnclass'));
       var clonedCheck = canBeCloned(selected.data('sbgnclass'));
 
@@ -401,7 +410,7 @@ var handleSBGNInspector = function () {
     $("#sbgn-inspector").html(html);
 
     if (type == "node") {
-      if (isSpecialSBGNNodeClass(selected.data('sbgnclass'))) {
+      if (canHaveCloneMarker(selected.data('sbgnclass')) || canHaveStateVariable(selected.data('sbgnclass'))) {
         fillInspectorStateAndInfos(selected, width);
       }
 
