@@ -801,7 +801,8 @@ $(document).ready(function () {
   });
 
   $("#collapse-selected").click(function (e) {
-    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "collapse");
+    var nodes = cy.nodes(":selected").filter("[expanded-collapsed='expanded']");
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(nodes, "collapse");
 
     if (!thereIs) {
       return;
@@ -813,11 +814,11 @@ $(document).ready(function () {
     }
     if (incrementalLayoutAfterExpandCollapse)
       editorActionsManager._do(new CollapseGivenNodesCommand({
-        nodes: cy.nodes(":selected"),
+        nodes: nodes,
         firstTime: true
       }));
     else
-      editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes(":selected")));
+      editorActionsManager._do(new SimpleCollapseGivenNodesCommand(nodes));
     refreshUndoRedoButtonsStatus();
   });
   
@@ -850,7 +851,8 @@ $(document).ready(function () {
   });
 
   $("#expand-selected").click(function (e) {
-    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(cy.nodes(":selected"), "expand");
+    var nodes = cy.nodes(":selected").filter("[expanded-collapsed='collapsed']");
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(nodes, "expand");
 
     if (!thereIs) {
       return;
@@ -862,11 +864,11 @@ $(document).ready(function () {
     }
     if (incrementalLayoutAfterExpandCollapse)
       editorActionsManager._do(new ExpandGivenNodesCommand({
-        nodes: cy.nodes(":selected"),
+        nodes: nodes,
         firstTime: true
       }));
     else
-      editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
+      editorActionsManager._do(new SimpleExpandGivenNodesCommand(nodes));
     refreshUndoRedoButtonsStatus();
   });
   
