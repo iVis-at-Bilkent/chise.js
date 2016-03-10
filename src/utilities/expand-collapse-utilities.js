@@ -64,9 +64,25 @@ var expandCollapseUtilities = {
     }
     return nodes;
   },
-  simpleExpandAllNodes: function () {
-    var nodes = cy.nodes();
-    var orphans = nodes.orphans();
+  simpleExpandAllNodes: function (nodes, selector) {
+    if (nodes === undefined) {
+      nodes = cy.nodes();
+    }
+    var orphans;
+    if (selector) {
+      if (selector === "complex-parent") {
+        orphans = cy.nodes().filter(function (i, element) {
+          var parent = element.parent()[0];
+          if (parent && parent.data('sbgnclass') == 'complex') {
+            return false;
+          }
+          return true;
+        });
+      }
+    }
+    else {
+      orphans = nodes.orphans();
+    }
     var expandStack = [];
     for (var i = 0; i < orphans.length; i++) {
       var root = orphans[i];
@@ -74,8 +90,8 @@ var expandCollapseUtilities = {
     }
     return expandStack;
   },
-  expandAllNodes: function () {
-    var expandedStack = this.simpleExpandAllNodes();
+  expandAllNodes: function (nodes, selector) {
+    var expandedStack = this.simpleExpandAllNodes(nodes, selector);
 
     $("#perform-incremental-layout").trigger("click");
 
@@ -186,7 +202,7 @@ var expandCollapseUtilities = {
       if (node._private.data.sbgnclass == "complex") {
         node.removeStyle('content');
       }
-      
+
       refreshPaddings();
       //return the node to undo the operation
       return node;
@@ -285,10 +301,10 @@ var expandCollapseUtilities = {
       var newEdge = jQuery.extend(true, {}, edge.jsons()[0]);
 
       //Initilize the meta level of this edge if it is not initilized yet
-      if (this.edgesMetaLevels[edge.id()] == null){
+      if (this.edgesMetaLevels[edge.id()] == null) {
         this.edgesMetaLevels[edge.id()] = 0;
       }
-      
+
       /*If the edge is meta and has different source and targets then handle this case because if
        * the other end of this edge is removed because of the reason that it's parent is
        * being collapsed and this node is expanded before other end is still collapsed this causes
@@ -360,7 +376,7 @@ var expandCollapseUtilities = {
       cy.add(newEdge);
       var newCyEdge = cy.edges()[cy.edges().length - 1];
       //If this edge has not meta class properties make it meta
-      if(this.edgesMetaLevels[newCyEdge.id()] == 0){
+      if (this.edgesMetaLevels[newCyEdge.id()] == 0) {
         newCyEdge.addClass("meta");
       }
       //Increase the meta level of this edge by 1
@@ -405,17 +421,17 @@ var expandCollapseUtilities = {
       }
       var oldEdge = cy.getElementById(edgesOfcollapsedChildren[i]._private.data.id);
       //If the edge is already in the graph remove it and decrease it's meta level
-      if (oldEdge != null && oldEdge.length > 0){
+      if (oldEdge != null && oldEdge.length > 0) {
         this.edgesMetaLevels[edgesOfcollapsedChildren[i]._private.data.id]--;
         oldEdge.remove();
       }
     }
     edgesOfcollapsedChildren.restore();
-    
+
     //Check for meta levels of edges and handle the changes
-    for(var i = 0; i < edgesOfcollapsedChildren.length; i++){
+    for (var i = 0; i < edgesOfcollapsedChildren.length; i++) {
       var edge = edgesOfcollapsedChildren[i];
-      if(this.edgesMetaLevels[edge.id()] == null || this.edgesMetaLevels[edge.id()] == 0){
+      if (this.edgesMetaLevels[edge.id()] == null || this.edgesMetaLevels[edge.id()] == 0) {
         edge.removeClass("meta");
       }
       else {

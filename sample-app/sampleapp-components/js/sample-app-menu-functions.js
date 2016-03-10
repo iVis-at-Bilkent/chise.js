@@ -820,6 +820,28 @@ $(document).ready(function () {
       editorActionsManager._do(new SimpleCollapseGivenNodesCommand(cy.nodes(":selected")));
     refreshUndoRedoButtonsStatus();
   });
+  
+  $("#collapse-complexes").click(function (e) {
+    var complexes = cy.nodes("[sbgnclass='complex'][expanded-collapsed='expanded']");
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(complexes, "collapse");
+
+    if (!thereIs) {
+      return;
+    }
+
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new CollapseGivenNodesCommand({
+        nodes: complexes,
+        firstTime: true
+      }));
+    else
+      editorActionsManager._do(new SimpleCollapseGivenNodesCommand(complexes));
+    refreshUndoRedoButtonsStatus();
+  });
 
   $("#collapse-selected-icon").click(function (e) {
     if (modeHandler.mode == "selection-mode") {
@@ -845,6 +867,32 @@ $(document).ready(function () {
       }));
     else
       editorActionsManager._do(new SimpleExpandGivenNodesCommand(cy.nodes(":selected")));
+    refreshUndoRedoButtonsStatus();
+  });
+  
+  $("#expand-complexes").click(function (e) {
+    var complexes = cy.nodes("[sbgnclass='complex'][expanded-collapsed='collapsed']");
+    var thereIs = expandCollapseUtilities.thereIsNodeToExpandOrCollapse(complexes, "expand");
+
+    if (!thereIs) {
+      return;
+    }
+
+    if (window.incrementalLayoutAfterExpandCollapse == null) {
+      window.incrementalLayoutAfterExpandCollapse =
+              (sbgnStyleRules['incremental-layout-after-expand-collapse'] == 'true');
+    }
+    if (incrementalLayoutAfterExpandCollapse)
+      editorActionsManager._do(new ExpandAllNodesCommand({
+        nodes: complexes,
+        firstTime: true,
+        selector: "complex-parent"
+      }));
+    else
+      editorActionsManager._do(new SimpleExpandAllNodesCommand({
+        nodes: complexes,
+        selector: "complex-parent"
+      }));
     refreshUndoRedoButtonsStatus();
   });
 
