@@ -488,7 +488,9 @@ function changeParent(param) {
     });
   }
 
+  refreshEmptyComplexesOrCompartments();
   cy.nodes().updateCompoundBounds();
+  
   returnToPositionsAndSizesConditionally(nodesData);
 
   return result;
