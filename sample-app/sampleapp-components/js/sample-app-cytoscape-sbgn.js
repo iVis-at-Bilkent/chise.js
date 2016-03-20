@@ -43,17 +43,6 @@ var stringAfterValueCheck = function (value) {
   return value ? value : '';
 };
 
-var refreshEmptyComplexesOrCompartments = function () {
-  cy.nodes().removeClass('emptyComplexOrCompartment');
-  cy.nodes("[sbgnclass='complex'],[sbgnclass='compartment']").filter( function(i, ele){
-    if(ele.children().length == 0){
-      return true;
-    }
-    
-    return false;
-  }).addClass('emptyComplexOrCompartment');
-};
-
 var enableDragAndDropMode = function () {
   window.dragAndDropModeEnabled = true;
   $("#sbgn-network-container").addClass("target-cursor");
@@ -909,10 +898,13 @@ var getElementContent = function (ele) {
 
   var content = "";
   if (sbgnclass == 'macromolecule' || sbgnclass == 'simple chemical'
-          || sbgnclass == 'phenotype' || sbgnclass == 'compartment'
+          || sbgnclass == 'phenotype'
           || sbgnclass == 'unspecified entity' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'perturbing agent' || sbgnclass == 'tag') {
     content = ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
+  }
+  else if(sbgnclass == 'compartment'){
+    return ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
   }
   else if(sbgnclass == 'complex'){
     content = ele.data('sbgnlabel') && ele.children().length == 0 ? ele.data('sbgnlabel') : "";
@@ -940,7 +932,7 @@ var getElementContent = function (ele) {
 
   var textProp = {
     label: content,
-    width: sbgnclass==('complex'||'compartment')?textWidth * 3:textWidth
+    width: sbgnclass==('complex')?textWidth * 3:textWidth
   };
 
   var font = getLabelTextSize(ele) + "px Arial";
@@ -1038,14 +1030,43 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'background-color': '#F4F3EE',
           'text-valign': 'bottom',
           'text-halign': 'center',
-          'font-size': '16'
+          'font-size': '16',
+          'width': function(ele){
+            if(ele.children() == null || ele.children().length == 0){
+              return '36';
+            }
+            return ele.data('width');
+          },
+          'height': function(ele){
+            if(ele.children() == null || ele.children().length == 0){
+              return '36';
+            }
+            return ele.data('height');
+          },
+          'content': function(ele){
+            return getElementContent(ele);
+          }
         })
         .selector("node[sbgnclass='compartment']")
         .css({
           'border-width': 3.75,
           'background-opacity': 0,
           'background-color': '#FFFFFF',
-          'content': 'data(sbgnlabel)',
+          'content': function(ele){
+            return getElementContent(ele);
+          },
+          'width': function(ele){
+            if(ele.children() == null || ele.children().length == 0){
+              return '36';
+            }
+            return ele.data('width');
+          },
+          'height': function(ele){
+            if(ele.children() == null || ele.children().length == 0){
+              return '36';
+            }
+            return ele.data('height');
+          },
           'text-valign': 'bottom',
           'text-halign': 'center',
           'font-size': '16'
@@ -1146,14 +1167,14 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'text-opacity': 0.3,
           'background-opacity': 0.3
         })
-        .selector("node.emptyComplexOrCompartment")
-        .css({
-          'width': 36,
-          'height': 36,
-          'content': function (ele) {
-            return getElementContent(ele);
-          }
-        })
+//        .selector("node.emptyComplexOrCompartment")
+//        .css({
+//          'width': 36,
+//          'height': 36,
+//          'content': function (ele) {
+//            return getElementContent(ele);
+//          }
+//        })
         .selector('node.not-highlighted')
         .css({
           'border-opacity': 0.3,
@@ -1171,11 +1192,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'line-color': '#d67614',
           'source-arrow-color': '#d67614',
           'target-arrow-color': '#d67614'
-        })
-        .selector("node.collapsed")
-        .css({
-          'width': 60,
-          'height': 60
         })
         .selector("node.changeBackgroundOpacity")
         .css({
@@ -1290,7 +1306,7 @@ var SBGNContainer = Backbone.View.extend({
           }
         }
 
-        refreshEmptyComplexesOrCompartments();
+//        refreshEmptyComplexesOrCompartments();
         refreshPaddings();
         initilizeUnselectedDataOfElements();
 

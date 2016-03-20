@@ -194,7 +194,7 @@ var expandCollapseUtilities = {
       node._private.data.collapsedChildren.restore();
       this.repairEdgesOfCollapsedChildren(node);
       node._private.data.collapsedChildren = null;
-      node.removeClass('collapsed');
+//      node.removeClass('collapsed');
 
       cy.nodes().updateCompoundBounds();
 
@@ -225,7 +225,7 @@ var expandCollapseUtilities = {
         var infoLabel = getInfoLabel(node);
         node._private.data.infoLabel = infoLabel;
 
-        new_content = node._private.data.sbgnlabel;
+        new_content = getElementContent(node);
 
         if (new_content == null || new_content == "") {
           new_content = infoLabel;
@@ -238,7 +238,7 @@ var expandCollapseUtilities = {
         this.barrowEdgesOfcollapsedChildren(node, child);
       }
       this.removeChildren(node, node);
-      node.addClass('collapsed');
+//      node.addClass('collapsed');
       refreshPaddings();
       //return the node to undo the operation
       return node;
