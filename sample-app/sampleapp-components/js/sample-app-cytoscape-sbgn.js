@@ -907,7 +907,20 @@ var getElementContent = function (ele) {
     return ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
   }
   else if(sbgnclass == 'complex'){
-    content = ele.data('sbgnlabel') && ele.children().length == 0 ? ele.data('sbgnlabel') : "";
+    if(ele.children().length == 0){
+      if(ele.data('sbgnlabel')){
+        content = ele.data('sbgnlabel');
+      }
+      else if(ele.data('infoLabel')){
+        content = ele.data('infoLabel');
+      }
+      else{
+        content = '';
+      }
+    }
+    else{
+      content = '';
+    }
   }
   else if (sbgnclass == 'and') {
     content = 'AND';
@@ -967,7 +980,7 @@ var getDynamicLabelTextSize = function (ele) {
   //This line will be useless and is to be removed later
 //  dynamicLabelSizeCoefficient = dynamicLabelSizeCoefficient ? dynamicLabelSizeCoefficient : 1;
 
-  var h = ele.data('height') ? ele.data('height') : ele.data('sbgnbbox').h;
+  var h = ele.css('height') ? parseInt(ele.css('height')) : ele.data('sbgnbbox').h;
   var textHeight = parseInt(h / 2.45) * dynamicLabelSizeCoefficient;
 
   return textHeight;

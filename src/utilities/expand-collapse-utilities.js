@@ -220,26 +220,23 @@ var expandCollapseUtilities = {
 
       //The children info of complex nodes should be shown when they are collapsed
       if (node._private.data.sbgnclass == "complex") {
-        var new_content;
         //The node is being collapsed store infolabel to use it later
         var infoLabel = getInfoLabel(node);
         node._private.data.infoLabel = infoLabel;
-
-        new_content = getElementContent(node);
-
-        if (new_content == null || new_content == "") {
-          new_content = infoLabel;
-        }
-        node.css('content', new_content);
       }
 
       for (var i = 0; i < children.length; i++) {
         var child = children[i];
         this.barrowEdgesOfcollapsedChildren(node, child);
       }
+      
       this.removeChildren(node, node);
-//      node.addClass('collapsed');
       refreshPaddings();
+      
+      if (node._private.data.sbgnclass == "complex") {
+        node.addClass('changeContent');
+      }
+      
       //return the node to undo the operation
       return node;
     }
