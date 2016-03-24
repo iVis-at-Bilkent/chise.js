@@ -323,6 +323,8 @@ var sbgnmlToJson = {
     cytoscapeJsGraph.nodes = cytoscapeJsNodes;
     cytoscapeJsGraph.edges = cytoscapeJsEdges;
 
+    this.insertedNodes = {};
+
     return cytoscapeJsGraph;
   }
 };
