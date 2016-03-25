@@ -52,7 +52,7 @@
       var bendY = segpts[i + 1];
       
       var oldStyle = context.fillStyle;
-      context.fillStyle = edge.data('lineColor')?edge.data('lineColor'):edge.css('line-color');
+      context.fillStyle = edge.css('line-color');
       $$.sbgn.fillBendShape(bendX, bendY, radius, context);
       context.fillStyle = oldStyle;
     }
