@@ -50,8 +50,11 @@
     for(var i = 0; segpts && i < segpts.length; i = i + 2){
       var bendX = segpts[i];
       var bendY = segpts[i + 1];
-
+      
+      var oldStyle = context.fillStyle;
+      context.fillStyle = edge.data('lineColor')?edge.data('lineColor'):edge.css('line-color');
       $$.sbgn.fillBendShape(bendX, bendY, radius, context);
+      context.fillStyle = oldStyle;
     }
   };
   
