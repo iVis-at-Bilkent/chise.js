@@ -148,7 +148,17 @@ var sbgnBendPointUtilities = {
     
     //If the difference is not -2 and not 6 then the direction of the distance is negative
     if(direction1 - direction2 != -2 && direction1 - direction2 != 6){
-      distance = -distance;
+      if(distance != 0)
+        distance = -1 * distance;
+    }
+    
+    var minDiff = 0.001;
+    
+    if(Math.abs(weight - 0) < minDiff){
+      weight = minDiff;
+    }
+    else if(Math.abs(weight - 1) < minDiff){
+      weight = 1 - minDiff;
     }
     
     return {
@@ -170,8 +180,7 @@ var sbgnBendPointUtilities = {
       weights.push(relativeBendPosition.weight);
       distances.push(relativeBendPosition.distance);
     }
-//    weights = [0.2, 0.9];
-//    distances = [0, 0];
+
     return {
       weights: weights,
       distances: distances
@@ -286,11 +295,9 @@ var sbgnBendPointUtilities = {
 //    weights.push(relativeBendPosition.weight);
 //    distances.push(relativeBendPosition.distance);
     if(newBendIndex != -1){
-      console.log(weights);
       console.log(newBendIndex);
       weights.splice(newBendIndex, 0, relativeBendPosition.weight);
       distances.splice(newBendIndex, 0, relativeBendPosition.distance);
-      console.log(weights);
     }
     
     edge.data('weights', weights);
