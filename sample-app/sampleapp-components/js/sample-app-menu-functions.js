@@ -724,7 +724,7 @@ $(document).ready(function () {
 
   $("#remove-highlights").click(function (e) {
 //    sbgnFiltering.removeHighlights();
-    if (sbgnFiltering.isAllElementsAreNotHighlighted()){
+    if (sbgnFiltering.thereIsNoHighlightedElement()){
       return;
     }
     editorActionsManager._do(new RemoveHighlightsCommand());

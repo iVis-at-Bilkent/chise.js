@@ -342,14 +342,14 @@ function showJustGivenNodes(nodesToShow) {
   return param;
 }
 
-function highlightSelected(param) {
+function highlightExtensionOfSelectedElements(param) {
   var elementsToHighlight;
   var result = {};
   //If this is the first call of the function then call the original method
   if (param.firstTime) {
-    if (sbgnFiltering.isAllElementsAreNotHighlighted()) {
+    if (sbgnFiltering.thereIsNoHighlightedElement()) {
       //mark that there was no highlighted element
-      result.allElementsWasNotHighlighted = true;
+      result.thereWasNoHighlightedElement = true;
     }
     
     var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
@@ -382,21 +382,21 @@ function highlightSelected(param) {
       sbgnFiltering.notHighlightNodes(elesToNotHighlight.nodes());
       sbgnFiltering.notHighlightEdges(elesToNotHighlight.edges());
 
-      //If there are some elements to not highlight then allElementsWasNotHighlighted should be true
-      result.allElementsWasNotHighlighted = true;
+      //If there are some elements to not highlight then thereWasNoHighlightedElement should be true
+      result.thereWasNoHighlightedElement = true;
     }
   }
   result.elesToNotHighlight = elementsToHighlight;
   return result;
 }
 
-function notHighlightEles(param) {
+function removeHighlightOfElements(param) {
   var elesToNotHighlight = param.elesToNotHighlight;
-  var allElementsWasNotHighlighted = param.allElementsWasNotHighlighted;
+  var thereWasNoHighlightedElement = param.thereWasNoHighlightedElement;
 
   var result = {};
 
-  if (param.allElementsWasNotHighlighted) {
+  if (param.thereWasNoHighlightedElement) {
     sbgnFiltering.removeHighlights();
     result.elesToHighlight = elesToNotHighlight;
     result.elesToNotHighlight = cy.elements(":visible").not(elesToNotHighlight);
@@ -415,7 +415,7 @@ function notHighlightEles(param) {
 
 function removeHighlights() {
   var result = {};
-  if (sbgnFiltering.isAllElementsAreNotHighlighted()) {
+  if (sbgnFiltering.thereIsNoHighlightedElement()) {
     result.elesToHighlight = cy.elements(":visible");
   }
   else {
@@ -868,16 +868,16 @@ var ShowAllCommand = function () {
 
 var HighlightNeighborsofSelectedCommand = function (param) {
   param.highlightNeighboursofSelected = true;
-  return new Command(highlightSelected, notHighlightEles, param);
+  return new Command(highlightExtensionOfSelectedElements, removeHighlightOfElements, param);
 };
 
 var HighlightProcessesOfSelectedCommand = function (param) {
   param.highlightProcessesOfSelected = true;
-  return new Command(highlightSelected, notHighlightEles, param);
+  return new Command(highlightExtensionOfSelectedElements, removeHighlightOfElements, param);
 };
 
 var RemoveHighlightsCommand = function () {
-  return new Command(removeHighlights, highlightSelected);
+  return new Command(removeHighlights, highlightExtensionOfSelectedElements);
 };
 
 var CreateCompundForSelectedNodesCommand = function (param) {

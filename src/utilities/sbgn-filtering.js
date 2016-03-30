@@ -110,7 +110,7 @@ var sbgnFiltering = {
       edges.addClass("not-highlighted");
     },
     
-    isAllElementsAreNotHighlighted: function(){
+    thereIsNoHighlightedElement: function(){
         var highlightedNodes = cy.nodes(":visible").nodes("[highlighted='true']");
         var highlightedEdges = cy.edges(":visible").edges("[highlighted='true']");
         return highlightedNodes.length + highlightedEdges.length == 0;
