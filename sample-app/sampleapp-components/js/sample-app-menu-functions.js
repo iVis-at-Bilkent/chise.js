@@ -386,7 +386,7 @@ $(document).ready(function () {
             {
               'autoDimensions': false,
               'width': 420,
-              'height': 393,
+              'height': 280,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
@@ -416,7 +416,7 @@ $(document).ready(function () {
             {
               'autoDimensions': false,
               'width': 400,
-              'height': 220,
+              'height': 335,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
