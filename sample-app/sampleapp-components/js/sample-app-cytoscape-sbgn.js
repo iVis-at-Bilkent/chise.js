@@ -1897,7 +1897,7 @@ var SBGNLayout = Backbone.View.extend({
     idealEdgeLength: 50,
     edgeElasticity: 0.45,
     nestingFactor: 0.1,
-    gravity: 0.4,
+    gravity: 0.25,
     numIter: 2500,
     tile: true,
     animate: true,
