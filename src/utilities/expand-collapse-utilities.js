@@ -189,6 +189,12 @@ var expandCollapseUtilities = {
    */
   simpleExpandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
+      //check how the position of the node is changed
+      var positionDiff = {
+        x: node.position('x') - node.data('position-before-collapse').x,
+        y: node.position('y') - node.data('position-before-collapse').y
+      };
+      
       node.removeData("infoLabel");
       node.data('expanded-collapsed', 'expanded');
       node._private.data.collapsedChildren.restore();
@@ -202,8 +208,12 @@ var expandCollapseUtilities = {
       if (node._private.data.sbgnclass == "complex") {
         node.removeStyle('content');
       }
+      
+      moveNodes(positionDiff ,node.children());
+      node.removeData('position-before-collapse');
 
       refreshPaddings();
+      
       //return the node to undo the operation
       return node;
     }
@@ -211,6 +221,10 @@ var expandCollapseUtilities = {
   //collapse the given node without making incremental layout
   simpleCollapseNode: function (node) {
     if (node._private.data.collapsedChildren == null) {
+      node.data('position-before-collapse', {
+        x: node.position().x,
+        y: node.position().y
+      });
       node.children().unselect();
       node.children().connectedEdges().unselect();
 
@@ -236,6 +250,8 @@ var expandCollapseUtilities = {
       if (node._private.data.sbgnclass == "complex") {
         node.addClass('changeContent');
       }
+      
+      node.position(node.data('position-before-collapse'));
       
       //return the node to undo the operation
       return node;
