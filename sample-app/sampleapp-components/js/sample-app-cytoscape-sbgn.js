@@ -904,7 +904,7 @@ var getElementContent = function (ele) {
     content = ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
   }
   else if(sbgnclass == 'compartment'){
-    return ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
+    content = ele.data('sbgnlabel') ? ele.data('sbgnlabel') : "";
   }
   else if(sbgnclass == 'complex'){
     if(ele.children().length == 0){
@@ -945,7 +945,7 @@ var getElementContent = function (ele) {
 
   var textProp = {
     label: content,
-    width: sbgnclass==('complex')?textWidth * 2:textWidth
+    width: ( sbgnclass==('complex') || sbgnclass==('compartment') )?textWidth * 2:textWidth
   };
 
   var font = getLabelTextSize(ele) + "px Arial";
