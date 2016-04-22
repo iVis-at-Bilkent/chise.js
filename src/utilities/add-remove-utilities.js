@@ -50,7 +50,7 @@ var addRemoveUtilities = {
       newNode._private.data.sbgnclonemarker = defaults.sbgnclonemarker;
     }
     newNode.addClass('changeBorderColor');
-//    refreshPaddings();
+    refreshPaddings();
     return newNode;
   },
   removeNodes: function (nodes) {
@@ -62,7 +62,7 @@ var addRemoveUtilities = {
     var parents = nodes.parents();
     removedEles = removedEles.union(nodes.remove());
     cy.nodes().updateCompoundBounds();
-//    refreshPaddings();
+    refreshPaddings();
     return removedEles;
   },
   addEdge: function (source, target, sbgnclass) {
@@ -129,6 +129,8 @@ var addRemoveUtilities = {
     }
 
     cy.add(removedNodes);
+    cy.nodes().updateCompoundBounds();
+    refreshPaddings();
 //    removedNodes.restore();
   }
 };

@@ -528,7 +528,7 @@ function createCompoundForSelectedNodes(param) {
   var newCompoundId = newCompound.id();
 
   addRemoveUtilities.changeParent(nodesToMakeCompound, oldParentId, newCompoundId);
-  refreshPaddings();
+  
   return newCompound;
 }
 
@@ -539,8 +539,6 @@ function removeCompound(compoundToRemove) {
 
   addRemoveUtilities.changeParent(childrenOfCompound, compoundId, newParentId);
   var removedCompund = compoundToRemove.remove();
-
-  refreshPaddings();
 
   var param = {
     nodesToMakeCompound: childrenOfCompound,

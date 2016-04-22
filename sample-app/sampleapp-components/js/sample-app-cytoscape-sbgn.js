@@ -568,10 +568,16 @@ var handleSBGNInspector = function () {
   }
 }
 
-var makePresetLayout = function () {
-  cy.layout({
+var makePresetLayout = function (fit) {
+  var options = {
     name: "preset"
-  });
+  };
+  
+  if(fit != null){
+    options.fit = fit;
+  }
+  
+  cy.layout(options);
 };
 
 var initilizeUnselectedDataOfElements = function () {
@@ -772,8 +778,6 @@ var refreshPaddings = function () {
   compounds.css('padding-right', calc_padding);
   compounds.css('padding-top', calc_padding);
   compounds.css('padding-bottom', calc_padding);
-  //To refresh the nodes on the screen apply the preset layout
-  makePresetLayout();
 };
 
 var isEPNClass = function (sbgnclass) {
@@ -1932,7 +1936,7 @@ var SBGNLayout = Backbone.View.extend({
     var options = _.clone(this.currentLayoutProperties);
     options.randomize = false;
     options.animate = false;
-    options.fit = false;
+    options.fit = true;
     cy.elements().filter(':visible').layout(options);
   },
   render: function () {
