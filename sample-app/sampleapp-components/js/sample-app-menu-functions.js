@@ -385,8 +385,8 @@ $(document).ready(function () {
             _.template($("#node-legend-template").html(), {}),
             {
               'autoDimensions': false,
-              'width': 420,
-              'height': 280,
+              'width': 504,
+              'height': 325,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
@@ -415,8 +415,8 @@ $(document).ready(function () {
             _.template($("#edge-legend-template").html(), {}),
             {
               'autoDimensions': false,
-              'width': 400,
-              'height': 335,
+              'width': 325,
+              'height': 285,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
