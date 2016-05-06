@@ -448,7 +448,7 @@ $(document).ready(function () {
             {
               'autoDimensions': false,
               'width': 300,
-              'height': 240,
+              'height': 250,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
