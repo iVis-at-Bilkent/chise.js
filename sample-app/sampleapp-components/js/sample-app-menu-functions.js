@@ -448,7 +448,7 @@ $(document).ready(function () {
             {
               'autoDimensions': false,
               'width': 300,
-              'height': 320,
+              'height': 240,
               'transitionIn': 'none',
               'transitionOut': 'none',
             });
@@ -517,25 +517,6 @@ $(document).ready(function () {
                 'height': "auto",
                 'transitionIn': 'none',
                 'transitionOut': 'none'
-              });
-    });
-
-    $("#how-to-use").click(function (e) {
-      var url = "http://www.cs.bilkent.edu.tr/~ivis/sbgnviz-js/SBGNViz.js-1.x.UG.pdf";
-      var win = window.open(url, '_blank');
-      win.focus();
-    });
-
-    $("#about").click(function (e) {
-      e.preventDefault();
-      $.fancybox(
-              _.template($("#about-template").html(), {}),
-              {
-                'autoDimensions': false,
-                'width': 300,
-                'height': 320,
-                'transitionIn': 'none',
-                'transitionOut': 'none',
               });
     });
 
