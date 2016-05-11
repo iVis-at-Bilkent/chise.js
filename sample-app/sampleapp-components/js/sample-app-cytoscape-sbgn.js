@@ -173,10 +173,10 @@ var fillInspectorStateAndInfos = function (node, width) {
     var state = stateAndInfos[i];
     if (state.clazz == "state variable") {
       $("#inspector-state-variables").append("<div><input type='text' class='just-added-inspector-input inspector-state-variable-value' style='width: "
-              + width / 5 + "px' value='" + stringAfterValueCheck(state.state.value) + "'/>"
+              + width / 5 + "px; margin-bottom: 2px;' value='" + stringAfterValueCheck(state.state.value) + "'/>"
               + "<span width='" + width / 5 + "'px>@</span>"
               + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable' style='width: "
-              + width / 2.5 + "px' value='" + stringAfterValueCheck(state.state.variable)
+              + width / 2.5 + "px; margin-bottom: 2px;' value='" + stringAfterValueCheck(state.state.variable)
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
@@ -210,7 +210,7 @@ var fillInspectorStateAndInfos = function (node, width) {
     else if (state.clazz == "unit of information") {
       var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label' style='width: "
-              + total + "px' value='" + stringAfterValueCheck(state.label.text)
+              + total + "px; margin-bottom: 2px;' value='" + stringAfterValueCheck(state.label.text)
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
@@ -328,28 +328,28 @@ var handleSBGNInspector = function () {
       type = "node";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-label' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
+              + "<input id='inspector-label' type='text' style='width: " + width / 1.25 + "px; margin-bottom: 2px;' value='" + sbgnlabel
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('borderColor')
+              + "<input id='inspector-border-color' type='color' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + selected.data('borderColor')
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.css('background-color')
+              + "<input id='inspector-fill-color' type='color' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + selected.css('background-color')
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('border-width'))
+              + "<input id='inspector-border-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + parseFloat(selected.css('border-width'))
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Opacity</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.data('backgroundOpacity'))
+              + "<input id='inspector-background-opacity' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + parseFloat(selected.data('backgroundOpacity'))
               + "'/>" + "</td></tr>";
       if (canHaveStateVariable(selected.data('sbgnclass'))) {
-        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                 + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
       }
       
       if (canHaveCloneMarker(selected.data('sbgnclass'))) {
-        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                 + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
       }
@@ -358,7 +358,7 @@ var handleSBGNInspector = function () {
       var clonedCheck = canBeCloned(selected.data('sbgnclass'));
 
       if (multimerCheck || clonedCheck) {
-        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
       }
 
       if (multimerCheck) {
@@ -374,11 +374,11 @@ var handleSBGNInspector = function () {
     else {
       type = "edge";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px;' value='" + selected.data('lineColor')
+              + "<input id='inspector-line-color' type='color' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + selected.data('lineColor')
               + "'/>" + "</td></tr>";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(selected.css('width'))
+              + "<input id='inspector-width' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + parseFloat(selected.css('width'))
               + "'/>" + "</td></tr>";
       if (selected.data('sbgnclass') == 'consumption' || selected.data('sbgnclass') == 'production') {
         var cardinality = selected.data('sbgncardinality');
@@ -386,7 +386,7 @@ var handleSBGNInspector = function () {
           cardinality = undefined;
         }
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Cardinality</font>" + "</td><td style='padding-left: 5px;'>"
-                + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
+                + "<input id='inspector-cardinality' type='number' min='0' step='1' style='width: " + buttonwidth + "px; margin-bottom: 2px;' value='" + cardinality
                 + "'/>" + "</td></tr>";
       }
 
@@ -394,7 +394,7 @@ var handleSBGNInspector = function () {
     html += "</table>";
     html += "<div style='text-align: center; margin-top: 5px;'><button style='align: center;' id='inspector-set-as-default-button'"
             + ">Set as Default</button></div>";
-    html += "<hr style='padding: 0px; margin-top: 15px; margin-bottom: 15px;' width='" + $("#sbgn-inspector").width() + "'>";
+    html += "<hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'>";
 //    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
     $("#sbgn-inspector").html(html);
 
