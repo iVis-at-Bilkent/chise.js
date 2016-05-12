@@ -355,6 +355,10 @@ $(document).ready(function () {
   var sbgnProperties = new SBGNProperties({
     el: '#sbgn-properties-table'
   });
+  
+  var pathsBetweenQuery = new PathsBetweenQuery({
+    el: '#query-pathsbetween-table'
+  });
 
   $("body").on("change", "#file-input", function (e) {
     if ($("#file-input").val() == "") {
@@ -775,6 +779,10 @@ $(document).ready(function () {
 
   $("#sbgn-properties").click(function (e) {
     sbgnProperties.render();
+  });
+  
+  $("#query-pathsbetween").click(function (e) {
+    pathsBetweenQuery.render();
   });
 
   $("#properties-icon").click(function (e) {

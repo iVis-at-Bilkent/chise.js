@@ -246,6 +246,24 @@
                                 <li><a href="#" id="layout-properties">Layout Properties...</a></li>
                             </ul>
                         </li>
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Query 
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu">
+                                    <a href="#" id="query-pathwaycommons" class="dropdown-toggle" data-toggle="dropdown">
+                                        Pathway Commons
+                                        <!--<b class="right-caret"></b>-->
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" id="query-pathsbetween">Paths Between</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
 
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -434,6 +452,10 @@
         </div>
 
         <div id="biogene-container" style="display: none">
+        </div>
+        
+        <div id="query-pathsbetween-table" title="Paths Between Query Parameters">
+            <!-- paths between query table will be shown here -->
         </div>
 
         <div id="box">
@@ -708,6 +730,58 @@
             </td>
             </div>
             </tr>
+            </table>
+        </script>
+        
+        <script type="text/template" id="query-pathsbetween-template">
+            <table class="table-condensed layout-table">
+            <tr>
+            <th colspan=2>
+            <span class="add-on layout-text"> Find all paths of specified length limit between any two entities of the specified set </span>
+            </th>
+            </tr>
+
+            <tr>
+            <td>
+            <span class="add-on layout-text"> Gene Symbols: </span><br>
+            <textarea id="query-pathsbetween-gene-symbols" rows="4" cols="86"><%= geneSymbols %></textarea>
+            </td>
+
+            <td>
+            <table>
+            <tr><td colspan="2">
+            <table frame="box">
+            <caption>Stop Distance</caption>
+            <tr>
+            <td colspan=2>Length limit</td>
+            <td><input id="query-pathsbetween-length-limit" type="number" class="input-small layout-text" value= <%= lengthLimit %> > </td>
+            </tr>
+            <tr>
+            <td><input id="query-pathsbetween-enable-shortest-k-alteration" type="checkbox" class="input-small layout-text" <% if (lengthLimit){ %> checked<%}%>></td>
+            <td>Shortest+k</td>
+            <td><input id="query-pathsbetween-shortest-k" type="number" class="input-small layout-text" value= <%= shortestK %> ></td>
+            </tr>
+            </table>
+            </td></tr>
+            <tr>
+            <td>
+            <input id="query-pathsbetween-ignore-s2s-t2t-targets" type="checkbox" class="input-small layout-text" <% if (ignoreS2SandT2TTargets){ %> checked<%}%>>
+            </td>
+            <td>
+            Ignore source/source target/target paths
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+    
+            <tr>
+            <td colspan=2>
+            <button id="save-query-pathsbetween" style="margin-left: 30%;" class="btn btn-default" >OK</button>
+            <button id="cancel-query-pathsbetween" style="margin-left: 10%;" class="btn btn-default">Cancel</button>
+            </td>
+            </tr>
+
             </table>
         </script>
 
