@@ -39,6 +39,117 @@ $(document).ready(function ()
   dynamicResize();
 });
 
+var getCommonSBGNClass = function(elements){
+  if(elements.length <= 1){
+    return "";
+  }
+  
+  var SBGNClassOfFirstElement = elements[0].data('sbgnclass');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('sbgnclass') != SBGNClassOfFirstElement){
+      return "";
+    }
+  }
+  
+  return SBGNClassOfFirstElement;
+};
+
+var allAreNode = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!ele.isNode()){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allAreEdge = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!ele.isEdge()){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allCanHaveStateVariable = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!canHaveStateVariable(ele.data('sbgnclass'))){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allCanHaveUnitOfInformation = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!allCanHaveUnitOfInformation(ele.data('sbgnclass'))){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allCanBeCloned = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!canBeCloned(ele.data('sbgnclass'))){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allCanBeMultimer = function(elements){
+  for(var i = 0; i <elements.length; i++){
+    var ele = elements[i];
+    if(!canBeMultimer(ele.data('sbgnclass'))){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var getCommonLabel = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var labelOfFirstElement = elements[0].data('sbgnlabel');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('sbgnlabel') != labelOfFirstElement){
+      return null;
+    }
+  }
+  
+  return labelOfFirstElement;
+};
+
+var getCommonBorderColor = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var borderColorOfFirstElement = elements[0].data('borderColor');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('borderColor') != borderColorOfFirstElement){
+      return null;
+    }
+  }
+  
+  return borderColorOfFirstElement;
+};
+
 var stringAfterValueCheck = function (value) {
   return value ? value : '';
 };
