@@ -736,7 +736,7 @@
         <script type="text/template" id="query-pathsbetween-template">
             <table class="table-condensed layout-table">
             <tr>
-            <th colspan=2>
+            <th colspan=2 style="padding-left: 0px;" align="left">
             <span class="add-on layout-text"> Find all paths of specified length limit between any two entities of the specified set </span>
             </th>
             </tr>
@@ -750,8 +750,8 @@
             <td>
             <table>
             <tr><td colspan="2">
-            <table frame="box">
-            <caption>Stop Distance</caption>
+            <table frame="box" style="border-color: rgb(204, 204, 204)">
+            <caption style="text-align: left;">Stop Distance</caption>
             <tr>
             <td colspan=2>Length limit</td>
             <td><input id="query-pathsbetween-length-limit" type="number" class="input-small layout-text" value= <%= lengthLimit %> > </td>
