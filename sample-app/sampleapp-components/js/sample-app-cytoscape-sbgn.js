@@ -2378,10 +2378,10 @@ var SBGNProperties = Backbone.View.extend({
 var PathsBetweenQuery = Backbone.View.extend({
   defaultQueryParameters: {
     geneSymbols: "",
-    lengthLimit: 1,
-    shortestK: 0,
-    enableShortestKAlteration: false,
-    ignoreS2SandT2TTargets: false
+    lengthLimit: 1
+//    shortestK: 0,
+//    enableShortestKAlteration: false,
+//    ignoreS2SandT2TTargets: false
   },
   currentQueryParameters: null,
   initialize: function () {
@@ -2412,11 +2412,11 @@ var PathsBetweenQuery = Backbone.View.extend({
 
       self.currentQueryParameters.geneSymbols = document.getElementById("query-pathsbetween-gene-symbols").value;
       self.currentQueryParameters.lengthLimit = Number(document.getElementById("query-pathsbetween-length-limit").value);
-      self.currentQueryParameters.shortestK = Number(document.getElementById("query-pathsbetween-shortest-k").value);
-      self.currentQueryParameters.enableShortestKAlteration =
-              document.getElementById("query-pathsbetween-enable-shortest-k-alteration").checked;
-      self.currentQueryParameters.ignoreS2SandT2TTargets =
-              document.getElementById("query-pathsbetween-ignore-s2s-t2t-targets").checked;
+//      self.currentQueryParameters.shortestK = Number(document.getElementById("query-pathsbetween-shortest-k").value);
+//      self.currentQueryParameters.enableShortestKAlteration =
+//              document.getElementById("query-pathsbetween-enable-shortest-k-alteration").checked;
+//      self.currentQueryParameters.ignoreS2SandT2TTargets =
+//              document.getElementById("query-pathsbetween-ignore-s2s-t2t-targets").checked;
       
       var pc2URL = "http://www.pathwaycommons.org/pc2/";
       var format = "graph?format=SBGN";
