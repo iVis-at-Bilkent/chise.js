@@ -91,6 +91,7 @@ var expandCollapseUtilities = {
     return expandStack;
   },
   expandAllNodes: function (nodes, selector) {
+    
     var expandedStack = this.simpleExpandAllNodes(nodes, selector);
 
     $("#perform-incremental-layout").trigger("click");
@@ -121,7 +122,7 @@ var expandCollapseUtilities = {
   //Expand the given nodes perform incremental layout after expandation
   expandGivenNodes: function (nodes) {
     this.simpleExpandGivenNodes(nodes);
-
+    
     $("#perform-incremental-layout").trigger("click");
 
     /*
@@ -170,9 +171,15 @@ var expandCollapseUtilities = {
   //Expand the given node perform incremental layout after expandation
   expandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
-      this.simpleExpandNode(node);
+        
+        this.storeWidthHeight(node)
+        this.simpleExpandNode(node);
+        
+        node.data('x-before-collapse', this.xPositionInParent(node));
+        node.data('y-before-collapse', this.yPositionInParent(node));
+            
+        this.fishEyeViewExpandGivenNode(node);
 
-      $("#perform-incremental-layout").trigger("click");
 
       /*
        * return the node to undo the operation
@@ -270,6 +277,240 @@ var expandCollapseUtilities = {
       return node;
     }
   },
+  
+    storeWidthHeight: function (node)
+    {
+        if (node != null)
+        {
+            node.data('x-before-collapse', this.xPositionInParent(node));
+            node.data('y-before-collapse', this.yPositionInParent(node));
+            node.data('width-before-collapse', node.outerWidth());
+            node.data('height-before-collapse', node.outerHeight());
+
+            if (node.parent()[0] != null)
+            {
+                this.storeWidthHeight(node.parent()[0]);
+            }
+        }
+
+    },
+    
+    fishEyeViewExpandGivenNodes: function (nodes)
+    {
+        nodes.data("expand", true);
+
+        for (var i = 0; i < nodes.length; i++)
+        {
+            this.fishEyeViewExpandGivenNode(nodes[i]);
+        }
+
+        return nodes;
+    },
+    
+    fishEyeViewExpandGivenNode: function (node)
+    {   
+        var siblings = this.getSiblings(node);
+
+        var x_a = this.xPositionInParent(node);
+        var y_a = this.yPositionInParent(node);
+
+        var d_x_left = Math.abs((node.data('width-before-collapse') - node.outerWidth()) / 2);
+        var d_x_right = Math.abs((node.data('width-before-collapse') - node.outerWidth()) / 2);
+        var d_y_upper = Math.abs((node.data('height-before-collapse') - node.outerHeight()) / 2);
+        var d_y_lower = Math.abs((node.data('height-before-collapse') - node.outerHeight()) / 2);
+        
+        var abs_diff_on_x = Math.abs(node.data('x-before-collapse') - x_a);
+        var abs_diff_on_y = Math.abs(node.data('y-before-collapse') - y_a);
+        
+        // Center went to LEFT
+        if (node.data('x-before-collapse') > x_a)
+        {
+            d_x_left = d_x_left + abs_diff_on_x;
+            d_x_right = d_x_right - abs_diff_on_x;
+        }
+        // Center went to RIGHT
+        else
+        {
+            d_x_left = d_x_left - abs_diff_on_x;
+            d_x_right = d_x_right + abs_diff_on_x;
+        }
+
+        // Center went to UP
+        if (node.data('y-before-collapse') > y_a)
+        {
+            d_y_upper = d_y_upper + abs_diff_on_y;
+            d_y_lower = d_y_lower - abs_diff_on_y;
+        }
+        // Center went to DOWN
+        else
+        {
+            d_y_upper = d_y_upper - abs_diff_on_y;
+            d_y_lower = d_y_lower + abs_diff_on_y;
+        }
+        
+        var xPosInParentSibling = [];
+        var yPosInParentSibling = [];
+        
+        for (var i = 0; i < siblings.length; i++)
+        {
+            xPosInParentSibling.push(this.xPositionInParent(siblings[i]));
+            yPosInParentSibling.push(this.yPositionInParent(siblings[i]));
+        }
+        
+        for (var i = 0; i < siblings.length; i++)
+        {
+            var sibling = siblings[i];
+
+            var x_b = xPosInParentSibling[i];
+            var y_b = yPosInParentSibling[i];
+            
+            var slope = (y_b - y_a) / (x_b - x_a);
+
+            var d_x = 0;
+            var d_y = 0;
+            var T_x = 0;
+            var T_y = 0;
+
+            // Current sibling is on the LEFT
+            if (x_a > x_b)
+            {
+                d_x = d_x_left;
+            }
+            // Current sibling is on the RIGHT
+            else
+            {
+                d_x = d_x_right;
+            }
+            // Current sibling is on the UPPER side
+            if (y_a > y_b)
+            {
+                d_y = d_y_upper;
+            }
+            // Current sibling is on the LOWER side
+            else
+            {
+                d_y = d_y_lower;
+            }
+            
+            if (isFinite(slope))
+            {
+                T_x = Math.min(d_x, (d_y / Math.abs(slope)));
+            }
+
+            if (slope !== 0)
+            {
+                T_y = Math.min(d_y, (d_x * Math.abs(slope)));                
+            }
+
+            if (x_a > x_b)
+            {
+                T_x = -1 * T_x;
+            }
+
+            if (y_a > y_b)
+            {
+                T_y = -1 * T_y;
+            }
+            
+            this.moveNode(sibling, T_x, T_y);
+        }
+        
+        // Do not call the function for the root!
+        if (node.parent()[0] != null)
+        {
+            this.fishEyeViewExpandGivenNode(node.parent()[0]);
+        }
+
+        return node;
+    },
+    
+    getSiblings: function (node)
+    {
+        var siblings;
+
+        if (node.parent()[0] == null)
+        {
+            siblings = cy.collection();
+            var orphans = cy.nodes().orphans();
+            
+            for (var i = 0; i < orphans.length; i++)
+            {
+                if (orphans[i] != node)
+                {
+                    siblings = siblings.add(orphans[i]);
+                }
+            }
+        } else
+        {
+            siblings = node.siblings();
+        }
+        
+        return siblings;
+    },
+    
+    moveNode: function (node, T_x, T_y)
+    {
+        var childrenList = node.children();
+        
+        if (childrenList.length == 0)
+        {
+            node.position('x', node.position('x') + T_x);
+            node.position('y', node.position('y') + T_y);
+        }
+        else
+        {
+            
+            for (var i=0; i < childrenList.length; i++)
+            {
+                this.moveNode(childrenList[i], T_x, T_y);
+            }
+        }
+    },
+    
+    xPositionInParent: function (node)
+    {
+        var parent = node.parent()[0];
+        var x_a = 0.0;
+
+        // Given node is not a direct child of the the root graph
+        if (parent != null)
+        {
+            x_a = node.relativePosition('x') + (parent.width() / 2);
+        }
+        // Given node is a direct child of the the root graph
+
+        else
+        {
+            x_a = node.position('x');
+        }
+
+        return x_a;
+    },
+    yPositionInParent: function (node)
+    {
+        var parent = node.parent()[0];
+        
+        var y_a = 0.0;
+
+        // Given node is not a direct child of the the root graph
+        if (parent != null)
+        {
+            /*console.log("Node ID: " + node.id());
+            console.log("Parent ID: " + parent.id());
+            console.log("Parent.width: " + parent.width());
+            console.log("Parent.height: " + parent.height());*/
+            y_a = node.relativePosition('y') + (parent.height() / 2);
+        }
+        // Given node is a direct child of the the root graph
+
+        else
+        {
+            y_a = node.position('y');
+        }
+
+        return y_a;
+    },
+    
   /*
    * for all children of the node parameter call this method
    * with the same root parameter,
