@@ -623,8 +623,14 @@ var handleSBGNInspector = function () {
               + "<input id='inspector-fill-color' class='inspector-input-box' type='color' style='width: " + buttonwidth + "px;' value='" + backgroundColor
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-border-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(borderWidth)
-              + "'/>" + "</td></tr>";
+              + "<input id='inspector-border-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+      
+      if(borderWidth){
+        html += " value='" + parseFloat(borderWidth) + "'";
+      }
+      
+      html += "/>" + "</td></tr>";
+      
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Opacity</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-background-opacity' class='inspector-input-box' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(backgroundOpacity)
               + "'/>" + "</td></tr>"; 
@@ -681,8 +687,14 @@ var handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;' value='" + parseFloat(commonLineWidth)
-              + "'/>" + "</td></tr>";
+              + "<input id='inspector-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+      
+      if(commonLineWidth){
+        html += " value='" + parseFloat(commonLineWidth) + "'";
+      }
+      
+      html += "/>" + "</td></tr>";
+      
       if (allCanHaveSBGNCardinality(selectedEles)) {
         var cardinality = getCommonSBGNCardinality(selectedEles);
         commonSBGNCardinality = cardinality;
