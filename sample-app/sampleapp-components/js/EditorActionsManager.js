@@ -569,16 +569,29 @@ function resizeNode(param) {
 function changeNodeLabel(param) {
   var result = {
   };
-  var node = param.node;
-  result.node = node;
-  result.sbgnlabel = node._private.data.sbgnlabel;
-
-  node._private.data.sbgnlabel = param.sbgnlabel;
+  var nodes = param.nodes;
+  result.nodes = nodes;
+  result.sbgnlabel = {};
   
-  node.removeClass('changeContent');
-  node.addClass('changeContent');
+  for(var i = 0; i < nodes.length; i++){
+    var node = nodes[i];
+    result.sbgnlabel[node.id()] = node._private.data.sbgnlabel;
+  }
+  
+  if(param.firstTime){
+    nodes.data('sbgnlabel', param.sbgnlabel);
+  }
+  else {
+    for(var i = 0; i < nodes.length; i++){
+      var node = nodes[i];
+      node._private.data.sbgnlabel = param.sbgnlabel[node.id()];
+    }
+  }
+  
+  nodes.removeClass('changeContent');
+  nodes.addClass('changeContent');
 
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
     handleSBGNInspector();
   }
 
@@ -593,15 +606,20 @@ function changeStateVariable(param) {
   result.state = state;
   result.type = type;
   result.valueOrVariable = state.state[type];
-  result.node = param.node;
+  result.nodes = param.nodes;
   result.width = param.width;
+  result.stateAndInfos = param.stateAndInfos;
 
+  var index = param.stateAndInfos.indexOf(state);
   state.state[type] = param.valueOrVariable;
+  
+  for(var i = 0; i < param.nodes.length; i++){
+    param.nodes[i]._private.data.sbgnstatesandinfos = param.stateAndInfos;
+  }
+  
   cy.forceRender();
 
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
-    fillInspectorStateAndInfos(param.node, param.width);
-  }
+  fillInspectorStateAndInfos(param.nodes, param.stateAndInfos, param.width);
 
   return result;
 }
@@ -627,19 +645,25 @@ function changeUnitOfInformation(param) {
 
 function addStateAndInfo(param) {
   var obj = param.obj;
-  var node = param.node;
-  var stateAndInfos = node._private.data.sbgnstatesandinfos;
+  var nodes = param.nodes;
+  var stateAndInfos = param.stateAndInfos;
 
   stateAndInfos.push(obj);
   relocateStateAndInfos(stateAndInfos);
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == node) {
-    fillInspectorStateAndInfos(node, param.width);
+  
+  for(var i = 0; i < nodes.length; i++){
+    nodes[i]._private.data.sbgnstatesandinfos = stateAndInfos;
+  }
+  
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
+    fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
   }
   cy.forceRender();
 
   var result = {
-    node: node,
+    nodes: nodes,
     width: param.width,
+    stateAndInfos: stateAndInfos,
     obj: obj
   };
   return result;
@@ -647,56 +671,66 @@ function addStateAndInfo(param) {
 
 function removeStateAndInfo(param) {
   var obj = param.obj;
-  var node = param.node;
-  var stateAndInfos = node._private.data.sbgnstatesandinfos;
+  var nodes = param.nodes;
+  var stateAndInfos = param.stateAndInfos;
 
   var index = stateAndInfos.indexOf(obj);
   stateAndInfos.splice(index, 1);
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == node) {
-    fillInspectorStateAndInfos(node, param.width);
+  
+  for(var i = 0; i < nodes.length; i++){
+    nodes[i]._private.data.sbgnstatesandinfos = stateAndInfos;
+  }
+  
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
+    fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
   }
   relocateStateAndInfos(stateAndInfos);
   cy.forceRender();
 
   var result = {
-    node: node,
+    nodes: nodes,
     width: param.width,
+    stateAndInfos: stateAndInfos,
     obj: obj
   };
   return result;
 }
 
 function changeIsMultimerStatus(param) {
-  var node = param.node;
+  var nodes = param.nodes;
   var makeMultimer = param.makeMultimer;
-  var sbgnclass = node.data('sbgnclass');
+  var sbgnclass = nodes.data('sbgnclass');
   if (makeMultimer) {
-    node.data('sbgnclass', sbgnclass + ' multimer');
+    nodes.data('sbgnclass', sbgnclass + ' multimer');
   }
   else {
-    node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+    nodes.data('sbgnclass', sbgnclass.replace(' multimer', ''));
   }
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
     $('#inspector-is-multimer').attr('checked', makeMultimer);
   }
   var result = {
     makeMultimer: !makeMultimer,
-    node: node
+    nodes: nodes
   };
   return result;
 }
 
 function changeIsCloneMarkerStatus(param) {
-  var node = param.node;
+  var nodes = param.nodes;
   var makeCloneMarker = param.makeCloneMarker;
-  node._private.data.sbgnclonemarker = makeCloneMarker ? true : undefined;
+  
+  for(var i = 0; i < nodes.length; i++){
+    nodes[i]._private.data.sbgnclonemarker = makeCloneMarker ? true : undefined;
+  }
+  
   cy.forceRender();
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
     $('#inspector-is-clone-marker').attr('checked', makeCloneMarker);
   }
   var result = {
     makeCloneMarker: !makeCloneMarker,
-    node: node
+    nodes: nodes
   };
   return result;
 }
@@ -704,15 +738,30 @@ function changeIsCloneMarkerStatus(param) {
 function changeStyleData(param) {
   var result = {
   };
-  var ele = param.ele;
+  var eles = param.eles;
+  
   result.dataType = param.dataType;
-  result.data = ele.data(param.dataType);
-  result.ele = ele;
+  result.data = {};
+  result.eles = eles;
+  
+  for(var i = 0; i < eles.length; i++){
+    var ele = eles[i];
+    result.data[ele.id()] = ele.data(param.dataType);
+  }
 
-  ele.data(param.dataType, param.data);
+  if(param.firstTime){
+    eles.data(param.dataType, param.data);
+  }
+  else {
+    for(var i = 0; i < eles.length; i++){
+      var ele = eles[i];
+      ele.data(param.dataType, param.data[ele.id()]);
+    }
+  }
+  
   cy.forceRender();
 
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
+  if (_.isEqual(eles, cy.nodes(':selected'))) {
     handleSBGNInspector();
   }
 
@@ -722,15 +771,28 @@ function changeStyleData(param) {
 function changeStyleCss(param) {
   var result = {
   };
-  var ele = param.ele;
+  var eles = param.eles;
   result.dataType = param.dataType;
-  result.data = ele.css(param.dataType);
-  result.ele = ele;
+  result.data = {};
+  result.eles = eles;
 
-  ele.css(param.dataType, param.data);
+  for(var i = 0; i < eles.length; i++){
+    var ele = eles[i];
+    result.data[ele.id()] = ele.css(param.dataType);
+  }
+
+  if(param.firstTime){
+    eles.css(param.dataType, param.data);
+  }
+  else {
+    for(var i = 0; i < eles.length; i++){
+      var ele = eles[i];
+      ele.css(param.dataType, param.data[ele.id()]);
+    }
+  }
   cy.forceRender();
 
-  if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.ele) {
+  if (_.isEqual(eles, cy.nodes(':selected'))) {
     handleSBGNInspector();
   }
 
