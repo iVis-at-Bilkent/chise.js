@@ -2075,8 +2075,6 @@ var SBGNContainer = Backbone.View.extend({
           if (window.firstSelectedNode == this) {
             window.firstSelectedNode = null;
           }
-          
-          handleSBGNInspector();
         });
 
         cy.on('select', function (event) {
@@ -2460,7 +2458,6 @@ var PathsBetweenQuery = Backbone.View.extend({
           handleSBGNInspector();
         }
       });
-
       
       $(self.el).dialog('close');
     });
