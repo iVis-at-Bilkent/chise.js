@@ -40,7 +40,7 @@ $(document).ready(function ()
 });
 
 var getCommonSBGNClass = function(elements){
-  if(elements.length <= 1){
+  if(elements.length < 1){
     return "";
   }
   
@@ -551,6 +551,12 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
 
 var handleSBGNInspector = function () {
   var selectedEles = cy.elements(":selected");
+  
+  if(selectedEles.length == 0){
+    $("#sbgn-inspector").html("");
+    return;
+  }
+  
   var width = $("#sbgn-inspector").width() * 0.45;
   
   var allNodes = allAreNode(selectedEles);
@@ -576,7 +582,7 @@ var handleSBGNInspector = function () {
       classInfo = classInfo.replace(' Not ', ' not ');
     }
 
-    var title = classInfo;
+    var title = classInfo=="" ? "Properties":classInfo + " Properties";
 
     var buttonwidth = width;
     if (buttonwidth > 50) {
@@ -597,9 +603,15 @@ var handleSBGNInspector = function () {
       type = "node";
       
       var borderColor = getCommonBorderColor(selectedEles);
+      borderColor = borderColor?borderColor:'#FFFFFF';
+      
       var backgroundColor = getCommonFillColor(selectedEles);
+      backgroundColor = backgroundColor?backgroundColor:'#FFFFFF';
+      
       var borderWidth = getCommonBorderWidth(selectedEles);
+      
       var backgroundOpacity = getCommonBackgroundOpacity(selectedEles);
+      backgroundOpacity = backgroundOpacity?backgroundOpacity:0.5;
       
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-label' class='inspector-input-box' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
@@ -660,6 +672,8 @@ var handleSBGNInspector = function () {
       type = "edge";
       
       var commonLineColor = getCommonLineColor(selectedEles);
+      commonLineColor = commonLineColor?commonLineColor:'#FFFFFF';
+      
       var commonLineWidth = getCommonLineWidth(selectedEles);
       
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
@@ -2049,6 +2063,8 @@ var SBGNContainer = Backbone.View.extend({
           if (window.firstSelectedNode == this) {
             window.firstSelectedNode = null;
           }
+          
+          handleSBGNInspector();
         });
 
         cy.on('select', function (event) {
