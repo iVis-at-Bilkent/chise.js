@@ -138,4 +138,4 @@ Thanks to JetBrains for an [Open Source License](https://www.jetbrains.com/buy/o
 
 ## Team
 
-  * Metin Can Siper, Ugur Dogrusoz, Mecit Sari, Istemi Bahceci, Ayhun Tekat, M.Furkan Sahin, [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
+  * Metin Can Siper, Ugur Dogrusoz, Istemi Bahceci, Alper Karacelik, Mecit Sari, Ayhun Tekat, M.Furkan Sahin, [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
