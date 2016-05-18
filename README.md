@@ -134,6 +134,8 @@ Icons made by [Freepik](http://www.freepik.com),
 [Flaticon](http://www.flaticon.com) and licensed with 
 [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
 
+Thanks to JetBrains for an [Open Source License](https://www.jetbrains.com/buy/opensource/)
+
 ## Team
 
   * Metin Can Siper, Ugur Dogrusoz, Mecit Sari, Istemi Bahceci, Ayhun Tekat, M.Furkan Sahin, [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
