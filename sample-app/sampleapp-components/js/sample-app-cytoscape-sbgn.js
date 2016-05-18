@@ -657,8 +657,13 @@ var handleSBGNInspector = function () {
       
       commonIsMultimer = getCommonIsMultimer(selectedEles);
       commonIsCloned = getCommonIsCloned(selectedEles);
-      multimerCheck = ( commonIsMultimer !== null ) && allCanBeMultimer(selectedEles);
-      clonedCheck = ( commonIsCloned !== null ) && allCanBeCloned(selectedEles);
+//      multimerCheck = ( commonIsMultimer !== null ) && allCanBeMultimer(selectedEles);
+//      clonedCheck = ( commonIsCloned !== null ) && allCanBeCloned(selectedEles);
+      multimerCheck = allCanBeMultimer(selectedEles);
+      clonedCheck = allCanBeCloned(selectedEles);
+      
+      multimerCheck = multimerCheck?multimerCheck:false;
+      clonedCheck = clonedCheck?clonedCheck:false;
 
       if (multimerCheck || clonedCheck) {
         html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
@@ -758,7 +763,8 @@ var handleSBGNInspector = function () {
       $('#inspector-is-multimer').on('click', function () {
         var param = {
           makeMultimer: $('#inspector-is-multimer').attr('checked') == 'checked',
-          nodes: selectedEles
+          nodes: selectedEles,
+          firstTime: true
         };
         editorActionsManager._do(new changeIsMultimerStatusCommand(param));
         refreshUndoRedoButtonsStatus();
@@ -767,7 +773,8 @@ var handleSBGNInspector = function () {
       $('#inspector-is-clone-marker').on('click', function () {
         var param = {
           makeCloneMarker: $('#inspector-is-clone-marker').attr('checked') == 'checked',
-          nodes: selectedEles
+          nodes: selectedEles,
+          firstTime: true
         };
         editorActionsManager._do(new changeIsCloneMarkerStatusCommand(param));
         refreshUndoRedoButtonsStatus();

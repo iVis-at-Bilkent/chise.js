@@ -697,41 +697,70 @@ function removeStateAndInfo(param) {
 }
 
 function changeIsMultimerStatus(param) {
+  var firstTime = param.firstTime;
   var nodes = param.nodes;
   var makeMultimer = param.makeMultimer;
-  var sbgnclass = nodes.data('sbgnclass');
-  if (makeMultimer) {
-    nodes.data('sbgnclass', sbgnclass + ' multimer');
+  var resultMakeMultimer = {};
+  
+  for(var i = 0; i < nodes.length; i++){
+    var node = nodes[i];
+    var isMultimer = node.data('sbgnclass').endsWith(' multimer');
+  
+    resultMakeMultimer[node.id()] = isMultimer;
   }
-  else {
-    nodes.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+  
+  for(var i = 0; i < nodes.length; i++){
+    var node = nodes[i];
+    var sbgnclass = node.data('sbgnclass');
+    var isMultimer = node.data('sbgnclass').endsWith(' multimer');
+    
+    if( ( firstTime && makeMultimer ) || ( !firstTime && makeMultimer[node.id()] ) ) {
+      if(!isMultimer){
+        node.data('sbgnclass', sbgnclass + ' multimer');
+      }
+    }
+    else {
+      if(isMultimer){
+        node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+      }
+    }
   }
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    $('#inspector-is-multimer').attr('checked', makeMultimer);
+  
+  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
   }
+  
   var result = {
-    makeMultimer: !makeMultimer,
+    makeMultimer: resultMakeMultimer,
     nodes: nodes
   };
+  
   return result;
 }
 
 function changeIsCloneMarkerStatus(param) {
   var nodes = param.nodes;
   var makeCloneMarker = param.makeCloneMarker;
+  var firstTime = param.firstTime;
+  var resultMakeCloneMarker = {};
   
   for(var i = 0; i < nodes.length; i++){
-    nodes[i]._private.data.sbgnclonemarker = makeCloneMarker ? true : undefined;
+    var node = nodes[i];
+    resultMakeCloneMarker[node.id()] = node._private.data.sbgnclonemarker;
+    var currentMakeCloneMarker = firstTime?makeCloneMarker:makeCloneMarker[node.id()];
+    node._private.data.sbgnclonemarker = currentMakeCloneMarker ? true : undefined;
   }
   
   cy.forceRender();
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    $('#inspector-is-clone-marker').attr('checked', makeCloneMarker);
+  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+    $('#inspector-is-clone-marker').attr("checked", !$('#inspector-is-clone-marker').attr("checked"));
   }
+  
   var result = {
-    makeCloneMarker: !makeCloneMarker,
+    makeCloneMarker: resultMakeCloneMarker,
     nodes: nodes
   };
+  
   return result;
 }
 
