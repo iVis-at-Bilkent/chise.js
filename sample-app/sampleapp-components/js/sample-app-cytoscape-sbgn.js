@@ -2452,6 +2452,8 @@ var PathsBetweenQuery = Backbone.View.extend({
       setFileContent(newfilename);
       pc2URL = pc2URL + format + kind + limit + sources;
       
+      $('#sbgn-network-container').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
+      
       $.ajax(
       {
         url: pc2URL,
