@@ -2261,9 +2261,9 @@ var SBGNLayout = Backbone.View.extend({
     options.randomize = false;
     options.animate = false;
     options.fit = false;
-    options.stop = function(){
-      cy.center(cy.elements(':visible'));
-    };
+//    options.stop = function(){
+//      cy.center(cy.elements(':visible'));
+//    };
     cy.elements().filter(':visible').layout(options);
   },
   render: function () {
