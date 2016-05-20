@@ -2228,7 +2228,7 @@ var SBGNLayout = Backbone.View.extend({
     gravity: 0.25,
     numIter: 2500,
     tile: true,
-    animate: true,
+    animate: false,
     randomize: true,
     tilingPaddingVertical: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10));
