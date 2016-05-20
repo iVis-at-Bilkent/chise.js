@@ -2260,7 +2260,10 @@ var SBGNLayout = Backbone.View.extend({
     var options = _.clone(this.currentLayoutProperties);
     options.randomize = false;
     options.animate = false;
-    options.fit = true;
+    options.fit = false;
+    options.stop = function(){
+      cy.center(cy.elements(':visible'));
+    };
     cy.elements().filter(':visible').layout(options);
   },
   render: function () {
