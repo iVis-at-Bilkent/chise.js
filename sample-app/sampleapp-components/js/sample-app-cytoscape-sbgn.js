@@ -2063,16 +2063,16 @@ var SBGNContainer = Backbone.View.extend({
           });
         });
 
-        var cancelSelection;
-        var selectAgain;
+//        var cancelSelection;
+//        var selectAgain;
         window.firstSelectedNode = null;
         cy.on('select', 'node', function (event) {
-          if (cancelSelection) {
-            this.unselect();
-            cancelSelection = null;
-            selectAgain.select();
-            selectAgain = null;
-          }
+//          if (cancelSelection) {
+//            this.unselect();
+//            cancelSelection = null;
+//            selectAgain.select();
+//            selectAgain = null;
+//          }
           if (cy.nodes(':selected').filter(':visible').length == 1) {
             window.firstSelectedNode = this;
           }
@@ -2165,8 +2165,8 @@ var SBGNContainer = Backbone.View.extend({
                   && cyPosX <= node._private.data.expandcollapseEndX
                   && cyPosY >= node._private.data.expandcollapseStartY
                   && cyPosY <= node._private.data.expandcollapseEndY) {
-            selectAgain = cy.filter(":selected");
-            cancelSelection = true;
+//            selectAgain = cy.filter(":selected");
+//            cancelSelection = true;
             var expandedOrcollapsed = this.data('expanded-collapsed');
 
             var fishEyeViewAfterExpandCollapse =
