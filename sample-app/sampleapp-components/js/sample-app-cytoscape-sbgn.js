@@ -1333,6 +1333,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'background-height': '25%',
           'background-fit': 'none',
           'background-image-opacity': function (ele) {
+            if(!ele.data('sbgnclonemarker')){
+              return 0;
+            }
             return ele._private.style['background-opacity'].value;
           }
         })
@@ -1581,6 +1584,14 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'line-color': '#d67614',
           'source-arrow-color': '#d67614',
           'target-arrow-color': '#d67614'
+        }).selector("node.changeClonedStatus")
+        .css({
+          'background-image-opacity': function (ele) {
+            if(!ele.data('sbgnclonemarker')){
+              return 0;
+            }
+            return ele._private.style['background-opacity'].value;
+          }
         });
 // end of sbgnStyleSheet
 

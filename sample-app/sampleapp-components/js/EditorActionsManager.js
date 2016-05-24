@@ -749,6 +749,10 @@ function changeIsCloneMarkerStatus(param) {
     resultMakeCloneMarker[node.id()] = node._private.data.sbgnclonemarker;
     var currentMakeCloneMarker = firstTime?makeCloneMarker:makeCloneMarker[node.id()];
     node._private.data.sbgnclonemarker = currentMakeCloneMarker ? true : undefined;
+    if(node.data('sbgnclass') === 'perturbing agent'){
+      node.removeClass('changeClonedStatus');
+      node.addClass('changeClonedStatus');
+    }
   }
   
   cy.forceRender();
