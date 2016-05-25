@@ -404,8 +404,9 @@ $(document).ready(function () {
   $("#node-label-textbox").on('change', function () {
     var node = $(this).data('node');
     var param = {
-      node: node,
-      sbgnlabel: $(this).attr('value')
+      nodes: cy.collection(node),
+      sbgnlabel: $(this).attr('value'),
+      firstTime: true
     };
     editorActionsManager._do(new ChangeNodeLabelCommand(param));
     refreshUndoRedoButtonsStatus();
