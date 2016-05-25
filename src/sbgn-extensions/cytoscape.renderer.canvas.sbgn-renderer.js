@@ -436,6 +436,7 @@
     node._private.data.expandcollapseStartY = node._private.position.y - height / 2 + startOffset;
     node._private.data.expandcollapseEndX = node._private.data.expandcollapseStartX + rectSize;
     node._private.data.expandcollapseEndY = node._private.data.expandcollapseStartY + rectSize;
+    node._private.data.expandcollapseRectSize = rectSize;
 
     var oldStyle = context.fillStyle;
 

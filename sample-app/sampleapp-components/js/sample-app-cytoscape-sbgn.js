@@ -2170,12 +2170,13 @@ var SBGNContainer = Backbone.View.extend({
           //Handle expand-collapse box
           var cyPosX = event.cyPosition.x;
           var cyPosY = event.cyPosition.y;
+          var rectSize = node._private.data.expandcollapseRectSize;
 
           if (modeHandler.mode == "selection-mode"
-                  && cyPosX >= node._private.data.expandcollapseStartX
-                  && cyPosX <= node._private.data.expandcollapseEndX
-                  && cyPosY >= node._private.data.expandcollapseStartY
-                  && cyPosY <= node._private.data.expandcollapseEndY) {
+                  && cyPosX >= node._private.data.expandcollapseStartX - rectSize * 0.25
+                  && cyPosX <= node._private.data.expandcollapseEndX + rectSize * 0.25
+                  && cyPosY >= node._private.data.expandcollapseStartY - rectSize * 0.25
+                  && cyPosY <= node._private.data.expandcollapseEndY + rectSize * 0.25) {
 //            selectAgain = cy.filter(":selected");
 //            cancelSelection = true;
             var expandedOrcollapsed = this.data('expanded-collapsed');
