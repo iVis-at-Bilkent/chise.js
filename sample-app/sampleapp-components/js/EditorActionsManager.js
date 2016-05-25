@@ -482,10 +482,12 @@ function changeParent(param) {
   addRemoveUtilities.changeParent(node, oldParentId, newParent ? newParent._private.data.id : undefined);
 
   if (param.posX && param.posY) {
-    node.position({
-      x: param.posX,
-      y: param.posY
-    });
+    var positionDiff = {
+      x: param.posX - node.position('x'),
+      y: param.posY - node.position('y')
+    };
+    
+    moveNodes(positionDiff ,node);
   }
 
   cy.nodes().updateCompoundBounds();
