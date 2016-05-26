@@ -2240,7 +2240,9 @@ var SBGNLayout = Backbone.View.extend({
     gravity: 0.25,
     numIter: 2500,
     tile: true,
-    animate: false,
+    animationEasing: 'cubic-bezier(0.19, 1, 0.22, 1)',
+    animate: 'end',
+    animationDuration: 1000,
     randomize: true,
     tilingPaddingVertical: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10));
@@ -2273,9 +2275,6 @@ var SBGNLayout = Backbone.View.extend({
     options.randomize = false;
     options.animate = false;
     options.fit = false;
-//    options.stop = function(){
-//      cy.center(cy.elements(':visible'));
-//    };
     cy.elements().filter(':visible').layout(options);
   },
   render: function () {
@@ -2299,7 +2298,7 @@ var SBGNLayout = Backbone.View.extend({
       self.currentLayoutProperties.gravity = Number(document.getElementById("gravity").value);
       self.currentLayoutProperties.numIter = Number(document.getElementById("num-iter").value);
       self.currentLayoutProperties.tile = document.getElementById("tile").checked;
-      self.currentLayoutProperties.animate = document.getElementById("animate").checked;
+      self.currentLayoutProperties.animate = document.getElementById("animate").checked?'during':'end';
       self.currentLayoutProperties.randomize = !document.getElementById("incremental").checked;
 
       sbgnStyleRules['tiling-padding-vertical'] = Number(document.getElementById("tiling-padding-vertical").value);
