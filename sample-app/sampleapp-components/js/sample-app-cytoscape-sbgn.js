@@ -2267,7 +2267,6 @@ var SBGNLayout = Backbone.View.extend({
   },
   applyLayout: function () {
     var options = this.currentLayoutProperties;
-    options.fit = options.randomize;
     cy.elements().filter(':visible').layout(options);
   },
   applyIncrementalLayout: function () {
