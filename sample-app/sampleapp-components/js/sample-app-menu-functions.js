@@ -179,6 +179,15 @@ $(document).ready(function () {
   $('#select-edit').click(function (e) {
     modeHandler.setSelectionMode();
   });
+  
+  $('#clone-selected').click(function (e) {
+    var selectedNodes = cy.nodes(':selected');
+    var param = {
+      eles: selectedNodes,
+      firstTime: true
+    };
+    editorActionsManager._do(new CloneGivenElementsCommand(param));
+  });
 
   $('#align-horizontal-top').click(function (e) {
     var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));

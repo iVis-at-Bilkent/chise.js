@@ -50,6 +50,47 @@ function removeEdges(edgesToBeDeleted)
   return addRemoveUtilities.removeEdges(edgesToBeDeleted);
 }
 
+function cloneGivenElements(param){
+  var eles;
+  if(param.firstTime){
+    eles = param.eles;
+    //Keep nodeIdMap to select the edges to clone
+    var nodeIdMap = {};
+    var topMostNodes = sbgnElementUtilities.getTopMostNodes(eles);
+    var elements = topMostNodes.union(topMostNodes.descendants());
+    var elementJsons;
+    var edges;
+    
+    for(var i = 0; i < elements.length; i++){
+      nodeIdMap[elements[i].id()] = true;
+    }
+    
+    edges = cy.edges(':visible').filter(function(i, ele){
+      var srcId = ele.data('source');
+      var tgtId = ele.data('target');
+      
+      return nodeIdMap[srcId] && nodeIdMap[tgtId];
+    });
+    
+    elements = elements.union(edges);
+    elementJsons = elements.jsons();
+    
+    //remove the ids in jsons
+    for(var i = 0; i < elementJsons.length; i++){
+      var json = elementJsons[i];
+      delete json.data.id;
+    }
+    
+    cy.add(elementJsons);
+  }
+  else {
+    eles = param;
+    cy.add(eles);
+  }
+  
+  return eles;
+}
+
 function expandNode(param) {
   var result = {
     firstTime: false
@@ -1025,6 +1066,10 @@ var changeParentCommand = function (param) {
 
 var changeBendPointsCommand = function (param) {
   return new Command(changeBendPoints, changeBendPoints, param);
+};
+
+var CloneGivenElementsCommand = function(param) {
+  return new Command(cloneGivenElements, removeEles, param);
 };
 
 /**
