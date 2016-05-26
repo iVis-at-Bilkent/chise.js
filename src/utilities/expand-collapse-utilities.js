@@ -48,7 +48,7 @@ var expandCollapseUtilities = {
   },
   simpleCollapseGivenNodes: function (nodes) {
     nodes.data("collapse", true);
-    var roots = sbgnElementUtilities.getRootsOfGivenNodes(nodes);
+    var roots = sbgnElementUtilities.getTopMostNodes(nodes);
     for (var i = 0; i < roots.length; i++) {
       var root = roots[i];
       this.collapseBottomUp(root);
@@ -57,7 +57,7 @@ var expandCollapseUtilities = {
   },
   simpleExpandGivenNodes: function (nodes) {
     nodes.data("expand", true);
-    var roots = sbgnElementUtilities.getRootsOfGivenNodes(nodes);
+    var roots = sbgnElementUtilities.getTopMostNodes(nodes);
     for (var i = 0; i < roots.length; i++) {
       var root = roots[i];
       this.expandTopDown(root);

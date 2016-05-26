@@ -11,7 +11,7 @@ var sbgnElementUtilities = {
         'nucleic acid feature multimer': true, 'macromolecule multimer': true,
         'simple chemical multimer': true, 'complex multimer': true, 'compartment': true},
     //this method returns the nodes non of whose ancestors is not in given nodes
-    getRootsOfGivenNodes: function (nodes) {
+    getTopMostNodes: function (nodes) {
         var nodesMap = {};
         for (var i = 0; i < nodes.length; i++) {
             nodesMap[nodes[i].id()] = true;
