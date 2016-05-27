@@ -56,7 +56,7 @@ function cloneTopDown(nodes, nodeIdMap, oldIDToID){
     return cy.collection();
   }
   
-  var jsons = nodes.jsons();
+  var jsons = jQuery.extend(true, [], nodes.jsons());
   for(var i = 0; i < jsons.length; i++){
     var json = jsons[i];
     nodeIdMap[json.data.id] = true;
@@ -107,7 +107,7 @@ function cloneGivenElements(param){
       return nodeIdMap[srcId] && nodeIdMap[tgtId];
     });
     
-    var edgeJsons = edges.jsons();
+    var edgeJsons = jQuery.extend(true, [], edges.jsons());
     //remove the ids in jsons and alter the source and target ids
     for(var i = 0; i < edgeJsons.length; i++){
       var json = edgeJsons[i];
@@ -119,10 +119,10 @@ function cloneGivenElements(param){
       delete json.data.id;
     }
     
+    cy.add(edgeJsons);
+    
     var justAddedEdges = cy.edges('[justAdded]');
     justAddedEdges.removeData('justAdded');
-    
-    cy.add(edgeJsons);
     
     //update the eles to be returned for undo operation
     eles = justAddedNodes.union(justAddedEdges);
@@ -131,6 +131,8 @@ function cloneGivenElements(param){
     eles = param;
     cy.add(eles);
   }
+  
+  refreshPaddings();
   
   return eles;
 }
