@@ -50,21 +50,56 @@ function removeEdges(edgesToBeDeleted)
   return addRemoveUtilities.removeEdges(edgesToBeDeleted);
 }
 
+//Clones given nodes and their descendants in top down order
+function cloneTopDown(nodes, nodeIdMap, oldIDToID){
+  if(nodes.length == 0){
+    return cy.collection();
+  }
+  
+  var jsons = nodes.jsons();
+  for(var i = 0; i < jsons.length; i++){
+    var json = jsons[i];
+    nodeIdMap[json.data.id] = true;
+    json.data.oldId = json.data.id;
+    json.data.justAdded = true;
+    
+    //change the original parent with the clone parent
+    if(json.data.parent && oldIDToID[json.data.parent]){
+      json.data.parent = oldIDToID[json.data.parent];
+    }
+    
+    delete json.data.id;
+  }
+  
+  cy.add(jsons);
+  
+  var justAddedNodes = cy.nodes('[justAdded]');
+  
+  for(var i = 0; i < justAddedNodes.length; i++){
+    var node = justAddedNodes[i];
+    oldIDToID[node.data('oldId')] = node.id();
+    node.removeData('justAdded');
+  }
+  
+  justAddedNodes.removeData('oldId');
+  var clonedDescendants = cloneTopDown(nodes.children(), nodeIdMap, oldIDToID);
+  return justAddedNodes.union(clonedDescendants);
+}
+
 function cloneGivenElements(param){
   var eles;
   if(param.firstTime){
     eles = param.eles;
     //Keep nodeIdMap to select the edges to clone
     var nodeIdMap = {};
+    var oldIDToID = {};
     var topMostNodes = sbgnElementUtilities.getTopMostNodes(eles);
-    var elements = topMostNodes.union(topMostNodes.descendants());
-    var elementJsons;
     var edges;
     
-    for(var i = 0; i < elements.length; i++){
-      nodeIdMap[elements[i].id()] = true;
-    }
+    var justAddedNodes = cloneTopDown(topMostNodes, nodeIdMap, oldIDToID);
+    moveNodes({x: 50, y: 50}, sbgnElementUtilities.getTopMostNodes(justAddedNodes));
     
+    //filter the edges which must be included in the cloned sub-network
     edges = cy.edges(':visible').filter(function(i, ele){
       var srcId = ele.data('source');
       var tgtId = ele.data('target');
@@ -72,16 +107,25 @@ function cloneGivenElements(param){
       return nodeIdMap[srcId] && nodeIdMap[tgtId];
     });
     
-    elements = elements.union(edges);
-    elementJsons = elements.jsons();
-    
-    //remove the ids in jsons
-    for(var i = 0; i < elementJsons.length; i++){
-      var json = elementJsons[i];
+    var edgeJsons = edges.jsons();
+    //remove the ids in jsons and alter the source and target ids
+    for(var i = 0; i < edgeJsons.length; i++){
+      var json = edgeJsons[i];
+      var newSrcId = oldIDToID[json.data.source];
+      var newTgtId = oldIDToID[json.data.target];
+      json.data.source = newSrcId;
+      json.data.target = newTgtId;
+      json.data.justAdded = true;
       delete json.data.id;
     }
     
-    cy.add(elementJsons);
+    var justAddedEdges = cy.edges('[justAdded]');
+    justAddedEdges.removeData('justAdded');
+    
+    cy.add(edgeJsons);
+    
+    //update the eles to be returned for undo operation
+    eles = justAddedNodes.union(justAddedEdges);
   }
   else {
     eles = param;
