@@ -92,3 +92,7 @@ CRp.usePaths function returns false.
 "var math = {};" => "var math = window.cyMath;"
 
 "var styfn = {};" => "var styfn = window.cyStyfn;"
+
+Add 'cytoscape.sbgn.registerSbgnArrowShapes();' to the end of 'registerSbgnArrowShapes' function
+
+Replace 'var arrowShapes = this.arrowShapes = {};' at the beggining of 'registerSbgnArrowShapes' function with 'var arrowShapes = this.arrowShapes = window.cyArrowShapes;'

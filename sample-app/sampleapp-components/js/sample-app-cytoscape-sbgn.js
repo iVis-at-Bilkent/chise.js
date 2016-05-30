@@ -1323,6 +1323,8 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'font-size': 11,
 //          'shape': 'data(sbgnclass)',
           'background-opacity': 0.5,
+          'text-opacity': 1,
+          'opacity': 1
         })
         .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
         .css({
@@ -1455,7 +1457,8 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         .css({
           'target-arrow-shape': function (ele) {
             return getCyArrowShape(ele);
-          }
+          },
+          'source-arrow-shape': 'none'
         })
         .selector("edge[sbgnclass='inhibition']")
         .css({
