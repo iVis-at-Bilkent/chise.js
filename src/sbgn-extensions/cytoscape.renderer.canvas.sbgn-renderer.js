@@ -432,29 +432,35 @@
     var diff = (rectSize - lineSize) / 2;
     var width = hasChildren ? node.outerWidth() : node.width();
     var height = hasChildren ? node.outerHeight() : node.height();
-    node._private.data.expandcollapseStartX = node._private.position.x - width / 2 + startOffset;
-    node._private.data.expandcollapseStartY = node._private.position.y - height / 2 + startOffset;
+    node._private.data.expandcollapseStartX = node._private.position.x - width / 2 - rectSize / 4;
+    node._private.data.expandcollapseStartY = node._private.position.y - height / 2 - rectSize / 4;
     node._private.data.expandcollapseEndX = node._private.data.expandcollapseStartX + rectSize;
     node._private.data.expandcollapseEndY = node._private.data.expandcollapseStartY + rectSize;
     node._private.data.expandcollapseRectSize = rectSize;
-
-    var oldStyle = context.fillStyle;
-
+   
+    var expandCollapseCenterX = node._private.data.expandcollapseStartX + rectSize / 2;
+    var expandCollapseCenterY = node._private.data.expandcollapseStartY + rectSize / 2;
+   
+    var oldFillStyle = context.fillStyle;
+    var oldWidth = context.lineWidth;
+    var oldStrokeStyle = context.strokeStyle;
+    
     context.fillStyle = "black";
-
-    context.fillRect(
-            node._private.data.expandcollapseStartX,
-            node._private.data.expandcollapseStartY,
-            rectSize,
-            rectSize);
-
-    context.fillStyle = oldStyle;
-
-    oldStyle = context.strokeStyle;
-
+    context.strokeStyle = "black";
+//    context.fillRect(
+//            node._private.data.expandcollapseStartX,
+//            node._private.data.expandcollapseStartY,
+//            rectSize,
+//            rectSize);
+    
+    window.cyNodeShapes['ellipse'].draw(context, expandCollapseCenterX, expandCollapseCenterY, rectSize, rectSize);
+    context.fill();
+    
     context.stroke();
     context.beginPath();
+    
     context.strokeStyle = "white";
+    context.lineWidth = 2.6;
 
     context.moveTo(node._private.data.expandcollapseStartX + diff, node._private.data.expandcollapseStartY + rectSize / 2);
     context.lineTo(node._private.data.expandcollapseStartX + lineSize + diff, node._private.data.expandcollapseStartY + +rectSize / 2);
@@ -465,7 +471,9 @@
     }
 
     context.stroke();
-    context.strokeStyle = oldStyle;
+    context.strokeStyle = oldStrokeStyle;
+    context.fillStyle = oldFillStyle;
+    context.lineWidth = oldWidth;
   };
 
   window.cyMath.calculateDistance = function (point1, point2) {
