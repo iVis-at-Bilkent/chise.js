@@ -133,6 +133,8 @@ function cloneGivenElements(param){
   }
   
   refreshPaddings();
+  cy.elements().unselect();
+  eles.select();
   
   return eles;
 }
