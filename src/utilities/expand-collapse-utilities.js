@@ -55,16 +55,16 @@ var expandCollapseUtilities = {
     }
     return nodes;
   },
-  simpleExpandGivenNodes: function (nodes) {
+  simpleExpandGivenNodes: function (nodes, applyFishEyeViewToEachNode) {
     nodes.data("expand", true);
     var roots = sbgnElementUtilities.getTopMostNodes(nodes);
     for (var i = 0; i < roots.length; i++) {
       var root = roots[i];
-      this.expandTopDown(root);
+      this.expandTopDown(root, applyFishEyeViewToEachNode);
     }
     return nodes;
   },
-  simpleExpandAllNodes: function (nodes, selector) {
+  simpleExpandAllNodes: function (nodes, selector, applyFishEyeViewToEachNode) {
     if (nodes === undefined) {
       nodes = cy.nodes();
     }
@@ -86,13 +86,13 @@ var expandCollapseUtilities = {
     var expandStack = [];
     for (var i = 0; i < orphans.length; i++) {
       var root = orphans[i];
-      this.expandAllTopDown(root, expandStack);
+      this.expandAllTopDown(root, expandStack, applyFishEyeViewToEachNode);
     }
     return expandStack;
   },
   expandAllNodes: function (nodes, selector) {
     
-    var expandedStack = this.simpleExpandAllNodes(nodes, selector);
+    var expandedStack = this.simpleExpandAllNodes(nodes, selector, true);
 
     triggerIncrementalLayout();
 
@@ -107,21 +107,21 @@ var expandCollapseUtilities = {
       this.simpleCollapseNode(node);
     }
   },
-  expandAllTopDown: function (root, expandStack) {
+  expandAllTopDown: function (root, expandStack, applyFishEyeViewToEachNode) {
     if (root._private.data.collapsedChildren != null)
     {
       expandStack.push(root);
-      this.simpleExpandNode(root);
+      this.simpleExpandNode(root, applyFishEyeViewToEachNode);
     }
     var children = root.children();
     for (var i = 0; i < children.length; i++) {
       var node = children[i];
-      this.expandAllTopDown(node, expandStack);
+      this.expandAllTopDown(node, expandStack, applyFishEyeViewToEachNode);
     }
   },
   //Expand the given nodes perform incremental layout after expandation
   expandGivenNodes: function (nodes) {
-    this.simpleExpandGivenNodes(nodes);
+    this.simpleExpandGivenNodes(nodes, true);
     
     triggerIncrementalLayout();
 
@@ -156,10 +156,10 @@ var expandCollapseUtilities = {
     }
   },
   //expand the nodes in top down order starting from the root 
-  expandTopDown: function (root) {
+  expandTopDown: function (root, applyFishEyeViewToEachNode) {
     if (root.data("expand") && root._private.data.collapsedChildren != null)
     {
-      this.simpleExpandNode(root);
+      this.simpleExpandNode(root, applyFishEyeViewToEachNode);
       root.removeData("expand");
     }
     var children = root.children();
@@ -173,7 +173,7 @@ var expandCollapseUtilities = {
     if (node._private.data.collapsedChildren != null) {
         
         this.storeWidthHeight(node);
-        this.simpleExpandNode(node);
+        this.simpleExpandNode(node, true);
         
         node.data('x-before-collapse', this.xPositionInParent(node));
         node.data('y-before-collapse', this.yPositionInParent(node));
@@ -194,7 +194,7 @@ var expandCollapseUtilities = {
    * after expand operation it will be simply
    * used to undo the collapse operation
    */
-  simpleExpandNode: function (node) {
+  simpleExpandNode: function (node, applyFishEyeViewToEachNode) {
     if (node._private.data.collapsedChildren != null) {
       //check how the position of the node is changed
       var positionDiff = {
@@ -220,6 +220,10 @@ var expandCollapseUtilities = {
       node.removeData('position-before-collapse');
 
       refreshPaddings();
+      
+      if(applyFishEyeViewToEachNode){
+        this.fishEyeViewExpandGivenNode(node);
+      }
       
       //return the node to undo the operation
       return node;
