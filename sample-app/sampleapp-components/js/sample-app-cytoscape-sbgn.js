@@ -2184,12 +2184,12 @@ var SBGNContainer = Backbone.View.extend({
 //            cancelSelection = true;
             var expandedOrcollapsed = this.data('expanded-collapsed');
 
-            var fishEyeViewAfterExpandCollapse =
-                    (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+            var rearrangeAfterExpandCollapse =
+                    (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
             
             if (expandedOrcollapsed == 'expanded') {
 //              expandCollapseUtilities.collapseNode(this);
-              if (fishEyeViewAfterExpandCollapse)
+              if (rearrangeAfterExpandCollapse)
                 editorActionsManager._do(new CollapseNodeCommand({
                   node: this,
                   firstTime: true
@@ -2199,7 +2199,7 @@ var SBGNContainer = Backbone.View.extend({
               refreshUndoRedoButtonsStatus();
             }
             else {
-              if (fishEyeViewAfterExpandCollapse)
+              if (rearrangeAfterExpandCollapse)
                 editorActionsManager._do(new ExpandNodeCommand({
                   node: this,
                   firstTime: true
@@ -2268,15 +2268,11 @@ var SBGNLayout = Backbone.View.extend({
   copyProperties: function () {
     this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
   },
-  applyLayout: function () {
-    var options = this.currentLayoutProperties;
-    cy.elements().filter(':visible').layout(options);
-  },
-  applyIncrementalLayout: function () {
-    var options = _.clone(this.currentLayoutProperties);
-    options.randomize = false;
-    options.animate = false;
-    options.fit = false;
+  applyLayout: function (preferences) {
+    if(preferences === undefined){
+      preferences = {};
+    }
+    var options = $.extend({}, this.currentLayoutProperties, preferences);
     cy.elements().filter(':visible').layout(options);
   },
   render: function () {
@@ -2332,7 +2328,7 @@ var SBGNProperties = Backbone.View.extend({
     compoundPadding: parseInt(sbgnStyleRules['compound-padding'], 10),
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
     fitLabelsToNodes: (sbgnStyleRules['fit-labels-to-nodes'] == 'true'),
-    fishEyeViewAfterExpandCollapse: (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true')
+    rearrangeAfterExpandCollapse: (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true')
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -2359,8 +2355,8 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.compoundPadding = Number(document.getElementById("compound-padding").value);
       self.currentSBGNProperties.dynamicLabelSize = $('select[name="dynamic-label-size"] option:selected').val();
       self.currentSBGNProperties.fitLabelsToNodes = document.getElementById("fit-labels-to-nodes").checked;
-      self.currentSBGNProperties.fishEyeViewAfterExpandCollapse =
-              document.getElementById("fish-eye-view-after-expand-collapse").checked;
+      self.currentSBGNProperties.rearrangeAfterExpandCollapse =
+              document.getElementById("rearrange-after-expand-collapse").checked;
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -2380,8 +2376,8 @@ var SBGNProperties = Backbone.View.extend({
         cy.nodes().addClass('changeContent');
       }
 
-      sbgnStyleRules['fish-eye-view-after-expand-collapse'] =
-              '' + self.currentSBGNProperties.fishEyeViewAfterExpandCollapse;
+      sbgnStyleRules['rearrange-after-expand-collapse'] =
+              '' + self.currentSBGNProperties.rearrangeAfterExpandCollapse;
 
       $(self.el).dialog('close');
     });

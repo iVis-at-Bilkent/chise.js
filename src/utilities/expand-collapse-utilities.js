@@ -94,7 +94,7 @@ var expandCollapseUtilities = {
     
     var expandedStack = this.simpleExpandAllNodes(nodes, selector);
 
-    $("#perform-incremental-layout").trigger("click");
+    triggerIncrementalLayout();
 
     /*
      * return the nodes to undo the operation
@@ -123,7 +123,7 @@ var expandCollapseUtilities = {
   expandGivenNodes: function (nodes) {
     this.simpleExpandGivenNodes(nodes);
     
-    $("#perform-incremental-layout").trigger("click");
+    triggerIncrementalLayout();
 
     /*
      * return the nodes to undo the operation
@@ -134,7 +134,7 @@ var expandCollapseUtilities = {
   collapseGivenNodes: function (nodes) {
     this.simpleCollapseGivenNodes(nodes);
 
-    $("#perform-incremental-layout").trigger("click");
+    triggerIncrementalLayout();
 
     /*
      * return the nodes to undo the operation
@@ -172,13 +172,13 @@ var expandCollapseUtilities = {
   expandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
         
-        this.storeWidthHeight(node)
+        this.storeWidthHeight(node);
         this.simpleExpandNode(node);
         
         node.data('x-before-collapse', this.xPositionInParent(node));
         node.data('y-before-collapse', this.yPositionInParent(node));
             
-        this.fishEyeViewExpandGivenNode(node);
+        triggerIncrementalLayout();
 
 
       /*
@@ -269,7 +269,7 @@ var expandCollapseUtilities = {
     if (node._private.data.collapsedChildren == null) {
       this.simpleCollapseNode(node);
 
-      $("#perform-incremental-layout").trigger("click");
+      triggerIncrementalLayout();
 
       /*
        * return the node to undo the operation

@@ -2,7 +2,7 @@ var defaultSbgnStyleRules = {
   'compound-padding': 20,
   'dynamic-label-size': 'regular',
   'fit-labels-to-nodes': 'true',
-  'fish-eye-view-after-expand-collapse': 'true',
+  'rearrange-after-expand-collapse': 'true',
   'tiling-padding-vertical': 20,
   'tiling-padding-horizontal': 20
 };

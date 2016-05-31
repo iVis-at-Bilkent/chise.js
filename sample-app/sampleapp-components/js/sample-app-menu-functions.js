@@ -21,6 +21,8 @@ var beforePerformLayout = function(){
   cy.edges().css('curve-style', 'bezier');
 };
 
+var triggerIncrementalLayout;
+
 //Handle keyboard events
 $(document).keydown(function (e) {
   if (e.ctrlKey) {
@@ -368,6 +370,16 @@ $(document).ready(function () {
   var pathsBetweenQuery = new PathsBetweenQuery({
     el: '#query-pathsbetween-table'
   });
+  
+  triggerIncrementalLayout = function(){
+    beforePerformLayout();
+    var preferences = {
+      randomize: false,
+      animate: 'end',
+      fit: false
+    };
+    sbgnLayoutProp.applyLayout(preferences);
+  };
 
   $("body").on("change", "#file-input", function (e) {
     if ($("#file-input").val() == "") {
@@ -807,11 +819,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new CollapseGivenNodesCommand({
         nodes: nodes,
         firstTime: true
@@ -829,11 +841,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new CollapseGivenNodesCommand({
         nodes: complexes,
         firstTime: true
@@ -857,11 +869,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new ExpandGivenNodesCommand({
         nodes: nodes,
         firstTime: true
@@ -879,11 +891,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new ExpandAllNodesCommand({
         nodes: complexes,
         firstTime: true,
@@ -910,11 +922,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new CollapseGivenNodesCommand({
         nodes: cy.nodes(),
         firstTime: true
@@ -931,11 +943,11 @@ $(document).ready(function () {
       return;
     }
 
-    if (window.fishEyeViewAfterExpandCollapse == null) {
-      window.fishEyeViewAfterExpandCollapse =
-              (sbgnStyleRules['fish-eye-view-after-expand-collapse'] == 'true');
+    if (window.rearrangeAfterExpandCollapse == null) {
+      window.rearrangeAfterExpandCollapse =
+              (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
     }
-    if (fishEyeViewAfterExpandCollapse)
+    if (rearrangeAfterExpandCollapse)
       editorActionsManager._do(new ExpandAllNodesCommand({
         firstTime: true
       }));
@@ -960,11 +972,6 @@ $(document).ready(function () {
     editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
 
     refreshUndoRedoButtonsStatus();
-  });
-
-  $("#perform-incremental-layout").click(function (e) {
-    beforePerformLayout();
-    sbgnLayoutProp.applyIncrementalLayout();
   });
 
   $("#undo-last-action").click(function (e) {
