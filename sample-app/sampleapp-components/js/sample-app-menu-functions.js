@@ -373,11 +373,17 @@ $(document).ready(function () {
   
   triggerIncrementalLayout = function(){
     beforePerformLayout();
+
     var preferences = {
       randomize: false,
-      animate: 'end',
+      animate: sbgnStyleRules['animate-on-drawing-changes'] == 'true'?'end':false,
       fit: false
     };
+    
+    if(sbgnLayoutProp.currentLayoutProperties.animate == 'during'){
+      delete preferences.animate;
+    }
+    
     sbgnLayoutProp.applyLayout(preferences);
   };
 
@@ -966,8 +972,16 @@ $(document).ready(function () {
     var nodesData = getNodesData();
 
     beforePerformLayout();
+    var preferences = {
+      animate: sbgnStyleRules['animate-on-drawing-changes'] == 'true'?'end':false
+    };
+    
+    if(sbgnLayoutProp.currentLayoutProperties.animate == 'during'){
+      delete preferences.animate;
+    }
+    
+    sbgnLayoutProp.applyLayout(preferences);
 
-    sbgnLayoutProp.applyLayout();
     nodesData.firstTime = true;
     editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
 

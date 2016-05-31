@@ -1777,7 +1777,11 @@ var SBGNContainer = Backbone.View.extend({
 //          // options here...
 //        });
         var panProps = ({
-          fitPadding: 10
+          fitPadding: 10,
+          fitSelector: ':visible',
+          animateOnFit: function(){
+            return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
+          }
         });
         container.cytoscapePanzoom(panProps);
 
@@ -2328,7 +2332,8 @@ var SBGNProperties = Backbone.View.extend({
     compoundPadding: parseInt(sbgnStyleRules['compound-padding'], 10),
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
     fitLabelsToNodes: (sbgnStyleRules['fit-labels-to-nodes'] == 'true'),
-    rearrangeAfterExpandCollapse: (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true')
+    rearrangeAfterExpandCollapse: (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true'),
+    animateOnDrawingChanges: (sbgnStyleRules['animate-on-drawing-changes'] == 'true')
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -2357,6 +2362,8 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.fitLabelsToNodes = document.getElementById("fit-labels-to-nodes").checked;
       self.currentSBGNProperties.rearrangeAfterExpandCollapse =
               document.getElementById("rearrange-after-expand-collapse").checked;
+      self.currentSBGNProperties.animateOnDrawingChanges =
+              document.getElementById("animate-on-drawing-changes").checked;
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -2378,6 +2385,9 @@ var SBGNProperties = Backbone.View.extend({
 
       sbgnStyleRules['rearrange-after-expand-collapse'] =
               '' + self.currentSBGNProperties.rearrangeAfterExpandCollapse;
+      
+      sbgnStyleRules['animate-on-drawing-changes'] =
+              '' + self.currentSBGNProperties.animateOnDrawingChanges;
 
       $(self.el).dialog('close');
     });
