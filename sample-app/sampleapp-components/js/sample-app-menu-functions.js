@@ -7,20 +7,30 @@ var setFileContent = function (fileName) {
 };
 
 var beforePerformLayout = function(){
-  cy.nodes().removeData("ports");
-  cy.edges().removeData("portsource");
-  cy.edges().removeData("porttarget");
+  var nodes = cy.nodes();
+  var edges = cy.edges();
+  
+  nodes.removeData("ports");
+  edges.removeData("portsource");
+  edges.removeData("porttarget");
 
-  cy.nodes().data("ports", []);
-  cy.edges().data("portsource", []);
-  cy.edges().data("porttarget", []);
+  nodes.data("ports", []);
+  edges.data("portsource", []);
+  edges.data("porttarget", []);
 
-  cy.edges().removeData('weights');
-  cy.edges().removeData('distances');
+  edges.removeData('weights');
+  edges.removeData('distances');
+  edges.removeData('bendPointPositions');
+  
+  //Clear the segment points in case of they are not updated
+  for(var i = 0; i < edges.length; i++){
+    edges[i]._private.rscratch.segpts = [];
+  }
   
   cy.edges().css('curve-style', 'bezier');
 };
 
+//A function to trigger incremental layout. Its definition is inside document.ready()
 var triggerIncrementalLayout;
 
 //Handle keyboard events

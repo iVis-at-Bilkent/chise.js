@@ -321,6 +321,7 @@ var sbgnBendPointUtilities = {
     if(distances.length == 0 || weights.lenght == 0){
       edge.removeData('distances');
       edge.removeData('weights');
+      edge._private.rscratch.segpts = [];
       edge.css('curve-style', 'bezier');
     }
     else {
