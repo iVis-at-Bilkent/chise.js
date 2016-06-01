@@ -225,8 +225,11 @@ function simpleExpandAllNodes(param) {
     firstTime: false
   };
   result.nodesData = getNodePositionsAndSizes();
-  result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
-  if (!param.firstTime) {
+  if (param.firstTime) {
+    result.expandStack = expandCollapseUtilities.simpleExpandAllNodes(param.nodes, param.selector);
+  }
+  else {
+    result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
     returnToPositionsAndSizes(param.nodesData);
   }
   return result;

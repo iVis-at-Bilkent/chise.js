@@ -920,6 +920,7 @@ $(document).ready(function () {
     else
       editorActionsManager._do(new SimpleExpandAllNodesCommand({
         nodes: complexes,
+        firstTime: true,
         selector: "complex-parent"
       }));
     refreshUndoRedoButtonsStatus();
