@@ -968,7 +968,9 @@ $(document).ready(function () {
         firstTime: true
       }));
     else
-      editorActionsManager._do(new SimpleExpandAllNodesCommand());
+      editorActionsManager._do(new SimpleExpandAllNodesCommand({
+        firstTime: true
+      }));
     refreshUndoRedoButtonsStatus();
   });
 

@@ -2389,6 +2389,8 @@ var SBGNProperties = Backbone.View.extend({
       sbgnStyleRules['animate-on-drawing-changes'] =
               '' + self.currentSBGNProperties.animateOnDrawingChanges;
 
+      window.rearrangeAfterExpandCollapse = (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
+
       $(self.el).dialog('close');
     });
 

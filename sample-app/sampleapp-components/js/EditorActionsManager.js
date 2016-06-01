@@ -221,7 +221,15 @@ function expandAllNodes(param) {
 }
 
 function simpleExpandAllNodes(param) {
-  return expandCollapseUtilities.simpleExpandAllNodes(param.nodes, param.selector);
+  var result = {
+    firstTime: false
+  };
+  result.nodesData = getNodePositionsAndSizes();
+  result.expandStack = expandCollapseUtilities.simpleExpandAllNodes();
+  if (!param.firstTime) {
+    returnToPositionsAndSizes(param.nodesData);
+  }
+  return result;
 }
 
 function collapseExpandedStack(expandedStack) {
@@ -1019,7 +1027,7 @@ var SimpleCollapseGivenNodesCommand = function (nodes) {
 };
 
 var SimpleExpandAllNodesCommand = function (param) {
-  return new Command(simpleExpandAllNodes, collapseExpandedStack);
+  return new Command(simpleExpandAllNodes, undoExpandAllNodes, param);
 };
 
 var ExpandAllNodesCommand = function (param) {
