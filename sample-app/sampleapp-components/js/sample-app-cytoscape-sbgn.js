@@ -1781,6 +1781,9 @@ var SBGNContainer = Backbone.View.extend({
           fitSelector: ':visible',
           animateOnFit: function(){
             return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
+          },
+          animateOnZoom: function(){
+            return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
           }
         });
         container.cytoscapePanzoom(panProps);
