@@ -62,9 +62,9 @@ $("#node-label-textbox").keydown(function (e) {
 });
 
 $(document).ready(function () {
-  var xmlObject = loadXMLDoc('samples/CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
+  var xmlObject = loadXMLDoc('samples/neuronal_muscle_signalling.xml');
 
-  setFileContent("CaM-CaMK_dependent_signaling_to_the_nucleus.sbgnml");
+  setFileContent("neuronal_muscle_signalling.sbgnml");
 
   (new SBGNContainer({
     el: '#sbgn-network-container',
@@ -497,6 +497,18 @@ $(document).ready(function () {
   });
 
   $("#load-sample1").click(function (e) {
+    var xmlObject = loadXMLDoc('samples/neuronal_muscle_signalling.xml');
+
+    setFileContent("neuronal_muscle_signalling.sbgnml");
+
+    (new SBGNContainer({
+      el: '#sbgn-network-container',
+      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
+    })).render();
+    handleSBGNInspector();
+  });
+
+  $("#load-sample2").click(function (e) {
     var xmlObject = loadXMLDoc('samples/CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
 
     setFileContent("CaM-CaMK_dependent_signaling_to_the_nucleus.sbgnml");
@@ -508,7 +520,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample2").click(function (e) {
+  $("#load-sample3").click(function (e) {
     var xmlObject = loadXMLDoc('samples/activated_stat1alpha_induction_of_the_irf1_gene.xml');
 
     setFileContent("activated_stat1alpha_induction_of_the_irf1_gene.sbgnml");
@@ -520,7 +532,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample3").click(function (e) {
+  $("#load-sample4").click(function (e) {
     var xmlObject = loadXMLDoc('samples/glycolysis.xml');
 
     setFileContent("glycolysis.sbgnml");
@@ -533,7 +545,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample4").click(function (e) {
+  $("#load-sample5").click(function (e) {
     var xmlObject = loadXMLDoc('samples/mapk_cascade.xml');
 
     setFileContent("mapk_cascade.sbgnml");
@@ -546,7 +558,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample5").click(function (e) {
+  $("#load-sample6").click(function (e) {
     var xmlObject = loadXMLDoc('samples/polyq_proteins_interference.xml');
 
     $("#quick-help").click(function (e) {
@@ -572,7 +584,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample6").click(function (e) {
+  $("#load-sample7").click(function (e) {
     var xmlObject = loadXMLDoc('samples/insulin-like_growth_factor_signaling.xml');
 
     setFileContent("insulin-like_growth_factor_signaling.sbgnml");
@@ -585,7 +597,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample7").click(function (e) {
+  $("#load-sample8").click(function (e) {
     var xmlObject = loadXMLDoc('samples/atm_mediated_phosphorylation_of_repair_proteins.xml');
 
     setFileContent("atm_mediated_phosphorylation_of_repair_proteins.sbgnml");
@@ -598,7 +610,7 @@ $(document).ready(function () {
     handleSBGNInspector();
   });
 
-  $("#load-sample8").click(function (e) {
+  $("#load-sample9").click(function (e) {
     var xmlObject = loadXMLDoc('samples/vitamins_b6_activation_to_pyridoxal_phosphate.xml');
 
     setFileContent("vitamins_b6_activation_to_pyridoxal_phosphatesbgnml");
