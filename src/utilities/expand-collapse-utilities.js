@@ -196,6 +196,42 @@ var expandCollapseUtilities = {
    */
   simpleExpandNode: function (node, applyFishEyeViewToEachNode) {
     if (node._private.data.collapsedChildren != null) {
+      
+      if(applyFishEyeViewToEachNode) {
+        var nodesInsideContainer = cy.nodes(':visible').filter(function(i, ele){
+          var renderedPosX = ele.renderedPosition('x');
+          var renderedPosY = ele.renderedPosition('y');
+          var containerWidth = $(cy.container()).width();
+          var containerHeight = $(cy.container()).height();
+          
+          if( renderedPosX < 0 || renderedPosX > containerWidth  ||  renderedPosY < 0 && renderedPosY > containerHeight  ){
+            return false;
+          }
+          
+          return true;
+        });
+        
+        var bb = nodesInsideContainer.boundingBox();
+        var nodeBB = {
+          x1: node.position('x') - node.data('size-before-collapse').w / 2,
+          x2: node.position('x') + node.data('size-before-collapse').w / 2,
+          y1: node.position('y') - node.data('size-before-collapse').h / 2,
+          y2: node.position('y') + node.data('size-before-collapse').h / 2
+        };
+        
+        var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
+        if(!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)){
+          var viewPort = cy.getFitViewport(unionBB, 10);
+          var self = this;
+          cy.animate({
+            pan: viewPort.pan,
+            zoom: viewPort.zoom
+          }, {
+            duration: 1000
+          });
+        }
+      }
+      
       //check how the position of the node is changed
       var positionDiff = {
         x: node.position('x') - node.data('position-before-collapse').x,
@@ -236,6 +272,12 @@ var expandCollapseUtilities = {
         x: node.position().x,
         y: node.position().y
       });
+      
+      node.data('size-before-collapse', {
+        w: node.outerWidth(),
+        h: node.outerHeight()
+      });
+      
       node.children().unselect();
       node.children().connectedEdges().unselect();
 
@@ -417,12 +459,6 @@ var expandCollapseUtilities = {
             }
             
             this.moveNode(sibling, T_x, T_y);
-        }
-        
-        // Do not call the function for the root!
-        if (node.parent()[0] != null)
-        {
-            this.fishEyeViewExpandGivenNode(node.parent()[0]);
         }
 
         return node;
