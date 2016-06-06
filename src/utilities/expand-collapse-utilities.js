@@ -171,15 +171,8 @@ var expandCollapseUtilities = {
   //Expand the given node perform incremental layout after expandation
   expandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
-        
-        this.storeWidthHeight(node);
-        this.simpleExpandNode(node, true);
-        
-        node.data('x-before-collapse', this.xPositionInParent(node));
-        node.data('y-before-collapse', this.yPositionInParent(node));
-            
-        triggerIncrementalLayout();
-
+      this.simpleExpandNode(node, true);
+      triggerIncrementalLayout();
 
       /*
        * return the node to undo the operation
@@ -198,6 +191,7 @@ var expandCollapseUtilities = {
     if (node._private.data.collapsedChildren != null) {
       
       if(applyFishEyeViewToEachNode) {
+        this.storeWidthHeight(node);
         var nodesInsideContainer = cy.nodes(':visible').filter(function(i, ele){
           var renderedPosX = ele.renderedPosition('x');
           var renderedPosY = ele.renderedPosition('y');
@@ -259,6 +253,8 @@ var expandCollapseUtilities = {
       
       if(applyFishEyeViewToEachNode){
         this.fishEyeViewExpandGivenNode(node);
+        node.data('x-before-collapse', this.xPositionInParent(node));
+        node.data('y-before-collapse', this.yPositionInParent(node));
       }
       
       //return the node to undo the operation
@@ -776,3 +772,4 @@ var expandCollapseUtilities = {
     };
   }
 };
+
