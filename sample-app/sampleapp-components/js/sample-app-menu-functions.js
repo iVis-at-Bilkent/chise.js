@@ -381,6 +381,10 @@ $(document).ready(function () {
     el: '#query-pathsbetween-table'
   });
   
+  var reactionTemplate = new ReactionTemplate({
+    el: '#reaction-template-table'
+  });
+  
   triggerIncrementalLayout = function(){
     beforePerformLayout();
 
@@ -833,6 +837,10 @@ $(document).ready(function () {
   
   $("#query-pathsbetween").click(function (e) {
     pathsBetweenQuery.render();
+  });
+  
+  $("#create-reaction-template").click(function (e) {
+    reactionTemplate.render();
   });
 
   $("#properties-icon").click(function (e) {

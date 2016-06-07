@@ -2505,3 +2505,78 @@ var PathsBetweenQuery = Backbone.View.extend({
     return this;
   }
 });
+
+var ReactionTemplate = Backbone.View.extend({
+  defaultTemplateParameters: {
+    templateType: "association",
+    macromoleculeList: [""]
+  },
+  currentTemplateParameters: undefined,
+  initialize: function () {
+    var self = this;
+    self.copyProperties();
+    self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+  },
+  copyProperties: function () {
+    this.currentTemplateParameters = _.clone(this.defaultTemplateParameters);
+  },
+  render: function () {
+    var self = this;
+    self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+    $(self.el).html(self.template);
+
+    $(self.el).dialog({width:'auto'});
+
+    $("#template-reaction-enable-complex-name").change(function(e){
+      if(document.getElementById("template-reaction-enable-complex-name").checked){
+        $( "#template-reaction-complex-name" ).prop( "disabled", false );
+      }
+      else {
+        $( "#template-reaction-complex-name" ).prop( "disabled", true );
+      }
+    });
+
+    $("#template-reaction-add-button").die("click").live("click",function (event) {
+      self.defaultTemplateParameters.macromoleculeList.push("");
+      
+      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      $(self.el).html(self.template);
+
+      $(self.el).dialog({width:'auto'});
+    });
+    
+    $(".template-reaction-textbox").die('change').live('change', function () {
+      var index = parseInt($(this).attr('name'));
+      var value = $(this).attr('value');
+      self.currentTemplateParameters.macromoleculeList[index] = value;
+      
+      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      $(self.el).html(self.template);
+
+      $(self.el).dialog({width:'auto'});
+    });
+    
+    $(".template-reaction-delete-button").die("click").live("click",function (event) {
+      var index = parseInt($(this).attr('name'));
+      self.currentTemplateParameters.macromoleculeList.splice(index, 1);
+      
+      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      $(self.el).html(self.template);
+
+      $(self.el).dialog({width:'auto'});
+    });
+
+    $("#create-template").die("click").live("click", function (evt) {
+      //TODO create reaction template here
+      self.copyProperties();
+      $(self.el).dialog('close');
+    });
+    
+    $("#cancel-template").die("click").live("click", function (evt) {
+      self.copyProperties();
+      $(self.el).dialog('close');
+    });
+    
+    return this;
+  }
+});
