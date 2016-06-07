@@ -171,8 +171,8 @@ var expandCollapseUtilities = {
   //Expand the given node perform incremental layout after expandation
   expandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
-      this.simpleExpandNode(node, true);
-      triggerIncrementalLayout();
+      this.simpleExpandNode(node, true, true);
+//      triggerIncrementalLayout();
 
       /*
        * return the node to undo the operation
@@ -187,55 +187,26 @@ var expandCollapseUtilities = {
    * after expand operation it will be simply
    * used to undo the collapse operation
    */
-  simpleExpandNode: function (node, applyFishEyeViewToEachNode) {
-    if (node._private.data.collapsedChildren != null) {
-      
-      if(applyFishEyeViewToEachNode) {
-        this.storeWidthHeight(node);
-        var nodesInsideContainer = cy.nodes(':visible').filter(function(i, ele){
-          var renderedPosX = ele.renderedPosition('x');
-          var renderedPosY = ele.renderedPosition('y');
-          var containerWidth = $(cy.container()).width();
-          var containerHeight = $(cy.container()).height();
-          
-          if( renderedPosX < 0 || renderedPosX > containerWidth  ||  renderedPosY < 0 && renderedPosY > containerHeight  ){
-            return false;
-          }
-          
-          return true;
-        });
-        
-        var bb = nodesInsideContainer.boundingBox();
-        var nodeBB = {
-          x1: node.position('x') - node.data('size-before-collapse').w / 2,
-          x2: node.position('x') + node.data('size-before-collapse').w / 2,
-          y1: node.position('y') - node.data('size-before-collapse').h / 2,
-          y2: node.position('y') + node.data('size-before-collapse').h / 2
-        };
-        
-        var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
-        if(!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)){
-          var viewPort = cy.getFitViewport(unionBB, 10);
-          var self = this;
-          cy.animate({
-            pan: viewPort.pan,
-            zoom: viewPort.zoom
-          }, {
-            duration: 1000
-          });
-        }
+  simpleExpandNode: function (node, applyFishEyeViewToEachNode, single) {
+    var self = this;
+
+    var commonExpandOperation = function (node, applyFishEyeViewToEachNode) {
+      if (applyFishEyeViewToEachNode) {
+        self.fishEyeViewExpandGivenNode(node);
+        node.data('x-before-collapse', self.xPositionInParent(node));
+        node.data('y-before-collapse', self.yPositionInParent(node));
       }
-      
+
       //check how the position of the node is changed
       var positionDiff = {
         x: node.position('x') - node.data('position-before-collapse').x,
         y: node.position('y') - node.data('position-before-collapse').y
       };
-      
+
       node.removeData("infoLabel");
       node.data('expanded-collapsed', 'expanded');
       node._private.data.collapsedChildren.restore();
-      this.repairEdgesOfCollapsedChildren(node);
+      self.repairEdgesOfCollapsedChildren(node);
       node._private.data.collapsedChildren = null;
 //      node.removeClass('collapsed');
 
@@ -245,16 +216,59 @@ var expandCollapseUtilities = {
       if (node._private.data.sbgnclass == "complex") {
         node.removeStyle('content');
       }
-      
-      moveNodes(positionDiff ,node.children());
+
+      moveNodes(positionDiff, node.children());
       node.removeData('position-before-collapse');
 
       refreshPaddings();
-      
-      if(applyFishEyeViewToEachNode){
-        this.fishEyeViewExpandGivenNode(node);
-        node.data('x-before-collapse', this.xPositionInParent(node));
-        node.data('y-before-collapse', this.yPositionInParent(node));
+    };
+
+    if (node._private.data.collapsedChildren != null) {
+      if (applyFishEyeViewToEachNode && single) {
+        this.storeWidthHeight(node);
+        var nodesInsideContainer = cy.nodes(':visible').filter(function (i, ele) {
+          var renderedPosX = ele.renderedPosition('x');
+          var renderedPosY = ele.renderedPosition('y');
+          var containerWidth = $(cy.container()).width();
+          var containerHeight = $(cy.container()).height();
+
+          if (renderedPosX < 0 || renderedPosX > containerWidth || renderedPosY < 0 && renderedPosY > containerHeight) {
+            return false;
+          }
+
+          return true;
+        });
+
+        var bb = nodesInsideContainer.boundingBox();
+        var nodeBB = {
+          x1: node.position('x') - node.data('size-before-collapse').w / 2,
+          x2: node.position('x') + node.data('size-before-collapse').w / 2,
+          y1: node.position('y') - node.data('size-before-collapse').h / 2,
+          y2: node.position('y') + node.data('size-before-collapse').h / 2
+        };
+
+        var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
+        if (!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
+          var viewPort = cy.getFitViewport(unionBB, 10);
+          var self = this;
+          cy.animate({
+            pan: viewPort.pan,
+            zoom: viewPort.zoom,
+            complete: function () {
+              commonExpandOperation(node, applyFishEyeViewToEachNode);
+              triggerIncrementalLayout();
+            }
+          }, {
+            duration: 1000
+          });
+        }
+        else {
+          commonExpandOperation(node, applyFishEyeViewToEachNode);
+          triggerIncrementalLayout();
+        }
+      }
+      else {
+        commonExpandOperation(node, applyFishEyeViewToEachNode);
       }
       
       //return the node to undo the operation
