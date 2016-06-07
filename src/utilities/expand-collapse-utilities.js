@@ -468,7 +468,7 @@ var expandCollapseUtilities = {
                 T_y = -1 * T_y;
             }
             
-            this.moveNode(sibling, T_x, T_y);
+            this.moveNodeAnimatedly(sibling, T_x, T_y);
         }
 
         return node;
@@ -498,21 +498,26 @@ var expandCollapseUtilities = {
         return siblings;
     },
     
-    moveNode: function (node, T_x, T_y)
+    moveNodeAnimatedly: function (node, T_x, T_y)
     {
         var childrenList = node.children();
         
         if (childrenList.length == 0)
         {
-            node.position('x', node.position('x') + T_x);
-            node.position('y', node.position('y') + T_y);
+//            node.position('x', node.position('x') + T_x);
+//            node.position('y', node.position('y') + T_y);
+            node.animate({
+              position: { x: node.position('x') + T_x, y: node.position('y') + T_y },
+            },{
+              duration: 1000
+            });
         }
         else
         {
             
             for (var i=0; i < childrenList.length; i++)
             {
-                this.moveNode(childrenList[i], T_x, T_y);
+                this.moveNodeAnimatedly(childrenList[i], T_x, T_y);
             }
         }
     },
