@@ -797,7 +797,7 @@
             </td>
             
             <td>
-            <select id="reaction-template-type-select" name="reaction-template-type">
+            <select id="reaction-template-type-select" class='input-medium layout-text' name="reaction-template-type">
             <option id="reaction-template-type-association" value="association" <% if (templateType == 'association'){ %> selected<%}%> > Association </option>
             <option id="reaction-template-type-dissociation" value="dissociation" <% if (templateType == 'dissociation'){ %> selected<%}%> > Dissociation </option>
             </select>
@@ -807,39 +807,11 @@
             
             <tr>
             <td>
-            <table>
-            
-            <% for( var i = 0; i < macromoleculeList.length; i++){%>
-                <tr>
-                <td>
-                <input type="text" class="template-reaction-textbox input-small layout-text" name=<%=i%> value=<%=macromoleculeList[i]%>></input>
-                </td>
-                <td>
-                <img class='template-reaction-delete-button' src='sampleapp-images/delete.png'/>
-                </td>
-                <tr>
-            <%}%>
-            
-            <tr>
-            <td>
-            <img id='template-reaction-add-button' src='sampleapp-images/add.png'/>
-            </td>
-            <tr>
-            
-            </table>
+            <%= getInputHtml() %>
             </td>
             
             <td>
-            <table>
-            <tr>
-            <td>
-            <input type="checkbox" class="input-small layout-text" id="template-reaction-enable-complex-name"></input>
-            </td>
-            <td>
-            <input type="text" class="input-small layout-text" id="template-reaction-complex-name"></input>
-            </td>
-            </tr>
-            </table>
+            <%= getOutputHtml() %>
             </td>
     
             </tr>
