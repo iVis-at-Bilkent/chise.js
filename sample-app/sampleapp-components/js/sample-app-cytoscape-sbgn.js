@@ -2578,7 +2578,7 @@ var ReactionTemplate = Backbone.View.extend({
 
     $(self.el).dialog({width:'auto'});
 
-    $('#reaction-template-type-select').live('change', function (e) {
+    $('#reaction-template-type-select').die('change').live('change', function (e) {
       var optionSelected = $("option:selected", this);
       var valueSelected = this.value;
       self.currentTemplateParameters.templateType = valueSelected;
@@ -2589,7 +2589,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#template-reaction-enable-complex-name").live("change", function(e){
+    $("#template-reaction-enable-complex-name").die("change").live("change", function(e){
       self.currentTemplateParameters.templateReactionEnableComplexName = 
               !self.currentTemplateParameters.templateReactionEnableComplexName;
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
@@ -2598,7 +2598,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
     
-    $("#template-reaction-complex-name").live("change", function(e){
+    $("#template-reaction-complex-name").die("change").live("change", function(e){
       self.currentTemplateParameters.templateReactionComplexName = $(this).attr('value');
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
@@ -2606,7 +2606,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#template-reaction-add-button").live("click",function (event) {
+    $("#template-reaction-add-button").die("click").live("click",function (event) {
       self.currentTemplateParameters.macromoleculeList.push("");
       
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
@@ -2615,7 +2615,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
     
-    $(".template-reaction-textbox").live('change', function () {
+    $(".template-reaction-textbox").die('change').live('change', function () {
       var index = parseInt($(this).attr('name'));
       var value = $(this).attr('value');
       self.currentTemplateParameters.macromoleculeList[index] = value;
@@ -2626,7 +2626,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
     
-    $(".template-reaction-delete-button").live("click",function (event) {
+    $(".template-reaction-delete-button").die("click").live("click",function (event) {
       var index = parseInt($(this).attr('name'));
       self.currentTemplateParameters.macromoleculeList.splice(index, 1);
       
@@ -2636,13 +2636,13 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#create-template").die("click").live("click", function (evt) {
+    $("#create-template").die("click").die("click").live("click", function (evt) {
       //TODO create reaction template here
       self.copyProperties();
       $(self.el).dialog('close');
     });
     
-    $("#cancel-template").die("click").live("click", function (evt) {
+    $("#cancel-template").die("click").die("click").live("click", function (evt) {
       self.copyProperties();
       $(self.el).dialog('close');
     });
