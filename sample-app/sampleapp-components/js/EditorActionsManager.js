@@ -100,6 +100,8 @@ function createTemplateReaction(param){
     var macromoleculeList = param.macromoleculeList;
     var complexName = param.complexName;
     var numOfMacromolecules = macromoleculeList.length;
+    var tilingPaddingVertical = param.tilingPaddingVertical?param.tilingPaddingVertical:15;
+    var tilingPaddingHorizontal = param.tilingPaddingHorizontal?param.tilingPaddingHorizontal:15;
     
     var xPositionOfFreeMacromolecules;
     if(templateType === 'association'){
@@ -113,9 +115,8 @@ function createTemplateReaction(param){
     var process = addRemoveUtilities.addNode(processPosition.x, processPosition.y, templateType);
     process.data('justAdded', true);
     
-    //Define the starting y position and the padding
-    var padding = 15;
-    var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * ( macromoleculeHeight + padding );
+    //Define the starting y position
+    var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * ( macromoleculeHeight + tilingPaddingVertical );
     
     //Create the free macromolecules
     for(var i = 0; i < numOfMacromolecules; i++){
@@ -128,7 +129,7 @@ function createTemplateReaction(param){
       newEdge.data('justAdded', true);
       
       //update the y position
-      yPosition += macromoleculeHeight + padding;
+      yPosition += macromoleculeHeight + tilingPaddingVertical;
     }
     
     //Create the complex including macromolecules inside of it
@@ -161,6 +162,8 @@ function createTemplateReaction(param){
       randomize: false,
       fit: false,
       animate: false,
+      tilingPaddingVertical: tilingPaddingVertical,
+      tilingPaddingHorizontal: tilingPaddingHorizontal,
       stop: function(){
         //re-position the nodes inside the complex
         var supposedXPosition;
@@ -481,9 +484,10 @@ function moveNodesReversely(param) {
   return result;
 }
 
-function moveNodes(positionDiff, nodes) {
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
+function moveNodes(positionDiff, nodes, notCalcTopMostNodes) {
+  var topMostNodes = notCalcTopMostNodes?nodes:sbgnElementUtilities.getTopMostNodes(nodes);
+  for (var i = 0; i < topMostNodes.length; i++) {
+    var node = topMostNodes[i];
     var oldX = node.position("x");
     var oldY = node.position("y");
     node.position({
@@ -491,7 +495,7 @@ function moveNodes(positionDiff, nodes) {
       y: oldY + positionDiff.y
     });
     var children = node.children();
-    moveNodes(positionDiff, children);
+    moveNodes(positionDiff, children, true);
   }
 }
 

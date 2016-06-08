@@ -1864,8 +1864,7 @@ var SBGNContainer = Backbone.View.extend({
               nodes = cy.nodes(":visible").filter(":selected");
             }
             else {
-              nodes = [];
-              nodes.push(node);
+              nodes = cy.collection([node]);
             }
 
             var param = {
