@@ -2638,6 +2638,15 @@ var ReactionTemplate = Backbone.View.extend({
 
     $("#create-template").die("click").die("click").live("click", function (evt) {
       //TODO create reaction template here
+      var param = {
+        firstTime: true,
+        templateType: self.currentTemplateParameters.templateType,
+        processPosition: {x: 100, y: 100},
+        macromoleculeList: jQuery.extend(true, [], self.currentTemplateParameters.macromoleculeList),
+        complexName: self.currentTemplateParameters.templateReactionEnableComplexName?self.currentTemplateParameters.templateReactionComplexName:undefined
+      };
+      editorActionsManager._do(new CreateTemplateReactionCommand(param));
+        
       self.copyProperties();
       $(self.el).dialog('close');
     });

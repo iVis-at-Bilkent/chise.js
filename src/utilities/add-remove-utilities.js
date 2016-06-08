@@ -1,6 +1,6 @@
 var addRemoveUtilities = {
   defaultsMap: {},
-  addNode: function (x, y, sbgnclass) {
+  addNode: function (x, y, sbgnclass, parent) {
     var defaultsMap = this.defaultsMap;
     var defaults = defaultsMap[sbgnclass];
     var width = defaults ? defaults.width : 50;
@@ -16,22 +16,27 @@ var addRemoveUtilities = {
     if(defaults && defaults.multimer){
       sbgnclass += " multimer";
     }
+    var data = {
+      width: width,
+      height: height,
+      sbgnclass: sbgnclass,
+      sbgnbbox: {
+        h: height,
+        w: width,
+        x: x,
+        y: y
+      },
+      sbgnstatesandinfos: [],
+      ports: []
+    };
+    
+    if(parent){
+      data.parent = parent;
+    }
     
     var eles = cy.add({
       group: "nodes",
-      data: {
-        width: width,
-        height: height,
-        sbgnclass: sbgnclass,
-        sbgnbbox: {
-          h: height,
-          w: width,
-          x: x,
-          y: y
-        },
-        sbgnstatesandinfos: [],
-        ports: []
-      },
+      data: data,
       css: css,
       position: {
         x: x,
