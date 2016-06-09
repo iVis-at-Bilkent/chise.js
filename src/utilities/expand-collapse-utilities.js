@@ -192,9 +192,14 @@ var expandCollapseUtilities = {
 
     var commonExpandOperation = function (node, applyFishEyeViewToEachNode) {
       if (applyFishEyeViewToEachNode) {
-        self.fishEyeViewExpandGivenNode(node);
-        node.data('x-before-collapse', self.xPositionInParent(node));
-        node.data('y-before-collapse', self.yPositionInParent(node));
+          
+          node.data('width-before-collapse', node.data('size-before-collapse').w);
+          node.data('height-before-collapse', node.data('size-before-collapse').h);
+          
+          self.fishEyeViewExpandGivenNode(node);
+          
+          //node.data('x-before-collapse', self.xPositionInParent(node));
+          //node.data('y-before-collapse', self.yPositionInParent(node));
       }
 
       //check how the position of the node is changed
@@ -470,7 +475,14 @@ var expandCollapseUtilities = {
             
             this.moveNodeAnimatedly(sibling, T_x, T_y);
         }
-
+        
+       
+        
+        if (node.parent()[0] != null)
+        {
+            this.fishEyeViewExpandGivenNode(node.parent()[0]);
+        }
+        
         return node;
     },
     
@@ -506,8 +518,12 @@ var expandCollapseUtilities = {
         {
 //            node.position('x', node.position('x') + T_x);
 //            node.position('y', node.position('y') + T_y);
+
             node.animate({
               position: { x: node.position('x') + T_x, y: node.position('y') + T_y },
+              complete: function(){
+                  
+              }
             },{
               duration: 1000
             });
