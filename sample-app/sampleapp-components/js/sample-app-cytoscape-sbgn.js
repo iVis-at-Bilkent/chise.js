@@ -2271,6 +2271,11 @@ var SBGNLayout = Backbone.View.extend({
     },
     tilingPaddingHorizontal: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-horizontal'], 10));
+    },
+    stop: function(){
+      if($('.layout-spinner').length > 0){
+        $('.layout-spinner').remove();
+      }
     }
   },
   currentLayoutProperties: null,
@@ -2491,7 +2496,9 @@ var PathsBetweenQuery = Backbone.View.extend({
       setFileContent(newfilename);
       pc2URL = pc2URL + format + kind + limit + sources;
       
-      $('#sbgn-network-container').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
+      var containerWidth = cy.width();
+      var containerHeight = cy.height();
+      $('#sbgn-network-container').html('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
       
       $.ajax(
       {
@@ -2530,7 +2537,7 @@ var ReactionTemplate = Backbone.View.extend({
         html += "<tr><td>"
           + "<input type='text' class='template-reaction-textbox input-small layout-text' name='"
           + i + "'" + " value='" + this.macromoleculeList[i] + "'></input>"
-          + "</td><td><img class='template-reaction-delete-button' name='" + i + "' src='sampleapp-images/delete.png'/></td></tr>"; 
+          + "</td><td><img style='padding-bottom: 8px;' class='template-reaction-delete-button' width='12px' height='12px' name='" + i + "' src='sampleapp-images/delete.png'/></td></tr>"; 
       }
       
       html += "<tr><td><img id='template-reaction-add-button' src='sampleapp-images/add.png'/></td></tr></table>";

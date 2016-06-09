@@ -6,6 +6,19 @@ var setFileContent = function (fileName) {
   span.appendChild(document.createTextNode(fileName));
 };
 
+var loadSample = function(filename){
+  var xmlObject = loadXMLDoc('samples/' + filename);
+
+  setFileContent(filename.replace('xml', 'sbgnml'));
+
+  (new SBGNContainer({
+    el: '#sbgn-network-container',
+    model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
+  })).render();
+  
+  handleSBGNInspector();
+};
+
 var beforePerformLayout = function(){
   var nodes = cy.nodes();
   var edges = cy.edges();
@@ -62,14 +75,7 @@ $("#node-label-textbox").keydown(function (e) {
 });
 
 $(document).ready(function () {
-  var xmlObject = loadXMLDoc('samples/neuronal_muscle_signalling.xml');
-
-  setFileContent("neuronal_muscle_signalling.sbgnml");
-
-  (new SBGNContainer({
-    el: '#sbgn-network-container',
-    model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-  })).render();
+  loadSample('neuronal_muscle_signalling.xml');
     
   document.getElementById("ctx-add-bend-point").addEventListener("contextmenu",function(event){
       event.preventDefault();
@@ -501,130 +507,39 @@ $(document).ready(function () {
   });
 
   $("#load-sample1").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/neuronal_muscle_signalling.xml');
-
-    setFileContent("neuronal_muscle_signalling.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-    handleSBGNInspector();
+    loadSample('neuronal_muscle_signalling.xml');
   });
 
   $("#load-sample2").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
-
-    setFileContent("CaM-CaMK_dependent_signaling_to_the_nucleus.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-    handleSBGNInspector();
+    loadSample('CaM-CaMK_dependent_signaling_to_the_nucleus.xml');
   });
 
   $("#load-sample3").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/activated_stat1alpha_induction_of_the_irf1_gene.xml');
-
-    setFileContent("activated_stat1alpha_induction_of_the_irf1_gene.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-    handleSBGNInspector();
+    loadSample('activated_stat1alpha_induction_of_the_irf1_gene.xml');
   });
 
   $("#load-sample4").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/glycolysis.xml');
-
-    setFileContent("glycolysis.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('glycolysis.xml');
   });
 
   $("#load-sample5").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/mapk_cascade.xml');
-
-    setFileContent("mapk_cascade.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('mapk_cascade.xml');
   });
 
   $("#load-sample6").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/polyq_proteins_interference.xml');
-
-    $("#quick-help").click(function (e) {
-      e.preventDefault();
-      $.fancybox(
-              _.template($("#quick-help-template").html(), {}),
-              {
-                'autoDimensions': false,
-                'width': 420,
-                'height': "auto",
-                'transitionIn': 'none',
-                'transitionOut': 'none'
-              });
-    });
-
-    setFileContent("polyq_proteins_interference.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('polyq_proteins_interference.xml');
   });
 
   $("#load-sample7").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/insulin-like_growth_factor_signaling.xml');
-
-    setFileContent("insulin-like_growth_factor_signaling.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('insulin-like_growth_factor_signaling.xml');
   });
 
   $("#load-sample8").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/atm_mediated_phosphorylation_of_repair_proteins.xml');
-
-    setFileContent("atm_mediated_phosphorylation_of_repair_proteins.sbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('atm_mediated_phosphorylation_of_repair_proteins.xml');
   });
 
   $("#load-sample9").click(function (e) {
-    var xmlObject = loadXMLDoc('samples/vitamins_b6_activation_to_pyridoxal_phosphate.xml');
-
-    setFileContent("vitamins_b6_activation_to_pyridoxal_phosphatesbgnml");
-
-    (new SBGNContainer({
-      el: '#sbgn-network-container',
-      model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
-    })).render();
-
-    handleSBGNInspector();
+    loadSample('vitamins_b6_activation_to_pyridoxal_phosphate.xml');
   });
 
   $("#hide-selected").click(function (e) {
@@ -1003,7 +918,12 @@ $(document).ready(function () {
 
   $("#perform-layout").click(function (e) {
     var nodesData = getNodesData();
-
+    if($('.layout-spinner').length === 0){
+      var containerWidth = cy.width();
+      var containerHeight = cy.height();
+      $('#sbgn-network-container').prepend('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw layout-spinner"></i>');
+    }
+    
     beforePerformLayout();
     var preferences = {
       animate: sbgnStyleRules['animate-on-drawing-changes'] == 'true'?'end':false
