@@ -102,13 +102,14 @@ function createTemplateReaction(param){
     var numOfMacromolecules = macromoleculeList.length;
     var tilingPaddingVertical = param.tilingPaddingVertical?param.tilingPaddingVertical:15;
     var tilingPaddingHorizontal = param.tilingPaddingHorizontal?param.tilingPaddingHorizontal:15;
+    var edgeLength = param.edgeLength?param.edgeLength:60;
     
     var xPositionOfFreeMacromolecules;
     if(templateType === 'association'){
-      xPositionOfFreeMacromolecules = processPosition.x - 50 - processWidth / 2 - macromoleculeWidth / 2;
+      xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
     }
     else{
-      xPositionOfFreeMacromolecules = processPosition.x + 50 + processWidth / 2 + macromoleculeWidth / 2;
+      xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
     }
     
     //Create the process in template type
@@ -125,7 +126,14 @@ function createTemplateReaction(param){
       newNode.data('sbgnlabel', macromoleculeList[i]);
       
       //create the edge connected to the new macromolecule
-      var newEdge = addRemoveUtilities.addEdge(process.id(), newNode.id(), 'catalysis');
+      var newEdge;
+      if(templateType === 'association'){
+        newEdge = addRemoveUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+      }
+      else{
+        newEdge = addRemoveUtilities.addEdge(process.id(), newNode.id(), 'production');
+      }
+      
       newEdge.data('justAdded', true);
       
       //update the y position
@@ -134,7 +142,7 @@ function createTemplateReaction(param){
     
     //Create the complex including macromolecules inside of it
     //Temprorarily add it to the process position we will move it according to the last size of it
-    var complex = addRemoveUtilities.addNode(0, processPosition.y, 'complex');
+    var complex = addRemoveUtilities.addNode(processPosition.x, processPosition.y, 'complex');
     complex.data('justAdded', true);
     complex.data('justAddedLayoutNode', true);
     
@@ -144,7 +152,13 @@ function createTemplateReaction(param){
     }
     
     //create the edge connnected to the complex
-    var edgeOfComplex = addRemoveUtilities.addEdge(complex.id(), process.id(), 'catalysis');
+    var edgeOfComplex;
+    if(templateType === 'association'){
+      edgeOfComplex = addRemoveUtilities.addEdge(process.id(), complex.id(), 'production');
+    }
+    else{
+      edgeOfComplex = addRemoveUtilities.addEdge(complex.id(), process.id(), 'consumption');
+    }
     edgeOfComplex.data('justAdded', true);
     
     //Create the macromolecules inside the complex
@@ -170,10 +184,10 @@ function createTemplateReaction(param){
         var supposedYPosition = processPosition.y;
         
         if(templateType === 'association'){
-          supposedXPosition = processPosition.x + 50 + processWidth / 2 + complex.outerWidth() / 2;
+          supposedXPosition = processPosition.x + edgeLength + processWidth / 2 + complex.outerWidth() / 2;
         }
         else{
-          supposedXPosition = processPosition.x - 50 - processWidth / 2 - complex.outerWidth() / 2;
+          supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
         }
         
         var positionDiffX = supposedXPosition - complex.position('x');

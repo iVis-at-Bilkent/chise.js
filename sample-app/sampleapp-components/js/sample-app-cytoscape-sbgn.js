@@ -54,6 +54,19 @@ var getCommonSBGNClass = function(elements){
   return SBGNClassOfFirstElement;
 };
 
+var convertToModelPosition = function(renderedPosition){
+  var pan = cy.pan();
+  var zoom = cy.zoom();
+    
+  var x = (renderedPosition.x - pan.x) / zoom;
+  var y = (renderedPosition.y - pan.y) / zoom;
+  
+  return {
+    x: x,
+    y: y
+  };
+};
+
 var allAreNode = function(elements){
   for(var i = 0; i <elements.length; i++){
     var ele = elements[i];
@@ -2508,7 +2521,7 @@ var PathsBetweenQuery = Backbone.View.extend({
 var ReactionTemplate = Backbone.View.extend({
   defaultTemplateParameters: {
     templateType: "association",
-    macromoleculeList: [""],
+    macromoleculeList: ["", ""],
     templateReactionEnableComplexName: true,
     templateReactionComplexName: "",
     getMacromoleculesHtml: function(){
@@ -2626,6 +2639,10 @@ var ReactionTemplate = Backbone.View.extend({
     });
     
     $(".template-reaction-delete-button").die("click").live("click",function (event) {
+      if(self.currentTemplateParameters.macromoleculeList.length <= 2){
+        return;
+      }
+      
       var index = parseInt($(this).attr('name'));
       self.currentTemplateParameters.macromoleculeList.splice(index, 1);
       
@@ -2636,13 +2653,14 @@ var ReactionTemplate = Backbone.View.extend({
     });
 
     $("#create-template").die("click").die("click").live("click", function (evt) {
-      //TODO create reaction template here
       var param = {
         firstTime: true,
         templateType: self.currentTemplateParameters.templateType,
-        processPosition: {x: 100, y: 100},
+        processPosition: convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2}),
         macromoleculeList: jQuery.extend(true, [], self.currentTemplateParameters.macromoleculeList),
-        complexName: self.currentTemplateParameters.templateReactionEnableComplexName?self.currentTemplateParameters.templateReactionComplexName:undefined
+        complexName: self.currentTemplateParameters.templateReactionEnableComplexName?self.currentTemplateParameters.templateReactionComplexName:undefined,
+        tilingPaddingVertical: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10)),
+        tilingPaddingHorizontal: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-horizontal'], 10))
       };
       editorActionsManager._do(new CreateTemplateReactionCommand(param));
         

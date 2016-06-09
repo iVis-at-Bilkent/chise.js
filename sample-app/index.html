@@ -143,8 +143,8 @@
                                 <li class="divider"></li>
                                 <li><a href="#" id="make-compound-complex" >Add Complex for Selected</a></li>
                                 <li><a href="#" id="make-compound-compartment" >Add Compartment for Selected</a></li>
+                                <li><a href="#" id="create-reaction-template" >Add From Template...</a></li>
                                 <li><a href="#" id="clone-selected" >Clone Selected</a></li>
-                                <li><a href="#" id="create-reaction-template" >Create Reaction Template...</a></li>
 
                                 <li class="divider"></li>
 
@@ -792,8 +792,8 @@
             <table class="table-condensed layout-table">
           
             <tr>
-            <td>
-            <span class="add-on layout-text"> Type </span>
+            <td style="padding-bottom: 10px;" align="right" valign="middle">
+            <span class="add-on layout-text"> <b> Type </b> </span>
             </td>
             
             <td>
@@ -801,6 +801,16 @@
             <option id="reaction-template-type-association" value="association" <% if (templateType == 'association'){ %> selected<%}%> > Association </option>
             <option id="reaction-template-type-dissociation" value="dissociation" <% if (templateType == 'dissociation'){ %> selected<%}%> > Dissociation </option>
             </select>
+            </td>
+            </tr>
+    
+            <tr>
+            <td align="center" valign="middle" style="margin-left: 5px;">
+            <span class="add-on layout-text"> <b> Input </b> </span>
+            </td>
+            
+            <td align="center" valign="middle" style="margin-right: 5px;">
+            <span class="add-on layout-text"> <b> Output </b> </span>
             </td>
             </tr>
             
@@ -817,9 +827,9 @@
             </tr>
             
             <tr>
-            <td colspan=2>
-            <button id="create-template" style="margin-left: 30%;" class="btn btn-default" >OK</button>
-            <button id="cancel-template" style="margin-left: 10%;" class="btn btn-default">Cancel</button>
+            <td colspan=2 align="center">
+            <button id="create-template" class="btn btn-default" >OK</button>
+            <button id="cancel-template" class="btn btn-default">Cancel</button>
             </td>
             </tr>
             

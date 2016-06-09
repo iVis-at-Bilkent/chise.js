@@ -1,6 +1,6 @@
 var addRemoveUtilities = {
   defaultsMap: {},
-  addNode: function (x, y, sbgnclass, parent) {
+  addNode: function (x, y, sbgnclass, parent, visibility) {
     var defaultsMap = this.defaultsMap;
     var defaults = defaultsMap[sbgnclass];
     var width = defaults ? defaults.width : 50;
@@ -12,6 +12,10 @@ var addRemoveUtilities = {
       'font-size': defaults['font-size'],
       'background-opacity': defaults['background-opacity']
     } : {};
+    
+    if(visibility){
+      css.visibility = visibility;
+    }
     
     if(defaults && defaults.multimer){
       sbgnclass += " multimer";
@@ -70,12 +74,17 @@ var addRemoveUtilities = {
     refreshPaddings();
     return removedEles;
   },
-  addEdge: function (source, target, sbgnclass) {
+  addEdge: function (source, target, sbgnclass, visibility) {
     var defaultsMap = this.defaultsMap;
     var defaults = defaultsMap[sbgnclass];
     var css = defaults ? {
       'width': defaults['width']
     } : {};
+    
+    if(visibility){
+      css.visibility = visibility;
+    }
+    
     var eles = cy.add({
       group: "edges",
       data: {
