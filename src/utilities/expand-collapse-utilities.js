@@ -264,8 +264,10 @@ var expandCollapseUtilities = {
         };
 
         var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
-        if (!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
-          var viewPort = cy.getFitViewport(unionBB, 10);
+        var viewPort = cy.getFitViewport(unionBB, 10);
+        
+        if (viewPort.zoom < cy.zoom() && !boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
+          
           var self = this;
           cy.animate({
             pan: viewPort.pan,
