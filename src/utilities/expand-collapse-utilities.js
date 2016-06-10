@@ -1,4 +1,6 @@
 var expandCollapseUtilities = {
+  //the number of nodes moving animatedly after expand operation
+  animatedlyMovingNodeCount: 0,
   //This is a map which keeps the information of collapsed meta edges to handle them correctly
   collapsedMetaEdgesInfo: {},
   //This map keeps track of the meta levels of edges by their id's
@@ -45,6 +47,36 @@ var expandCollapseUtilities = {
     }
 
     return thereIs;
+  },
+  //A funtion basicly expanding a node it is to be called when a node is expanded anyway
+  expandNodeBaseFunction: function(node, single){
+    //check how the position of the node is changed
+    var positionDiff = {
+      x: node.position('x') - node.data('position-before-collapse').x,
+      y: node.position('y') - node.data('position-before-collapse').y
+    };
+
+    node.removeData("infoLabel");
+    node.data('expanded-collapsed', 'expanded');
+    node._private.data.collapsedChildren.restore();
+    this.repairEdgesOfCollapsedChildren(node);
+    node._private.data.collapsedChildren = null;
+
+    cy.nodes().updateCompoundBounds();
+
+    //Don't show children info when the complex node is expanded
+    if (node._private.data.sbgnclass == "complex") {
+      node.removeStyle('content');
+    }
+
+    moveNodes(positionDiff, node.children());
+    node.removeData('position-before-collapse');
+
+    refreshPaddings();
+    
+    if(single){
+      triggerIncrementalLayout();
+    }
   },
   simpleCollapseGivenNodes: function (nodes) {
     nodes.data("collapse", true);
@@ -190,42 +222,21 @@ var expandCollapseUtilities = {
   simpleExpandNode: function (node, applyFishEyeViewToEachNode, single) {
     var self = this;
 
-    var commonExpandOperation = function (node, applyFishEyeViewToEachNode) {
+    var commonExpandOperation = function (node, applyFishEyeViewToEachNode, single) {
       if (applyFishEyeViewToEachNode) {
           
           node.data('width-before-collapse', node.data('size-before-collapse').w);
           node.data('height-before-collapse', node.data('size-before-collapse').h);
           
-          self.fishEyeViewExpandGivenNode(node);
+          self.fishEyeViewExpandGivenNode(node, single);
           
           //node.data('x-before-collapse', self.xPositionInParent(node));
           //node.data('y-before-collapse', self.yPositionInParent(node));
       }
-
-      //check how the position of the node is changed
-      var positionDiff = {
-        x: node.position('x') - node.data('position-before-collapse').x,
-        y: node.position('y') - node.data('position-before-collapse').y
-      };
-
-      node.removeData("infoLabel");
-      node.data('expanded-collapsed', 'expanded');
-      node._private.data.collapsedChildren.restore();
-      self.repairEdgesOfCollapsedChildren(node);
-      node._private.data.collapsedChildren = null;
-//      node.removeClass('collapsed');
-
-      cy.nodes().updateCompoundBounds();
-
-      //Don't show children info when the complex node is expanded
-      if (node._private.data.sbgnclass == "complex") {
-        node.removeStyle('content');
+      
+      if(!single){
+        self.expandNodeBaseFunction(node);
       }
-
-      moveNodes(positionDiff, node.children());
-      node.removeData('position-before-collapse');
-
-      refreshPaddings();
     };
 
     if (node._private.data.collapsedChildren != null) {
@@ -260,16 +271,16 @@ var expandCollapseUtilities = {
             pan: viewPort.pan,
             zoom: viewPort.zoom,
             complete: function () {
-              commonExpandOperation(node, applyFishEyeViewToEachNode);
-              triggerIncrementalLayout();
+              commonExpandOperation(node, applyFishEyeViewToEachNode, single);
+//              triggerIncrementalLayout();
             }
           }, {
             duration: 1000
           });
         }
         else {
-          commonExpandOperation(node, applyFishEyeViewToEachNode);
-          triggerIncrementalLayout();
+          commonExpandOperation(node, applyFishEyeViewToEachNode, single);
+//          triggerIncrementalLayout();
         }
       }
       else {
@@ -368,7 +379,7 @@ var expandCollapseUtilities = {
         return nodes;
     },
     
-    fishEyeViewExpandGivenNode: function (node)
+    fishEyeViewExpandGivenNode: function (node, single)
     {   
         var siblings = this.getSiblings(node);
 
@@ -473,14 +484,14 @@ var expandCollapseUtilities = {
                 T_y = -1 * T_y;
             }
             
-            this.moveNodeAnimatedly(sibling, T_x, T_y);
+            this.moveNodeAnimatedly(sibling, T_x, T_y, node, single);
         }
         
        
         
         if (node.parent()[0] != null)
         {
-            this.fishEyeViewExpandGivenNode(node.parent()[0]);
+            this.fishEyeViewExpandGivenNode(node.parent()[0], single);
         }
         
         return node;
@@ -510,19 +521,26 @@ var expandCollapseUtilities = {
         return siblings;
     },
     
-    moveNodeAnimatedly: function (node, T_x, T_y)
+    moveNodeAnimatedly: function (node, T_x, T_y, nodeToExpand, single)
     {
         var childrenList = node.children();
+        var self = this;
         
         if (childrenList.length == 0)
         {
+            this.animatedlyMovingNodeCount++;
 //            node.position('x', node.position('x') + T_x);
 //            node.position('y', node.position('y') + T_y);
 
             node.animate({
               position: { x: node.position('x') + T_x, y: node.position('y') + T_y },
               complete: function(){
-                  
+                self.animatedlyMovingNodeCount--;
+                if(self.animatedlyMovingNodeCount > 0 || nodeToExpand.data('expanded-collapsed') === 'expanded' || !single){
+                  return;
+                }
+                
+                self.expandNodeBaseFunction(nodeToExpand, single);
               }
             },{
               duration: 1000
@@ -533,7 +551,7 @@ var expandCollapseUtilities = {
             
             for (var i=0; i < childrenList.length; i++)
             {
-                this.moveNodeAnimatedly(childrenList[i], T_x, T_y);
+                this.moveNodeAnimatedly(childrenList[i], T_x, T_y, nodeToExpand, single);
             }
         }
     },
