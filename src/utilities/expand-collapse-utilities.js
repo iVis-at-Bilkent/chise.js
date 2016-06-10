@@ -224,17 +224,17 @@ var expandCollapseUtilities = {
 
     var commonExpandOperation = function (node, applyFishEyeViewToEachNode, single) {
       if (applyFishEyeViewToEachNode) {
-          
-          node.data('width-before-collapse', node.data('size-before-collapse').w);
-          node.data('height-before-collapse', node.data('size-before-collapse').h);
-          
-          self.fishEyeViewExpandGivenNode(node, single);
-          
-          //node.data('x-before-collapse', self.xPositionInParent(node));
-          //node.data('y-before-collapse', self.yPositionInParent(node));
+
+        node.data('width-before-collapse', node.data('size-before-collapse').w);
+        node.data('height-before-collapse', node.data('size-before-collapse').h);
+
+        self.fishEyeViewExpandGivenNode(node, single);
+
+        //node.data('x-before-collapse', self.xPositionInParent(node));
+        //node.data('y-before-collapse', self.yPositionInParent(node));
       }
-      
-      if(!single){
+
+      if (!single) {
         self.expandNodeBaseFunction(node);
       }
     };
@@ -286,7 +286,7 @@ var expandCollapseUtilities = {
       else {
         commonExpandOperation(node, applyFishEyeViewToEachNode);
       }
-      
+
       //return the node to undo the operation
       return node;
     }
