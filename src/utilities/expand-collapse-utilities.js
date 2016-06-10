@@ -242,20 +242,16 @@ var expandCollapseUtilities = {
     if (node._private.data.collapsedChildren != null) {
       if (applyFishEyeViewToEachNode && single) {
         this.storeWidthHeight(node);
-        var nodesInsideContainer = cy.nodes(':visible').filter(function (i, ele) {
-          var renderedPosX = ele.renderedPosition('x');
-          var renderedPosY = ele.renderedPosition('y');
-          var containerWidth = $(cy.container()).width();
-          var containerHeight = $(cy.container()).height();
-
-          if (renderedPosX < 0 || renderedPosX > containerWidth || renderedPosY < 0 && renderedPosY > containerHeight) {
-            return false;
-          }
-
-          return true;
-        });
-
-        var bb = nodesInsideContainer.boundingBox();
+        var topLeftPosition = convertToModelPosition({x: 0, y: 0});
+        var bottomRightPosition = convertToModelPosition({x: cy.width(), y: cy.height()});
+        
+        var bb = {
+          x1: topLeftPosition.x,
+          x2: bottomRightPosition.x,
+          y1: topLeftPosition.y,
+          y2: bottomRightPosition.y
+        };
+        
         var nodeBB = {
           x1: node.position('x') - node.data('size-before-collapse').w / 2,
           x2: node.position('x') + node.data('size-before-collapse').w / 2,
@@ -264,10 +260,9 @@ var expandCollapseUtilities = {
         };
 
         var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
-        var viewPort = cy.getFitViewport(unionBB, 10);
-        
-        if (viewPort.zoom < cy.zoom() && !boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
-          
+
+        if (boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
+          var viewPort = cy.getFitViewport(unionBB, 10);
           var self = this;
           cy.animate({
             pan: viewPort.pan,
