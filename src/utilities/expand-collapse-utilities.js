@@ -231,7 +231,7 @@ var expandCollapseUtilities = {
         self.fishEyeViewExpandGivenNode(node, single, node);
       }
 
-      if (!single) {
+      if (!single || !applyFishEyeViewToEachNode) {
         self.expandNodeBaseFunction(node);
       }
     };
@@ -276,7 +276,7 @@ var expandCollapseUtilities = {
         }
       }
       else {
-        commonExpandOperation(node, applyFishEyeViewToEachNode);
+        commonExpandOperation(node, applyFishEyeViewToEachNode, single);
       }
 
       //return the node to undo the operation
@@ -476,7 +476,7 @@ var expandCollapseUtilities = {
                 T_y = -1 * T_y;
             }
             
-            this.moveNodeAnimatedly(sibling, T_x, T_y, nodeToExpand, single);
+            this.fishEyeViewMoveNode(sibling, T_x, T_y, nodeToExpand, single);
         }
         
        
@@ -512,36 +512,45 @@ var expandCollapseUtilities = {
         
         return siblings;
     },
-    
-    moveNodeAnimatedly: function (node, T_x, T_y, nodeToExpand, single)
+    /*
+     * Move node operation specialized for fish eye view expand operation 
+     * Moves the node by moving its descandents. Movement is animated if single flag is truthy. 
+     */
+    fishEyeViewMoveNode: function (node, T_x, T_y, nodeToExpand, single)
     {
         var childrenList = node.children();
         var self = this;
         
         if (childrenList.length == 0)
         {
-            this.animatedlyMovingNodeCount++;
+            var newPosition = { x: node.position('x') + T_x, y: node.position('y') + T_y };
+            if(!single){
+              node.position(newPosition);
+            }
+            else{
+              this.animatedlyMovingNodeCount++;
 
-            node.animate({
-              position: { x: node.position('x') + T_x, y: node.position('y') + T_y },
-              complete: function(){
-                self.animatedlyMovingNodeCount--;
-                if(self.animatedlyMovingNodeCount > 0 || nodeToExpand.data('expanded-collapsed') === 'expanded' || !single){
-                  return;
+              node.animate({
+                position: newPosition,
+                complete: function(){
+                  self.animatedlyMovingNodeCount--;
+                  if(self.animatedlyMovingNodeCount > 0 || nodeToExpand.data('expanded-collapsed') === 'expanded'){
+                    return;
+                  }
+
+                  self.expandNodeBaseFunction(nodeToExpand, single);
                 }
-                
-                self.expandNodeBaseFunction(nodeToExpand, single);
-              }
-            },{
-              duration: 1000
-            });
+              },{
+                duration: 1000
+              });
+            }
         }
         else
         {
             
             for (var i=0; i < childrenList.length; i++)
             {
-                this.moveNodeAnimatedly(childrenList[i], T_x, T_y, nodeToExpand, single);
+                this.fishEyeViewMoveNode(childrenList[i], T_x, T_y, nodeToExpand, single);
             }
         }
     },
