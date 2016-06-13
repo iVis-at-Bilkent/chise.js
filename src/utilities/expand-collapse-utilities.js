@@ -74,7 +74,8 @@ var expandCollapseUtilities = {
 
     refreshPaddings();
     
-    if(single){
+    if (single)
+    {
       triggerIncrementalLayout();
     }
   },
@@ -244,7 +245,7 @@ var expandCollapseUtilities = {
         this.storeWidthHeight(node);
         var topLeftPosition = convertToModelPosition({x: 0, y: 0});
         var bottomRightPosition = convertToModelPosition({x: cy.width(), y: cy.height()});
-        
+        var padding = 80;
         var bb = {
           x1: topLeftPosition.x,
           x2: bottomRightPosition.x,
@@ -253,15 +254,15 @@ var expandCollapseUtilities = {
         };
         
         var nodeBB = {
-          x1: node.position('x') - node.data('size-before-collapse').w / 2,
-          x2: node.position('x') + node.data('size-before-collapse').w / 2,
-          y1: node.position('y') - node.data('size-before-collapse').h / 2,
-          y2: node.position('y') + node.data('size-before-collapse').h / 2
+          x1: node.position('x') - node.data('size-before-collapse').w / 2 - padding,
+          x2: node.position('x') + node.data('size-before-collapse').w / 2 + padding,
+          y1: node.position('y') - node.data('size-before-collapse').h / 2 - padding,
+          y2: node.position('y') + node.data('size-before-collapse').h / 2 + padding
         };
 
         var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
 
-        if (boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
+        if (!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
           var viewPort = cy.getFitViewport(unionBB, 10);
           var self = this;
           cy.animate({
@@ -269,7 +270,6 @@ var expandCollapseUtilities = {
             zoom: viewPort.zoom,
             complete: function () {
               commonExpandOperation(node, applyFishEyeViewToEachNode, single);
-//              triggerIncrementalLayout();
             }
           }, {
             duration: 1000
@@ -277,7 +277,6 @@ var expandCollapseUtilities = {
         }
         else {
           commonExpandOperation(node, applyFishEyeViewToEachNode, single);
-//          triggerIncrementalLayout();
         }
       }
       else {
