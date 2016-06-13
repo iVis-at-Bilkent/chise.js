@@ -205,7 +205,6 @@ var expandCollapseUtilities = {
   expandNode: function (node) {
     if (node._private.data.collapsedChildren != null) {
       this.simpleExpandNode(node, true, true);
-//      triggerIncrementalLayout();
 
       /*
        * return the node to undo the operation
@@ -229,10 +228,7 @@ var expandCollapseUtilities = {
         node.data('width-before-collapse', node.data('size-before-collapse').w);
         node.data('height-before-collapse', node.data('size-before-collapse').h);
 
-        self.fishEyeViewExpandGivenNode(node, single);
-
-        //node.data('x-before-collapse', self.xPositionInParent(node));
-        //node.data('y-before-collapse', self.yPositionInParent(node));
+        self.fishEyeViewExpandGivenNode(node, single, node);
       }
 
       if (!single) {
@@ -375,7 +371,7 @@ var expandCollapseUtilities = {
         return nodes;
     },
     
-    fishEyeViewExpandGivenNode: function (node, single)
+    fishEyeViewExpandGivenNode: function (node, single, nodeToExpand)
     {   
         var siblings = this.getSiblings(node);
 
@@ -480,14 +476,14 @@ var expandCollapseUtilities = {
                 T_y = -1 * T_y;
             }
             
-            this.moveNodeAnimatedly(sibling, T_x, T_y, node, single);
+            this.moveNodeAnimatedly(sibling, T_x, T_y, nodeToExpand, single);
         }
         
        
         
         if (node.parent()[0] != null)
         {
-            this.fishEyeViewExpandGivenNode(node.parent()[0], single);
+            this.fishEyeViewExpandGivenNode(node.parent()[0], single, nodeToExpand);
         }
         
         return node;
@@ -525,8 +521,6 @@ var expandCollapseUtilities = {
         if (childrenList.length == 0)
         {
             this.animatedlyMovingNodeCount++;
-//            node.position('x', node.position('x') + T_x);
-//            node.position('y', node.position('y') + T_y);
 
             node.animate({
               position: { x: node.position('x') + T_x, y: node.position('y') + T_y },
