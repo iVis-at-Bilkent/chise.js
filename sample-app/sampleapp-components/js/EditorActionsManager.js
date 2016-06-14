@@ -269,14 +269,17 @@ function expandNode(param) {
   var result = {
     firstTime: false
   };
+  
+  var animate = sbgnStyleRules['animate-on-drawing-changes'] === 'true';
   var node = param.node;
+  
   result.node = node;
   result.nodesData = getNodePositionsAndSizes();
   if (param.firstTime) {
-    expandCollapseUtilities.expandNode(node);
+    expandCollapseUtilities.expandNode(node, animate);
   }
   else {
-    expandCollapseUtilities.simpleExpandNode(node);
+    expandCollapseUtilities.simpleExpandNode(node, animate);
     returnToPositionsAndSizes(param.nodesData);
   }
   return result;
@@ -433,7 +436,8 @@ function undoCollapseGivenNodes(param) {
 }
 
 function simpleExpandNode(node) {
-  return expandCollapseUtilities.simpleExpandNode(node);
+  var animate = sbgnStyleRules['animate-on-drawing-changes'] === 'true';
+  return expandCollapseUtilities.simpleExpandNode(node, false, false, animate);
 }
 
 function simpleCollapseNode(node) {

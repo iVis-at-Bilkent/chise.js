@@ -49,7 +49,7 @@ var expandCollapseUtilities = {
     return thereIs;
   },
   //A funtion basicly expanding a node it is to be called when a node is expanded anyway
-  expandNodeBaseFunction: function(node, single){
+  expandNodeBaseFunction: function(node, triggerLayout){
     //check how the position of the node is changed
     var positionDiff = {
       x: node.position('x') - node.data('position-before-collapse').x,
@@ -74,7 +74,7 @@ var expandCollapseUtilities = {
 
     refreshPaddings();
     
-    if (single)
+    if (triggerLayout)
     {
       triggerIncrementalLayout();
     }
@@ -202,9 +202,9 @@ var expandCollapseUtilities = {
     }
   },
   //Expand the given node perform incremental layout after expandation
-  expandNode: function (node) {
+  expandNode: function (node, animate) {
     if (node._private.data.collapsedChildren != null) {
-      this.simpleExpandNode(node, true, true);
+      this.simpleExpandNode(node, true, true, animate);
 
       /*
        * return the node to undo the operation
@@ -219,25 +219,25 @@ var expandCollapseUtilities = {
    * after expand operation it will be simply
    * used to undo the collapse operation
    */
-  simpleExpandNode: function (node, applyFishEyeViewToEachNode, single) {
+  simpleExpandNode: function (node, applyFishEyeViewToEachNode, singleNotSimple, animate) {
     var self = this;
 
-    var commonExpandOperation = function (node, applyFishEyeViewToEachNode, single) {
+    var commonExpandOperation = function (node, applyFishEyeViewToEachNode, singleNotSimple, animate) {
       if (applyFishEyeViewToEachNode) {
 
         node.data('width-before-collapse', node.data('size-before-collapse').w);
         node.data('height-before-collapse', node.data('size-before-collapse').h);
 
-        self.fishEyeViewExpandGivenNode(node, single, node);
+        self.fishEyeViewExpandGivenNode(node, singleNotSimple, node, animate);
       }
 
-      if (!single || !applyFishEyeViewToEachNode) {
-        self.expandNodeBaseFunction(node);
+      if (!singleNotSimple || !applyFishEyeViewToEachNode || !animate) {
+        self.expandNodeBaseFunction(node, singleNotSimple);
       }
     };
 
     if (node._private.data.collapsedChildren != null) {
-      if (applyFishEyeViewToEachNode && single) {
+      if (applyFishEyeViewToEachNode && singleNotSimple) {
         this.storeWidthHeight(node);
         var topLeftPosition = convertToModelPosition({x: 0, y: 0});
         var bottomRightPosition = convertToModelPosition({x: cy.width(), y: cy.height()});
@@ -257,26 +257,34 @@ var expandCollapseUtilities = {
         };
 
         var unionBB = boundingBoxUtilities.getUnion(nodeBB, bb);
-
+        var animating = false;
+        
         if (!boundingBoxUtilities.equalBoundingBoxes(unionBB, bb)) {
           var viewPort = cy.getFitViewport(unionBB, 10);
           var self = this;
-          cy.animate({
-            pan: viewPort.pan,
-            zoom: viewPort.zoom,
-            complete: function () {
-              commonExpandOperation(node, applyFishEyeViewToEachNode, single);
-            }
-          }, {
-            duration: 1000
-          });
+          animating = animate;
+          if(animate){
+            cy.animate({
+              pan: viewPort.pan,
+              zoom: viewPort.zoom,
+              complete: function () {
+                commonExpandOperation(node, applyFishEyeViewToEachNode, singleNotSimple, animate);
+              }
+            }, {
+              duration: 1000
+            });
+          }
+          else {
+            cy.zoom(viewPort.zoom);
+            cy.pan(viewPort.pan);
+          }
         }
-        else {
-          commonExpandOperation(node, applyFishEyeViewToEachNode, single);
+        if(!animating) {
+          commonExpandOperation(node, applyFishEyeViewToEachNode, singleNotSimple, animate);
         }
       }
       else {
-        commonExpandOperation(node, applyFishEyeViewToEachNode, single);
+        commonExpandOperation(node, applyFishEyeViewToEachNode, singleNotSimple, animate);
       }
 
       //return the node to undo the operation
@@ -371,7 +379,7 @@ var expandCollapseUtilities = {
         return nodes;
     },
     
-    fishEyeViewExpandGivenNode: function (node, single, nodeToExpand)
+    fishEyeViewExpandGivenNode: function (node, singleNotSimple, nodeToExpand, animate)
     {   
         var siblings = this.getSiblings(node);
 
@@ -476,14 +484,14 @@ var expandCollapseUtilities = {
                 T_y = -1 * T_y;
             }
             
-            this.fishEyeViewMoveNode(sibling, T_x, T_y, nodeToExpand, single);
+            this.fishEyeViewMoveNode(sibling, T_x, T_y, nodeToExpand, singleNotSimple, animate);
         }
         
        
         
         if (node.parent()[0] != null)
         {
-            this.fishEyeViewExpandGivenNode(node.parent()[0], single, nodeToExpand);
+            this.fishEyeViewExpandGivenNode(node.parent()[0], singleNotSimple, nodeToExpand, animate);
         }
         
         return node;
@@ -514,9 +522,9 @@ var expandCollapseUtilities = {
     },
     /*
      * Move node operation specialized for fish eye view expand operation 
-     * Moves the node by moving its descandents. Movement is animated if single flag is truthy. 
+     * Moves the node by moving its descandents. Movement is animated if singleNotSimple flag is truthy. 
      */
-    fishEyeViewMoveNode: function (node, T_x, T_y, nodeToExpand, single)
+    fishEyeViewMoveNode: function (node, T_x, T_y, nodeToExpand, singleNotSimple, animate)
     {
         var childrenList = node.children();
         var self = this;
@@ -524,7 +532,7 @@ var expandCollapseUtilities = {
         if (childrenList.length == 0)
         {
             var newPosition = { x: node.position('x') + T_x, y: node.position('y') + T_y };
-            if(!single){
+            if(!singleNotSimple || !animate){
               node.position(newPosition);
             }
             else{
@@ -538,7 +546,7 @@ var expandCollapseUtilities = {
                     return;
                   }
 
-                  self.expandNodeBaseFunction(nodeToExpand, single);
+                  self.expandNodeBaseFunction(nodeToExpand, singleNotSimple);
                 }
               },{
                 duration: 1000
@@ -550,7 +558,7 @@ var expandCollapseUtilities = {
             
             for (var i=0; i < childrenList.length; i++)
             {
-                this.fishEyeViewMoveNode(childrenList[i], T_x, T_y, nodeToExpand, single);
+                this.fishEyeViewMoveNode(childrenList[i], T_x, T_y, nodeToExpand, singleNotSimple, animate);
             }
         }
     },
