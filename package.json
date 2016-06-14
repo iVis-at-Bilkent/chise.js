@@ -17,6 +17,7 @@
     "cytoscape-qtip": "~2.3.0",
     "filesaverjs": "~0.2.2",
     "jQuery": "1.7.4",
-    "backbone": "0.9.10"
+    "backbone": "0.9.10",
+    "cytoscape-cose-bilkent": "latest"
   }
 }
