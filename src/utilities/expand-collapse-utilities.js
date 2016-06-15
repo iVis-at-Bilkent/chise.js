@@ -225,8 +225,8 @@ var expandCollapseUtilities = {
     var commonExpandOperation = function (node, applyFishEyeViewToEachNode, singleNotSimple, animate) {
       if (applyFishEyeViewToEachNode) {
 
-        node.data('width-before-collapse', node.data('size-before-collapse').w);
-        node.data('height-before-collapse', node.data('size-before-collapse').h);
+        node.data('width-before-fisheye', node.data('size-before-collapse').w);
+        node.data('height-before-fisheye', node.data('size-before-collapse').h);
 
         self.fishEyeViewExpandGivenNode(node, singleNotSimple, node, animate);
       }
@@ -354,10 +354,10 @@ var expandCollapseUtilities = {
     {
         if (node != null)
         {
-            node.data('x-before-collapse', this.xPositionInParent(node));
-            node.data('y-before-collapse', this.yPositionInParent(node));
-            node.data('width-before-collapse', node.outerWidth());
-            node.data('height-before-collapse', node.outerHeight());
+            node.data('x-before-fisheye', this.xPositionInParent(node));
+            node.data('y-before-fisheye', this.yPositionInParent(node));
+            node.data('width-before-fisheye', node.outerWidth());
+            node.data('height-before-fisheye', node.outerHeight());
 
             if (node.parent()[0] != null)
             {
@@ -386,16 +386,16 @@ var expandCollapseUtilities = {
         var x_a = this.xPositionInParent(node);
         var y_a = this.yPositionInParent(node);
 
-        var d_x_left = Math.abs((node.data('width-before-collapse') - node.outerWidth()) / 2);
-        var d_x_right = Math.abs((node.data('width-before-collapse') - node.outerWidth()) / 2);
-        var d_y_upper = Math.abs((node.data('height-before-collapse') - node.outerHeight()) / 2);
-        var d_y_lower = Math.abs((node.data('height-before-collapse') - node.outerHeight()) / 2);
+        var d_x_left = Math.abs((node.data('width-before-fisheye') - node.outerWidth()) / 2);
+        var d_x_right = Math.abs((node.data('width-before-fisheye') - node.outerWidth()) / 2);
+        var d_y_upper = Math.abs((node.data('height-before-fisheye') - node.outerHeight()) / 2);
+        var d_y_lower = Math.abs((node.data('height-before-fisheye') - node.outerHeight()) / 2);
         
-        var abs_diff_on_x = Math.abs(node.data('x-before-collapse') - x_a);
-        var abs_diff_on_y = Math.abs(node.data('y-before-collapse') - y_a);
+        var abs_diff_on_x = Math.abs(node.data('x-before-fisheye') - x_a);
+        var abs_diff_on_y = Math.abs(node.data('y-before-fisheye') - y_a);
         
         // Center went to LEFT
-        if (node.data('x-before-collapse') > x_a)
+        if (node.data('x-before-fisheye') > x_a)
         {
             d_x_left = d_x_left + abs_diff_on_x;
             d_x_right = d_x_right - abs_diff_on_x;
@@ -408,7 +408,7 @@ var expandCollapseUtilities = {
         }
 
         // Center went to UP
-        if (node.data('y-before-collapse') > y_a)
+        if (node.data('y-before-fisheye') > y_a)
         {
             d_y_upper = d_y_upper + abs_diff_on_y;
             d_y_lower = d_y_lower - abs_diff_on_y;
