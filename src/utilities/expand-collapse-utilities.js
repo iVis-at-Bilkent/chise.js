@@ -237,8 +237,8 @@ var expandCollapseUtilities = {
     };
 
     if (node._private.data.collapsedChildren != null) {
+      this.storeWidthHeight(node);
       if (applyFishEyeViewToEachNode && singleNotSimple) {
-        this.storeWidthHeight(node);
         var topLeftPosition = convertToModelPosition({x: 0, y: 0});
         var bottomRightPosition = convertToModelPosition({x: cy.width(), y: cy.height()});
         var padding = 80;
