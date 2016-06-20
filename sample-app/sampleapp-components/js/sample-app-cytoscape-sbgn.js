@@ -312,6 +312,36 @@ var allCanHaveSBGNCardinality = function(elements){
   return true;
 };
 
+var getCommonNodeWidth = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var widthOfFirstElement = elements[0].width();
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].width() != widthOfFirstElement){
+      return null;
+    }
+  }
+  
+  return widthOfFirstElement;
+};
+
+var getCommonNodeHeight = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var heightOfFirstElement = elements[0].height();
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].width() != heightOfFirstElement){
+      return null;
+    }
+  }
+  
+  return heightOfFirstElement;
+};
+
 var stringAfterValueCheck = function (value) {
   return value ? value : '';
 };
@@ -626,9 +656,34 @@ var handleSBGNInspector = function () {
       var backgroundOpacity = getCommonBackgroundOpacity(selectedEles);
       backgroundOpacity = backgroundOpacity?backgroundOpacity:0.5;
       
+      var nodeWidth = getCommonNodeWidth(selectedEles);
+
+      var nodeHeight = getCommonNodeHeight(selectedEles);
+      
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Label</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-label' class='inspector-input-box' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
               + "'/>" + "</td></tr>";
+      
+      
+      html += "<tr><td style='width: " + nodeWidth + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
+              + "<input id='inspector-node-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+      
+      if(nodeWidth){
+        html += " value='" + nodeWidth + "'";
+      }
+      
+      html += "/>" + "</td></tr>";
+      
+      html += "<tr><td style='width: " + nodeHeight + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Height</font>" + "</td><td style='padding-left: 5px;'>"
+              + "<input id='inspector-node-height' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+      
+      if(nodeHeight){
+        html += " value='" + nodeHeight + "'";
+      }
+      
+      html += "/>" + "</td></tr>";
+      
+      
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-border-color' class='inspector-input-box' type='color' style='width: " + buttonwidth + "px;' value='" + borderColor
               + "'/>" + "</td></tr>";
@@ -771,6 +826,16 @@ var handleSBGNInspector = function () {
         defaults['background-color'] = selected.css('background-color');
         defaults['font-size'] = selected.css('font-size');
         defaults['background-opacity'] = selected.css('background-opacity');
+      });
+
+      $("#inspector-node-width, #inspector-node-height").bind('change').on('change', function () {
+        var param = {
+          nodes: selectedEles,
+          width: parseFloat($("#inspector-node-width").attr("value")),
+          height: parseFloat($("#inspector-node-height").attr("value"))
+        };
+        editorActionsManager._do(new ResizeNodeCommand(param));
+        refreshUndoRedoButtonsStatus();
       });
 
       $('#inspector-is-multimer').on('click', function () {
@@ -1692,7 +1757,7 @@ var SBGNContainer = Backbone.View.extend({
           start: function (sourceNode) {
             // fired when noderesize interaction starts (drag on handle)
             var param = {
-              node: sourceNode,
+              nodes: cy.collection([sourceNode]),
               firstTime: true
             };
             editorActionsManager._do(new ResizeNodeCommand(param));

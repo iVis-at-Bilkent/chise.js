@@ -785,17 +785,45 @@ function resizeNode(param) {
   var result = {
     firstTime: false
   };
-  var node = param.node;
-  result.width = node.width();
-  result.height = node.height();
-  result.node = node;
-  if (!param.firstTime) {
-    node.data("width", param.width);
-    node.data("height", param.height);
+  
+  var nodes = param.nodes;
+  
+  result.sizeMap = {};
+  
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    result.sizeMap[node.id()] = {
+      w: node.width(),
+      h: node.height()
+    };
   }
   
-  node._private.data.sbgnbbox.w = node.width();
-  node._private.data.sbgnbbox.h = node.height();
+  result.nodes = nodes;
+  
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    
+    if (!param.firstTime) {
+      if(param.sizeMap) {
+        node.data("width", param.sizeMap[node.id()].w);
+        node.data("height", param.sizeMap[node.id()].h);
+      }
+      else {
+        if(param.width) {
+          node.data("width", param.width);
+        }
+        if(param.height) {
+          node.data("height", param.height);
+        }
+      }
+    }
+    
+    node._private.data.sbgnbbox.w = node.data('width') || node.width();
+    node._private.data.sbgnbbox.h = node.data('height') || node.height();
+  }
+  
+  nodes.addClass('noderesize-resized');
+  
   return result;
 }
 
