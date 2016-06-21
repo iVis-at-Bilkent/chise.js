@@ -665,7 +665,7 @@ var handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
       
       
-      html += "<tr><td style='width: " + nodeWidth + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-node-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
       
       if(nodeWidth){
@@ -674,14 +674,22 @@ var handleSBGNInspector = function () {
       
       html += "/>" + "</td></tr>";
       
-      html += "<tr><td style='width: " + nodeHeight + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Height</font>" + "</td><td style='padding-left: 5px;'>"
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Height</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-node-height' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
       
       if(nodeHeight){
         html += " value='" + nodeHeight + "'";
       }
       
-      html += "/>" + "</td></tr>";
+      html += "/>";
+      
+      html += "<input style='margin-left: 5px;' title='use aspect ratio' type='checkbox' id='inspector-node-sizes-aspect-ratio'";
+      
+      if(window.inspectorNodeSizeUseAspectRatio) {
+        html += " checked";
+      }
+      
+      html += ">" + "</td></tr>";
       
       
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"
@@ -829,13 +837,30 @@ var handleSBGNInspector = function () {
       });
 
       $("#inspector-node-width, #inspector-node-height").bind('change').on('change', function () {
+        var w = parseFloat($("#inspector-node-width").attr("value"));
+        var h = parseFloat($("#inspector-node-height").attr("value"));
+        
+        if( $(this).attr('id') === 'inspector-node-width' ) {
+          h = undefined;
+        }
+        else {
+          w = undefined;
+        }
+        
+        var useAspectRatio = $('#inspector-node-sizes-aspect-ratio').attr('checked') == 'checked';
+
         var param = {
           nodes: selectedEles,
-          width: parseFloat($("#inspector-node-width").attr("value")),
-          height: parseFloat($("#inspector-node-height").attr("value"))
+          width: w,
+          height: h,
+          useAspectRatio: useAspectRatio
         };
         editorActionsManager._do(new ResizeNodeCommand(param));
         refreshUndoRedoButtonsStatus();
+      });
+
+      $('#inspector-node-sizes-aspect-ratio').on('change', function() {
+        window.inspectorNodeSizeUseAspectRatio = $('#inspector-node-sizes-aspect-ratio').attr('checked');
       });
 
       $('#inspector-is-multimer').on('click', function () {

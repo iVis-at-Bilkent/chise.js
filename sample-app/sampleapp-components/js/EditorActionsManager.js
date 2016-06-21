@@ -789,6 +789,7 @@ function resizeNode(param) {
   var nodes = param.nodes;
   
   result.sizeMap = {};
+  result.useAspectRatio = false;
   
   for(var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
@@ -809,20 +810,46 @@ function resizeNode(param) {
         node.data("height", param.sizeMap[node.id()].h);
       }
       else {
-        if(param.width) {
+        var ratio;
+        
+        // Note that both param.width and param.height cannot be truthy
+        if (param.width) {
+          if (param.useAspectRatio) {
+            ratio = param.width / node.width();
+          }
+  
           node.data("width", param.width);
         }
-        if(param.height) {
+        else if (param.height) {
+          if (param.useAspectRatio) {
+            ratio = param.height / node.height();
+          }
+          
           node.data("height", param.height);
+        }
+        
+        if (param.useAspectRatio && !param.height) {
+          node.data("height", node.height() * ratio);
+        }
+        else if (param.useAspectRatio && !param.width) {
+          node.data("width", node.width() * ratio);
         }
       }
     }
     
     node._private.data.sbgnbbox.w = node.data('width') || node.width();
     node._private.data.sbgnbbox.h = node.data('height') || node.height();
+    
+    node.removeClass('noderesize-resized');
+    node.addClass('noderesize-resized');
   }
   
+  nodes.removeClass('noderesize-resized');
   nodes.addClass('noderesize-resized');
+  
+  if (_.isEqual(nodes, cy.nodes(':selected'))) {
+    handleSBGNInspector();
+  }
   
   return result;
 }
