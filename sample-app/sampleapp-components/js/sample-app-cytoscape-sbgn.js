@@ -382,6 +382,38 @@ var canHaveStateVariable = function(sbgnclass) {
   return false;
 };
 
+var mustBeSquare = function(sbgnclass) {
+  return (sbgnclass.indexOf('process') != -1 || sbgnclass == 'source and sink'
+          || sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not'
+          || sbgnclass == 'association' || sbgnclass == 'dissociation');
+};
+
+var someMustNotBeSquare = function(nodes) {
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    if ( !mustBeSquare(node.data('sbgnclass')) ) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
+var isCollapsedOrParent = function(node) {
+  return (node.data('collapsedChildren') != null || ( node.children() && node.children().length > 0 ));
+};
+
+var includesNotCollapsedNorParentElement = function(nodes) {
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    if ( !isCollapsedOrParent(node) ) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
 //checks if a node with the given sbgnclass can be cloned
 var canBeCloned = function (sbgnclass) {
   sbgnclass = sbgnclass.replace(" multimer", "");
@@ -664,32 +696,37 @@ var handleSBGNInspector = function () {
               + "<input id='inspector-label' class='inspector-input-box' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
               + "'/>" + "</td></tr>";
       
-      
-      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-node-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
-      
-      if(nodeWidth){
-        html += " value='" + nodeWidth + "'";
+      if( includesNotCollapsedNorParentElement(selectedEles) ) {
+        html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Width</font>" + "</td><td style='padding-left: 5px;'>"
+                + "<input id='inspector-node-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+
+        if (nodeWidth) {
+          html += " value='" + nodeWidth + "'";
+        }
+
+        html += "/>" + "</td></tr>";
+
+        html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Height</font>" + "</td><td style='padding-left: 5px;'>"
+                + "<input id='inspector-node-height' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+
+        if (nodeHeight) {
+          html += " value='" + nodeHeight + "'";
+        }
+
+        html += "/>";
+        
+        if( someMustNotBeSquare(selectedEles) ) {
+          html += "<input style='margin-left: 5px;' title='use aspect ratio' type='checkbox' id='inspector-node-sizes-aspect-ratio'";
+
+          if (window.inspectorNodeSizeUseAspectRatio) {
+            html += " checked";
+          }
+
+          html += ">";
+        }
+        
+        html += "</td></tr>";
       }
-      
-      html += "/>" + "</td></tr>";
-      
-      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Height</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-node-height' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
-      
-      if(nodeHeight){
-        html += " value='" + nodeHeight + "'";
-      }
-      
-      html += "/>";
-      
-      html += "<input style='margin-left: 5px;' title='use aspect ratio' type='checkbox' id='inspector-node-sizes-aspect-ratio'";
-      
-      if(window.inspectorNodeSizeUseAspectRatio) {
-        html += " checked";
-      }
-      
-      html += ">" + "</td></tr>";
       
       
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Border Color</font>" + "</td><td style='padding-left: 5px;'>"

@@ -810,28 +810,29 @@ function resizeNode(param) {
         node.data("height", param.sizeMap[node.id()].h);
       }
       else {
-        var ratio;
+        var ratio = undefined;
+        var eleMustBeSquare = mustBeSquare(node.data('sbgnclass'));
         
         // Note that both param.width and param.height cannot be truthy
         if (param.width) {
-          if (param.useAspectRatio) {
+          if (param.useAspectRatio || eleMustBeSquare) {
             ratio = param.width / node.width();
           }
   
           node.data("width", param.width);
         }
         else if (param.height) {
-          if (param.useAspectRatio) {
+          if (param.useAspectRatio || eleMustBeSquare) {
             ratio = param.height / node.height();
           }
           
           node.data("height", param.height);
         }
         
-        if (param.useAspectRatio && !param.height) {
+        if (ratio && !param.height) {
           node.data("height", node.height() * ratio);
         }
-        else if (param.useAspectRatio && !param.width) {
+        else if (ratio && !param.width) {
           node.data("width", node.width() * ratio);
         }
       }
