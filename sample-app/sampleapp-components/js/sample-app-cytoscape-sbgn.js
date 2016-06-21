@@ -716,13 +716,26 @@ var handleSBGNInspector = function () {
         html += "/>";
         
         if( someMustNotBeSquare(selectedEles) ) {
-          html += "<input style='margin-left: 5px;' title='use aspect ratio' type='checkbox' id='inspector-node-sizes-aspect-ratio'";
-
-          if (window.inspectorNodeSizeUseAspectRatio) {
-            html += " checked";
+          var imageName;
+          var title;
+          if(window.inspectorNodeSizeUseAspectRatio) {
+            imageName = "lock.png";
+            title = "lock aspect ratio";
           }
-
-          html += ">";
+          else {
+            imageName = "open-lock.png";
+            title = "unlock aspect ratio";
+          }
+          
+          html += "<img id='inspector-node-sizes-aspect-ratio' width='12px' height='12px' src='sampleapp-images/";
+          html += imageName;
+          html += "'";
+          
+          html += "title='";
+          html += title;
+          html += "'";
+          
+          html += "></img>";
         }
         
         html += "</td></tr>";
@@ -884,7 +897,7 @@ var handleSBGNInspector = function () {
           w = undefined;
         }
         
-        var useAspectRatio = $('#inspector-node-sizes-aspect-ratio').attr('checked') == 'checked';
+        var useAspectRatio = window.inspectorNodeSizeUseAspectRatio;
 
         var param = {
           nodes: selectedEles,
@@ -896,8 +909,25 @@ var handleSBGNInspector = function () {
         refreshUndoRedoButtonsStatus();
       });
 
-      $('#inspector-node-sizes-aspect-ratio').on('change', function() {
-        window.inspectorNodeSizeUseAspectRatio = $('#inspector-node-sizes-aspect-ratio').attr('checked');
+      $('#inspector-node-sizes-aspect-ratio').on('click', function() {
+        if(window.inspectorNodeSizeUseAspectRatio == null) {
+          window.inspectorNodeSizeUseAspectRatio = false;
+        }
+        
+        window.inspectorNodeSizeUseAspectRatio = !window.inspectorNodeSizeUseAspectRatio;
+        
+        // refresh image
+        if (window.inspectorNodeSizeUseAspectRatio) {
+          imageName = "lock.png";
+          title = "lock aspect ratio";
+        }
+        else {
+          imageName = "open-lock.png";
+          title = "unlock aspect ratio";
+        }
+        
+        $(this).attr('src', 'sampleapp-images/' + imageName);
+        $(this).attr('title', title);
       });
 
       $('#inspector-is-multimer').on('click', function () {
