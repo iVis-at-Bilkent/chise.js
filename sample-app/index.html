@@ -917,6 +917,8 @@
         <script src="../lib/js/jquery.noty.packaged.min.js"></script>
         <script src="../lib/js/cytoscape-noderesize.js"></script>
         <script src="../node_modules/cytoscape-cose-bilkent/cytoscape-cose-bilkent.js"></script>
+        <script src="../node_modules/cytoscape-undo-redo/cytoscape-undo-redo.js"></script>
+        <script src="../node_modules/cytoscape-expand-collapse/cytoscape-expand-collapse.js"></script>
 
         <!-- Core SBGNViz components -->
         <script src="../src/sbgn-extensions/cytoscape.renderer.canvas.sbgn-renderer.js"></script>
@@ -926,13 +928,19 @@
         <script src="../src/utilities/sbgnml-to-json-converter.js"></script>
         <script src="../src/utilities/sbgn-filtering.js"></script>
         <script src="../src/utilities/sbgn-element-utilities.js"></script>
-        <script src="../src/utilities/expand-collapse-utilities.js"></script>
         <script src="../src/utilities/add-remove-utilities.js"></script>
         <script src="../src/utilities/sbgn-bend-point-utilities.js"></script>
         
         
         <!-- Sample application components -->
-        <script src="sampleapp-components/js/EditorActionsManager.js"></script>
+        <script src="sampleapp-components/js/SBGNActionFunctions.js"></script>
+        <script src="sampleapp-components/js/addRemoveActionFunctions.js"></script>
+        <script src="sampleapp-components/js/easyCreationActionFunctions.js"></script>
+        <script src="sampleapp-components/js/filteringActionFunctions.js"></script>
+        <script src="sampleapp-components/js/generalActionFunctions.js"></script>
+        <script src="sampleapp-components/js/registerUndoRedoActions.js"></script>
+        
+        <!--<script src="sampleapp-components/js/EditorActionsManager.js"></script>-->
         <script src="sampleapp-components/js/sample-app-cytoscape-sbgn.js"></script>
         <script src="sampleapp-components/js/sample-app-menu-functions.js"></script>
         <script src="sampleapp-components/js/sample-app-mode-handler.js"></script>

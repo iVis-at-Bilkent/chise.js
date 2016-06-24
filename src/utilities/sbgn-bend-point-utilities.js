@@ -295,7 +295,6 @@ var sbgnBendPointUtilities = {
 //    weights.push(relativeBendPosition.weight);
 //    distances.push(relativeBendPosition.distance);
     if(newBendIndex != -1){
-      console.log(newBendIndex);
       weights.splice(newBendIndex, 0, relativeBendPosition.weight);
       distances.splice(newBendIndex, 0, relativeBendPosition.distance);
     }

@@ -522,10 +522,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
           stateAndInfos: stateAndInfos,
           width: width
         };
-        editorActionsManager._do(new ChangeStateVariableCommand(param));
-        refreshUndoRedoButtonsStatus();
-//        $(this).data("state").state.value = $(this).attr('value');
-//        cy.forceRender();
+        
+        cy.undoRedo().do("changeStateVariable", param);
       });
 
       $(".inspector-state-variable-variable").unbind('change').on('change', function () {
@@ -537,10 +535,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
           stateAndInfos: stateAndInfos,
           width: width
         };
-        editorActionsManager._do(new ChangeStateVariableCommand(param));
-        refreshUndoRedoButtonsStatus();
-//        $(this).data("state").state.variable = $(this).attr('value');
-//        cy.forceRender();
+        
+        cy.undoRedo().do("changeStateVariable", param);
       });
     }
     else if (state.clazz == "unit of information") {
@@ -557,10 +553,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
           nodes: nodes,
           width: width
         };
-        editorActionsManager._do(new ChangeUnitOfInformationCommand(param));
-        refreshUndoRedoButtonsStatus();
-//        $(this).data("state").label.text = $(this).attr('value');
-//        cy.forceRender();
+        
+        cy.undoRedo().do("changeUnitOfInformation", param);
       });
     }
 
@@ -571,8 +565,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
         stateAndInfos: stateAndInfos,
         width: width
       };
-      editorActionsManager._do(new RemoveStateAndInfoCommand(param));
-      refreshUndoRedoButtonsStatus();
+      
+      cy.undoRedo().do("removeStateAndInfo", param);
     });
 
     $(".just-added-inspector-input").data("state", state);
@@ -599,8 +593,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
       stateAndInfos: stateAndInfos,
       width: width
     };
-    editorActionsManager._do(new AddStateAndInfoCommand(param));
-    refreshUndoRedoButtonsStatus();
+    
+    cy.undoRedo().do("addStateAndInfo", param);
   });
 
   $("#inspector-add-unit-of-information").click(function () {
@@ -619,8 +613,8 @@ var fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
       width: width,
       stateAndInfos: stateAndInfos
     };
-    editorActionsManager._do(new AddStateAndInfoCommand(param));
-    refreshUndoRedoButtonsStatus();
+    
+    cy.undoRedo().do("addStateAndInfo", param);
   });
 }
 
@@ -903,10 +897,11 @@ var handleSBGNInspector = function () {
           nodes: selectedEles,
           width: w,
           height: h,
-          useAspectRatio: useAspectRatio
+          useAspectRatio: useAspectRatio,
+          performOperation: true
         };
-        editorActionsManager._do(new ResizeNodeCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("resizeNode", param);
       });
 
       $('#inspector-node-sizes-aspect-ratio').on('click', function() {
@@ -936,8 +931,8 @@ var handleSBGNInspector = function () {
           nodes: selectedEles,
           firstTime: true
         };
-        editorActionsManager._do(new changeIsMultimerStatusCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeIsMultimerStatus", param);
       });
 
       $('#inspector-is-clone-marker').on('click', function () {
@@ -946,8 +941,8 @@ var handleSBGNInspector = function () {
           nodes: selectedEles,
           firstTime: true
         };
-        editorActionsManager._do(new changeIsCloneMarkerStatusCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeIsCloneMarkerStatus", param);
       });
 
       $("#inspector-border-color").on('change', function () {
@@ -957,8 +952,8 @@ var handleSBGNInspector = function () {
           dataType: "borderColor",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleDataCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleData", param);
       });
 
       $("#inspector-label").on('change', function () {
@@ -967,8 +962,8 @@ var handleSBGNInspector = function () {
           sbgnlabel: $(this).attr('value'),
           firstTime: true
         };
-        editorActionsManager._do(new ChangeNodeLabelCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeNodeLabel", param);
       });
 
       $("#inspector-background-opacity").on('change', function () {
@@ -978,8 +973,8 @@ var handleSBGNInspector = function () {
           dataType: "backgroundOpacity",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleDataCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleData", param);
       });
 
       $("#inspector-fill-color").on('change', function () {
@@ -989,8 +984,8 @@ var handleSBGNInspector = function () {
           dataType: "background-color",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleCssCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleCss", param);
       });
 
       $("#inspector-border-width").bind('change').on('change', function () {
@@ -1000,8 +995,8 @@ var handleSBGNInspector = function () {
           dataType: "border-width",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleCssCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleCss", param);
       });
     }
     else {
@@ -1021,8 +1016,8 @@ var handleSBGNInspector = function () {
           dataType: "lineColor",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleDataCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleData", param);
       });
 
       $("#inspector-cardinality").bind('change').on('change', function () {
@@ -1041,8 +1036,8 @@ var handleSBGNInspector = function () {
           dataType: "sbgncardinality",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleDataCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleData", param);
       });
 
       $("#inspector-width").bind('change').on('change', function () {
@@ -1052,8 +1047,8 @@ var handleSBGNInspector = function () {
           dataType: "width",
           firstTime: true
         };
-        editorActionsManager._do(new ChangeStyleCssCommand(param));
-        refreshUndoRedoButtonsStatus();
+        
+        cy.undoRedo().do("changeStyleCss", param);
       });
     }
   }
@@ -1203,14 +1198,16 @@ var nodeQtipFunction = function (node) {
  * The status of buttons are determined by whether the undo-redo stacks are empty.
  */
 var refreshUndoRedoButtonsStatus = function () {
-  if (editorActionsManager.isUndoStackEmpty()) {
+  var ur = cy.undoRedo();
+  
+  if (ur.isUndoStackEmpty()) {
     $("#undo-last-action").parent("li").addClass("disabled");
   }
   else {
     $("#undo-last-action").parent("li").removeClass("disabled");
   }
 
-  if (editorActionsManager.isRedoStackEmpty()) {
+  if (ur.isRedoStackEmpty()) {
     $("#redo-last-action").parent("li").addClass("disabled");
   }
   else {
@@ -1231,17 +1228,9 @@ var calculatePaddings = function (paddingPercent) {
   for (var i = 0; i < nodes.length; i++) {
     var theNode = nodes[i];
     if (theNode.children() == null || theNode.children().length == 0) {
-      var collapsedChildren = theNode._private.data.collapsedChildren;
-      if (collapsedChildren == null || collapsedChildren.length == 0) {
-        total += Number(theNode.width());
-        total += Number(theNode.height());
-        numOfSimples++;
-      }
-      else {
-        var result = expandCollapseUtilities.getCollapsedChildrenData(collapsedChildren, numOfSimples, total);
-        numOfSimples = result.numOfSimples;
-        total = result.total;
-      }
+      total += Number(theNode.width());
+      total += Number(theNode.height());
+      numOfSimples++;
     }
   }
 
@@ -1817,9 +1806,11 @@ var SBGNContainer = Backbone.View.extend({
       ready: function ()
       {
         window.cy = this;
-
+        registerUndoRedoActions();
+        
+        cy.expandCollapse(getExpandCollapseOptions());
+        
         var edges = cy.edges();
-//        console.log(edges.length);
 
         for (var i = 0; i < edges.length; i++) {
           var edge = edges[i];
@@ -1850,10 +1841,10 @@ var SBGNContainer = Backbone.View.extend({
             // fired when noderesize interaction starts (drag on handle)
             var param = {
               nodes: cy.collection([sourceNode]),
-              firstTime: true
+              performOperation: false
             };
-            editorActionsManager._do(new ResizeNodeCommand(param));
-            refreshUndoRedoButtonsStatus();
+            
+            cy.undoRedo().do("resizeNode", param);
           },
           complete: function (sourceNode, targetNodes, addedEntities) {
             // fired when noderesize is done and entities are added
@@ -1929,23 +1920,15 @@ var SBGNContainer = Backbone.View.extend({
               sbgnclass: sbgnclass
             };
             param.firstTime = true;
-            editorActionsManager._do(new AddEdgeCommand(param));
+            
+            cy.undoRedo().do("addEdge", param);
             modeHandler.setSelectionMode();
             cy.edges()[cy.edges().length - 1].select();
-            refreshUndoRedoButtonsStatus();
           }
         });
 
         cy.edgehandles('drawoff');
-
-        expandCollapseUtilities.initCollapsedNodes();
-
-        editorActionsManager.reset();
-        refreshUndoRedoButtonsStatus();
-
-//        cy.panzoom({
-//          // options here...
-//        });
+        
         var panProps = ({
           fitPadding: 10,
           fitSelector: ':visible',
@@ -1958,20 +1941,59 @@ var SBGNContainer = Backbone.View.extend({
         });
         container.cytoscapePanzoom(panProps);
 
-        var lastMouseDownNodeInfo = null;
+        cy.on("beforeCollapse", "node", function (event) {
+          var node = this;
+          //The children info of complex nodes should be shown when they are collapsed
+          if (node._private.data.sbgnclass == "complex") {
+            //The node is being collapsed store infolabel to use it later
+            var infoLabel = getInfoLabel(node);
+            node._private.data.infoLabel = infoLabel;
+          }
+        });
+        
+        cy.on("afterCollapse", "node", function (event) {
+          var node = this;
+          refreshPaddings();
+
+          if (node._private.data.sbgnclass == "complex") {
+            node.addClass('changeContent');
+          }
+        });
+        
+        cy.on("beforeExpand", "node", function (event) {
+          var node = this;
+          node.removeData("infoLabel");
+        });
+        
+        cy.on("afterExpand", "node", function (event) {
+          var node = this;
+          cy.nodes().updateCompoundBounds();
+
+          //Don't show children info when the complex node is expanded
+          if (node._private.data.sbgnclass == "complex") {
+            node.removeStyle('content');
+          }
+          
+          refreshPaddings();
+        });
+
+        cy.on("beforeDo", function(actionName, args){
+          refreshUndoRedoButtonsStatus();
+        });
+
+        cy.on("beforeUndo", function(actionName, args){
+          refreshUndoRedoButtonsStatus();
+        });
+        
+        cy.on("beforeRedo", function(actionName, args){
+          refreshUndoRedoButtonsStatus();
+        });
+
         cy.on("mousedown", "node", function () {
           var self = this;
           if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
             enableDragAndDropMode();
             window.nodeToDragAndDrop = self;
-          }
-          else {
-            lastMouseDownNodeInfo = {};
-            lastMouseDownNodeInfo.lastMouseDownPosition = {
-              x: this.position("x"),
-              y: this.position("y")
-            };
-            lastMouseDownNodeInfo.node = this;
           }
         });
 
@@ -1995,9 +2017,11 @@ var SBGNContainer = Backbone.View.extend({
             }
 
             disableDragAndDropMode();
+            
             if (node.parent()[0] == newParent || node._private.data.parent == node.id()) {
               return;
             }
+            
             var param = {
               newParent: newParent,
               node: node,
@@ -2005,47 +2029,13 @@ var SBGNContainer = Backbone.View.extend({
               posX: event.cyPosition.x,
               posY: event.cyPosition.y
             };
-            editorActionsManager._do(new changeParentCommand(param));
+            
+            cy.undoRedo().do("changeParent", param);
           }
         });
 
         cy.on("mouseup", "node", function () {
-          if (window.dragAndDropModeEnabled) {
-            return;
-          }
-          if (lastMouseDownNodeInfo == null) {
-            return;
-          }
-          var node = lastMouseDownNodeInfo.node;
-          var lastMouseDownPosition = lastMouseDownNodeInfo.lastMouseDownPosition;
-          var mouseUpPosition = {
-            x: node.position("x"),
-            y: node.position("y")
-          };
-          if (mouseUpPosition.x != lastMouseDownPosition.x ||
-                  mouseUpPosition.y != lastMouseDownPosition.y) {
-            var positionDiff = {
-              x: mouseUpPosition.x - lastMouseDownPosition.x,
-              y: mouseUpPosition.y - lastMouseDownPosition.y
-            };
-
-            var nodes;
-            if (node.selected()) {
-              nodes = cy.nodes(":visible").filter(":selected");
-            }
-            else {
-              nodes = cy.collection([node]);
-            }
-
-            var param = {
-              positionDiff: positionDiff,
-              nodes: nodes, move: false
-            };
-            editorActionsManager._do(new MoveNodeCommand(param));
-
-            lastMouseDownNodeInfo = null;
-            refreshUndoRedoButtonsStatus();
-          }
+          
         });
 
         cy.on('mouseover', 'node', function (event) {
@@ -2164,8 +2154,8 @@ var SBGNContainer = Backbone.View.extend({
 
           if (moveBendParam !== undefined && edge.data('weights')
                   && edge.data('weights').toString() != moveBendParam.weights.toString()) {
-            editorActionsManager._do(new changeBendPointsCommand(moveBendParam));
-            refreshUndoRedoButtonsStatus();
+            
+            cy.undoRedo().do("changeBendPoints", moveBendParam);
           }
 
           movedBendIndex = undefined;
@@ -2293,16 +2283,17 @@ var SBGNContainer = Backbone.View.extend({
             var cyPosY = event.cyPosition.y;
             var param = {};
             var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
+            
             param.newNode = {
               x: cyPosX,
               y: cyPosY,
               sbgnclass: sbgnclass
             };
             param.firstTime = true;
-            editorActionsManager._do(new AddNodeCommand(param));
+            
+            cy.undoRedo().do("addNode", param);
             modeHandler.setSelectionMode();
             cy.nodes()[cy.nodes().length - 1].select();
-            refreshUndoRedoButtonsStatus();
           }
         });
 
@@ -2344,47 +2335,6 @@ var SBGNContainer = Backbone.View.extend({
             tappedBefore = null;
           } else {
             tappedBefore = tappedNow;
-          }
-
-          //Handle expand-collapse box
-          var cyPosX = event.cyPosition.x;
-          var cyPosY = event.cyPosition.y;
-          var rectSize = node._private.data.expandcollapseRectSize;
-
-          if (modeHandler.mode == "selection-mode"
-                  && cyPosX >= node._private.data.expandcollapseStartX - rectSize * 0.5
-                  && cyPosX <= node._private.data.expandcollapseEndX + rectSize * 0.5
-                  && cyPosY >= node._private.data.expandcollapseStartY - rectSize * 0.5
-                  && cyPosY <= node._private.data.expandcollapseEndY + rectSize * 0.5) {
-//            selectAgain = cy.filter(":selected");
-//            cancelSelection = true;
-            var expandedOrcollapsed = this.data('expanded-collapsed');
-
-            var rearrangeAfterExpandCollapse =
-                    (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
-            
-            if (expandedOrcollapsed == 'expanded') {
-//              expandCollapseUtilities.collapseNode(this);
-              if (rearrangeAfterExpandCollapse)
-                editorActionsManager._do(new CollapseNodeCommand({
-                  node: this,
-                  firstTime: true
-                }));
-              else
-                editorActionsManager._do(new SimpleCollapseNodeCommand(this));
-              refreshUndoRedoButtonsStatus();
-            }
-            else {
-              if (rearrangeAfterExpandCollapse)
-                editorActionsManager._do(new ExpandNodeCommand({
-                  node: this,
-                  firstTime: true
-                }));
-              else
-                editorActionsManager._do(new SimpleExpandNodeCommand(this));
-              refreshUndoRedoButtonsStatus();
-//              expandCollapseUtilities.expandNode(this);
-            }
           }
 
           $(".qtip").remove();
@@ -2449,12 +2399,20 @@ var SBGNLayout = Backbone.View.extend({
   copyProperties: function () {
     this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
   },
-  applyLayout: function (preferences) {
+  applyLayout: function (preferences, undoable) {
     if(preferences === undefined){
       preferences = {};
     }
     var options = $.extend({}, this.currentLayoutProperties, preferences);
-    cy.elements().filter(':visible').layout(options);
+    if(undoable === false) {
+      cy.elements().filter(':visible').layout(options);
+    }
+    else {
+      cy.undoRedo().do("layout", {
+        options: options,
+        eles: cy.elements().filter(':visible')
+      });
+    }
   },
   render: function () {
     var self = this;
@@ -2826,7 +2784,8 @@ var ReactionTemplate = Backbone.View.extend({
         tilingPaddingVertical: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10)),
         tilingPaddingHorizontal: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-horizontal'], 10))
       };
-      editorActionsManager._do(new CreateTemplateReactionCommand(param));
+      
+      cy.undoRedo().do("createTemplateReaction", param);
         
       self.copyProperties();
       $(self.el).dialog('close');

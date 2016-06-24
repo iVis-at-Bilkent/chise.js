@@ -56,5 +56,19 @@ var sbgnElementUtilities = {
             
             this.propogateReplacementToChildren(child, dx, dy);
         }
+    },
+    moveNodes: function(positionDiff, nodes, notCalcTopMostNodes) {
+      var topMostNodes = notCalcTopMostNodes ? nodes : sbgnElementUtilities.getTopMostNodes(nodes);
+      for (var i = 0; i < topMostNodes.length; i++) {
+        var node = topMostNodes[i];
+        var oldX = node.position("x");
+        var oldY = node.position("y");
+        node.position({
+          x: oldX + positionDiff.x,
+          y: oldY + positionDiff.y
+        });
+        var children = node.children();
+        this.moveNodes(positionDiff, children, true);
+      }
     }
 };
