@@ -32,7 +32,7 @@ In checkNode function inside findNearestElement
 is commented out.
 
 In checkNode function inside findNearestElement, and BRp.findEdgeControlPoints shape.checkPoint and similar function calls are
-replaced. An example replaced statement is "cytoscape.sbgn.totallyOverridenNodeShapes(self, node)?shape.checkPoint( x, y, node, 0 ):shape.checkPoint(x, y, 0, width, height, pos.x, pos.y)"
+replaced. An example replaced statement is "cytoscape.sbgn.isNodeShapeTotallyOverriden(self, node)?shape.checkPoint( x, y, node, 0 ):shape.checkPoint(x, y, 0, width, height, pos.x, pos.y)"
 
 In BRp.getNodeShape function
 "if( node.isParent() ){
@@ -49,7 +49,7 @@ IntersectLine function calls are conditinally replaced(If the shape of that node
 overriden).
 
 An example call is here.
-"if(cytoscape.sbgn.totallyOverridenNodeShapes(this, src))
+"if(cytoscape.sbgn.isNodeShapeTotallyOverriden(this, src))
         srcOutside = srcShape.intersectLine(src, tgtPos.x, tgtPos.y, edge._private.data.porttarget);
 //        srcOutside = cytoscape.sbgn.intersetLineSelection(this, src, tgtPos.x, tgtPos.y, edge._private.data.portsource );
       else
@@ -93,6 +93,64 @@ CRp.usePaths function returns false.
 
 "var styfn = {};" => "var styfn = window.cyStyfn;"
 
-Add 'cytoscape.sbgn.registerSbgnArrowShapes();' to the end of 'registerSbgnArrowShapes' function
+Add 'cytoscape.sbgn.registerSbgnArrowShapes();' to the end of 'registerArrowShapes' function
 
-Replace 'var arrowShapes = this.arrowShapes = {};' at the beggining of 'registerSbgnArrowShapes' function with 'var arrowShapes = this.arrowShapes = window.cyArrowShapes;'
+Replace 'var arrowShapes = this.arrowShapes = {};' at the beggining of 'registerArrowShapes' function with 'var arrowShapes = this.arrowShapes = window.cyArrowShapes;'
+
+In 'BRp.findEndpoints' add  'var porttarget = edge._private.data.porttarget;'
+                            'var portsource = edge._private.data.portsource;' inside variables.
+append
+if(!segments){
+      var portP1 = cytoscape.sbgn.addPortReplacementIfAny(source, portsource);
+      var portP2 = cytoscape.sbgn.addPortReplacementIfAny(target, porttarget);
+
+      if(portP1.x != srcPos.x || portP1.y != srcPos.y){
+        p1[0] = portP1.x;
+        p1[1] = portP1.y;
+      }
+
+      if(portP2.x != tgtPos.x || portP2.y != tgtPos.y){
+        p2[0] = portP2.x;
+        p2[1] = portP2.y;
+      }
+    }
+to the end of 'else if( lines )'
+
+In 'CRp.drawEdgePath' add after 'if( canvasCxt.setLineDash )' ends
+
+if (type === 'consumption' || type === 'production') {
+
+    if (!pathCacheHit) {
+      if (context.beginPath) {
+        context.beginPath();
+      }
+      if (rs.edgeType != 'segments' && pts.length == 3 * 2) {
+        cytoscape.sbgn.drawQuadraticLineCardinality(context, edge, pts, type);
+      } else {
+        cytoscape.sbgn.drawStraightLineCardinality(context, edge, pts, type);
+      }
+    }
+
+    context = canvasCxt;
+    context.stroke();
+  }
+
+and add 
+
+    if (rs.edgeType == 'segments'){
+      cytoscape.sbgn.fillBendShapes(edge, context);
+    }
+
+to the end of 'CRp.drawEdgePath'
+
+Comment out 
+
+d = swappedDirection ? -d : d;
+var w1 = !swappedDirection ? (1 - w) : w;
+var w2 = !swappedDirection ? w : (1 - w);
+
+comment 
+
+d = Math.abs(d);
+var w1 = (1 - w);
+var w2 = w;
