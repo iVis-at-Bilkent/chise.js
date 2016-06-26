@@ -110,7 +110,7 @@ var generalActionFunctions = {
     nodes.addClass('noderesize-resized');
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      handleSBGNInspector();
+      inspectorUtilities.handleSBGNInspector();
     }
 
     return result;
@@ -141,7 +141,7 @@ var generalActionFunctions = {
     nodes.addClass('changeContent');
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      handleSBGNInspector();
+      inspectorUtilities.handleSBGNInspector();
     }
 
     return result;
@@ -173,7 +173,7 @@ var generalActionFunctions = {
     cy.forceRender();
 
     if (_.isEqual(eles, cy.nodes(':selected'))) {
-      handleSBGNInspector();
+      inspectorUtilities.handleSBGNInspector();
     }
 
     return result;
@@ -203,7 +203,7 @@ var generalActionFunctions = {
     cy.forceRender();
 
     if (_.isEqual(eles, cy.nodes(':selected'))) {
-      handleSBGNInspector();
+      inspectorUtilities.handleSBGNInspector();
     }
 
     return result;

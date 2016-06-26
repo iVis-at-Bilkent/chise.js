@@ -20,7 +20,7 @@ var SBGNActionFunctions = {
 
     cy.forceRender();
 
-    fillInspectorStateAndInfos(param.nodes, param.stateAndInfos, param.width);
+    inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.stateAndInfos, param.width);
 
     return result;
   },
@@ -37,7 +37,7 @@ var SBGNActionFunctions = {
     cy.forceRender();
 
     if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
-      fillInspectorStateAndInfos(param.node, param.width);
+      inspectorUtilities.fillInspectorStateAndInfos(param.node, param.width);
     }
 
     return result;
@@ -48,14 +48,14 @@ var SBGNActionFunctions = {
     var stateAndInfos = param.stateAndInfos;
 
     stateAndInfos.push(obj);
-    relocateStateAndInfos(stateAndInfos);
+    inspectorUtilities.relocateStateAndInfos(stateAndInfos);
 
     for (var i = 0; i < nodes.length; i++) {
       nodes[i]._private.data.sbgnstatesandinfos = stateAndInfos;
     }
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
+      inspectorUtilities.fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
     }
     cy.forceRender();
 
@@ -80,9 +80,9 @@ var SBGNActionFunctions = {
     }
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
+      inspectorUtilities.fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
     }
-    relocateStateAndInfos(stateAndInfos);
+    inspectorUtilities.relocateStateAndInfos(stateAndInfos);
     cy.forceRender();
 
     var result = {

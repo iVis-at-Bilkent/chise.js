@@ -70,5 +70,17 @@ var sbgnElementUtilities = {
         var children = node.children();
         this.moveNodes(positionDiff, children, true);
       }
+    },
+    convertToModelPosition: function (renderedPosition) {
+      var pan = cy.pan();
+      var zoom = cy.zoom();
+
+      var x = (renderedPosition.x - pan.x) / zoom;
+      var y = (renderedPosition.y - pan.y) / zoom;
+
+      return {
+        x: x,
+        y: y
+      };
     }
 };

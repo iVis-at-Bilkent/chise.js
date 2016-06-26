@@ -16,7 +16,7 @@ var loadSample = function(filename){
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
   
-  handleSBGNInspector();
+  inspectorUtilities.handleSBGNInspector();
 };
 
 var beforePerformLayout = function(){
@@ -142,7 +142,7 @@ $(document).ready(function () {
     })).render();
 
     editorActionsManager.reset();
-    handleSBGNInspector();
+    inspectorUtilities.handleSBGNInspector();
   });
 
   $('.add-node-menu-item').click(function (e) {
