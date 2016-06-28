@@ -155,4 +155,6 @@ d = Math.abs(d);
 var w1 = (1 - w);
 var w2 = w;
 
-consider state-infos, multimers, ports on bounding box calculation (refer to 'https://github.com/iVis-at-Bilkent/sbgnviz-js/commit/12d400fef6cec4784c33abc10f680b7efe4ca34b')
+consider state-infos, multimers, ports on bounding box calculation 
+(refer to 'https://github.com/iVis-at-Bilkent/sbgnviz-js/commit/12d400fef6cec4784c33abc10f680b7efe4ca34b' and 
+'https://github.com/iVis-at-Bilkent/sbgnviz-js/commit/9f63661e1597df4ecf8f3ea6bbb585ee3c91a301')
