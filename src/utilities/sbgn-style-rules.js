@@ -1,5 +1,5 @@
 var defaultSbgnStyleRules = {
-  'compound-padding': 20,
+  'compound-padding': 10,
   'dynamic-label-size': 'regular',
   'fit-labels-to-nodes': 'true',
   'rearrange-after-expand-collapse': 'true',

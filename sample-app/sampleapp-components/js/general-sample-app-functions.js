@@ -221,8 +221,8 @@ var calculatePaddings = function (paddingPercent) {
 
   var calc_padding = (paddingPercent / 100) * Math.floor(total / (2 * numOfSimples));
 
-  if (calc_padding < 15) {
-    calc_padding = 15;
+  if (calc_padding < 5) {
+    calc_padding = 5;
   }
 
   return calc_padding;
