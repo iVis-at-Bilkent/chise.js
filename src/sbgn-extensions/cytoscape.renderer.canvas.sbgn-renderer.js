@@ -650,7 +650,7 @@
 
   $$.sbgn.isMultimer = function (node) {
     var sbgnClass = node._private.data.sbgnclass;
-    if (sbgnClass.indexOf("multimer") != -1)
+    if (sbgnClass && sbgnClass.indexOf("multimer") != -1)
       return true;
     return false;
   };
