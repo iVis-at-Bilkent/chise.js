@@ -20,6 +20,7 @@
     "backbone": "0.9.10",
     "cytoscape-cose-bilkent": "latest",
     "cytoscape-undo-redo": "latest",
-    "cytoscape-expand-collapse": "latest"
+    "cytoscape-expand-collapse": "latest",
+    "cytoscape-clipboard": "latest"
   }
 }

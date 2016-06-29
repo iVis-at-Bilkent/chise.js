@@ -209,12 +209,10 @@ $(document).ready(function () {
   
   $('#clone-selected').click(function (e) {
     var selectedNodes = cy.nodes(':selected');
-    var param = {
-      eles: selectedNodes,
-      firstTime: true
-    };
-    
-    cy.undoRedo().do("cloneGivenElements", param);
+    var cb = cy.clipboard();
+    var _id = cb.copy(selectedNodes, "cloneOperation");
+    console.log(_id);
+    cy.undoRedo().do("paste", { id: _id });
   });
 
   $('#align-horizontal-top').click(function (e) {
