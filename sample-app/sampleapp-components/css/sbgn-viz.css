@@ -397,13 +397,6 @@ td {
     width: 100%;
 }
 
-.ctx-bend-operation{
-    display:none;
-    z-index:1000;
-    width:110px;
-    padding: 3px 20px;
-}
-
 menu {
     position:absolute;
     display:block;

@@ -21,6 +21,7 @@
     "cytoscape-cose-bilkent": "latest",
     "cytoscape-undo-redo": "latest",
     "cytoscape-expand-collapse": "latest",
-    "cytoscape-clipboard": "latest"
+    "cytoscape-clipboard": "latest",
+    "cytoscape-edge-bend-editing": "latest"
   }
 }

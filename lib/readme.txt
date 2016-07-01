@@ -34,6 +34,8 @@ is commented out.
 In checkNode function inside findNearestElement, and BRp.findEdgeControlPoints shape.checkPoint and similar function calls are
 replaced. An example replaced statement is "cytoscape.sbgn.isNodeShapeTotallyOverriden(self, node)?shape.checkPoint( x, y, node, 0 ):shape.checkPoint(x, y, 0, width, height, pos.x, pos.y)"
 
+In BRp.findEdgeControlPoints portsource and porttarget are considered while swapping src and tgt.
+
 In BRp.getNodeShape function
 "if( node.isParent() ){
     if( shape === 'rectangle' || shape === 'roundrectangle' ){
@@ -143,17 +145,10 @@ and add
 
 to the end of 'CRp.drawEdgePath'
 
-Comment out 
+change dx and dy while calculating vectorNorm as the following
 
-d = swappedDirection ? -d : d;
-var w1 = !swappedDirection ? (1 - w) : w;
-var w2 = !swappedDirection ? w : (1 - w);
-
-comment 
-
-d = Math.abs(d);
-var w1 = (1 - w);
-var w2 = w;
+"var dy = ( tgtPos.y - srcPos.y );
+var dx = ( tgtPos.x - srcPos.x );"
 
 consider state-infos, multimers, ports on bounding box calculation 
 (refer to 'https://github.com/iVis-at-Bilkent/sbgnviz-js/commit/12d400fef6cec4784c33abc10f680b7efe4ca34b' and 

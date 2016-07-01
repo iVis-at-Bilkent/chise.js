@@ -31,16 +31,10 @@ var beforePerformLayout = function(){
   edges.data("portsource", []);
   edges.data("porttarget", []);
 
+  // TODO do this by using extension API
   edges.removeData('weights');
   edges.removeData('distances');
-  edges.removeData('bendPointPositions');
-  
-  //Clear the segment points in case of they are not updated
-  for(var i = 0; i < edges.length; i++){
-    edges[i]._private.rscratch.segpts = [];
-  }
-  
-  cy.edges().css('curve-style', 'bezier');
+  edges.removeClass('edgebendediting-hasbendpoints');
 };
 
 //A function to trigger incremental layout. Its definition is inside document.ready()
@@ -87,42 +81,6 @@ $("#node-label-textbox").keydown(function (e) {
 
 $(document).ready(function () {
   loadSample('neuronal_muscle_signalling.xml');
-    
-  document.getElementById("ctx-add-bend-point").addEventListener("contextmenu",function(event){
-      event.preventDefault();
-  },false);
-  
-  document.getElementById("ctx-remove-bend-point").addEventListener("contextmenu",function(event){
-      event.preventDefault();
-  },false);
-
-  $('.ctx-bend-operation').click(function (e) {
-    $('.ctx-bend-operation').css('display', 'none');
-  });
-
-  $('#ctx-add-bend-point').click(function (e) {
-    var edge = sbgnBendPointUtilities.currentCtxEdge;
-    var param = {
-      edge: edge,
-      weights: edge.data('weights')?[].concat(edge.data('weights')):edge.data('weights'),
-      distances: edge.data('distances')?[].concat(edge.data('distances')):edge.data('distances')
-    };
-    
-    sbgnBendPointUtilities.addBendPoint();
-    cy.undoRedo().do("changeBendPoints", param);
-  });
-  
-  $('#ctx-remove-bend-point').click(function (e) {
-    var edge = sbgnBendPointUtilities.currentCtxEdge;
-    var param = {
-      edge: edge,
-      weights: [].concat(edge.data('weights')),
-      distances: [].concat(edge.data('distances'))
-    };
-    
-    sbgnBendPointUtilities.removeBendPoint();
-    cy.undoRedo().do("changeBendPoints", param);
-  });
 
   $('#new-file-icon').click(function (e) {
     $('#new-file').trigger("click");

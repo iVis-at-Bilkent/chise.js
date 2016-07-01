@@ -149,8 +149,8 @@ var jsonToSbgnml = {
         sbgnmlText = sbgnmlText + "<start y='" + edge._private.rscratch.startY + "' x='" +
             edge._private.rscratch.startX + "'/>\n";
 
-        if(edge.data('weights') && edge.data('distances') && edge.data('weights').length > 0 && edge.data('distances').length > 0){
-          var segpts = edge._private.rscratch.segpts;
+        var segpts = edge.getSegmentPoints();
+        if(segpts){
           for(var i = 0; segpts && i < segpts.length; i = i + 2){
             var bendX = segpts[i];
             var bendY = segpts[i + 1];

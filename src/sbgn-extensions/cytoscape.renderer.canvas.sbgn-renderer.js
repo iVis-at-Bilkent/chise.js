@@ -43,61 +43,6 @@
     $$.sbgn.drawText(context, textProp, false);
   };
 
-  $$.sbgn.fillBendShapes = function(edge, context){
-    var segpts = edge._private.rscratch.segpts;
-    var radius = $$.sbgn.getBendShapesLenght(edge);
-    
-    for(var i = 0; segpts && i < segpts.length; i = i + 2){
-      var bendX = segpts[i];
-      var bendY = segpts[i + 1];
-      
-      var oldStyle = context.fillStyle;
-      context.fillStyle = edge.css('line-color');
-      $$.sbgn.fillBendShape(bendX, bendY, radius, context);
-      context.fillStyle = oldStyle;
-    }
-  };
-  
-  $$.sbgn.fillBendShape = function(bendX, bendY, length, context){
-    window.cyRenderer.drawPolygonPath(context,
-                bendX, bendY,
-                length, length,
-                window.cyNodeShapes['process'].points);
-    context.fill();
-  };
-  
-  $$.sbgn.getBendShapesLenght = function(edge){
-    var factor = 6;
-    var length = parseFloat(edge.css('width')) * factor;
-    return length;
-  };
-  
-  $$.sbgn.checkIfInsideBendShape = function(x, y, length, centerX, centerY){
-    return window.cyMath.pointInsidePolygon(x, y, window.cyNodeShapes['process'].points,
-                centerX, centerY, length, length, [0, -1], 0);
-  };
-  
-  $$.sbgn.getContainingBendShapeIndex = function(x, y, edge) {
-    if(edge.data('weights') == null || edge.data('weights').lenght == 0){
-      return -1;
-    }
-    
-    var segpts = edge._private.rscratch.segpts;
-    var length = cytoscape.sbgn.getBendShapesLenght(edge);
-
-    for(var i = 0; segpts && i < segpts.length; i = i + 2){
-      var bendX = segpts[i];
-      var bendY = segpts[i + 1];
-
-      var inside = cytoscape.sbgn.checkIfInsideBendShape(x, y, length, bendX, bendY);
-      if(inside){
-        return i / 2;
-      }
-    }
-    
-    return -1;
-  };
-
   $$.sbgn.addPortReplacementIfAny = function (node, edgePort) {
     var posX = node.position().x;
     var posY = node.position().y;

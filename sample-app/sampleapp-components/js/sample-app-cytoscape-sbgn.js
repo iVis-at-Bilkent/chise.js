@@ -127,16 +127,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'source-arrow-color': '#555',
 //          'target-arrow-shape': 'data(sbgnclass)'
         })
-        .selector("edge[distances][weights]")
-        .css({
-          'curve-style': 'segments',
-          'segment-distances': function (ele) {
-            return sbgnBendPointUtilities.getSegmentDistancesString(ele);
-          },
-          'segment-weights': function (ele) {
-            return sbgnBendPointUtilities.getSegmentWeightsString(ele);
-          }
-        })
         .selector("edge[sbgnclass]")
         .css({
           'target-arrow-shape': function (ele) {
@@ -333,7 +323,18 @@ var SBGNContainer = Backbone.View.extend({
         window.cy = this;
         registerUndoRedoActions();
         
+        // register the extensions
+        
         cy.expandCollapse(getExpandCollapseOptions());
+        
+        cy.edgeBendEditing({
+          // this function specifies the positions of bend points
+          bendPositionsFunction: function(ele) {
+            return ele.data('bendPointPositions');
+          },
+          // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
+          undoable: true
+        });
         
         cy.clipboard({
           clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
@@ -345,21 +346,8 @@ var SBGNContainer = Backbone.View.extend({
         
         var edges = cy.edges();
 
-        for (var i = 0; i < edges.length; i++) {
-          var edge = edges[i];
-          var result = sbgnBendPointUtilities.convertToRelativeBendPositions(edge);
-
-          if (result.distances.length > 0) {
-            edge.data('weights', result.weights);
-            edge.data('distances', result.distances);
-          }
-        }
-
-//        refreshEmptyComplexesOrCompartments();
         refreshPaddings();
         initilizeUnselectedDataOfElements();
-
-        cy.nodes('[sbgnclass="complex"],[sbgnclass="compartment"],[sbgnclass="submap"]').data('expanded-collapsed', 'expanded');
 
         cy.noderesize({
           handleColor: '#000000', // the colour of the handle and the line drawn from it
@@ -472,7 +460,10 @@ var SBGNContainer = Backbone.View.extend({
             return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
           }
         });
+        
         container.cytoscapePanzoom(panProps);
+
+        // listen events
 
         cy.on("beforeCollapse", "node", function (event) {
           var node = this;
@@ -567,10 +558,6 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        cy.on("mouseup", "node", function () {
-          
-        });
-
         cy.on('mouseover', 'node', function (event) {
           var node = this;
           if (modeHandler.mode != "selection-mode") {
@@ -599,104 +586,6 @@ var SBGNContainer = Backbone.View.extend({
           }
           this.mouseover = false;           //make preset layout to redraw the nodes
           cy.forceRender();
-        });
-
-        cy.on('cxttap', 'edge', function (event) {
-          var edge = this;
-          var containerPos = $(cy.container()).position();
-
-          var left = containerPos.left + event.cyRenderedPosition.x;
-          left = left.toString() + 'px';
-
-          var top = containerPos.top + event.cyRenderedPosition.y;
-          top = top.toString() + 'px';
-
-//          var ctxMenu = document.getElementById("edge-ctx-menu");
-//          ctxMenu.style.display = "block";
-//          ctxMenu.style.left = left;
-//          ctxMenu.style.top = top;
-
-          $('.ctx-bend-operation').css('display', 'none');
-
-          var selectedBendIndex = cytoscape.sbgn.getContainingBendShapeIndex(event.cyPosition.x, event.cyPosition.y, edge);
-          if (selectedBendIndex == -1) {
-            $('#ctx-add-bend-point').css('display', 'block');
-            sbgnBendPointUtilities.currentCtxPos = event.cyPosition;
-            ctxMenu = document.getElementById("ctx-add-bend-point");
-          }
-          else {
-            $('#ctx-remove-bend-point').css('display', 'block');
-            sbgnBendPointUtilities.currentBendIndex = selectedBendIndex;
-            ctxMenu = document.getElementById("ctx-remove-bend-point");
-          }
-
-          ctxMenu.style.display = "block";
-          ctxMenu.style.left = left;
-          ctxMenu.style.top = top;
-
-          sbgnBendPointUtilities.currentCtxEdge = edge;
-        });
-
-        var movedBendIndex;
-        var movedBendEdge;
-        var moveBendParam;
-
-        cy.on('tapstart', 'edge', function (event) {
-          var edge = this;
-          movedBendEdge = edge;
-
-          moveBendParam = {
-            edge: edge,
-            weights: edge.data('weights') ? [].concat(edge.data('weights')) : edge.data('weights'),
-            distances: edge.data('distances') ? [].concat(edge.data('distances')) : edge.data('distances')
-          };
-
-          var cyPosX = event.cyPosition.x;
-          var cyPosY = event.cyPosition.y;
-
-          if (edge._private.selected) {
-            var index = cytoscape.sbgn.getContainingBendShapeIndex(cyPosX, cyPosY, edge);
-            if (index != -1) {
-              movedBendIndex = index;
-              cy.panningEnabled(false);
-              cy.boxSelectionEnabled(false);
-            }
-          }
-        });
-
-        cy.on('tapdrag', function (event) {
-          var edge = movedBendEdge;
-
-          if (movedBendEdge === undefined || movedBendIndex === undefined) {
-            return;
-          }
-
-          var weights = edge.data('weights');
-          var distances = edge.data('distances');
-
-          var relativeBendPosition = sbgnBendPointUtilities.convertToRelativeBendPosition(edge, event.cyPosition);
-          weights[movedBendIndex] = relativeBendPosition.weight;
-          distances[movedBendIndex] = relativeBendPosition.distance;
-
-          edge.data('weights', weights);
-          edge.data('distances', distances);
-        });
-
-        cy.on('tapend', 'edge', function (event) {
-          var edge = movedBendEdge;
-
-          if (moveBendParam !== undefined && edge.data('weights')
-                  && edge.data('weights').toString() != moveBendParam.weights.toString()) {
-            
-            cy.undoRedo().do("changeBendPoints", moveBendParam);
-          }
-
-          movedBendIndex = undefined;
-          movedBendEdge = undefined;
-          moveBendParam = undefined;
-
-          cy.panningEnabled(true);
-          cy.boxSelectionEnabled(true);
         });
 
         cy.on('cxttap', 'node', function (event) {
@@ -807,7 +696,6 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('tap', function (event) {
           $('input').blur();
-          $('.ctx-bend-operation').css('display', 'none');
 //          $("#node-label-textbox").blur();
           cy.nodes(":selected").length;
 
