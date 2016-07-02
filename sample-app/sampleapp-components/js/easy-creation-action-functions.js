@@ -1,39 +1,4 @@
 var easyCreationActionFunctions = {
-  //Clones given nodes and their descendants in top down order
-  cloneTopDown: function (nodes, nodeIdMap, oldIDToID) {
-    if (nodes.length == 0) {
-      return cy.collection();
-    }
-
-    var jsons = jQuery.extend(true, [], nodes.jsons());
-    for (var i = 0; i < jsons.length; i++) {
-      var json = jsons[i];
-      nodeIdMap[json.data.id] = true;
-      json.data.oldId = json.data.id;
-      json.data.justAdded = true;
-
-      //change the original parent with the clone parent
-      if (json.data.parent && oldIDToID[json.data.parent]) {
-        json.data.parent = oldIDToID[json.data.parent];
-      }
-
-      delete json.data.id;
-    }
-
-    cy.add(jsons);
-
-    var justAddedNodes = cy.nodes('[justAdded]');
-
-    for (var i = 0; i < justAddedNodes.length; i++) {
-      var node = justAddedNodes[i];
-      oldIDToID[node.data('oldId')] = node.id();
-      node.removeData('justAdded');
-    }
-
-    justAddedNodes.removeData('oldId');
-    var clonedDescendants = easyCreationActionFunctions.cloneTopDown(nodes.children(), nodeIdMap, oldIDToID);
-    return justAddedNodes.union(clonedDescendants);
-  },
   createTemplateReaction: function (param) {
     var firstTime = param.firstTime;
     var eles;
@@ -147,58 +112,6 @@ var easyCreationActionFunctions = {
       //filter the just added elememts to return them and remove just added mark
       eles = cy.elements('[justAdded]');
       eles.removeData('justAdded');
-    }
-    else {
-      eles = param;
-      cy.add(eles);
-    }
-
-    refreshPaddings();
-    cy.elements().unselect();
-    eles.select();
-
-    return eles;
-  },
-  cloneGivenElements: function (param) {
-    var eles;
-    if (param.firstTime) {
-      eles = param.eles;
-      //Keep nodeIdMap to select the edges to clone
-      var nodeIdMap = {};
-      var oldIDToID = {};
-      var topMostNodes = sbgnElementUtilities.getTopMostNodes(eles);
-      var edges;
-
-      var justAddedNodes = easyCreationActionFunctions.cloneTopDown(topMostNodes, nodeIdMap, oldIDToID);
-      sbgnElementUtilities.moveNodes({x: 50, y: 50}, sbgnElementUtilities.getTopMostNodes(justAddedNodes));
-
-      //filter the edges which must be included in the cloned sub-network
-      edges = cy.edges(':visible').filter(function (i, ele) {
-        var srcId = ele.data('source');
-        var tgtId = ele.data('target');
-
-        return nodeIdMap[srcId] && nodeIdMap[tgtId];
-      });
-
-      var edgeJsons = jQuery.extend(true, [], edges.jsons());
-      //remove the ids in jsons and alter the source and target ids
-      for (var i = 0; i < edgeJsons.length; i++) {
-        var json = edgeJsons[i];
-        var newSrcId = oldIDToID[json.data.source];
-        var newTgtId = oldIDToID[json.data.target];
-        json.data.source = newSrcId;
-        json.data.target = newTgtId;
-        json.data.justAdded = true;
-        delete json.data.id;
-      }
-
-      cy.add(edgeJsons);
-
-      var justAddedEdges = cy.edges('[justAdded]');
-      justAddedEdges.removeData('justAdded');
-
-      //update the eles to be returned for undo operation
-      eles = justAddedNodes.union(justAddedEdges);
     }
     else {
       eles = param;

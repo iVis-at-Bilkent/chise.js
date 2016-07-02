@@ -39,6 +39,5 @@ var registerUndoRedoActions = function () {
   ur.action("removeStateAndInfo", SBGNActionFunctions.removeStateAndInfo, SBGNActionFunctions.addStateAndInfo);
   
   // register easy creation actions
-  ur.action("cloneGivenElements", easyCreationActionFunctions.cloneGivenElements, addRemoveActionFunctions.removeEles);
   ur.action("createTemplateReaction", easyCreationActionFunctions.createTemplateReaction, addRemoveActionFunctions.removeEles);
 };
