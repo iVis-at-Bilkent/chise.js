@@ -169,7 +169,6 @@ $(document).ready(function () {
     var selectedNodes = cy.nodes(':selected');
     var cb = cy.clipboard();
     var _id = cb.copy(selectedNodes, "cloneOperation");
-    console.log(_id);
     cy.undoRedo().do("paste", { id: _id });
   });
 
