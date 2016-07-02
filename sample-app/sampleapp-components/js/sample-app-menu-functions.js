@@ -32,8 +32,8 @@ var beforePerformLayout = function(){
   edges.data("porttarget", []);
 
   // TODO do this by using extension API
-  edges.removeData('weights');
-  edges.removeData('distances');
+  edges.removeScratch('cyedgebendeditingWeights');
+  edges.removeScratch('cyedgebendeditingDistances');
   edges.removeClass('edgebendediting-hasbendpoints');
 };
 
