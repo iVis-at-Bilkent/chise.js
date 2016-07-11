@@ -27,6 +27,18 @@ var loadSBGNMLText = function(text){
   })).render();
 };
 
+var loadSBGNMLFile = function(file) {
+  var textType = /text.*/;
+
+  var reader = new FileReader();
+
+  reader.onload = function (e) {
+    loadSBGNMLText(this.result);
+  }
+  reader.readAsText(file);
+  setFileContent(file.name);
+};
+
 var beforePerformLayout = function(){
   var nodes = cy.nodes();
   var edges = cy.edges();
@@ -393,15 +405,9 @@ $(document).ready(function () {
 
     var fileInput = document.getElementById('file-input');
     var file = fileInput.files[0];
-    var textType = /text.*/;
-
-    var reader = new FileReader();
-
-    reader.onload = function (e) {
-      loadSBGNMLText(this.result);
-    }
-    reader.readAsText(file);
-    setFileContent(file.name);
+    
+    loadSBGNMLFile(file);
+    
     $("#file-input").val("");
   });
 
