@@ -19,6 +19,14 @@ var loadSample = function(filename){
   inspectorUtilities.handleSBGNInspector();
 };
 
+var loadSBGNMLText = function(text){
+  (new SBGNContainer({
+    el: '#sbgn-network-container',
+    model: {cytoscapeJsGraph:
+              sbgnmlToJson.convert(textToXmlObject(text))}
+  })).render();
+};
+
 var beforePerformLayout = function(){
   var nodes = cy.nodes();
   var edges = cy.edges();
@@ -390,11 +398,7 @@ $(document).ready(function () {
     var reader = new FileReader();
 
     reader.onload = function (e) {
-      (new SBGNContainer({
-        el: '#sbgn-network-container',
-        model: {cytoscapeJsGraph:
-                  sbgnmlToJson.convert(textToXmlObject(this.result))}
-      })).render();
+      loadSBGNMLText(this.result);
     }
     reader.readAsText(file);
     setFileContent(file.name);
