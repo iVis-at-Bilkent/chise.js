@@ -16,13 +16,6 @@ var registerUndoRedoActions = function () {
   ur.action("createCompoundForSelectedNodes", addRemoveActionFunctions.createCompoundForSelectedNodes, addRemoveActionFunctions.removeCompound);
   ur.action("changeParent", addRemoveActionFunctions.changeParent, addRemoveActionFunctions.changeParent);
 
-  // register filtering actions
-  ur.action("hideSelected", filteringActionFunctions.hideSelected, filteringActionFunctions.showJustGivenNodes);
-  ur.action("showSelected", filteringActionFunctions.showSelected, filteringActionFunctions.showJustGivenNodes);
-  ur.action("highlightExtensionOfSelected", filteringActionFunctions.highlightExtensionOfSelectedElements, filteringActionFunctions.removeHighlightOfElements);
-  ur.action("removeHighlights", filteringActionFunctions.removeHighlights, filteringActionFunctions.highlightExtensionOfSelectedElements);
-  ur.action("showAll", filteringActionFunctions.showAll, filteringActionFunctions.showJustGivenNodes);
-
   // register general actions
   ur.action("resizeNode", generalActionFunctions.resizeNode, generalActionFunctions.resizeNode);
   ur.action("changeNodeLabel", generalActionFunctions.changeNodeLabel, generalActionFunctions.changeNodeLabel);

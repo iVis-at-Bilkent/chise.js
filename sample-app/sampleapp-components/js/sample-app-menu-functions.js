@@ -524,13 +524,15 @@ $(document).ready(function () {
   $("#hide-selected").click(function (e) {
     var selectedEles = cy.$(":selected");
     
-    if(selectedEles.length == 0){
+    if(selectedEles.length === 0){
       return;
     }
     
-    var param = {};
+    cy.undoRedo().do("hide", selectedEles);
     
-    cy.undoRedo().do("hideSelected", param);
+//    var param = {};
+//    
+//    cy.undoRedo().do("hideSelected", param);
   });
 
   $("#hide-selected-icon").click(function (e) {
@@ -538,13 +540,15 @@ $(document).ready(function () {
   });
 
   $("#show-selected").click(function (e) {
-    if(cy.nodes(":selected").length == cy.nodes(':visible').length) {
+    if(cy.elements(":selected").length === cy.elements(':visible').length) {
       return;
     }
 
-    var param = {};
-    
-    cy.undoRedo().do("showSelected", param);
+    cy.undoRedo().do("show", cy.elements(":selected"));
+
+//    var param = {};
+//    
+//    cy.undoRedo().do("showSelected", param);
   });
 
   $("#show-selected-icon").click(function (e) {
@@ -552,11 +556,13 @@ $(document).ready(function () {
   });
 
   $("#show-all").click(function (e) {
-    if(cy.nodes().length == cy.nodes(':visible').length) {
+    if(cy.elements().length === cy.elements(':visible').length) {
       return;
     }
+    
+    cy.undoRedo().do("show", cy.elements());
 
-    cy.undoRedo().do("showAll", {});
+//    cy.undoRedo().do("showAll", {});
   });
 
   $("#delete-selected-smart").click(function (e) {
@@ -576,21 +582,24 @@ $(document).ready(function () {
   });
 
   $("#neighbors-of-selected").click(function (e) {
-    var elesToHighlight = sbgnFiltering.getNeighborsofSelected();
-    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
-    
-    if(elesToHighlight.not(alreadyHighlighted).length == 0)
-    {
-      return;
+//    var elesToHighlight = sbgnFiltering.getNeighborsofSelected();
+//    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
+//    
+//    if(elesToHighlight.not(alreadyHighlighted).length == 0)
+//    {
+//      return;
+//    }
+//    
+//    var param = {
+//      firstTime: true,
+//      elesToHighlight: elesToHighlight,
+//      highlightNeighboursofSelected: true
+//    };
+//    
+//    cy.undoRedo().do("highlightExtensionOfSelected", param);
+    if(cy.$(":selected").length > 0) {
+      cy.undoRedo().do("highlightNeighbors", cy.$(":selected"));
     }
-    
-    var param = {
-      firstTime: true,
-      elesToHighlight: elesToHighlight,
-      highlightNeighboursofSelected: true
-    };
-    
-    cy.undoRedo().do("highlightExtensionOfSelected", param);
   });
 
   $("#highlight-neighbors-of-selected-icon").click(function (e) {
@@ -616,12 +625,15 @@ $(document).ready(function () {
     }
 
     nodesToSelect.select();
-    var param = {
-      firstTime: true,
-      highlightProcessesOfSelected: true
-    };
-
-    cy.undoRedo().do("highlightExtensionOfSelected", param);
+//    var param = {
+//      firstTime: true,
+//      highlightProcessesOfSelected: true
+//    };
+//
+//    cy.undoRedo().do("highlightExtensionOfSelected", param);
+    
+    var nodesToHighlight = sbgnFiltering.getProcessesOfSelected();
+    cy.undoRedo().do("highlight", nodesToHighlight);
   });
 
   $("#search-by-label-text-box").keydown(function (e) {
@@ -635,30 +647,32 @@ $(document).ready(function () {
   });
 
   $("#processes-of-selected").click(function (e) {
-    var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
-    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
-    
-    if(elesToHighlight.not(alreadyHighlighted).length == 0)
-    {
-      return;
-    }
-    
-    var param = {
-      firstTime: true,
-      elesToHighlight: elesToHighlight,
-      highlightProcessesOfSelected: true
-    };
-    
-    cy.undoRedo().do("highlightExtensionOfSelected", param);
+//    var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
+//    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
+//    
+//    if(elesToHighlight.not(alreadyHighlighted).length == 0)
+//    {
+//      return;
+//    }
+//    
+//    var param = {
+//      firstTime: true,
+//      elesToHighlight: elesToHighlight,
+//      highlightProcessesOfSelected: true
+//    };
+//    
+//    cy.undoRedo().do("highlightExtensionOfSelected", param);
+    var processOfSelected = sbgnFiltering.getProcessesOfSelected();
+    cy.undoRedo().do("highlight", processOfSelected);
   });
 
   $("#remove-highlights").click(function (e) {
     
-    if (sbgnFiltering.thereIsNoHighlightedElement()){
+    if (sbgnFiltering.noneIsNotHighlighted()){
       return;
     }
     
-    cy.undoRedo().do("removeHighlights", {});
+    cy.undoRedo().do("removeHighlights");
   });
 
   $('#remove-highlights-icon').click(function (e) {

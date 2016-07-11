@@ -188,14 +188,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
           'text-opacity': 0.3,
           'background-opacity': 0.3
         })
-//        .selector("node.emptyComplexOrCompartment")
-//        .css({
-//          'width': 36,
-//          'height': 36,
-//          'content': function (ele) {
-//            return getElementContent(ele);
-//          }
-//        })
         .selector('node.not-highlighted')
         .css({
           'border-opacity': 0.3,
@@ -342,6 +334,31 @@ var SBGNContainer = Backbone.View.extend({
             enabled: true, // Whether keyboard shortcuts are enabled
             undoable: true // and if undoRedo extension exists
           }
+        });
+        
+        cy.viewUtilities({
+          node: {
+              highlighted: {}, // styles for when nodes are highlighted.
+              unhighlighted: { // styles for when nodes are unhighlighted.
+                'border-opacity': 0.3,
+                'text-opacity': 0.3,
+                'background-opacity': 0.3
+              },
+              hidden: {
+                'display': 'none'
+              }
+            },
+            edge: {
+              highlighted: {}, // styles for when edges are highlighted.
+              unhighlighted: { // styles for when edges are unhighlighted.
+                'opacity': 0.3,
+                'text-opacity': 0.3,
+                'background-opacity': 0.3
+              },
+              hidden: {
+                'display': 'none'
+              }
+            }
         });
         
         var edges = cy.edges();
