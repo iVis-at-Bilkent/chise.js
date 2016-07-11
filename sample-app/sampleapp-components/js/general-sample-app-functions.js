@@ -58,20 +58,24 @@ var initilizeUnselectedDataOfElements = function () {
   var nodes = cy.nodes();
   var edges = cy.edges();
 
+  cy.startBatch();
+
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     node.data("borderColor", node.css('border-color'));
-    node.addClass('changeBorderColor');
-
     node.data("backgroundOpacity", node.css('background-opacity'));
-    node.addClass('changeBackgroundOpacity');
   }
 
   for (var i = 0; i < edges.length; i++) {
     var edge = edges[i];
     edge.data("lineColor", edge.css('line-color'));
-    edge.addClass('changeLineColor');
   }
+  
+  nodes.addClass('changeBorderColor');
+  nodes.addClass('changeBackgroundOpacity');
+  edges.addClass('changeLineColor');
+  
+  cy.endBatch();
 };
 
 /*
