@@ -84,8 +84,6 @@ An example call is
               nodeW, nodeH);
         }"
 
- Added "cytoscape.sbgn.drawExpandCollapseBoxes(node, context);" statement to the end of drawNode function.
-
 Before the definition of CRp.drawPolygonPath function,
 "var CRp = {};" => "var CRp = window.cyRenderer;"
 
@@ -136,14 +134,6 @@ if (type === 'consumption' || type === 'production') {
     context = canvasCxt;
     context.stroke();
   }
-
-and add 
-
-    if (rs.edgeType == 'segments'){
-      cytoscape.sbgn.fillBendShapes(edge, context);
-    }
-
-to the end of 'CRp.drawEdgePath'
 
 change dx and dy while calculating vectorNorm as the following
 
