@@ -582,24 +582,20 @@ $(document).ready(function () {
   });
 
   $("#neighbors-of-selected").click(function (e) {
-//    var elesToHighlight = sbgnFiltering.getNeighborsofSelected();
-//    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
-//    
-//    if(elesToHighlight.not(alreadyHighlighted).length == 0)
-//    {
-//      return;
-//    }
-//    
-//    var param = {
-//      firstTime: true,
-//      elesToHighlight: elesToHighlight,
-//      highlightNeighboursofSelected: true
-//    };
-//    
-//    cy.undoRedo().do("highlightExtensionOfSelected", param);
-    if(cy.$(":selected").length > 0) {
-      cy.undoRedo().do("highlightNeighbors", cy.$(":selected"));
+    var elesToHighlight = sbgnFiltering.getNeighboursOfSelected();
+    
+    if(elesToHighlight.length === 0) {
+      return;
     }
+    
+    var notHighlightedEles = cy.elements(".nothighlighted").filter(":visible");
+    var highlightedEles = cy.elements(':visible').difference(notHighlightedEles);
+    
+    if(elesToHighlight.same(highlightedEles)) {
+      return;
+    }
+    
+    cy.undoRedo().do("highlight", elesToHighlight);
   });
 
   $("#highlight-neighbors-of-selected-icon").click(function (e) {
@@ -647,23 +643,20 @@ $(document).ready(function () {
   });
 
   $("#processes-of-selected").click(function (e) {
-//    var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
-//    var alreadyHighlighted = cy.elements("[highlighted='true']").filter(":visible");
-//    
-//    if(elesToHighlight.not(alreadyHighlighted).length == 0)
-//    {
-//      return;
-//    }
-//    
-//    var param = {
-//      firstTime: true,
-//      elesToHighlight: elesToHighlight,
-//      highlightProcessesOfSelected: true
-//    };
-//    
-//    cy.undoRedo().do("highlightExtensionOfSelected", param);
-    var processOfSelected = sbgnFiltering.getProcessesOfSelected();
-    cy.undoRedo().do("highlight", processOfSelected);
+    var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
+    
+    if(elesToHighlight.length === 0) {
+      return;
+    }
+    
+    var notHighlightedEles = cy.elements(".nothighlighted").filter(":visible");
+    var highlightedEles = cy.elements(':visible').difference(notHighlightedEles);
+    
+    if(elesToHighlight.same(highlightedEles)) {
+      return;
+    }
+    
+    cy.undoRedo().do("highlight", elesToHighlight);
   });
 
   $("#remove-highlights").click(function (e) {

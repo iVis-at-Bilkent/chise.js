@@ -19,6 +19,16 @@ var sbgnFiltering = {
         selectedEles = this.expandNodes(selectedEles);
         return selectedEles;
     },
+    
+    getNeighboursOfSelected: function(){
+        var selectedEles = cy.elements(":selected");
+        selectedEles = selectedEles.add(selectedEles.parents("node[sbgnclass='complex']"));
+        selectedEles = selectedEles.add(selectedEles.descendants());
+        var neighborhoodEles = selectedEles.neighborhood();
+        var nodesToHighlight = selectedEles.add(neighborhoodEles);
+        nodesToHighlight = nodesToHighlight.add(nodesToHighlight.descendants());
+        return nodesToHighlight;
+    },
 
     expandNodes: function(nodesToShow){
         var self = this;
