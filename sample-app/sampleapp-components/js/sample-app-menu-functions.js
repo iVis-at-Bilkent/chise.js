@@ -621,12 +621,6 @@ $(document).ready(function () {
     }
 
     nodesToSelect.select();
-//    var param = {
-//      firstTime: true,
-//      highlightProcessesOfSelected: true
-//    };
-//
-//    cy.undoRedo().do("highlightExtensionOfSelected", param);
     
     var nodesToHighlight = sbgnFiltering.getProcessesOfSelected();
     cy.undoRedo().do("highlight", nodesToHighlight);

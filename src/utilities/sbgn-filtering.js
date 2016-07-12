@@ -25,9 +25,9 @@ var sbgnFiltering = {
         selectedEles = selectedEles.add(selectedEles.parents("node[sbgnclass='complex']"));
         selectedEles = selectedEles.add(selectedEles.descendants());
         var neighborhoodEles = selectedEles.neighborhood();
-        var nodesToHighlight = selectedEles.add(neighborhoodEles);
-        nodesToHighlight = nodesToHighlight.add(nodesToHighlight.descendants());
-        return nodesToHighlight;
+        var elesToHighlight = selectedEles.add(neighborhoodEles);
+        elesToHighlight = elesToHighlight.add(elesToHighlight.descendants());
+        return elesToHighlight;
     },
 
     expandNodes: function(nodesToShow){
