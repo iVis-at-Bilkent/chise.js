@@ -488,7 +488,10 @@ var SBGNContainer = Backbone.View.extend({
           resize: false,
           guidelines: true,
           guidelinesTolerance: 2.0,
-          parentPadding: false
+          parentPadding: false,
+          guidelinesStyle: {
+            strokeStyle: "#dddddd"
+          }
         });
 
         // listen events
@@ -939,7 +942,8 @@ var SBGNProperties = Backbone.View.extend({
     gridSize: 40,
     autoResizeNodes: false,
     showAlignmentGuidelines: true,
-    guidelineTolerance: 2.0
+    guidelineTolerance: 2.0,
+    guidelineColor: "#dddddd"
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -977,6 +981,7 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.autoResizeNodes = document.getElementById("auto-resize-nodes").checked;
       self.currentSBGNProperties.showAlignmentGuidelines = document.getElementById("show-alignment-guidelines").checked;
       self.currentSBGNProperties.guidelineTolerance = Number(document.getElementById("guideline-tolerance").value);
+      self.currentSBGNProperties.guidelineColor = document.getElementById("guideline-color").value;
       console.log(self.currentSBGNProperties);
 
       //Refresh paddings if needed
@@ -1004,7 +1009,10 @@ var SBGNProperties = Backbone.View.extend({
         discreteDrag: self.currentSBGNProperties.discreteDrag,
         resize: self.currentSBGNProperties.autoResizeNodes,
         guidelines: self.currentSBGNProperties.showAlignmentGuidelines,
-        guidelinesTolerance: self.currentSBGNProperties.guidelineTolerance
+        guidelinesTolerance: self.currentSBGNProperties.guidelineTolerance,
+        guidelinesStyle: {
+          strokeStyle: self.currentSBGNProperties.guidelineColor
+        }
       });
 
       sbgnStyleRules['rearrange-after-expand-collapse'] =
