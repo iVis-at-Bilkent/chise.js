@@ -52,9 +52,9 @@ var beforePerformLayout = function(){
   edges.data("porttarget", []);
 
   // TODO do this by using extension API
-  edges.removeScratch('cyedgebendeditingWeights');
-  edges.removeScratch('cyedgebendeditingDistances');
-  edges.removeClass('edgebendediting-hasbendpoints');
+  cy.$('.edgebendediting-hasbendpoints').removeClass('edgebendediting-hasbendpoints');
+  edges.scratch('cyedgebendeditingWeights', []);
+  edges.scratch('cyedgebendeditingDistances', []);
 };
 
 //A function to trigger incremental layout. Its definition is inside document.ready()
@@ -62,9 +62,6 @@ var triggerIncrementalLayout;
 
 var getExpandCollapseOptions = function() {
   return {
-    layoutBy: function(){
-      return triggerIncrementalLayout;
-    },
     fisheye: function(){
       return sbgnStyleRules['rearrange-after-expand-collapse'] === 'true';
     },
@@ -745,7 +742,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("collapse", {
       nodes: nodes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
   
@@ -759,7 +756,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("collapseRecursively", {
       nodes: complexes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
 
@@ -779,7 +776,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("expand", {
       nodes: nodes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
   
@@ -793,7 +790,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("expandRecursively", {
       nodes: nodes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
 
@@ -813,7 +810,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("collapseRecursively", {
       nodes: nodes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
 
@@ -827,7 +824,7 @@ $(document).ready(function () {
 
     cy.undoRedo().do("expandRecursively", {
       nodes: nodes,
-      options: getExpandCollapseOptions()
+//      options: getExpandCollapseOptions()
     });
   });
 
