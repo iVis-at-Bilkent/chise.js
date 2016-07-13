@@ -726,17 +726,82 @@
             <input id="rearrange-after-expand-collapse" type="checkbox" class="input-small layout-text" <% if (rearrangeAfterExpandCollapse){ %> checked<%}%>>
             </td>
             </tr>
-    
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Animate on Drawing Changes </span>
-            </td>
 
-            <td>
-            <input id="animate-on-drawing-changes" type="checkbox" class="input-small layout-text" <% if (animateOnDrawingChanges){ %> checked<%}%>>
-            </td>
-            </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Animate on Drawing Changes </span>
+                    </td>
 
+                    <td>
+                        <input id="animate-on-drawing-changes" type="checkbox" class="input-small layout-text" <% if (animateOnDrawingChanges){ %> checked<%}%>>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Show Grid </span>
+                    </td>
+
+                    <td>
+                        <input id="show-grid" type="checkbox" class="input-small layout-text" <% if (showGrid){ %> checked<%}%>>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Snap to Grid </span>
+                    </td>
+
+                    <td>
+                        <input id="snap-to-grid" type="checkbox" class="input-small layout-text" <% if (snapToGrid){ %> checked<%}%>>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Grid Size </span>
+                    </td>
+
+                    <td>
+                        <input id="grid-size" type="number" min=5 class="input-small layout-text" value= <%= gridSize %> >
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Discrete Drag </span>
+                    </td>
+
+                    <td>
+                        <input id="discrete-drag" type="checkbox" class="input-small layout-text" <% if (discreteDrag){ %> checked<%}%>>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Auto  Resize Nodes </span>
+                    </td>
+
+                    <td>
+                        <input id="auto-resize-nodes" type="checkbox" class="input-small layout-text" <% if (autoResizeNodes){ %> checked<%}%>>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Show Alignment Guidelines </span>
+                    </td>
+
+                    <td>
+                        <input id="show-alignment-guidelines" type="checkbox" class="input-small layout-text" <% if (showAlignmentGuidelines){ %> checked<%}%>>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Guideline Tolerance </span>
+                    </td>
+
+                    <td>
+                        <input id="guideline-tolerance" type="number" min=0 step=0.1 class="input-small layout-text" value= <%= guidelineTolerance %> >
+                    </td>
+                    <td></td>
+                </tr>
             <tr id="sbgn-buttons">
             <td colspan="2"">
             <div style="margin-left: 30%;">

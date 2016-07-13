@@ -481,6 +481,13 @@ var SBGNContainer = Backbone.View.extend({
         container.cytoscapePanzoom(panProps);
 
         cy.snapToGrid({
+          snapToGrid: false,
+          drawGrid: false,
+          gridSpacing: 40,
+          discreteDrag: false,
+          resize: false,
+          guidelines: true,
+          guidelinesTolerance: 2.0,
           parentPadding: false
         });
 
@@ -910,7 +917,14 @@ var SBGNProperties = Backbone.View.extend({
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
     fitLabelsToNodes: (sbgnStyleRules['fit-labels-to-nodes'] == 'true'),
     rearrangeAfterExpandCollapse: (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true'),
-    animateOnDrawingChanges: (sbgnStyleRules['animate-on-drawing-changes'] == 'true')
+    animateOnDrawingChanges: (sbgnStyleRules['animate-on-drawing-changes'] == 'true'),
+    showGrid: false,
+    snapToGrid: false,
+    discreteDrag: false,
+    gridSize: 40,
+    autoResizeNodes: false,
+    showAlignmentGuidelines: true,
+    guidelineTolerance: 2.0
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -940,7 +954,15 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.rearrangeAfterExpandCollapse =
               document.getElementById("rearrange-after-expand-collapse").checked;
       self.currentSBGNProperties.animateOnDrawingChanges =
-              document.getElementById("animate-on-drawing-changes").checked;
+          document.getElementById("animate-on-drawing-changes").checked;
+      self.currentSBGNProperties.showGrid = document.getElementById("show-grid").checked;
+      self.currentSBGNProperties.snapToGrid = document.getElementById("snap-to-grid").checked;
+      self.currentSBGNProperties.gridSize = Number(document.getElementById("grid-size").value);
+      self.currentSBGNProperties.discreteDrag = document.getElementById("discrete-drag").checked;
+      self.currentSBGNProperties.autoResizeNodes = document.getElementById("auto-resize-nodes").checked;
+      self.currentSBGNProperties.showAlignmentGuidelines = document.getElementById("show-alignment-guidelines").checked;
+      self.currentSBGNProperties.guidelineTolerance = Number(document.getElementById("guideline-tolerance").value);
+      console.log(self.currentSBGNProperties);
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -959,6 +981,16 @@ var SBGNProperties = Backbone.View.extend({
         cy.nodes().removeClass('changeContent');
         cy.nodes().addClass('changeContent');
       }
+
+      cy.snapToGrid({
+        drawGrid: self.currentSBGNProperties.showGrid,
+        snapToGrid: self.currentSBGNProperties.snapToGrid,
+        gridSpacing: self.currentSBGNProperties.gridSize,
+        discreteDrag: self.currentSBGNProperties.discreteDrag,
+        resize: self.currentSBGNProperties.autoResizeNodes,
+        guidelines: self.currentSBGNProperties.showAlignmentGuidelines,
+        guidelinesTolerance: self.currentSBGNProperties.guidelineTolerance
+      });
 
       sbgnStyleRules['rearrange-after-expand-collapse'] =
               '' + self.currentSBGNProperties.rearrangeAfterExpandCollapse;
