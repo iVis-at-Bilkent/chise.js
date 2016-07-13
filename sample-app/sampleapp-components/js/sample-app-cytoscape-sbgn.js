@@ -480,6 +480,10 @@ var SBGNContainer = Backbone.View.extend({
         
         container.cytoscapePanzoom(panProps);
 
+        cy.snapToGrid({
+          parentPadding: false
+        });
+
         // listen events
 
         cy.on("beforeCollapse", "node", function (event) {
