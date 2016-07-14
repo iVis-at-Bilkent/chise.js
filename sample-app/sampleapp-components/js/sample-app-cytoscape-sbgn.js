@@ -471,10 +471,10 @@ var SBGNContainer = Backbone.View.extend({
           fitPadding: 10,
           fitSelector: ':visible',
           animateOnFit: function(){
-            return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
+            return sbgnStyleRules['animate-on-drawing-changes'];
           },
           animateOnZoom: function(){
-            return sbgnStyleRules['animate-on-drawing-changes'] == 'true';
+            return sbgnStyleRules['animate-on-drawing-changes'];
           }
         });
         
@@ -933,17 +933,17 @@ var SBGNProperties = Backbone.View.extend({
   defaultSBGNProperties: {
     compoundPadding: parseInt(sbgnStyleRules['compound-padding'], 10),
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
-    fitLabelsToNodes: (sbgnStyleRules['fit-labels-to-nodes'] == 'true'),
-    rearrangeAfterExpandCollapse: (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true'),
-    animateOnDrawingChanges: (sbgnStyleRules['animate-on-drawing-changes'] == 'true'),
-    showGrid: false,
-    snapToGrid: false,
-    discreteDrag: false,
-    gridSize: 40,
-    autoResizeNodes: false,
-    showAlignmentGuidelines: true,
-    guidelineTolerance: 2.0,
-    guidelineColor: "#dddddd"
+    fitLabelsToNodes: sbgnStyleRules['fit-labels-to-nodes'],
+    rearrangeAfterExpandCollapse: sbgnStyleRules['rearrange-after-expand-collapse'],
+    animateOnDrawingChanges: sbgnStyleRules['animate-on-drawing-changes'],
+    showGrid: sbgnStyleRules['show-grid'],
+    snapToGrid: sbgnStyleRules['snap-to-grid'],
+    discreteDrag: sbgnStyleRules['discrete-drag'],
+    gridSize: sbgnStyleRules['grid-size'],
+    autoResizeNodes: sbgnStyleRules['auto-resize-nodes'],
+    showAlignmentGuidelines: sbgnStyleRules['show-alignment-guidelines'],
+    guidelineTolerance: sbgnStyleRules['guideline-tolerance'],
+    guidelineColor: sbgnStyleRules['guideline-color']
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -971,7 +971,7 @@ var SBGNProperties = Backbone.View.extend({
       self.currentSBGNProperties.dynamicLabelSize = $('select[name="dynamic-label-size"] option:selected').val();
       self.currentSBGNProperties.fitLabelsToNodes = document.getElementById("fit-labels-to-nodes").checked;
       self.currentSBGNProperties.rearrangeAfterExpandCollapse =
-              document.getElementById("rearrange-after-expand-collapse").checked;
+          document.getElementById("rearrange-after-expand-collapse").checked;
       self.currentSBGNProperties.animateOnDrawingChanges =
           document.getElementById("animate-on-drawing-changes").checked;
       self.currentSBGNProperties.showGrid = document.getElementById("show-grid").checked;
@@ -997,7 +997,7 @@ var SBGNProperties = Backbone.View.extend({
       }
       //Refresh truncations if needed
       if (sbgnStyleRules['fit-labels-to-nodes'] != self.currentSBGNProperties.fitLabelsToNodes) {
-        sbgnStyleRules['fit-labels-to-nodes'] = '' + self.currentSBGNProperties.fitLabelsToNodes;
+        sbgnStyleRules['fit-labels-to-nodes'] = self.currentSBGNProperties.fitLabelsToNodes;
         cy.nodes().removeClass('changeContent');
         cy.nodes().addClass('changeContent');
       }
@@ -1015,13 +1015,11 @@ var SBGNProperties = Backbone.View.extend({
         }
       });
 
-      sbgnStyleRules['rearrange-after-expand-collapse'] =
-              '' + self.currentSBGNProperties.rearrangeAfterExpandCollapse;
+      sbgnStyleRules['rearrange-after-expand-collapse'] = 
+              self.currentSBGNProperties.rearrangeAfterExpandCollapse;
       
-      sbgnStyleRules['animate-on-drawing-changes'] =
-              '' + self.currentSBGNProperties.animateOnDrawingChanges;
-
-      window.rearrangeAfterExpandCollapse = (sbgnStyleRules['rearrange-after-expand-collapse'] == 'true');
+      sbgnStyleRules['animate-on-drawing-changes'] = 
+              self.currentSBGNProperties.animateOnDrawingChanges;
 
       $(self.el).dialog('close');
     });

@@ -63,10 +63,10 @@ var triggerIncrementalLayout;
 var getExpandCollapseOptions = function() {
   return {
     fisheye: function(){
-      return sbgnStyleRules['rearrange-after-expand-collapse'] === 'true';
+      return sbgnStyleRules['rearrange-after-expand-collapse'];
     },
     animate: function(){
-      return sbgnStyleRules['animate-on-drawing-changes'] === 'true';
+      return sbgnStyleRules['animate-on-drawing-changes'];
     }
   };
 };
@@ -374,14 +374,14 @@ $(document).ready(function () {
   });
   
   triggerIncrementalLayout = function(){
-    if(sbgnStyleRules['rearrange-after-expand-collapse'] !== 'true') {
+    if(!sbgnStyleRules['rearrange-after-expand-collapse']) {
       return;
     }
     beforePerformLayout();
 
     var preferences = {
       randomize: false,
-      animate: sbgnStyleRules['animate-on-drawing-changes'] == 'true'?'end':false,
+      animate: sbgnStyleRules['animate-on-drawing-changes']?'end':false,
       fit: false
     };
     
