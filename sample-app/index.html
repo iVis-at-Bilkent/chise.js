@@ -222,6 +222,7 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li><a href="#" id="grid-properties">Grid...</a></li>
                             </ul>
                         </li>
                         
@@ -454,6 +455,10 @@
             <!-- sbgn properties table will be shown here -->
         </div>
 
+        <div id="grid-properties-table" title="Grid Properties" style="display: inline">
+            <!-- sbgn properties table will be shown here -->
+        </div>
+
         <div id="biogene-container" style="display: none">
         </div>
         
@@ -682,50 +687,50 @@
 
         <script type="text/template" id="sbgn-properties-template">
             <table class="table-condensed layout-table">
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Compound Padding </span>
-            </td>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Compound Padding </span>
+                    </td>
 
-            <td>
-            <input id="compound-padding" type="text" class="input-small layout-text" value= <%= compoundPadding %> > 
-            </td>
-            <td>%</td>
-            </tr>
+                    <td>
+                        <input id="compound-padding" type="text" class="input-small layout-text" value= <%= compoundPadding %> >
+                    </td>
+                    <td>%</td>
+                </tr>
 
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Label Size </span>
-            </td>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Label Size </span>
+                    </td>
 
-            <td>
-            <select id="dynamic-label-size-select" name="dynamic-label-size">
-            <option id="dynamic-label-size_small" value="small" <% if (dynamicLabelSize == 'small'){ %> selected<%}%> > Small </option>
-            <option id="dynamic-label-size_regular" value="regular" <% if (dynamicLabelSize == 'regular'){ %> selected<%}%> > Regular </option>
-            <option id="dynamic-label-size_large" value="large" <% if (dynamicLabelSize == 'large'){ %> selected<%}%> > Large </option>
-            </select>
-            </td>
-            </tr>
+                    <td>
+                        <select id="dynamic-label-size-select" name="dynamic-label-size">
+                            <option id="dynamic-label-size_small" value="small" <% if (dynamicLabelSize == 'small'){ %> selected<%}%> > Small </option>
+                            <option id="dynamic-label-size_regular" value="regular" <% if (dynamicLabelSize == 'regular'){ %> selected<%}%> > Regular </option>
+                            <option id="dynamic-label-size_large" value="large" <% if (dynamicLabelSize == 'large'){ %> selected<%}%> > Large </option>
+                        </select>
+                    </td>
+                </tr>
 
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Fit Labels To Nodes </span>
-            </td>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Fit Labels To Nodes </span>
+                    </td>
 
-            <td>
-            <input id="fit-labels-to-nodes" type="checkbox" class="input-small layout-text" <% if (fitLabelsToNodes){ %> checked<%}%>>
-            </td>
-            </tr>
+                    <td>
+                        <input id="fit-labels-to-nodes" type="checkbox" class="input-small layout-text" <% if (fitLabelsToNodes){ %> checked<%}%>>
+                    </td>
+                </tr>
 
-            <tr>
-            <td>
-            <span class="add-on layout-text"> Rearrange After Expand-Collapse </span>
-            </td>
+                <tr>
+                    <td>
+                        <span class="add-on layout-text"> Rearrange After Expand-Collapse </span>
+                    </td>
 
-            <td>
-            <input id="rearrange-after-expand-collapse" type="checkbox" class="input-small layout-text" <% if (rearrangeAfterExpandCollapse){ %> checked<%}%>>
-            </td>
-            </tr>
+                    <td>
+                        <input id="rearrange-after-expand-collapse" type="checkbox" class="input-small layout-text" <% if (rearrangeAfterExpandCollapse){ %> checked<%}%>>
+                    </td>
+                </tr>
 
                 <tr>
                     <td>
@@ -736,6 +741,19 @@
                         <input id="animate-on-drawing-changes" type="checkbox" class="input-small layout-text" <% if (animateOnDrawingChanges){ %> checked<%}%>>
                     </td>
                 </tr>
+
+                <tr id="sbgn-buttons">
+                    <td colspan="2">
+                    <div style="margin-left: 30%;">
+                        <button id="save-sbgn" class="btn btn-default" >Save</button>
+                        <button id="default-sbgn" class="btn btn-default">Default</button>
+                    </div>
+                    </td>
+                </tr>
+            </table>
+        </script>
+        <script type="text/template" id="grid-properties-template">
+            <table class="table-condensed layout-table">
                 <tr>
                     <td>
                         <span class="add-on layout-text"> Show Grid </span>
@@ -812,14 +830,14 @@
                     </td>
                     <td></td>
                 </tr>
-            <tr id="sbgn-buttons">
-            <td colspan="2"">
-            <div style="margin-left: 30%;">
-            <button id="save-sbgn" class="btn btn-default" >Save</button>
-            <button id="default-sbgn" class="btn btn-default">Default</button>
-            </td>
-            </div>
-            </tr>
+                <tr id="grid-buttons">
+                    <td colspan="2">
+                    <div style="margin-left: 30%;">
+                        <button id="save-grid" class="btn btn-default" >Save</button>
+                        <button id="default-grid" class="btn btn-default">Default</button>
+                    </div>
+                        </td>
+                </tr>
             </table>
         </script>
         

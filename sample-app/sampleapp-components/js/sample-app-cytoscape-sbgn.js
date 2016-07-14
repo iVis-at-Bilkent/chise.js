@@ -1,267 +1,267 @@
 var sbgnStyleSheet = cytoscape.stylesheet()
-        .selector("node")
-        .css({
-          'border-width': 1.5,
-          'border-color': '#555',
-          'background-color': '#f6f6f6',
-          'font-size': 11,
+    .selector("node")
+    .css({
+      'border-width': 1.5,
+      'border-color': '#555',
+      'background-color': '#f6f6f6',
+      'font-size': 11,
 //          'shape': 'data(sbgnclass)',
-          'background-opacity': 0.5,
-          'text-opacity': 1,
-          'opacity': 1
-        })
-        .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
-        .css({
-          'background-image': 'sampleapp-images/clone_bg.png',
-          'background-position-x': '50%',
-          'background-position-y': '100%',
-          'background-width': '100%',
-          'background-height': '25%',
-          'background-fit': 'none',
-          'background-image-opacity': function (ele) {
-            if(!ele.data('sbgnclonemarker')){
-              return 0;
-            }
-            return ele._private.style['background-opacity'].value;
-          }
-        })
-        .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
-        .css({
+      'background-opacity': 0.5,
+      'text-opacity': 1,
+      'opacity': 1
+    })
+    .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
+    .css({
+      'background-image': 'sampleapp-images/clone_bg.png',
+      'background-position-x': '50%',
+      'background-position-y': '100%',
+      'background-width': '100%',
+      'background-height': '25%',
+      'background-fit': 'none',
+      'background-image-opacity': function (ele) {
+        if(!ele.data('sbgnclonemarker')){
+          return 0;
+        }
+        return ele._private.style['background-opacity'].value;
+      }
+    })
+    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
+    .css({
 //          'content': 'data(sbgnlabel)',
-          'content': function (ele) {
-            return getElementContent(ele);
-          },
-          'text-valign': 'center',
-          'text-halign': 'center',
-          'font-size': function (ele) {
-            return getLabelTextSize(ele);
-          }
-        })
-        .selector("node[sbgnclass]")
-        .css({
-          'shape': function (ele) {
-            return getCyShape(ele);
-          }
-        })
-        .selector("node[sbgnclass='perturbing agent']")
-        .css({
-          'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
-        })
-        .selector("node[sbgnclass='association']")
-        .css({
-          'background-color': '#6B6B6B'
-        })
-        .selector("node[sbgnclass='tag']")
-        .css({
-          'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
-        })
-        .selector("node[sbgnclass='complex']")
-        .css({
-          'background-color': '#F4F3EE',
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'font-size': '16',
-          'width': function(ele){
-            if(ele.children() == null || ele.children().length == 0){
-              return '36';
-            }
-            return ele.data('width');
-          },
-          'height': function(ele){
-            if(ele.children() == null || ele.children().length == 0){
-              return '36';
-            }
-            return ele.data('height');
-          },
-          'content': function(ele){
-            return getElementContent(ele);
-          }
-        })
-        .selector("node[sbgnclass='compartment']")
-        .css({
-          'border-width': 3.75,
-          'background-opacity': 0,
-          'background-color': '#FFFFFF',
-          'content': function(ele){
-            return getElementContent(ele);
-          },
-          'width': function(ele){
-            if(ele.children() == null || ele.children().length == 0){
-              return '36';
-            }
-            return ele.data('width');
-          },
-          'height': function(ele){
-            if(ele.children() == null || ele.children().length == 0){
-              return '36';
-            }
-            return ele.data('height');
-          },
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'font-size': '16'
-        })
-        .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
-        .css({
-          'width': 'data(sbgnbbox.w)',
-          'height': 'data(sbgnbbox.h)'
-        })
-        .selector("node:selected")
-        .css({
-          'border-color': '#d67614',
-          'target-arrow-color': '#000',
-          'text-outline-color': '#000'})
-        .selector("node:active")
-        .css({
-          'background-opacity': 0.7, 'overlay-color': '#d67614',
-          'overlay-padding': '14'
-        })
-        .selector("edge")
-        .css({
-          'curve-style': 'bezier',
-          'line-color': '#555',
-          'target-arrow-fill': 'hollow',
-          'source-arrow-fill': 'hollow',
-          'width': 1.5,
-          'target-arrow-color': '#555',
-          'source-arrow-color': '#555',
+      'content': function (ele) {
+        return getElementContent(ele);
+      },
+      'text-valign': 'center',
+      'text-halign': 'center',
+      'font-size': function (ele) {
+        return getLabelTextSize(ele);
+      }
+    })
+    .selector("node[sbgnclass]")
+    .css({
+      'shape': function (ele) {
+        return getCyShape(ele);
+      }
+    })
+    .selector("node[sbgnclass='perturbing agent']")
+    .css({
+      'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
+    })
+    .selector("node[sbgnclass='association']")
+    .css({
+      'background-color': '#6B6B6B'
+    })
+    .selector("node[sbgnclass='tag']")
+    .css({
+      'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
+    })
+    .selector("node[sbgnclass='complex']")
+    .css({
+      'background-color': '#F4F3EE',
+      'text-valign': 'bottom',
+      'text-halign': 'center',
+      'font-size': '16',
+      'width': function(ele){
+        if(ele.children() == null || ele.children().length == 0){
+          return '36';
+        }
+        return ele.data('width');
+      },
+      'height': function(ele){
+        if(ele.children() == null || ele.children().length == 0){
+          return '36';
+        }
+        return ele.data('height');
+      },
+      'content': function(ele){
+        return getElementContent(ele);
+      }
+    })
+    .selector("node[sbgnclass='compartment']")
+    .css({
+      'border-width': 3.75,
+      'background-opacity': 0,
+      'background-color': '#FFFFFF',
+      'content': function(ele){
+        return getElementContent(ele);
+      },
+      'width': function(ele){
+        if(ele.children() == null || ele.children().length == 0){
+          return '36';
+        }
+        return ele.data('width');
+      },
+      'height': function(ele){
+        if(ele.children() == null || ele.children().length == 0){
+          return '36';
+        }
+        return ele.data('height');
+      },
+      'text-valign': 'bottom',
+      'text-halign': 'center',
+      'font-size': '16'
+    })
+    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
+    .css({
+      'width': 'data(sbgnbbox.w)',
+      'height': 'data(sbgnbbox.h)'
+    })
+    .selector("node:selected")
+    .css({
+      'border-color': '#d67614',
+      'target-arrow-color': '#000',
+      'text-outline-color': '#000'})
+    .selector("node:active")
+    .css({
+      'background-opacity': 0.7, 'overlay-color': '#d67614',
+      'overlay-padding': '14'
+    })
+    .selector("edge")
+    .css({
+      'curve-style': 'bezier',
+      'line-color': '#555',
+      'target-arrow-fill': 'hollow',
+      'source-arrow-fill': 'hollow',
+      'width': 1.5,
+      'target-arrow-color': '#555',
+      'source-arrow-color': '#555',
 //          'target-arrow-shape': 'data(sbgnclass)'
-        })
-        .selector("edge[sbgnclass]")
-        .css({
-          'target-arrow-shape': function (ele) {
-            return getCyArrowShape(ele);
-          },
-          'source-arrow-shape': 'none'
-        })
-        .selector("edge[sbgnclass='inhibition']")
-        .css({
-          'target-arrow-fill': 'filled'
-        })
-        .selector("edge[sbgnclass='consumption']")
-        .css({
-          'line-style': 'consumption'
-        })
-        .selector("edge[sbgnclass='production']")
-        .css({
-          'target-arrow-fill': 'filled',
-          'line-style': 'production'
-        })
-        .selector("edge:selected")
-        .css({
-          'line-color': '#d67614',
-          'source-arrow-color': '#d67614',
-          'target-arrow-color': '#d67614'
-        })
-        .selector("edge:active")
-        .css({
-          'background-opacity': 0.7, 'overlay-color': '#d67614',
-          'overlay-padding': '8'
-        })
-        .selector("core")
-        .css({
-          'selection-box-color': '#d67614',
-          'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
-        })
-        .selector(".ui-cytoscape-edgehandles-source")
-        .css({
-          'border-color': '#5CC2ED',
-          'border-width': 3
-        })
-        .selector(".ui-cytoscape-edgehandles-target, node.ui-cytoscape-edgehandles-preview")
-        .css({
-          'background-color': '#5CC2ED'
-        })
-        .selector("edge.ui-cytoscape-edgehandles-preview")
-        .css({
-          'line-color': '#5CC2ED'
-        })
-        .selector("node.ui-cytoscape-edgehandles-preview, node.intermediate")
-        .css({
-          'shape': 'rectangle',
-          'width': 15,
-          'height': 15
-        })
-        .selector('edge.not-highlighted')
-        .css({
-          'opacity': 0.3,
-          'text-opacity': 0.3,
-          'background-opacity': 0.3
-        })
-        .selector('node.not-highlighted')
-        .css({
-          'border-opacity': 0.3,
-          'text-opacity': 0.3,
-          'background-opacity': 0.3
-        })
-        .selector('edge.meta')
-        .css({
-          'line-color': '#C4C4C4',
-          'source-arrow-color': '#C4C4C4',
-          'target-arrow-color': '#C4C4C4'
-        })
-        .selector("edge.meta:selected")
-        .css({
-          'line-color': '#d67614',
-          'source-arrow-color': '#d67614',
-          'target-arrow-color': '#d67614'
-        })
-        .selector("node.changeBackgroundOpacity")
-        .css({
-          'background-opacity': 'data(backgroundOpacity)'
-        })
-        .selector("node.changeLabelTextSize")
-        .css({
-          'font-size': function (ele) {
-            return getLabelTextSize(ele);
-          }
-        })
-        .selector("node.changeContent")
-        .css({
-          'content': function (ele) {
-            return getElementContent(ele);
-          }
-        })
-        .selector("node.changeBorderColor")
-        .css({
-          'border-color': 'data(borderColor)'
-        })
-        .selector("node.changeBorderColor:selected")
-        .css({
-          'border-color': '#d67614'
-        })
-        .selector("edge.changeLineColor")
-        .css({
-          'line-color': 'data(lineColor)',
-          'source-arrow-color': 'data(lineColor)',
-          'target-arrow-color': 'data(lineColor)'
-        })
-        .selector("edge.changeLineColor:selected")
-        .css({
-          'line-color': '#d67614',
-          'source-arrow-color': '#d67614',
-          'target-arrow-color': '#d67614'
-        })
-        .selector('edge.changeLineColor.meta')
-        .css({
-          'line-color': '#C4C4C4',
-          'source-arrow-color': '#C4C4C4',
-          'target-arrow-color': '#C4C4C4'
-        })
-        .selector("edge.changeLineColor.meta:selected")
-        .css({
-          'line-color': '#d67614',
-          'source-arrow-color': '#d67614',
-          'target-arrow-color': '#d67614'
-        }).selector("node.changeClonedStatus")
-        .css({
-          'background-image-opacity': function (ele) {
-            if(!ele.data('sbgnclonemarker')){
-              return 0;
-            }
-            return ele._private.style['background-opacity'].value;
-          }
-        });
+    })
+    .selector("edge[sbgnclass]")
+    .css({
+      'target-arrow-shape': function (ele) {
+        return getCyArrowShape(ele);
+      },
+      'source-arrow-shape': 'none'
+    })
+    .selector("edge[sbgnclass='inhibition']")
+    .css({
+      'target-arrow-fill': 'filled'
+    })
+    .selector("edge[sbgnclass='consumption']")
+    .css({
+      'line-style': 'consumption'
+    })
+    .selector("edge[sbgnclass='production']")
+    .css({
+      'target-arrow-fill': 'filled',
+      'line-style': 'production'
+    })
+    .selector("edge:selected")
+    .css({
+      'line-color': '#d67614',
+      'source-arrow-color': '#d67614',
+      'target-arrow-color': '#d67614'
+    })
+    .selector("edge:active")
+    .css({
+      'background-opacity': 0.7, 'overlay-color': '#d67614',
+      'overlay-padding': '8'
+    })
+    .selector("core")
+    .css({
+      'selection-box-color': '#d67614',
+      'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
+    })
+    .selector(".ui-cytoscape-edgehandles-source")
+    .css({
+      'border-color': '#5CC2ED',
+      'border-width': 3
+    })
+    .selector(".ui-cytoscape-edgehandles-target, node.ui-cytoscape-edgehandles-preview")
+    .css({
+      'background-color': '#5CC2ED'
+    })
+    .selector("edge.ui-cytoscape-edgehandles-preview")
+    .css({
+      'line-color': '#5CC2ED'
+    })
+    .selector("node.ui-cytoscape-edgehandles-preview, node.intermediate")
+    .css({
+      'shape': 'rectangle',
+      'width': 15,
+      'height': 15
+    })
+    .selector('edge.not-highlighted')
+    .css({
+      'opacity': 0.3,
+      'text-opacity': 0.3,
+      'background-opacity': 0.3
+    })
+    .selector('node.not-highlighted')
+    .css({
+      'border-opacity': 0.3,
+      'text-opacity': 0.3,
+      'background-opacity': 0.3
+    })
+    .selector('edge.meta')
+    .css({
+      'line-color': '#C4C4C4',
+      'source-arrow-color': '#C4C4C4',
+      'target-arrow-color': '#C4C4C4'
+    })
+    .selector("edge.meta:selected")
+    .css({
+      'line-color': '#d67614',
+      'source-arrow-color': '#d67614',
+      'target-arrow-color': '#d67614'
+    })
+    .selector("node.changeBackgroundOpacity")
+    .css({
+      'background-opacity': 'data(backgroundOpacity)'
+    })
+    .selector("node.changeLabelTextSize")
+    .css({
+      'font-size': function (ele) {
+        return getLabelTextSize(ele);
+      }
+    })
+    .selector("node.changeContent")
+    .css({
+      'content': function (ele) {
+        return getElementContent(ele);
+      }
+    })
+    .selector("node.changeBorderColor")
+    .css({
+      'border-color': 'data(borderColor)'
+    })
+    .selector("node.changeBorderColor:selected")
+    .css({
+      'border-color': '#d67614'
+    })
+    .selector("edge.changeLineColor")
+    .css({
+      'line-color': 'data(lineColor)',
+      'source-arrow-color': 'data(lineColor)',
+      'target-arrow-color': 'data(lineColor)'
+    })
+    .selector("edge.changeLineColor:selected")
+    .css({
+      'line-color': '#d67614',
+      'source-arrow-color': '#d67614',
+      'target-arrow-color': '#d67614'
+    })
+    .selector('edge.changeLineColor.meta')
+    .css({
+      'line-color': '#C4C4C4',
+      'source-arrow-color': '#C4C4C4',
+      'target-arrow-color': '#C4C4C4'
+    })
+    .selector("edge.changeLineColor.meta:selected")
+    .css({
+      'line-color': '#d67614',
+      'source-arrow-color': '#d67614',
+      'target-arrow-color': '#d67614'
+    }).selector("node.changeClonedStatus")
+    .css({
+      'background-image-opacity': function (ele) {
+        if(!ele.data('sbgnclonemarker')){
+          return 0;
+        }
+        return ele._private.style['background-opacity'].value;
+      }
+    });
 // end of sbgnStyleSheet
 
 var NotyView = Backbone.View.extend({
@@ -314,11 +314,11 @@ var SBGNContainer = Backbone.View.extend({
       {
         window.cy = this;
         registerUndoRedoActions();
-        
+
         // register the extensions
-        
+
         cy.expandCollapse(getExpandCollapseOptions());
-        
+
         cy.edgeBendEditing({
           // this function specifies the positions of bend points
           bendPositionsFunction: function(ele) {
@@ -327,7 +327,7 @@ var SBGNContainer = Backbone.View.extend({
           // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
           undoable: true
         });
-        
+
         cy.clipboard({
           clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
           shortcuts: {
@@ -335,32 +335,32 @@ var SBGNContainer = Backbone.View.extend({
             undoable: true // and if undoRedo extension exists
           }
         });
-        
+
         cy.viewUtilities({
           node: {
-              highlighted: {}, // styles for when nodes are highlighted.
-              unhighlighted: { // styles for when nodes are unhighlighted.
-                'border-opacity': 0.3,
-                'text-opacity': 0.3,
-                'background-opacity': 0.3
-              },
-              hidden: {
-                'display': 'none'
-              }
+            highlighted: {}, // styles for when nodes are highlighted.
+            unhighlighted: { // styles for when nodes are unhighlighted.
+              'border-opacity': 0.3,
+              'text-opacity': 0.3,
+              'background-opacity': 0.3
             },
-            edge: {
-              highlighted: {}, // styles for when edges are highlighted.
-              unhighlighted: { // styles for when edges are unhighlighted.
-                'opacity': 0.3,
-                'text-opacity': 0.3,
-                'background-opacity': 0.3
-              },
-              hidden: {
-                'display': 'none'
-              }
+            hidden: {
+              'display': 'none'
             }
+          },
+          edge: {
+            highlighted: {}, // styles for when edges are highlighted.
+            unhighlighted: { // styles for when edges are unhighlighted.
+              'opacity': 0.3,
+              'text-opacity': 0.3,
+              'background-opacity': 0.3
+            },
+            hidden: {
+              'display': 'none'
+            }
+          }
         });
-        
+
         var edges = cy.edges();
 
         refreshPaddings();
@@ -381,7 +381,7 @@ var SBGNContainer = Backbone.View.extend({
               nodes: cy.collection([sourceNode]),
               performOperation: false
             };
-            
+
             cy.undoRedo().do("resizeNode", param);
           },
           complete: function (sourceNode, targetNodes, addedEntities) {
@@ -405,8 +405,8 @@ var SBGNContainer = Backbone.View.extend({
             var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
 
             if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
-                    || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-                    || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
+                || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
+                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
               if (!isEPNClass(sourceClass) || !isPNClass(targetClass)) {
                 if (isPNClass(sourceClass) && isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
@@ -447,7 +447,7 @@ var SBGNContainer = Backbone.View.extend({
             }
             else if (sbgnclass == 'equivalence arc') {
               if (!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
-                      && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
+                  && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
                 return;
               }
             }
@@ -458,7 +458,7 @@ var SBGNContainer = Backbone.View.extend({
               sbgnclass: sbgnclass
             };
             param.firstTime = true;
-            
+
             cy.undoRedo().do("addEdge", param);
             modeHandler.setSelectionMode();
             cy.edges()[cy.edges().length - 1].select();
@@ -466,7 +466,7 @@ var SBGNContainer = Backbone.View.extend({
         });
 
         cy.edgehandles('drawoff');
-        
+
         var panProps = ({
           fitPadding: 10,
           fitSelector: ':visible',
@@ -477,20 +477,20 @@ var SBGNContainer = Backbone.View.extend({
             return sbgnStyleRules['animate-on-drawing-changes'];
           }
         });
-        
+
         container.cytoscapePanzoom(panProps);
 
+
         cy.snapToGrid({
-          snapToGrid: false,
-          drawGrid: false,
-          gridSpacing: 40,
-          discreteDrag: false,
-          resize: false,
-          guidelines: true,
-          guidelinesTolerance: 2.0,
-          parentPadding: false,
+          drawGrid: sbgnStyleRules['show-grid'],
+          snapToGrid: sbgnStyleRules['snap-to-grid'],
+          discreteDrag: sbgnStyleRules['discrete-drag'],
+          gridSpacing: sbgnStyleRules['grid-size'],
+          resize: sbgnStyleRules['auto-resize-nodes'],
+          guidelines: sbgnStyleRules['show-alignment-guidelines'],
+          guidelinesTolerance: sbgnStyleRules['guideline-tolerance'],
           guidelinesStyle: {
-            strokeStyle: "#dddddd"
+            strokeStyle: sbgnStyleRules['guideline-color']
           }
         });
 
@@ -504,9 +504,9 @@ var SBGNContainer = Backbone.View.extend({
             var infoLabel = getInfoLabel(node);
             node._private.data.infoLabel = infoLabel;
           }
-          
+
           var edges = cy.edges();
-          
+
           // remove bend points before collapse
           for (var i = 0; i < edges.length; i++) {
             var edge = edges[i];
@@ -515,12 +515,12 @@ var SBGNContainer = Backbone.View.extend({
               delete edge._private.classes['edgebendediting-hasbendpoints'];
             }
           }
-          
+
           edges.scratch('cyedgebendeditingWeights', []);
           edges.scratch('cyedgebendeditingDistances', []);
-          
+
         });
-        
+
         cy.on("afterCollapse", "node", function (event) {
           var node = this;
           refreshPaddings();
@@ -529,12 +529,12 @@ var SBGNContainer = Backbone.View.extend({
             node.addClass('changeContent');
           }
         });
-        
+
         cy.on("beforeExpand", "node", function (event) {
           var node = this;
           node.removeData("infoLabel");
         });
-        
+
         cy.on("afterExpand", "node", function (event) {
           var node = this;
           cy.nodes().updateCompoundBounds();
@@ -543,7 +543,7 @@ var SBGNContainer = Backbone.View.extend({
           if (node._private.data.sbgnclass == "complex") {
             node.removeStyle('content');
           }
-          
+
           refreshPaddings();
         });
 
@@ -554,7 +554,7 @@ var SBGNContainer = Backbone.View.extend({
         cy.on("afterUndo", function(actionName, args){
           refreshUndoRedoButtonsStatus();
         });
-        
+
         cy.on("afterRedo", function(actionName, args){
           refreshUndoRedoButtonsStatus();
         });
@@ -587,11 +587,11 @@ var SBGNContainer = Backbone.View.extend({
             }
 
             disableDragAndDropMode();
-            
+
             if (node.parent()[0] == newParent || node._private.data.parent == node.id()) {
               return;
             }
-            
+
             var param = {
               newParent: newParent,
               node: node,
@@ -599,7 +599,7 @@ var SBGNContainer = Backbone.View.extend({
               posX: event.cyPosition.x,
               posY: event.cyPosition.y
             };
-            
+
             cy.undoRedo().do("changeParent", param);
           }
         });
@@ -645,7 +645,7 @@ var SBGNContainer = Backbone.View.extend({
 
           var geneClass = node._private.data.sbgnclass;
           if (geneClass != 'macromolecule' && geneClass != 'nucleic acid feature' &&
-                  geneClass != 'unspecified entity')
+              geneClass != 'unspecified entity')
             return;
 
           var queryScriptURL = "sampleapp-components/php/BioGeneQuery.php";
@@ -653,11 +653,11 @@ var SBGNContainer = Backbone.View.extend({
 
           // set the query parameters
           var queryParams =
-                  {
-                    query: geneName,
-                    org: "human",
-                    format: "json",
-                  };
+          {
+            query: geneName,
+            org: "human",
+            format: "json",
+          };
 
           cy.getElementById(node.id()).qtip({
             content: {
@@ -668,24 +668,24 @@ var SBGNContainer = Backbone.View.extend({
                   async: true,
                   data: queryParams,
                 })
-                        .then(function (content) {
-                          queryResult = JSON.parse(content);
-                          if (queryResult.count > 0 && queryParams.query != "" && typeof queryParams.query != 'undefined')
-                          {
-                            var info = (new BioGeneView(
-                                    {
-                                      el: '#biogene-container',
-                                      model: queryResult.geneInfo[0]
-                                    })).render();
-                            var html = $('#biogene-container').html();
-                            api.set('content.text', html);
-                          }
-                          else {
-                            api.set('content.text', "No additional information available &#013; for the selected node!");
-                          }
-                        }, function (xhr, status, error) {
-                          api.set('content.text', "Error retrieving data: " + error);
-                        });
+                    .then(function (content) {
+                      queryResult = JSON.parse(content);
+                      if (queryResult.count > 0 && queryParams.query != "" && typeof queryParams.query != 'undefined')
+                      {
+                        var info = (new BioGeneView(
+                            {
+                              el: '#biogene-container',
+                              model: queryResult.geneInfo[0]
+                            })).render();
+                        var html = $('#biogene-container').html();
+                        api.set('content.text', html);
+                      }
+                      else {
+                        api.set('content.text', "No additional information available &#013; for the selected node!");
+                      }
+                    }, function (xhr, status, error) {
+                      api.set('content.text', "Error retrieving data: " + error);
+                    });
                 api.set('content.title', node._private.data.sbgnlabel);
                 return _.template($("#loading-small-template").html());
               }
@@ -750,14 +750,14 @@ var SBGNContainer = Backbone.View.extend({
             var cyPosY = event.cyPosition.y;
             var param = {};
             var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
-            
+
             param.newNode = {
               x: cyPosX,
               y: cyPosY,
               sbgnclass: sbgnclass
             };
             param.firstTime = true;
-            
+
             cy.undoRedo().do("addNode", param);
             modeHandler.setSelectionMode();
             cy.nodes()[cy.nodes().length - 1].select();
@@ -935,15 +935,7 @@ var SBGNProperties = Backbone.View.extend({
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
     fitLabelsToNodes: sbgnStyleRules['fit-labels-to-nodes'],
     rearrangeAfterExpandCollapse: sbgnStyleRules['rearrange-after-expand-collapse'],
-    animateOnDrawingChanges: sbgnStyleRules['animate-on-drawing-changes'],
-    showGrid: sbgnStyleRules['show-grid'],
-    snapToGrid: sbgnStyleRules['snap-to-grid'],
-    discreteDrag: sbgnStyleRules['discrete-drag'],
-    gridSize: sbgnStyleRules['grid-size'],
-    autoResizeNodes: sbgnStyleRules['auto-resize-nodes'],
-    showAlignmentGuidelines: sbgnStyleRules['show-alignment-guidelines'],
-    guidelineTolerance: sbgnStyleRules['guideline-tolerance'],
-    guidelineColor: sbgnStyleRules['guideline-color']
+    animateOnDrawingChanges: sbgnStyleRules['animate-on-drawing-changes']
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -974,15 +966,6 @@ var SBGNProperties = Backbone.View.extend({
           document.getElementById("rearrange-after-expand-collapse").checked;
       self.currentSBGNProperties.animateOnDrawingChanges =
           document.getElementById("animate-on-drawing-changes").checked;
-      self.currentSBGNProperties.showGrid = document.getElementById("show-grid").checked;
-      self.currentSBGNProperties.snapToGrid = document.getElementById("snap-to-grid").checked;
-      self.currentSBGNProperties.gridSize = Number(document.getElementById("grid-size").value);
-      self.currentSBGNProperties.discreteDrag = document.getElementById("discrete-drag").checked;
-      self.currentSBGNProperties.autoResizeNodes = document.getElementById("auto-resize-nodes").checked;
-      self.currentSBGNProperties.showAlignmentGuidelines = document.getElementById("show-alignment-guidelines").checked;
-      self.currentSBGNProperties.guidelineTolerance = Number(document.getElementById("guideline-tolerance").value);
-      self.currentSBGNProperties.guidelineColor = document.getElementById("guideline-color").value;
-      console.log(self.currentSBGNProperties);
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -1002,24 +985,11 @@ var SBGNProperties = Backbone.View.extend({
         cy.nodes().addClass('changeContent');
       }
 
-      cy.snapToGrid({
-        drawGrid: self.currentSBGNProperties.showGrid,
-        snapToGrid: self.currentSBGNProperties.snapToGrid,
-        gridSpacing: self.currentSBGNProperties.gridSize,
-        discreteDrag: self.currentSBGNProperties.discreteDrag,
-        resize: self.currentSBGNProperties.autoResizeNodes,
-        guidelines: self.currentSBGNProperties.showAlignmentGuidelines,
-        guidelinesTolerance: self.currentSBGNProperties.guidelineTolerance,
-        guidelinesStyle: {
-          strokeStyle: self.currentSBGNProperties.guidelineColor
-        }
-      });
+      sbgnStyleRules['rearrange-after-expand-collapse'] =
+          self.currentSBGNProperties.rearrangeAfterExpandCollapse;
 
-      sbgnStyleRules['rearrange-after-expand-collapse'] = 
-              self.currentSBGNProperties.rearrangeAfterExpandCollapse;
-      
-      sbgnStyleRules['animate-on-drawing-changes'] = 
-              self.currentSBGNProperties.animateOnDrawingChanges;
+      sbgnStyleRules['animate-on-drawing-changes'] =
+          self.currentSBGNProperties.animateOnDrawingChanges;
 
       $(self.el).dialog('close');
     });
@@ -1027,6 +997,75 @@ var SBGNProperties = Backbone.View.extend({
     $("#default-sbgn").die("click").live("click", function (evt) {
       self.copyProperties();
       self.template = _.template($("#sbgn-properties-template").html(), self.currentSBGNProperties);
+      $(self.el).html(self.template);
+    });
+
+    return this;
+  }
+});
+
+var GridProperties = Backbone.View.extend({
+  defaultGridProperties: {
+    showGrid: sbgnStyleRules['show-grid'],
+    snapToGrid: sbgnStyleRules['snap-to-grid'],
+    discreteDrag: sbgnStyleRules['discrete-drag'],
+    gridSize: sbgnStyleRules['grid-size'],
+    autoResizeNodes: sbgnStyleRules['auto-resize-nodes'],
+    showAlignmentGuidelines: sbgnStyleRules['show-alignment-guidelines'],
+    guidelineTolerance: sbgnStyleRules['guideline-tolerance'],
+    guidelineColor: sbgnStyleRules['guideline-color']
+  },
+  currentGridProperties: null,
+  initialize: function () {
+    var self = this;
+    self.copyProperties();
+    self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
+  },
+  copyProperties: function () {
+    this.currentGridProperties = _.clone(this.defaultGridProperties);
+  },
+  render: function () {
+    var self = this;
+    self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
+    $(self.el).html(self.template);
+
+    $(self.el).dialog();
+
+    $("#save-grid").die("click").live("click", function (evt) {
+
+      var param = {};
+      param.firstTime = true;
+      param.previousGrid = _.clone(self.currentGridProperties);
+
+      self.currentGridProperties.showGrid = document.getElementById("show-grid").checked;
+      self.currentGridProperties.snapToGrid = document.getElementById("snap-to-grid").checked;
+      self.currentGridProperties.gridSize = Number(document.getElementById("grid-size").value);
+      self.currentGridProperties.discreteDrag = document.getElementById("discrete-drag").checked;
+      self.currentGridProperties.autoResizeNodes = document.getElementById("auto-resize-nodes").checked;
+      self.currentGridProperties.showAlignmentGuidelines = document.getElementById("show-alignment-guidelines").checked;
+      self.currentGridProperties.guidelineTolerance = Number(document.getElementById("guideline-tolerance").value);
+      self.currentGridProperties.guidelineColor = document.getElementById("guideline-color").value;
+
+
+      cy.snapToGrid({
+        drawGrid: self.currentGridProperties.showGrid,
+        snapToGrid: self.currentGridProperties.snapToGrid,
+        gridSpacing: self.currentGridProperties.gridSize,
+        discreteDrag: self.currentGridProperties.discreteDrag,
+        resize: self.currentGridProperties.autoResizeNodes,
+        guidelines: self.currentGridProperties.showAlignmentGuidelines,
+        guidelinesTolerance: self.currentGridProperties.guidelineTolerance,
+        guidelinesStyle: {
+          strokeStyle: self.currentGridProperties.guidelineColor
+        }
+      });
+
+      $(self.el).dialog('close');
+    });
+
+    $("#default-grid").die("click").live("click", function (evt) {
+      self.copyProperties();
+      self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
       $(self.el).html(self.template);
     });
 
@@ -1076,23 +1115,23 @@ var PathsBetweenQuery = Backbone.View.extend({
 //              document.getElementById("query-pathsbetween-enable-shortest-k-alteration").checked;
 //      self.currentQueryParameters.ignoreS2SandT2TTargets =
 //              document.getElementById("query-pathsbetween-ignore-s2s-t2t-targets").checked;
-      
+
       var pc2URL = "http://www.pathwaycommons.org/pc2/";
       var format = "graph?format=SBGN";
       var kind = "&kind=PATHSBETWEEN";
       var limit = "&limit=" + self.currentQueryParameters.lengthLimit;
       var sources = "";
       var newfilename = "";
-      
+
       var geneSymbolsArray = self.currentQueryParameters.geneSymbols.replace("\n"," ").replace("\t"," ").split(" ");
       for(var i = 0; i < geneSymbolsArray.length; i++){
         var currentGeneSymbol = geneSymbolsArray[i];
         if(currentGeneSymbol.length == 0 || currentGeneSymbol == ' ' || currentGeneSymbol == '\n' || currentGeneSymbol == '\t'){
           continue;
         }
-        
+
         sources = sources + "&source=" + currentGeneSymbol;
-        
+
         if(newfilename == ''){
           newfilename = currentGeneSymbol;
         }
@@ -1100,37 +1139,37 @@ var PathsBetweenQuery = Backbone.View.extend({
           newfilename = newfilename + '_' + currentGeneSymbol;
         }
       }
-      
+
       newfilename = newfilename + '_PBTWN.sbgnml';
-      
+
       setFileContent(newfilename);
       pc2URL = pc2URL + format + kind + limit + sources;
-      
+
       var containerWidth = cy.width();
       var containerHeight = cy.height();
       $('#sbgn-network-container').html('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>');
-      
+
       $.ajax(
-      {
-        url: pc2URL,
-        type: 'GET',
-        success: function(data)
-        {
-          (new SBGNContainer({
-            el: '#sbgn-network-container',
-            model: {cytoscapeJsGraph: sbgnmlToJson.convert(data)}
-          })).render();
-          inspectorUtilities.handleSBGNInspector();
-        }
-      });
-      
+          {
+            url: pc2URL,
+            type: 'GET',
+            success: function(data)
+            {
+              (new SBGNContainer({
+                el: '#sbgn-network-container',
+                model: {cytoscapeJsGraph: sbgnmlToJson.convert(data)}
+              })).render();
+              inspectorUtilities.handleSBGNInspector();
+            }
+          });
+
       $(self.el).dialog('close');
     });
-    
+
     $("#cancel-query-pathsbetween").die("click").live("click", function (evt) {
       $(self.el).dialog('close');
     });
-    
+
     return this;
   }
 });
@@ -1145,33 +1184,33 @@ var ReactionTemplate = Backbone.View.extend({
       var html = "<table>";
       for( var i = 0; i < this.macromoleculeList.length; i++){
         html += "<tr><td>"
-          + "<input type='text' class='template-reaction-textbox input-small layout-text' name='"
-          + i + "'" + " value='" + this.macromoleculeList[i] + "'></input>"
-          + "</td><td><img style='padding-bottom: 8px;' class='template-reaction-delete-button' width='12px' height='12px' name='" + i + "' src='sampleapp-images/delete.png'/></td></tr>"; 
+            + "<input type='text' class='template-reaction-textbox input-small layout-text' name='"
+            + i + "'" + " value='" + this.macromoleculeList[i] + "'></input>"
+            + "</td><td><img style='padding-bottom: 8px;' class='template-reaction-delete-button' width='12px' height='12px' name='" + i + "' src='sampleapp-images/delete.png'/></td></tr>";
       }
-      
+
       html += "<tr><td><img id='template-reaction-add-button' src='sampleapp-images/add.png'/></td></tr></table>";
       return html;
     },
     getComplexHtml: function(){
       var html = "<table>"
-        + "<tr><td><input type='checkbox' class='input-small layout-text' id='template-reaction-enable-complex-name'";
-        
+          + "<tr><td><input type='checkbox' class='input-small layout-text' id='template-reaction-enable-complex-name'";
+
       if(this.templateReactionEnableComplexName){
         html += " checked ";
       }
-        
+
       html += "/>"
-        + "</td><td><input type='text' class='input-small layout-text' id='template-reaction-complex-name' value='" 
-        + this.templateReactionComplexName + "'";
-      
+          + "</td><td><input type='text' class='input-small layout-text' id='template-reaction-complex-name' value='"
+          + this.templateReactionComplexName + "'";
+
       if(!this.templateReactionEnableComplexName){
         html += " disabled ";
       }
-      
+
       html += "></input>"
-        + "</td></tr></table>";
-        
+          + "</td></tr></table>";
+
       return html;
     },
     getInputHtml: function(){
@@ -1211,7 +1250,7 @@ var ReactionTemplate = Backbone.View.extend({
       var optionSelected = $("option:selected", this);
       var valueSelected = this.value;
       self.currentTemplateParameters.templateType = valueSelected;
-      
+
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
 
@@ -1219,14 +1258,14 @@ var ReactionTemplate = Backbone.View.extend({
     });
 
     $("#template-reaction-enable-complex-name").die("change").live("change", function(e){
-      self.currentTemplateParameters.templateReactionEnableComplexName = 
-              !self.currentTemplateParameters.templateReactionEnableComplexName;
+      self.currentTemplateParameters.templateReactionEnableComplexName =
+          !self.currentTemplateParameters.templateReactionEnableComplexName;
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
     });
-    
+
     $("#template-reaction-complex-name").die("change").live("change", function(e){
       self.currentTemplateParameters.templateReactionComplexName = $(this).attr('value');
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
@@ -1237,32 +1276,32 @@ var ReactionTemplate = Backbone.View.extend({
 
     $("#template-reaction-add-button").die("click").live("click",function (event) {
       self.currentTemplateParameters.macromoleculeList.push("");
-      
+
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
     });
-    
+
     $(".template-reaction-textbox").die('change').live('change', function () {
       var index = parseInt($(this).attr('name'));
       var value = $(this).attr('value');
       self.currentTemplateParameters.macromoleculeList[index] = value;
-      
+
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
     });
-    
+
     $(".template-reaction-delete-button").die("click").live("click",function (event) {
       if(self.currentTemplateParameters.macromoleculeList.length <= 2){
         return;
       }
-      
+
       var index = parseInt($(this).attr('name'));
       self.currentTemplateParameters.macromoleculeList.splice(index, 1);
-      
+
       self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
       $(self.el).html(self.template);
 
@@ -1279,18 +1318,18 @@ var ReactionTemplate = Backbone.View.extend({
         tilingPaddingVertical: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10)),
         tilingPaddingHorizontal: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-horizontal'], 10))
       };
-      
+
       cy.undoRedo().do("createTemplateReaction", param);
-        
+
       self.copyProperties();
       $(self.el).dialog('close');
     });
-    
+
     $("#cancel-template").die("click").die("click").live("click", function (evt) {
       self.copyProperties();
       $(self.el).dialog('close');
     });
-    
+
     return this;
   }
 });

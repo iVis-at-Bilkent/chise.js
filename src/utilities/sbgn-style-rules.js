@@ -9,11 +9,11 @@ var defaultSbgnStyleRules = {
   'show-grid': false,
   'snap-to-grid': false,
   'discrete-drag': false,
-  'grid-size': 40,
+  'grid-size': 20,
   'auto-resize-nodes': false,
   'show-alignment-guidelines': true,
   'guideline-tolerance': 2.0,
-  'guideline-color': "#dddddd"
+  'guideline-color': "#8b7d6b"
 };
 
 var sbgnStyleRules = _.clone(this.defaultSbgnStyleRules);

@@ -364,6 +364,10 @@ $(document).ready(function () {
   var sbgnProperties = new SBGNProperties({
     el: '#sbgn-properties-table'
   });
+
+  var gridProperties = new GridProperties({
+    el: '#grid-properties-table'
+  });
   
   var pathsBetweenQuery = new PathsBetweenQuery({
     el: '#query-pathsbetween-table'
@@ -718,6 +722,9 @@ $(document).ready(function () {
 
   $("#sbgn-properties").click(function (e) {
     sbgnProperties.render();
+  });
+  $("#grid-properties").click(function (e) {
+    gridProperties.render();
   });
   
   $("#query-pathsbetween").click(function (e) {
