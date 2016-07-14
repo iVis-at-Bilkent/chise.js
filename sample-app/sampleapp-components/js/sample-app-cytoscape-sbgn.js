@@ -481,7 +481,7 @@ var SBGNContainer = Backbone.View.extend({
         container.cytoscapePanzoom(panProps);
 
 
-        cy.snapToGrid({
+        cy.gridGuide({
           drawGrid: sbgnStyleRules['show-grid'],
           snapToGrid: sbgnStyleRules['snap-to-grid'],
           discreteDrag: sbgnStyleRules['discrete-drag'],
@@ -1047,7 +1047,7 @@ var GridProperties = Backbone.View.extend({
       self.currentGridProperties.guidelineColor = document.getElementById("guideline-color").value;
 
 
-      cy.snapToGrid({
+      cy.gridGuide({
         drawGrid: self.currentGridProperties.showGrid,
         snapToGrid: self.currentGridProperties.snapToGrid,
         gridSpacing: self.currentGridProperties.gridSize,
