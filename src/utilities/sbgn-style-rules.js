@@ -13,7 +13,7 @@ var defaultSbgnStyleRules = {
   'auto-resize-nodes': false,
   'show-alignment-guidelines': true,
   'guideline-tolerance': 2.0,
-  'guideline-color': "#8b7d6b"
+  'guideline-color': "#0B9BCD"
 };
 
 var sbgnStyleRules = _.clone(this.defaultSbgnStyleRules);
