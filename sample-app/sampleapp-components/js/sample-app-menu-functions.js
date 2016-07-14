@@ -73,12 +73,12 @@ var getExpandCollapseOptions = function() {
 
 //Handle keyboard events
 $(document).keydown(function (e) {
-  if (e.ctrlKey) {
+  if (e.ctrlKey && e.target.nodeName === 'BODY') {
     window.ctrlKeyDown = true;
-    if (e.which === 90) {
+    if (e.which === 90) { // ctrl + z
       cy.undoRedo().undo();
     }
-    else if (e.which === 89) {
+    else if (e.which === 89) { // ctrl + y
       cy.undoRedo().redo();
     }
   }
