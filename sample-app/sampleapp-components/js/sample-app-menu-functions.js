@@ -190,27 +190,10 @@ $(document).ready(function () {
   });
 
   $('#align-horizontal-top').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonTopY = modelNode.position("y") - modelNode.height() / 2;
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosY = node.position('y');
-      var newPosY = commonTopY + node.height() / 2;
-      node.position({
-        y: newPosY
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, 0, newPosY - oldPosY);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      horizontal: "top"
+    });
   });
 
   $("#align-horizontal-top-icon").click(function (e) {
@@ -218,27 +201,10 @@ $(document).ready(function () {
   });
 
   $('#align-horizontal-middle').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonMiddleY = modelNode.position("y");
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosY = node.position('y');
-      var newPosY = commonMiddleY;
-      node.position({
-        y: newPosY
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, 0, newPosY - oldPosY);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      horizontal: "center"
+    });
   });
 
   $("#align-horizontal-middle-icon").click(function (e) {
@@ -246,27 +212,10 @@ $(document).ready(function () {
   });
 
   $('#align-horizontal-bottom').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonBottomY = modelNode.position("y") + modelNode.height() / 2;
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosY = node.position('y');
-      var newPosY = commonBottomY - node.height() / 2;
-      node.position({
-        y: newPosY
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, 0, newPosY - oldPosY);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      horizontal: "bottom"
+    });
   });
 
   $("#align-horizontal-bottom-icon").click(function (e) {
@@ -274,27 +223,10 @@ $(document).ready(function () {
   });
 
   $('#align-vertical-left').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonLeftX = modelNode.position("x") - modelNode.width() / 2;
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosX = node.position('x');
-      var newPosX = commonLeftX + node.width() / 2;
-      node.position({
-        x: newPosX
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, newPosX - oldPosX, 0);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      vertical: "left"
+    });
   });
 
   $("#align-vertical-left-icon").click(function (e) {
@@ -302,27 +234,10 @@ $(document).ready(function () {
   });
 
   $('#align-vertical-center').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonCenterX = modelNode.position("x");
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosX = node.position('x');
-      var newPosX = commonCenterX
-      node.position({
-        x: newPosX
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, newPosX - oldPosX, 0);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      vertical: "center"
+    });
   });
 
   $("#align-vertical-center-icon").click(function (e) {
@@ -330,27 +245,10 @@ $(document).ready(function () {
   });
 
   $('#align-vertical-right').click(function (e) {
-    var selectedNodes = sbgnElementUtilities.getTopMostNodes(cy.nodes(":selected").filter(":visible"));
-    if (selectedNodes.length <= 1) {
-      return;
-    }
-    var nodesData = getNodesData();
-
-    var modelNode = window.firstSelectedNode ? firstSelectedNode : selectedNodes[0];
-    var commonRightX = modelNode.position("x") + modelNode.width() / 2;
-
-    for (var i = 0; i < selectedNodes.length; i++) {
-      var node = selectedNodes[i];
-      var oldPosX = node.position('x');
-      var newPosX = commonRightX - node.width() / 2;
-      node.position({
-        x: newPosX
-      });
-      sbgnElementUtilities.propogateReplacementToChildren(node, newPosX - oldPosX, 0);
-    }
-
-    nodesData.firstTime = true;
-    //editorActionsManager._do(new ReturnToPositionsAndSizesCommand(nodesData));
+    cy.undoRedo().do("align", {
+      nodes: cy.nodes(":selected"),
+      vertical: "right"
+    });
   });
 
   $("#align-vertical-right-icon").click(function (e) {
