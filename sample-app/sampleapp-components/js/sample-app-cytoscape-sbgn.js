@@ -547,15 +547,15 @@ var SBGNContainer = Backbone.View.extend({
           refreshPaddings();
         });
 
-        cy.on("beforeDo", function(actionName, args){
+        cy.on("afterDo", function(actionName, args){
           refreshUndoRedoButtonsStatus();
         });
 
-        cy.on("beforeUndo", function(actionName, args){
+        cy.on("afterUndo", function(actionName, args){
           refreshUndoRedoButtonsStatus();
         });
         
-        cy.on("beforeRedo", function(actionName, args){
+        cy.on("afterRedo", function(actionName, args){
           refreshUndoRedoButtonsStatus();
         });
 
