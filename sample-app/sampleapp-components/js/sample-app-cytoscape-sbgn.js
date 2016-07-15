@@ -60,7 +60,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'background-color': '#F4F3EE',
       'text-valign': 'bottom',
       'text-halign': 'center',
-      'font-size': '16',
+      'font-size': function (ele) {
+        return getLabelTextSize(ele);
+      },
       'width': function(ele){
         if(ele.children() == null || ele.children().length == 0){
           return '36';
@@ -99,7 +101,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       },
       'text-valign': 'bottom',
       'text-halign': 'center',
-      'font-size': '16'
+      'font-size': function (ele) {
+        return getLabelTextSize(ele);
+      }
     })
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
     .css({
@@ -606,14 +610,6 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('mouseover', 'node', function (event) {
           var node = this;
-          if (modeHandler.mode != "selection-mode") {
-            node.mouseover = false;
-          }
-          else if (!node.mouseover) {
-            node.mouseover = true;
-            //make preset layout to redraw the nodes
-            cy.forceRender();
-          }
 
           $(".qtip").remove();
 

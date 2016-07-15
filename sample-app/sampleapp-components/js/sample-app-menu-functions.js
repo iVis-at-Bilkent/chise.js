@@ -749,7 +749,7 @@ $(document).ready(function () {
     
     beforePerformLayout();
     var preferences = {
-      animate: sbgnStyleRules['animate-on-drawing-changes'] == 'true'?'end':false
+      animate: sbgnStyleRules['animate-on-drawing-changes']?'end':false
     };
     
     if(sbgnLayoutProp.currentLayoutProperties.animate == 'during'){
