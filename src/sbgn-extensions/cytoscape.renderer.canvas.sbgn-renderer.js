@@ -240,9 +240,9 @@
             'width': stateWidth, 'height': stateHeight};
 
           if (state.clazz == "state variable") {//draw ellipse
-            $$.sbgn.drawEllipse(context,
+            window.cyRenderer.drawRoundRectanglePath(context,
                     stateCenterX, stateCenterY,
-                    stateWidth, stateHeight);
+                    stateWidth, stateHeight, 15);
             context.fill();
 
             textProp.state = state.state;
@@ -269,9 +269,9 @@
             'width': stateWidth, 'height': stateHeight};
 
           if (state.clazz == "state variable") {//draw ellipse
-            $$.sbgn.drawEllipse(context,
+            window.cyRenderer.drawRoundRectanglePath(context,
                     stateCenterX, stateCenterY,
-                    stateWidth, stateHeight);
+                    stateWidth, stateHeight, 15);
             context.fill();
 
             textProp.state = state.state;
@@ -377,8 +377,8 @@
 
       if (state.clazz == "state variable") {//draw ellipse
         //var stateLabel = state.state.value;
-        $$.sbgn.drawEllipse(context, stateCenterX, stateCenterY,
-                stateWidth, stateHeight);
+        window.cyRenderer.drawRoundRectanglePath(context, stateCenterX, stateCenterY,
+                stateWidth, stateHeight, 15);
 
         context.fill();
         textProp.state = state.state;
