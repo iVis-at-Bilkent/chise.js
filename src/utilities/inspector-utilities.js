@@ -263,7 +263,7 @@ inspectorUtilities.handleSBGNInspector = function () {
             title = "unlock aspect ratio";
           }
           
-          html += "<img id='inspector-node-sizes-aspect-ratio' width='12px' height='12px' src='sampleapp-images/";
+          html += "<img id='inspector-node-sizes-aspect-ratio' style='vertical-align: top; margin-left: 5px;' src='sampleapp-images/";
           html += imageName;
           html += "'";
           
