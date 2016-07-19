@@ -15,7 +15,7 @@ var loadSample = function(filename){
     el: '#sbgn-network-container',
     model: {cytoscapeJsGraph: sbgnmlToJson.convert(xmlObject)}
   })).render();
-  
+  ""
   inspectorUtilities.handleSBGNInspector();
 };
 
@@ -189,10 +189,15 @@ $(document).ready(function () {
     cy.undoRedo().do("paste", { id: _id });
   });
 
+  function getFirstSelectedNode() {
+    return window.firstSelectedNode ? window.firstSelectedNode : cy.nodes(":selected")[0];
+  }
+
   $('#align-horizontal-top').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      horizontal: "top"
+      horizontal: "top",
+      alignTo: getFirstSelectedNode()
     });
   });
 
@@ -203,7 +208,8 @@ $(document).ready(function () {
   $('#align-horizontal-middle').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      horizontal: "center"
+      horizontal: "center",
+      alignTo: getFirstSelectedNode()
     });
   });
 
@@ -214,7 +220,8 @@ $(document).ready(function () {
   $('#align-horizontal-bottom').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      horizontal: "bottom"
+      horizontal: "bottom",
+      alignTo: getFirstSelectedNode()
     });
   });
 
@@ -225,7 +232,8 @@ $(document).ready(function () {
   $('#align-vertical-left').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      vertical: "left"
+      vertical: "left",
+      alignTo: getFirstSelectedNode()
     });
   });
 
@@ -236,7 +244,8 @@ $(document).ready(function () {
   $('#align-vertical-center').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      vertical: "center"
+      vertical: "center",
+      alignTo: getFirstSelectedNode()
     });
   });
 
@@ -247,7 +256,8 @@ $(document).ready(function () {
   $('#align-vertical-right').click(function (e) {
     cy.undoRedo().do("align", {
       nodes: cy.nodes(":selected"),
-      vertical: "right"
+      vertical: "right",
+      alignTo: getFirstSelectedNode()
     });
   });
 
