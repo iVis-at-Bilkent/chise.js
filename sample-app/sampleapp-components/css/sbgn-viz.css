@@ -263,9 +263,13 @@ body {
 .selectedType {
     /*box-shadow: 10px 10px 5px #888888;*/
     border-style: solid;
-    border-color: #0B9BCD;
+    border-color: #0db9f2;
     border-width: 2px;
     border-radius: 5px;
+}
+
+.selectedTypeSustainable {
+    border-color: #0981aa;
 }
 
 .selectedMenuItem {

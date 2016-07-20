@@ -464,7 +464,11 @@ var SBGNContainer = Backbone.View.extend({
             param.firstTime = true;
 
             cy.undoRedo().do("addEdge", param);
-            modeHandler.setSelectionMode();
+            
+            if( !modeHandler.sustainMode ) {
+              modeHandler.setSelectionMode();
+            }
+            
             cy.edges()[cy.edges().length - 1].select();
           }
         });
@@ -755,7 +759,11 @@ var SBGNContainer = Backbone.View.extend({
             param.firstTime = true;
 
             cy.undoRedo().do("addNode", param);
-            modeHandler.setSelectionMode();
+            
+            if( !modeHandler.sustainMode ) {
+              modeHandler.setSelectionMode();
+            }
+            
             cy.nodes()[cy.nodes().length - 1].select();
           }
         });

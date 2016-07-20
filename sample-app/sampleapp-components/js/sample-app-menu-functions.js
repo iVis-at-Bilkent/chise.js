@@ -166,11 +166,19 @@ $(document).ready(function () {
     if (modeHandler.mode != "add-node-mode") {
       modeHandler.setAddNodeMode();
     }
+    else {
+      modeHandler.sustainMode = true;
+      $('#node-list').addClass('selectedTypeSustainable');
+    }
   });
 
   $('#edge-list-set-mode-btn').click(function (e) {
     if (modeHandler.mode != "add-edge-mode") {
       modeHandler.setAddEdgeMode();
+    }
+    else {
+      modeHandler.sustainMode = true;
+      $('#edge-list').addClass('selectedTypeSustainable');
     }
   });
 
