@@ -8,8 +8,10 @@ var setFileContent = function (fileName) {
 
 var startSpinner = function(id) {
     
+      if($('.' + id).length === 0){
         var containerWidth = $('#sbgn-network-container').width();
         var containerHeight = $('#sbgn-network-container').height();
+        $('#sbgn-network-container').prepend('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw layout-spinner"></i>');
       }
 };
 var endSpinner = function(id) {
