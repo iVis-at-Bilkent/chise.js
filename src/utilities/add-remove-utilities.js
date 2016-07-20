@@ -3,8 +3,11 @@ var addRemoveUtilities = {
   addNode: function (x, y, sbgnclass, parent, visibility) {
     var defaultsMap = this.defaultsMap;
     var defaults = defaultsMap[sbgnclass];
-    var width = defaults ? defaults.width : 50;
-    var height = defaults ? defaults.height : 50;
+    
+    var defaultDim = sbgnclass.endsWith("process") || sbgnclass === "association" || sbgnclass === "dissociation" ? 30 : 50;
+    var width = defaults ? defaults.width : defaultDim;
+    var height = defaults ? defaults.height : defaultDim;
+    
     var css = defaults ? {
       'border-width': defaults['border-width'],
 //      'border-color': defaults['border-color'],

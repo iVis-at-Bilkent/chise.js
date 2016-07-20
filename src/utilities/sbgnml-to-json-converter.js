@@ -1,13 +1,16 @@
-function loadXMLDoc(filename) {
+function loadXMLDoc(filename, callback) {
   if (window.XMLHttpRequest) {
     xhttp = new XMLHttpRequest();
   }
   else {
     xhttp = new ActiveXObject("Microsoft.XMLHTTP");
   }
-  xhttp.open("GET", filename, false);
+  xhttp.onreadystatechange = function(res) {
+      if (xhttp.readyState === 4)
+        callback(xhttp.responseXML);
+  };
+  xhttp.open("GET", filename);
   xhttp.send();
-  return xhttp.responseXML;
 }
 ;
 
