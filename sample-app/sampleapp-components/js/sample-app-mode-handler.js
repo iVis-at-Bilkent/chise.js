@@ -42,8 +42,6 @@ var modeHandler = {
   },
   setAddNodeMode: function () {
     if (modeHandler.mode != "add-node-mode") {
-      $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
-      modeHandler.sustainMode = false;
       $('#node-list').addClass('selectedType');
 
       cy.elements().unselect();
@@ -62,11 +60,12 @@ var modeHandler = {
 
       cy.edgehandles('drawoff');
     }
+    
+    $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
+    modeHandler.sustainMode = false;
   },
   setAddEdgeMode: function () {
     if (modeHandler.mode != "add-edge-mode") {
-      $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
-      modeHandler.sustainMode = false;
       $('#edge-list').addClass('selectedType');
       
       cy.elements().unselect();
@@ -84,11 +83,12 @@ var modeHandler = {
 
       cy.edgehandles('drawon');
     }
+    
+    $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
+    modeHandler.sustainMode = false;
   },
   setSelectionMode: function () {
     if (modeHandler.mode != "selection-mode") {
-      $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
-      modeHandler.sustainMode = false;
       $('#select-icon').addClass('selectedType');
       modeHandler.setSelectedMenuItem("selection-mode");
 
@@ -103,6 +103,9 @@ var modeHandler = {
 
       cy.edgehandles('drawoff');
     }
+    
+    $('.selectedTypeSustainable').removeClass('selectedTypeSustainable');
+    modeHandler.sustainMode = false;
   },
   autoEnableMenuItems: function (enable) {
     if (enable) {
