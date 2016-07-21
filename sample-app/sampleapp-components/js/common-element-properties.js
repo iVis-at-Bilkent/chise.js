@@ -361,8 +361,8 @@ var includesNotCollapsedNorParentElement = function(nodes) {
 };
 
 //checks if a node with the given sbgnclass can be cloned
-var canBeCloned = function (sbgnclass) {
-  sbgnclass = sbgnclass.replace(" multimer", "");
+var canBeCloned = function (_sbgnclass) {
+  var sbgnclass = _sbgnclass.replace(" multimer", "");
   var list = {
     'unspecified entity': true,
     'macromolecule': true,
@@ -376,8 +376,8 @@ var canBeCloned = function (sbgnclass) {
 };
 
 //checks if a node with the given sbgnclass can become a multimer
-var canBeMultimer = function (sbgnclass) {
-  sbgnclass = sbgnclass.replace(" multimer", "");
+var canBeMultimer = function (_sbgnclass) {
+  var sbgnclass = _sbgnclass.replace(" multimer", "");
   var list = {
     'macromolecule': true,
     'complex': true,
@@ -388,7 +388,8 @@ var canBeMultimer = function (sbgnclass) {
   return list[sbgnclass] ? true : false;
 };
 
-var isEPNClass = function (sbgnclass) {
+var isEPNClass = function (_sbgnclass) {
+  var sbgnclass = _sbgnclass.replace(" multimer", "");
   return (sbgnclass == 'unspecified entity'
           || sbgnclass == 'simple chemical'
           || sbgnclass == 'macromolecule'
