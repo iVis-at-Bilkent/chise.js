@@ -612,6 +612,17 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
+        function removeQtip(event) {
+          if (this.qtipTimeOutFcn != null) {
+            clearTimeout(this.qtipTimeOutFcn);
+            this.qtipTimeOutFcn = null;
+          }
+          this.mouseover = false;           //make preset layout to redraw the nodes
+          cy.forceRender();
+          cy.off('mouseout', 'node', removeQtip);
+          cy.off("drag", "node", removeQtip);
+        }
+        
         cy.on('mouseover', 'node', function (event) {
           var node = this;
 
@@ -623,16 +634,13 @@ var SBGNContainer = Backbone.View.extend({
           node.qtipTimeOutFcn = setTimeout(function () {
             nodeQtipFunction(node);
           }, 1000);
+          cy.on('mouseout', 'node', removeQtip);
+          cy.on("drag", "node", removeQtip)
         });
 
-        cy.on('mouseout', 'node', function (event) {
-          if (this.qtipTimeOutFcn != null) {
-            clearTimeout(this.qtipTimeOutFcn);
-            this.qtipTimeOutFcn = null;
-          }
-          this.mouseover = false;           //make preset layout to redraw the nodes
-          cy.forceRender();
-        });
+
+        
+        
 
         cy.on('cxttap', 'node', function (event) {
           var node = this;
