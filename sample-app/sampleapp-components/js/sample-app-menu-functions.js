@@ -37,6 +37,8 @@ var loadSample = function(filename, callback){
         callback();
     
     endSpinner("load-spinner");
+    
+    modeHandler.setSelectionMode();
   });
 };
 
@@ -46,6 +48,8 @@ var loadSBGNMLText = function(text){
     model: {cytoscapeJsGraph:
               sbgnmlToJson.convert(textToXmlObject(text))}
   })).render();
+  
+  modeHandler.setSelectionMode();
 };
 
 var loadSBGNMLFile = function(file) {
