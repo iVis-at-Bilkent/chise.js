@@ -38,7 +38,9 @@ var loadSample = function(filename, callback){
     
     endSpinner("load-spinner");
     
+    resetUndoRedoButtons();
     modeHandler.setSelectionMode();
+    inspectorUtilities.handleSBGNInspector();
   });
 };
 
@@ -50,8 +52,9 @@ var loadSBGNMLText = function(text){
               sbgnmlToJson.convert(textToXmlObject(text))}
   })).render();
 
-    modeHandler.setSelectionMode();
-    
+  resetUndoRedoButtons();
+  modeHandler.setSelectionMode();
+  inspectorUtilities.handleSBGNInspector();
 };
 
 var loadSBGNMLFile = function(file) {
@@ -148,7 +151,8 @@ $(document).ready(function () {
         }
       })).render();
 
-      editorActionsManager.reset();
+      resetUndoRedoButtons();
+      modeHandler.setSelectionMode();
       inspectorUtilities.handleSBGNInspector();
     });
 

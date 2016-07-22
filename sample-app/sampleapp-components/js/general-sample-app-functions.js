@@ -204,6 +204,11 @@ var refreshUndoRedoButtonsStatus = function () {
   }
 };
 
+var resetUndoRedoButtons = function() {
+  $("#undo-last-action").parent("li").addClass("disabled");
+  $("#redo-last-action").parent("li").addClass("disabled");
+};
+
 var calculatePaddings = function (paddingPercent) {
   //As default use the compound padding value
   if (!paddingPercent) {
