@@ -268,10 +268,6 @@ body {
     border-radius: 5px;
 }
 
-.selectedTypeSustainable {
-    border-color: #0981aa;
-}
-
 .selectedTypeSustainable > .btn-selectedTypeSustainable {
   background-color: #cccccc;
   *background-color: #bfbfbf;
