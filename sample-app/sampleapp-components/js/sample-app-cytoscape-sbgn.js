@@ -819,7 +819,7 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('tap', 'node', function (event) {
           var node = this;
-/*
+
           var tappedNow = event.cyTarget;
           setTimeout(function () {
             tappedBefore = null;
@@ -830,19 +830,6 @@ var SBGNContainer = Backbone.View.extend({
           } else {
             tappedBefore = tappedNow;
           }
-
-          $(".qtip").remove();
-
-          if (event.originalEvent.shiftKey)
-            return;
-
-          if (node.qtipTimeOutFcn != null) {
-            clearTimeout(node.qtipTimeOutFcn);
-            node.qtipTimeOutFcn = null;
-          }
-
-          nodeQtipFunction(node);
-*/
         });
       }
     };
