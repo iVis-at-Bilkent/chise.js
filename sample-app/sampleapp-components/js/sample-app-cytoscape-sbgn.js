@@ -437,6 +437,7 @@ var SBGNContainer = Backbone.View.extend({
               }
             }
             else if (sbgnclass == 'logic arc') {
+              var invalid = false;
               if (!isEPNClass(sourceClass) || !isLogicalOperator(targetClass)) {
                 if (isLogicalOperator(sourceClass) && isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
@@ -445,8 +446,17 @@ var SBGNContainer = Backbone.View.extend({
                   target = temp;
                 }
                 else {
-                  return;
+                  invalid = true;
                 }
+              }
+              
+              // the case that both sides are logical operators are valid too
+              if(isLogicalOperator(sourceClass) && isLogicalOperator(targetClass)) {
+                invalid = false;
+              }
+              
+              if( invalid ) {
+                return;
               }
             }
             else if (sbgnclass == 'equivalence arc') {
