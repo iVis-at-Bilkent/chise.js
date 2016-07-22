@@ -11,7 +11,7 @@ var startSpinner = function(id) {
       if($('.' + id).length === 0){
         var containerWidth = $('#sbgn-network-container').width();
         var containerHeight = $('#sbgn-network-container').height();
-        $('#sbgn-network-container').prepend('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw layout-spinner"></i>');
+        $('#sbgn-network-container:parent').prepend('<i style="position: absolute; z-index: 9999999; left: ' + containerWidth / 2 + 'px; top: ' + containerHeight / 2 + 'px;" class="fa fa-spinner fa-spin fa-3x fa-fw layout-spinner"></i>');
       }
 };
 var endSpinner = function(id) {
@@ -43,25 +43,31 @@ var loadSample = function(filename, callback){
 };
 
 var loadSBGNMLText = function(text){
+
   (new SBGNContainer({
     el: '#sbgn-network-container',
     model: {cytoscapeJsGraph:
               sbgnmlToJson.convert(textToXmlObject(text))}
   })).render();
-  
-  modeHandler.setSelectionMode();
+
+    modeHandler.setSelectionMode();
+    
 };
 
 var loadSBGNMLFile = function(file) {
-  var textType = /text.*/;
+  startSpinner("load-file-spinner");
 
-  var reader = new FileReader();
+  $("#load-file-spinner").ready(function() {
+    var textType = /text.*/;
 
-  reader.onload = function (e) {
-    loadSBGNMLText(this.result);
-  }
-  reader.readAsText(file);
-  setFileContent(file.name);
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      loadSBGNMLText(this.result);
+    };
+    reader.readAsText(file);
+    setFileContent(file.name);
+  });
 };
 
 var beforePerformLayout = function(){

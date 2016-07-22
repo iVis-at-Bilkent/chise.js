@@ -612,23 +612,35 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        function removeQtip(event) {
+        var isQtipActive = false;
+        
+        function removeQtip(e) {
           if (this.qtipTimeOutFcn != null) {
             clearTimeout(this.qtipTimeOutFcn);
             this.qtipTimeOutFcn = null;
           }
           this.mouseover = false;           //make preset layout to redraw the nodes
-          cy.forceRender();
           cy.off('mouseout', 'node', removeQtip);
           cy.off("drag", "node", removeQtip);
+          $(".qtip").remove();
+          isQtipActive = false;
+          cy.forceRender();
         }
         
-        cy.on('mouseover', 'node', function (event) {
+        cy.on('mouseover', 'node', function (e) {
           var node = this;
-
+          
+          if (node.renderedStyle("label") == node.data("sbgnlabel") && node.data("sbgnstatesandinfos").length == 0 &&  node.data("sbgnclass") != "complex")
+              return;
+          
+          if(isQtipActive) {
+              removeQtip();
+              iQtipActive = true;
+          }
+           
           $(".qtip").remove();
 
-          if (event.originalEvent.shiftKey)
+          if (e.originalEvent.shiftKey)
             return;
 
           node.qtipTimeOutFcn = setTimeout(function () {
@@ -804,7 +816,7 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('tap', 'node', function (event) {
           var node = this;
-
+/*
           var tappedNow = event.cyTarget;
           setTimeout(function () {
             tappedBefore = null;
@@ -827,11 +839,13 @@ var SBGNContainer = Backbone.View.extend({
           }
 
           nodeQtipFunction(node);
-
+*/
         });
       }
     };
+
     container.html("");
+    endSpinner("load-file-spinner");
     container.cy(cyOptions);
     return this;
   }
