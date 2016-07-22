@@ -126,8 +126,8 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
       variable: ""
     };
     obj.bbox = {
-      w: 69,
-      h: 28
+      w: 53,
+      h: 18
     };
     var param = {
       obj: obj,
