@@ -203,8 +203,8 @@ $(document).ready(function () {
         modeHandler.setAddNodeMode();
       }
       else {
-        modeHandler.sustainMode = true;
-        $('#node-list').addClass('selectedTypeSustainable');
+        modeHandler.sustainMode = !modeHandler.sustainMode;
+        $('#node-list').toggleClass('selectedTypeSustainable');
       }
     });
 
@@ -213,8 +213,8 @@ $(document).ready(function () {
         modeHandler.setAddEdgeMode();
       }
       else {
-        modeHandler.sustainMode = true;
-        $('#edge-list').addClass('selectedTypeSustainable');
+        modeHandler.sustainMode = !modeHandler.sustainMode;
+        $('#edge-list').toggleClass('selectedTypeSustainable');
       }
     });
 
