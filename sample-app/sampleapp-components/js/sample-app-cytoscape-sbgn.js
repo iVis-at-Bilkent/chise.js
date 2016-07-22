@@ -612,32 +612,35 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        var isQtipActive = false;
-        
+
         function removeQtip(e) {
           if (this.qtipTimeOutFcn != null) {
             clearTimeout(this.qtipTimeOutFcn);
             this.qtipTimeOutFcn = null;
           }
           this.mouseover = false;           //make preset layout to redraw the nodes
+          this.removeData("showingTooltip");
           cy.off('mouseout', 'node', removeQtip);
           cy.off("drag", "node", removeQtip);
           $(".qtip").remove();
-          isQtipActive = false;
           cy.forceRender();
         }
-        
-        cy.on('mouseover', 'node', function (e) {
+
+        cy.on("mouseover", "node", function (e) {
+          e.cy.$("[showingTooltip]").trigger("hideTooltip");
+          e.cyTarget.trigger("showTooltip");
+        });
+
+
+        cy.on("hideTooltip", "node", removeQtip);
+
+        cy.on('showTooltip', 'node', function (e) {
           var node = this;
           
           if (node.renderedStyle("label") == node.data("sbgnlabel") && node.data("sbgnstatesandinfos").length == 0 &&  node.data("sbgnclass") != "complex")
               return;
-          
-          if(isQtipActive) {
-              removeQtip();
-              iQtipActive = true;
-          }
-           
+
+           node.data("showingTooltip", true);
           $(".qtip").remove();
 
           if (e.originalEvent.shiftKey)
