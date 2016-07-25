@@ -109,19 +109,6 @@ var getExpandCollapseOptions = function() {
 $(document).ready(function () {
   loadSample('neuronal_muscle_signalling.xml', function() {
       
-    //Handle keyboard events
-    $(document).keydown(function (e) {
-      if (e.ctrlKey && e.target.nodeName === 'BODY') {
-        window.ctrlKeyDown = true;
-        if (e.which === 90) { // ctrl + z
-          cy.undoRedo().undo();
-        }
-        else if (e.which === 89) { // ctrl + y
-          cy.undoRedo().redo();
-        }
-      }
-    });
-
     $(document).keyup(function (e) {
       window.ctrlKeyDown = null;
     //  $("#sbgn-network-container").removeClass("target-cursor");

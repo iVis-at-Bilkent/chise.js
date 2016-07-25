@@ -335,7 +335,7 @@ var SBGNContainer = Backbone.View.extend({
         cy.clipboard({
           clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
           shortcuts: {
-            enabled: true, // Whether keyboard shortcuts are enabled
+            enabled: false, // Whether keyboard shortcuts are enabled
             undoable: true // and if undoRedo extension exists
           }
         });
