@@ -1,19 +1,75 @@
 var addRemoveUtilities = {
-  defaultsMap: {},
+  defaultsMap: {
+    "process": {
+      width: 30,
+      height: 30
+    },
+    "omitted process": {
+      width: 30,
+      height: 30
+    },
+    "uncertain process": {
+      width: 30,
+      height: 30
+    },
+    "associationprocess": {
+      width: 30,
+      height: 30
+    },
+    "association": {
+      width: 30,
+      height: 30
+    },
+    "dissociation": {
+      width: 30,
+      height: 30
+    },
+    "macromolecule": {
+      width: 100,
+      height: 50
+    },
+    "nucleic acid feature": {
+      width: 100,
+      height: 50
+    },
+    "phenotype": {
+      width: 100,
+      height: 50
+    },
+    "unspecified entity": {
+      width: 100,
+      height: 50
+    },
+    "perturbing agent": {
+      width: 100,
+      height: 50
+    },
+    "complex": {
+      width: 100,
+      height: 100
+    },
+    "compartment": {
+      width: 100,
+      height: 100
+    }
+  },
   addNode: function (x, y, sbgnclass, parent, visibility) {
     var defaultsMap = this.defaultsMap;
     var defaults = defaultsMap[sbgnclass];
-    
-    var defaultDim = sbgnclass.endsWith("process") || sbgnclass === "association" || sbgnclass === "dissociation" ? 30 : 50;
-    var width = defaults ? defaults.width : defaultDim;
-    var height = defaults ? defaults.height : defaultDim;
-    
+
+    var width = defaults ? defaults.width : 50;
+    var height = defaults ? defaults.height : 50;
+
+
+
     var css = defaults ? {
       'border-width': defaults['border-width'],
 //      'border-color': defaults['border-color'],
       'background-color': defaults['background-color'],
       'font-size': defaults['font-size'],
-      'background-opacity': defaults['background-opacity']
+      'background-opacity': defaults['background-opacity'],
+      "width": width,
+      "height": height
     } : {};
     
     if(visibility){
