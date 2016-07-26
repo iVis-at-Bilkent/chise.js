@@ -67,9 +67,7 @@ var addRemoveUtilities = {
 //      'border-color': defaults['border-color'],
       'background-color': defaults['background-color'],
       'font-size': defaults['font-size'],
-      'background-opacity': defaults['background-opacity'],
-      "width": width,
-      "height": height
+      'background-opacity': defaults['background-opacity']
     } : {};
     
     if(visibility){
