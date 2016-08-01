@@ -383,8 +383,29 @@ inspectorUtilities.handleSBGNInspector = function () {
     }
     
     html += "<hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'>";
-//    html += "<button type='button' style='display: block; margin: 0 auto;' class='btn btn-default' id='inspector-apply-button'>Apply Changes</button>";
+    
+    if (selectedEles.length === 1) {
+      var geneClass = selectedEles[0]._private.data.sbgnclass;
+      
+      if (geneClass === 'macromolecule' || geneClass === 'nucleic acid feature' ||
+          geneClass === 'unspecified entity') {
+    
+//          html += "<div style='text-align: center;'>";
+          html += "<a style='align: center; color: black;' class='accordion-toggle collapsed' data-toggle='collapse' data-target='#biogene-collapsable'>Bio Gene Info</a>"
+//          html += "</div>";
+    
+          html += "<div style='margin-top: 5px;' id='biogene-collapsable' class='collapse'>";
+          html += "<div style='padding-left: 3px;' id='biogene-title'></div>";
+          html += "<div id='biogene-container'></div>";
+          html += "</div>";
+          html += "<hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'>";
+      }
+    }
+    
     $("#sbgn-inspector").html(html);
+    if(selectedEles.length === 1) {
+      fillBioGeneContainer(selectedEles[0]);
+    }
 
     if (type == "node") {
       if (fillStateAndInfos) {
