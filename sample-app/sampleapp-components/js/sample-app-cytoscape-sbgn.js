@@ -322,6 +322,77 @@ var SBGNContainer = Backbone.View.extend({
         // register the extensions
 
         cy.expandCollapse(getExpandCollapseOptions());
+        
+        cy.contextMenus({
+          menuItemClasses: ['chise-context-menus-menu-item']
+        });
+        
+        cy.appendMenuItems([
+          {
+            id: 'ctx-menu-delete',
+            title: 'Delete',
+            selector: 'node, edge', 
+            onClickFunction: function (event) { 
+              cy.undoRedo().do("removeEles", event.cyTarget);
+            }
+          },
+          {
+            id: 'ctx-menu-expand', // ID of menu item
+            title: 'Expand', // Title of menu item
+            // Filters the elements to have this menu item on cxttap
+            // If the selector is not truthy no elements will have this menu item on cxttap
+            selector: 'node[expanded-collapsed="collapsed"]', 
+            onClickFunction: function (event) { // The function to be executed on click
+              cy.undoRedo().do("expand", {
+                nodes: event.cyTarget
+              });
+            }
+          },
+          {
+            id: 'ctx-menu-collapse',
+            title: 'Collapse',
+            selector: 'node[expanded-collapsed="expanded"]', 
+            onClickFunction: function (event) {
+              cy.undoRedo().do("collapse", {
+                nodes: event.cyTarget
+              });
+            }
+          },
+          {
+            id: 'ctx-menu-delete-selected', 
+            title: 'Delete Selected', 
+            onClickFunction: function () { 
+              $("#delete-selected-simple").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-perform-layout', 
+            title: 'Perform Layout', 
+            onClickFunction: function () { 
+              if (modeHandler.mode == "selection-mode") {
+                $("#perform-layout").trigger('click');
+              }
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-hide-selected', 
+            title: 'Hide Selected', 
+            onClickFunction: function () { 
+              $("#hide-selected").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-show-all', 
+            title: 'Show All', 
+            onClickFunction: function () { 
+              $("#show-all").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          }
+        ]);
 
         cy.edgeBendEditing({
           // this function specifies the positions of bend points

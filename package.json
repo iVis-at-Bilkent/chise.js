@@ -18,6 +18,7 @@
     "cytoscape-edge-bend-editing": "latest",
     "cytoscape-expand-collapse": "latest",
     "cytoscape-grid-guide": "latest",
+    "cytoscape-context-menus": "latest",
     "cytoscape-panzoom": "~2.4.0",
     "cytoscape-qtip": "~2.3.0",
     "cytoscape-undo-redo": "latest",

@@ -455,3 +455,7 @@ menu:not([title]):before{
     padding-bottom: 2px !important;
     padding-top: 2px !important;
 }
+
+.chise-context-menus-menu-item {
+    width: 150px !important;
+}
