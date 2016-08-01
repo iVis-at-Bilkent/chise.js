@@ -1149,6 +1149,15 @@ var GridProperties = Backbone.View.extend({
       self.currentGridProperties.guidelineTolerance = Number(document.getElementById("guideline-tolerance").value);
       self.currentGridProperties.guidelineColor = document.getElementById("guideline-color").value;
 
+      sbgnStyleRules["show-grid"] = document.getElementById("show-grid").checked;
+      sbgnStyleRules["snap-to-grid"] = document.getElementById("snap-to-grid").checked;
+      sbgnStyleRules["grid-size"] = Number(document.getElementById("grid-size").value);
+      sbgnStyleRules["discrete-drag"] = document.getElementById("discrete-drag").checked;
+      sbgnStyleRules["auto-resize-nodes"] = document.getElementById("auto-resize-nodes").checked;
+      sbgnStyleRules["show-alignment-guidelines"] = document.getElementById("show-alignment-guidelines").checked;
+      sbgnStyleRules["guideline-tolerance"] = Number(document.getElementById("guideline-tolerance").value);
+      sbgnStyleRules["guideline-color"] = document.getElementById("guideline-color").value;
+
 
       cy.gridGuide({
         drawGrid: self.currentGridProperties.showGrid,
