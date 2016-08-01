@@ -1,8 +1,8 @@
 var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node")
     .css({
-      'border-width': 1.5,
-      'border-color': '#555',
+      "border-color": "#555",
+      "border-width": "1.5px",
       'background-color': '#f6f6f6',
       'font-size': 11,
 //          'shape': 'data(sbgnclass)',
@@ -112,7 +112,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node:selected")
     .css({
-      'border-color': '#d67614',
       'target-arrow-color': '#000',
       'text-outline-color': '#000'})
     .selector("node:active")
@@ -232,7 +231,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node.changeBorderColor:selected")
     .css({
-      'border-color': '#d67614'
+    //  'border-color': '#d67614'
     })
     .selector("edge.changeLineColor")
     .css({
@@ -436,7 +435,49 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        cy.nodeResize();
+        var fixedAspectRatioModeTypes = ["source and sink", "process", "omitted process", "uncertain process", "association", "dissociation", "and", "or", "not"];
+        cy.nodeResize({
+          padding: 4, // spacing between node and grapples/rectangle
+          undoable: true, // and if cy.undoRedo exists
+
+          grappleSize: 4, // size of square dots
+          grappleColor: "#d67614", // color of grapples
+          inactiveGrappleStroke: "outside 1px #d67614",
+          boundingRectangle: true, // enable/disable bounding rectangle
+          boundingRectangleLineDash: [2, 4], // line dash of bounding rectangle
+          boundingRectangleLineColor: "darkgray",
+          boundingRectangleLineWidth: 1.5,
+          zIndex: 999,
+
+          minWidth: function (node) {
+            var data = node.data("resizeMinWidth");
+            return data ? data : 10;
+          }, // a function returns min width of node
+          minHeight: function (node) {
+            var data = node.data("resizeMinHeight");
+            return data ? data : 10;
+          }, // a function returns min height of node
+
+          isFixedAspectRatioResizeMode: function (node) {
+            var sbgnclass = node.data("sbgnclass");
+            return fixedAspectRatioModeTypes.indexOf(sbgnclass) >= 0;
+          },// with only 4 active grapples (at corners)
+          isNoResizeMode: function (node) { return node.is(".noResizeMode, :parent") }, // no active grapples
+
+          cursors: { // See http://www.w3schools.com/cssref/tryit.asp?filename=trycss_cursor
+            // May take any "cursor" css property
+            default: "default", // to be set after resizing finished or mouseleave
+            inactive: "not-allowed",
+            nw: "nw-resize",
+            n: "n-resize",
+            ne: "ne-resize",
+            e: "e-resize",
+            se: "se-resize",
+            s: "s-resize",
+            sw: "sw-resize",
+            w: "w-resize"
+          }
+        });
 
         var edges = cy.edges();
 
