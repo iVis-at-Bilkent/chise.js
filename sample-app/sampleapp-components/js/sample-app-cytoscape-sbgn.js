@@ -323,7 +323,7 @@ var SBGNContainer = Backbone.View.extend({
         cy.expandCollapse(getExpandCollapseOptions());
         
         cy.contextMenus({
-          menuItemClasses: ['chise-context-menus-menu-item']
+          menuItemClasses: ['customized-context-menus-menu-item']
         });
         
         cy.edgeBendEditing({

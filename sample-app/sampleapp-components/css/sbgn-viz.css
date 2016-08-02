@@ -456,7 +456,7 @@ menu:not([title]):before{
     padding-top: 2px !important;
 }
 
-.chise-context-menus-menu-item {
+.customized-context-menus-menu-item {
     width: 150px !important;
 }
 
