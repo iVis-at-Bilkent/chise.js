@@ -326,7 +326,26 @@ var SBGNContainer = Backbone.View.extend({
           menuItemClasses: ['chise-context-menus-menu-item']
         });
         
+        cy.edgeBendEditing({
+          // this function specifies the positions of bend points
+          bendPositionsFunction: function(ele) {
+            return ele.data('bendPointPositions');
+          },
+          // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
+          undoable: true,
+          // title of remove bend point menu item
+          removeBendMenuItemTitle: "Delete Bend Point"
+        });
+        
         cy.appendMenuItems([
+          {
+            id: 'ctx-menu-sbgn-properties',
+            title: 'Properties...',
+            coreAsWell: true,
+            onClickFunction: function (event) { 
+              $("#sbgn-properties").trigger("click");
+            }
+          },
           {
             id: 'ctx-menu-delete',
             title: 'Delete',
@@ -334,6 +353,30 @@ var SBGNContainer = Backbone.View.extend({
             onClickFunction: function (event) { 
               cy.undoRedo().do("removeEles", event.cyTarget);
             }
+          },
+          {
+            id: 'ctx-menu-delete-selected', 
+            title: 'Delete Selected', 
+            onClickFunction: function () { 
+              $("#delete-selected-simple").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-hide-selected', 
+            title: 'Hide Selected', 
+            onClickFunction: function () { 
+              $("#hide-selected").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-show-all', 
+            title: 'Show All', 
+            onClickFunction: function () { 
+              $("#show-all").trigger('click');
+            },
+            coreAsWell: true // Whether core instance have this item on cxttap
           },
           {
             id: 'ctx-menu-expand', // ID of menu item
@@ -358,14 +401,6 @@ var SBGNContainer = Backbone.View.extend({
             }
           },
           {
-            id: 'ctx-menu-delete-selected', 
-            title: 'Delete Selected', 
-            onClickFunction: function () { 
-              $("#delete-selected-simple").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
             id: 'ctx-menu-perform-layout', 
             title: 'Perform Layout', 
             onClickFunction: function () { 
@@ -374,33 +409,8 @@ var SBGNContainer = Backbone.View.extend({
               }
             },
             coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-hide-selected', 
-            title: 'Hide Selected', 
-            onClickFunction: function () { 
-              $("#hide-selected").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-show-all', 
-            title: 'Show All', 
-            onClickFunction: function () { 
-              $("#show-all").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
           }
         ]);
-
-        cy.edgeBendEditing({
-          // this function specifies the positions of bend points
-          bendPositionsFunction: function(ele) {
-            return ele.data('bendPointPositions');
-          },
-          // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
-          undoable: true
-        });
 
         cy.clipboard({
           clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
