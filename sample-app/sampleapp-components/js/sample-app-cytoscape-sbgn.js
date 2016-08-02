@@ -437,14 +437,14 @@ var SBGNContainer = Backbone.View.extend({
 
         var fixedAspectRatioModeTypes = ["source and sink", "process", "omitted process", "uncertain process", "association", "dissociation", "and", "or", "not"];
         cy.nodeResize({
-          padding: 4, // spacing between node and grapples/rectangle
+          padding: 2, // spacing between node and grapples/rectangle
           undoable: true, // and if cy.undoRedo exists
 
-          grappleSize: 4, // size of square dots
+          grappleSize: 7, // size of square dots
           grappleColor: "#d67614", // color of grapples
-          inactiveGrappleStroke: "outside 1px #d67614",
+          inactiveGrappleStroke: "inside 1px #d67614",
           boundingRectangle: true, // enable/disable bounding rectangle
-          boundingRectangleLineDash: [2, 4], // line dash of bounding rectangle
+          boundingRectangleLineDash: [1.5, 1.5], // line dash of bounding rectangle
           boundingRectangleLineColor: "darkgray",
           boundingRectangleLineWidth: 1.5,
           zIndex: 999,
