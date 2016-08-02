@@ -18,10 +18,11 @@
         cy.elements().select();
         return false;
     });
-    mt.bind(["ctrl", "command"], function () {
+  /*  mt.bind(["ctrl", "command"], function () {
         window.ctrlKeyDown = true;
     }, "keydown");
     mt.bind(["ctrl", "command"], function () {
-        window.ctrlKeyDown = false;
-    }, "keyup");
+        window.ctrlKeyDown = null;
+        disableDragAndDropMode();
+    }, "keyup");*/
 })();

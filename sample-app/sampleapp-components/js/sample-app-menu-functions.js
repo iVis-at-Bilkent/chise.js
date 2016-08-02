@@ -108,7 +108,11 @@ var getExpandCollapseOptions = function() {
 
 $(document).ready(function () {
   loadSample('neuronal_muscle_signalling.xml', function() {
-      
+    $(document).keydown(function (e) {
+        if (e.ctrlKey && e.target.nodeName === 'BODY') {
+            window.ctrlKeyDown = true;
+          }
+    });
     $(document).keyup(function (e) {
       window.ctrlKeyDown = null;
     //  $("#sbgn-network-container").removeClass("target-cursor");

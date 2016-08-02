@@ -294,7 +294,7 @@ var stringAfterValueCheck = function (value) {
 
 var enableDragAndDropMode = function () {
   window.dragAndDropModeEnabled = true;
-  $("#sbgn-network-container").addClass("target-cursor");
+  $("#sbgn-network-container canvas").addClass("target-cursor");
   cy.autolock(true);
   cy.autounselectify(true);
 };
@@ -302,7 +302,7 @@ var enableDragAndDropMode = function () {
 var disableDragAndDropMode = function () {
   window.dragAndDropModeEnabled = null;
   window.nodeToDragAndDrop = null;
-  $("#sbgn-network-container").removeClass("target-cursor");
+  $("#sbgn-network-container canvas").removeClass("target-cursor");
   cy.autolock(false);
   cy.autounselectify(false);
 };
