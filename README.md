@@ -1,20 +1,22 @@
-# SBGNViz Editor: Cytoscape.js based visualization and editing tool for process description diagrams in SBGN-ML
+# ChiSE (Chisio SBGN Editor): Cytoscape.js based visualization and editing tool for process description diagrams in SBGN-ML
 
-SBGNViz Editor is a web application based on [cytoscape.js](http://cytoscape.github.io/cytoscape.js/) to visualize and edit the pathway models represented by [SBGN Process Description Notation](http://www.sbgn.org/Image:Refcard-PD.png). SBGNViz Editor accepts the pathway models represented in [SBGN-ML](http://sourceforge.net/apps/mediawiki/libsbgn/index.php?title=Exchange_Format) format.
-
-SBGNViz Editor is built by extending an open-source javascript graph theory library for analysis and visualisation, [cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to support the [SBGN Process Description Notation](http://www.sbgn.org/Image:Refcard-PD.png). 
+ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz-js), which in turn is based on [cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by [SBGN Process Description Notation](http://www.sbgn.org/Image:Refcard-PD.png). It accepts the pathway models represented in [SBGN-ML](http://sourceforge.net/apps/mediawiki/libsbgn/index.php?title=Exchange_Format) format, and can save edited pathways back to the same format as well as static image formats (PNG and JPEG).
 <br/>
 
 ## Software
 
-<font color="#B3A31D"><b>A sample application using SBGNViz Editor can be found [here](http://www.cs.bilkent.edu.tr/~ivis/SBGNViz.js_editor/sample-app/).</b></font>
+<font color="#B3A31D"><b>A sample application using ChiSE can be found [here](http://www.cs.bilkent.edu.tr/~ivis/ChiSE.js_daily/sample-app/).</b></font>
 
-SBGNViz Editor is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). Instructions for obtaining a working copy of the project can be found [here](https://github.com/PathwayCommons/sbgnviz-js/wiki/Obtaining-A-Working-Copy). SBGNViz Editor works on every platform that have javascript support including mobile devices.
+ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). Instructions for obtaining a working copy of the project can be found [here](https://github.com/iVis-at-Bilkent/chise.js/wiki/Obtaining-A-Working-Copy). ChiSE works on every platform that have javascript support including mobile devices.
 <br/>
 
-## Highlights
+## Features
 
-Below are some sample screenshots from SBGNViz.js, illustrating some of its capabilities. Please click on a figure to see it in full size. A User's Guide can be found [here](http://www.cs.bilkent.edu.tr/~ivis/sbgnviz-js/SBGNViz.js-1.0.UG.pdf), documenting all features of the tool.
+#### Interactive editing
+
+Users can create SBGN maps from scratch or by first loading them from SBGN-ML files. The tool allows advanced editing capabilities including support of a grid, alignment based on grid or neighbors, highlighting, hide/show and expand/collapse for better management of complexity of maps.
+
+Below are some sample screenshots from ChiSE.js, illustrating some of its capabilities. Please click on a figure to see it in full size. 
 
 <table  border="1" width="800px" align="left">
 	<tr>
@@ -138,4 +140,8 @@ Thanks to JetBrains for an [Open Source License](https://www.jetbrains.com/buy/o
 
 ## Team
 
-  * Metin Can Siper, Ugur Dogrusoz, Istemi Bahceci, Alper Karacelik, Mecit Sari, Ayhun Tekat, M.Furkan Sahin, [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
+  * [Metin Can Siper](https://github.com/metincansiper), [Selim Firat Yilmaz](https://github.com/mrsfy), [Ugur Dogrusoz](https://github.com/ugurdogrusoz) of [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis)
+
+#### Alumni
+
+  * Istemi Bahceci
