@@ -459,3 +459,16 @@ menu:not([title]):before{
 .chise-context-menus-menu-item {
     width: 150px !important;
 }
+
+.accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content:"\25B2";     /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: black;        
+}
+
+.accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content:"\25BC";    /* adjust as needed, taken from bootstrap.css */
+}
