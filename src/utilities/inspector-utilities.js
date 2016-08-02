@@ -200,7 +200,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       buttonwidth = 50;
     }
 
-    var html = "<div style='text-align: center; color: black; font-weight: bold; margin-bottom: 5px;'>" + title + "</div><table cellpadding='0' cellspacing='0'>";
+    var html = "<div width='100%' style='text-align: center; color: black; font-weight: bold; margin-bottom: 5px;'>" + title + "</div><table cellpadding='0' cellspacing='0' width='100%'>";
     var type;
     var fillStateAndInfos;
     var multimerCheck;
@@ -303,7 +303,7 @@ inspectorUtilities.handleSBGNInspector = function () {
         if (allCanHaveStateVariable(selectedEles)) {
           fillStateAndInfos = true;
           
-          html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+          html += "<tr><td colspan='2'><hr class='inspector-divider'></td></tr>";
           html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>State Variables</font>" + "</td>"
                   + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
         }
@@ -311,7 +311,7 @@ inspectorUtilities.handleSBGNInspector = function () {
         if (allCanHaveUnitOfInformation(selectedEles)) {
           fillStateAndInfos = true;
           
-          html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+          html += "<tr><td colspan='2'><hr class='inspector-divider'></td></tr>";
           html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font size='2'>Units of Information</font>" + "</td>"
                   + "<td id='inspector-unit-of-informations' style='padding-left: 5px; width: '" + width + "'></td></tr>";
         }
@@ -328,7 +328,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       clonedCheck = clonedCheck?clonedCheck:false;
 
       if (multimerCheck || clonedCheck) {
-        html += "<tr><td colspan='2'><hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'></td></tr>";
+        html += "<tr><td colspan='2'><hr class='inspector-divider'></td></tr>";
       }
 
       if (multimerCheck) {
@@ -382,7 +382,7 @@ inspectorUtilities.handleSBGNInspector = function () {
             + ">Set as Default</button></div>";
     }
     
-    html += "<hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'>";
+    html += "<hr class='inspector-divider' align='center'>";
     
     if (selectedEles.length === 1) {
       var geneClass = selectedEles[0]._private.data.sbgnclass;
@@ -390,15 +390,13 @@ inspectorUtilities.handleSBGNInspector = function () {
       if (geneClass === 'macromolecule' || geneClass === 'nucleic acid feature' ||
           geneClass === 'unspecified entity') {
     
-//          html += "<div style='text-align: center;'>";
-          html += "<a style='align: center; color: black;' class='accordion-toggle collapsed' data-toggle='collapse' data-target='#biogene-collapsable'>Bio Gene Info</a>"
-//          html += "</div>";
+          html += "<a style='align: center; color: black;' class='accordion-toggle collapsed' data-toggle='collapse' data-target='#biogene-collapsable'>BioGene Properties</a>"
     
           html += "<div style='margin-top: 5px;' id='biogene-collapsable' class='collapse'>";
           html += "<div style='padding-left: 3px;' id='biogene-title'></div>";
           html += "<div id='biogene-container'></div>";
           html += "</div>";
-          html += "<hr style='padding: 0px; margin-top: 5px; margin-bottom: 5px;' width='" + $("#sbgn-inspector").width() + "'>";
+          html += "<hr class='inspector-divider'>";
       }
     }
     

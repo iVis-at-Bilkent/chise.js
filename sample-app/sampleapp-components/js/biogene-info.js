@@ -210,8 +210,6 @@ var fillBioGeneContainer = function (node) {
             }
           }, function (xhr, status, error) {
             $('#biogene-container').html("Error retrieving data: " + error);
-//            api.set('content.text', "Error retrieving data: " + error);
           });
-//  api.set('content.title', node._private.data.sbgnlabel);
    $('#biogene-title').html("<b>" + node._private.data.sbgnlabel + "</b>");
 };

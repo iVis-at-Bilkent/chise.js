@@ -463,12 +463,18 @@ menu:not([title]):before{
 .accordion-toggle:after {
     /* symbol for "opening" panels */
     font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
-    content:"\25B2";     /* adjust as needed, taken from bootstrap.css */
-    float: right;        /* adjust as needed */
-    color: black;        
+    content:"\25B3"; 
+    float: right;     
 }
 
 .accordion-toggle.collapsed:after {
     /* symbol for "collapsed" panels */
-    content:"\25BC";    /* adjust as needed, taken from bootstrap.css */
+    content:"\25BD";
+}
+
+hr.inspector-divider {
+    padding: 0px !important;
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+    width: 100% !important;
 }
