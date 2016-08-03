@@ -193,7 +193,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       classInfo = classInfo.replace(' Not ', ' not ');
     }
 
-    var title = classInfo=="" ? "Properties":classInfo + " Properties";
+    var title = classInfo=="" ? "Visual Properties":classInfo + " Visual Properties";
 
     var buttonwidth = width;
     if (buttonwidth > 50) {
@@ -378,11 +378,12 @@ inspectorUtilities.handleSBGNInspector = function () {
     html += "</table>";
     
     if(selectedEles.length == 1){
+      var setAsDefaultTitle = "Set as Default for " + classInfo;
       html += "<div style='text-align: center; margin-top: 5px;'><button style='align: center;' id='inspector-set-as-default-button'"
-            + ">Set as Default</button></div>";
+            + ">" + setAsDefaultTitle + "</button></div>";
     }
     
-    html += "<hr class='inspector-divider' align='center'>";
+    html += "<hr class='inspector-divider' style='border-width: 3px;'>";
     
     if (selectedEles.length === 1) {
       var geneClass = selectedEles[0]._private.data.sbgnclass;
@@ -390,7 +391,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       if (geneClass === 'macromolecule' || geneClass === 'nucleic acid feature' ||
           geneClass === 'unspecified entity') {
     
-          html += "<div style='align: center;text-align: center;'><a style='color: black; font-weight: bold;' class='accordion-toggle collapsed' data-toggle='collapse' data-target='#biogene-collapsable'>BioGene Properties</a></div>"
+          html += "<div style='align: center;text-align: center;'><a style='color: black; font-weight: bold;' class='accordion-toggle collapsed' data-toggle='collapse' data-target='#biogene-collapsable'>Properties from EntrezGene</a></div>"
     
           html += "<div style='margin-top: 5px;align: center;text-align: center;' id='biogene-collapsable' class='collapse'>";
           html += "<div style='padding-left: 3px;' id='biogene-title'></div>";
