@@ -409,6 +409,18 @@ var SBGNContainer = Backbone.View.extend({
               }
             },
             coreAsWell: true // Whether core instance have this item on cxttap
+          },
+          {
+            id: 'ctx-menu-select-all-object-of-this-type', 
+            title: 'Select All Objects of This Type', 
+            selector: 'node, edge', 
+            onClickFunction: function (event) { 
+              var cyTarget = event.cyTarget;
+              var sbgnclass = cyTarget.data('sbgnclass');
+              
+              cy.elements().unselect();
+              cy.elements('[sbgnclass="' + sbgnclass + '"]').select();
+            }
           }
         ]);
 
