@@ -206,10 +206,10 @@ var fillBioGeneContainer = function (node) {
                       })).render();
             }
             else {
-              $('#biogene-container').html("No additional information available &#013; for the selected node!");
+              $('#biogene-container').html("<span style='padding-left: 3px;'>No additional information available &#013; for the selected node!</span>");
             }
           }, function (xhr, status, error) {
-            $('#biogene-container').html("Error retrieving data: " + error);
+            $('#biogene-container').html("<span style='padding-left: 3px;'>Error retrieving data: " + error + "</span>");
           });
    $('#biogene-title').html("<b>" + node._private.data.sbgnlabel + "</b>");
 };
