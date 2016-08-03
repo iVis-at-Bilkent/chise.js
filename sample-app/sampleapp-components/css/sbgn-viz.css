@@ -478,3 +478,12 @@ hr.inspector-divider {
     margin-bottom: 5px !important;
     width: 100% !important;
 }
+
+.sbgn-label-font {
+    font-size: 11px !important;
+    /*font-weight: bold;*/
+}
+
+#biogene-template-div th {
+    text-align: right;
+}

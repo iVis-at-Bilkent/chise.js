@@ -954,34 +954,34 @@
 
         <!-- BioGeneView template for backbone.js -->
         <script type="text/template" id="biogene-template">
-            <div class='node-details-text'>
+            <div id="biogene-template-div" class='node-details-text'>
             <table class="table table-condensed table-striped" cellspacing="10">
             <tr class="biogene-info biogene-description node-details-summary">
-            <th valign="top">Gene Summary:</th>
+            <th valign="top">Gene Summary</th>
             <td colspan="2" class="expandable">
             <%=geneSummary %>
             </td>
             </tr>
             <tr class="biogene-info biogene-aliases">
-            <th valign="top">Aliases:</th>
+            <th valign="top">Aliases</th>
             <td>
             <%=geneAliases %>
             </td>
             </tr>
             <tr class="biogene-info biogene-description">
-            <th>Description:</th>
+            <th>Description</th>
             <td class="expandable">
             <%=geneDescription %>
             </td>
             </tr>
             <tr class="biogene-info biogene-location">
-            <th valign="top">Chromosome Location:</th>
+            <th valign="top">Chromosome Location</th>
             <td>
             <%=geneLocation %>
             </td>
             </tr>
             <tr class="biogene-info biogene-uniprot-links">
-            <th valign="top">UniProt ID:</th>
+            <th valign="top">UniProt ID</th>
             <td>
             <a href='http://www.uniprot.org/uniprot/<%= geneUniprotId %>' target='blank'>
             <%=geneUniprotId %>
@@ -992,7 +992,7 @@
             </td>
             </tr>
             <tr class="biogene-info biogene-id">
-            <th valign="top">Gene ID:</th>
+            <th valign="top">Gene ID</th>
             <td>
             <a href='http://www.ncbi.nlm.nih.gov/gene?term=<%= geneId %>' target='blank'>
             <%=geneId %>
