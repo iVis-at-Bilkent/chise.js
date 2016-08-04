@@ -412,7 +412,7 @@ var SBGNContainer = Backbone.View.extend({
           },
           {
             id: 'ctx-menu-select-all-object-of-this-type', 
-            title: 'Select All Objects of This Type', 
+            title: 'Select Objects of This Type', 
             selector: 'node, edge', 
             onClickFunction: function (event) { 
               var cyTarget = event.cyTarget;

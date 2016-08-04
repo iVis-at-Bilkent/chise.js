@@ -457,7 +457,7 @@ menu:not([title]):before{
 }
 
 .customized-context-menus-menu-item {
-    width: 190px !important;
+    width: 175px !important;
 }
 
 .accordion-toggle:after {
