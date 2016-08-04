@@ -357,14 +357,10 @@ $(document).ready(function () {
 
     $("#node-legend").click(function (e) {
       e.preventDefault();
-      $.fancybox(
-              _.template($("#node-legend-template").html(), {}),
-              {
+      fancyboxUtilities.openFancybox($("#node-legend-template"), {
                 'autoDimensions': false,
                 'width': 504,
-                'height': 325,
-                'transitionIn': 'none',
-                'transitionOut': 'none',
+                'height': 325
               });
     });
 
@@ -386,27 +382,19 @@ $(document).ready(function () {
 
     $("#edge-legend").click(function (e) {
       e.preventDefault();
-      $.fancybox(
-              _.template($("#edge-legend-template").html(), {}),
-              {
+      fancyboxUtilities.openFancybox($("#edge-legend-template"), {
                 'autoDimensions': false,
                 'width': 325,
-                'height': 285,
-                'transitionIn': 'none',
-                'transitionOut': 'none',
+                'height': 285
               });
     });
 
     $("#quick-help").click(function (e) {
       e.preventDefault();
-      $.fancybox(
-              _.template($("#quick-help-template").html(), {}),
-              {
+      fancyboxUtilities.openFancybox($("#quick-help-template"), {
                 'autoDimensions': false,
                 'width': 420,
-                'height': "auto",
-                'transitionIn': 'none',
-                'transitionOut': 'none'
+                'height': "auto"
               });
     });
 
@@ -418,14 +406,10 @@ $(document).ready(function () {
 
     $("#about").click(function (e) {
       e.preventDefault();
-      $.fancybox(
-              _.template($("#about-template").html(), {}),
-              {
+      fancyboxUtilities.openFancybox($("#about-template"), {
                 'autoDimensions': false,
                 'width': 300,
-                'height': 250,
-                'transitionIn': 'none',
-                'transitionOut': 'none',
+                'height': 250
               });
     });
 
