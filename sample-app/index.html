@@ -566,7 +566,7 @@
             <span class="add-on layout-text"> Node Repulsion </span>
             </td>
             <td>
-            <input id="node-repulsion" type="text" class="input-small layout-text" value= <%= nodeRepulsion %> >
+            <input id="node-repulsion" type="text" min="0" class="input-small layout-text float-input" value= <%= nodeRepulsion %> >
             </td>
             </tr>
 
@@ -584,7 +584,7 @@
             <span class="add-on layout-text"> Ideal Edge Length </span>
             </td>
             <td>
-            <input id="ideal-edge-length" type="text" class="input-small layout-text" value= <%= idealEdgeLength %> >
+            <input id="ideal-edge-length" type="text" min="5" class="input-small layout-text float-input" value= <%= idealEdgeLength %> >
             </td>
             </tr>
 
@@ -593,7 +593,7 @@
             <span class="add-on layout-text"> Edge Elasticity </span>
             </td>
             <td>
-            <input id="edge-elasticity" type="text" class="input-small layout-text" value= <%= edgeElasticity %> >
+            <input id="edge-elasticity" type="text" min="0" class="input-small layout-text float-input" value= <%= edgeElasticity %> >
             </td>
             </tr>
 
@@ -602,7 +602,7 @@
             <span class="add-on layout-text"> Nesting Factor </span>
             </td>
             <td>
-            <input id="nesting-factor" type="text" class="input-small layout-text" value= <%= nestingFactor %> >
+            <input id="nesting-factor" type="text" min="0" class="input-small layout-text float-input" value= <%= nestingFactor %> >
             </td>
             </tr>
 
@@ -611,7 +611,7 @@
             <span class="add-on layout-text"> Gravity </span>
             </td>
             <td>
-            <input id="gravity" type="text" class="input-small layout-text" value= <%= gravity %> >
+            <input id="gravity" type="text" min="0" class="input-small layout-text float-input" value= <%= gravity %> >
             </td>
             </tr>
     
@@ -620,7 +620,7 @@
             <span class="add-on layout-text"> Gravity Range   </span>
             </td>
             <td>
-            <input id="gravity-range" type="text" class="input-small layout-text" value= <%= gravityRange %> >
+            <input id="gravity-range" type="text" min="0" class="input-small layout-text float-input" value= <%= gravityRange %> >
             </td>
             </tr>
     
@@ -629,7 +629,7 @@
             <span class="add-on layout-text"> Compound Gravity  </span>
             </td>
             <td>
-            <input id="gravity-compound" type="text" class="input-small layout-text" value= <%= gravityCompound %> >
+            <input id="gravity-compound" type="text" min="0" class="input-small layout-text float-input" value= <%= gravityCompound %> >
             </td>
             </tr>
     
@@ -638,7 +638,7 @@
             <span class="add-on layout-text"> Compound Gravity Range </span>
             </td>
             <td>
-            <input id="gravity-range-compound" type="text" class="input-small layout-text" value= <%= gravityRangeCompound %> >
+            <input id="gravity-range-compound" type="text" min="0" class="input-small layout-text float-input" value= <%= gravityRangeCompound %> >
             </td>
             </tr>
 
@@ -647,7 +647,7 @@
             <span class="add-on layout-text"> Number of Iterations </span>
             </td>
             <td>
-            <input id="num-iter" type="text" class="input-small layout-text" value= <%= numIter %> >
+            <input id="num-iter" type="text" min="0" class="input-small layout-text integer-input" value= <%= numIter %> >
             </td>
             </tr>
     
@@ -656,7 +656,7 @@
             <span class="add-on layout-text"> Tiling Vertical Padding </span>
             </td>
             <td>
-            <input id="tiling-padding-vertical" type="text" class="input-small layout-text" value= <%= tilingPaddingVertical %> >
+            <input id="tiling-padding-vertical" type="text" min="0" class="input-small layout-text integer-input" value= <%= tilingPaddingVertical %> >
             </td>
             </tr>
     
@@ -665,7 +665,7 @@
             <span class="add-on layout-text"> Tiling Horizontal Padding </span>
             </td>
             <td>
-            <input id="tiling-padding-horizontal" type="text" class="input-small layout-text" value= <%= tilingPaddingHorizontal %> >
+            <input id="tiling-padding-horizontal" type="text" min="0" class="input-small layout-text integer-input" value= <%= tilingPaddingHorizontal %> >
             </td>
             </tr>
 
@@ -717,7 +717,7 @@
                     </td>
 
                     <td>
-                        <input id="compound-padding" type="text" class="input-small layout-text" value= <%= compoundPadding %> >
+                        <input id="compound-padding" type="text" class="input-small layout-text integer-input" min="0" max="100" value= <%= compoundPadding %> >
                     </td>
                     <td>%</td>
                 </tr>
@@ -802,7 +802,7 @@
                     </td>
 
                     <td>
-                        <input id="grid-size" type="number" min=5 class="input-small layout-text" value= <%= gridSize %> >
+                        <input id="grid-size" type="text" min="5" class="input-small layout-text integer-input" value= <%= gridSize %> >
                     </td>
                     <td></td>
                 </tr>
@@ -840,7 +840,7 @@
                     </td>
 
                     <td>
-                        <input id="guideline-tolerance" type="number" min=0 step=0.1 class="input-small layout-text" value= <%= guidelineTolerance %> >
+                        <input id="guideline-tolerance" type="text" min="0" class="input-small layout-text float-input" value= <%= guidelineTolerance %> >
                     </td>
                     <td></td>
                 </tr>
@@ -886,7 +886,7 @@
             <caption style="text-align: left;">Stop Distance</caption>
             <tr>
             <td colspan=2>Length limit</td>
-            <td><input id="query-pathsbetween-length-limit" type="number" class="input-small layout-text" value= <%= lengthLimit %> > </td>
+            <td><input id="query-pathsbetween-length-limit" type="text" min="1" class="input-small layout-text integer-input" value= <%= lengthLimit %> > </td>
             </tr>
             </table>
             </td></tr>
@@ -1045,6 +1045,7 @@
 
         <!-- Core SBGNViz components -->
         <script src="../src/sbgn-extensions/cytoscape.renderer.canvas.sbgn-renderer.js"></script>
+        <script src="../src/utilities/number-input-utilities.js"></script>
         <script src="../src/utilities/dialog-utilities.js"></script>
         <script src="../src/utilities/fancybox-utilities.js"></script>
         <script src="../src/utilities/sbgn-style-rules.js"></script>
