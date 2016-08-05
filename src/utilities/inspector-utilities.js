@@ -234,7 +234,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       
       if( includesNotCollapsedNorParentElement(selectedEles) ) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-                + "<input id='inspector-node-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+                + "<input id='inspector-node-width' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
 
         if (nodeWidth) {
           html += " value='" + nodeWidth + "'";
@@ -243,7 +243,7 @@ inspectorUtilities.handleSBGNInspector = function () {
         html += "/>" + "</td></tr>";
 
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Height</font>" + "</td><td style='padding-left: 5px;'>"
-                + "<input id='inspector-node-height' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+                + "<input id='inspector-node-height' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
 
         if (nodeHeight) {
           html += " value='" + nodeHeight + "'";
@@ -285,7 +285,7 @@ inspectorUtilities.handleSBGNInspector = function () {
               + "<input id='inspector-fill-color' class='inspector-input-box' type='color' style='width: " + buttonwidth + "px;' value='" + backgroundColor
               + "'/>" + "</td></tr>";
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Border Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-border-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+              + "<input id='inspector-border-width' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
       
       if(borderWidth){
         html += " value='" + parseFloat(borderWidth) + "'";
@@ -354,7 +354,7 @@ inspectorUtilities.handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
 
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Width</font>" + "</td><td style='padding-left: 5px;'>"
-              + "<input id='inspector-width' class='inspector-input-box' type='number' step='0.01' min='0' style='width: " + buttonwidth + "px;'";
+              + "<input id='inspector-width' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
       
       if(commonLineWidth){
         html += " value='" + parseFloat(commonLineWidth) + "'";
@@ -370,8 +370,13 @@ inspectorUtilities.handleSBGNInspector = function () {
           cardinality = undefined;
         }
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Cardinality</font>" + "</td><td style='padding-left: 5px;'>"
-                + "<input id='inspector-cardinality' class='inspector-input-box' type='number' min='0' step='1' style='width: " + buttonwidth + "px;' value='" + cardinality
-                + "'/>" + "</td></tr>";
+                + "<input id='inspector-cardinality' class='inspector-input-box integer-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
+        
+        if(cardinality != null) {
+          html += "value='" + cardinality + "'/>";
+        }
+        
+        html += "</td></tr>";
       }
 
     }
