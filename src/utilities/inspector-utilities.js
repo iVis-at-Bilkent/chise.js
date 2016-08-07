@@ -200,7 +200,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       buttonwidth = 50;
     }
 
-    var html = "<div width='100%' style='text-align: center; color: black; font-weight: bold; margin-bottom: 5px;'>" + title + "</div><table cellpadding='0' cellspacing='0' width='100%'>";
+    var html = "<div width='100%' style='text-align: center; color: black; font-weight: bold; margin-bottom: 5px;'>" + title + "</div><table cellpadding='0' cellspacing='0' width='100%' align= 'center'>";
     var type;
     var fillStateAndInfos;
     var multimerCheck;
