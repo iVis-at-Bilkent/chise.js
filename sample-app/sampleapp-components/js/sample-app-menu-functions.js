@@ -130,21 +130,25 @@ $(document).ready(function () {
     });
 
     $('#new-file').click(function (e) {
-      setFileContent("new_file.sbgnml");
+      var createNewFile = function () {
+        setFileContent("new_file.sbgnml");
 
-      (new SBGNContainer({
-        el: '#sbgn-network-container',
-        model: {
-          cytoscapeJsGraph: {
-            nodes: [],
-            edges: []
+        (new SBGNContainer({
+          el: '#sbgn-network-container',
+          model: {
+            cytoscapeJsGraph: {
+              nodes: [],
+              edges: []
+            }
           }
-        }
-      })).render();
+        })).render();
 
-      resetUndoRedoButtons();
-      modeHandler.setSelectionMode();
-      inspectorUtilities.handleSBGNInspector();
+        resetUndoRedoButtons();
+        modeHandler.setSelectionMode();
+        inspectorUtilities.handleSBGNInspector();
+      };
+      
+      promptSave.render(createNewFile);
     });
 
     $('.add-node-menu-item').click(function (e) {
@@ -298,6 +302,10 @@ $(document).ready(function () {
 
     $("#align-vertical-right-icon").click(function (e) {
       $("#align-vertical-right").trigger('click');
+    });
+
+    var promptSave = new PromptSave({
+      el: '#sbgn-prompt-save-table'
     });
 
     var sbgnLayoutProp = new SBGNLayout({

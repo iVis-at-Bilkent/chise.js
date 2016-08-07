@@ -879,6 +879,38 @@ var SBGNContainer = Backbone.View.extend({
   }
 });
 
+var PromptSave = Backbone.View.extend({
+  
+  initialize: function () {
+    var self = this;
+    self.template = _.template($("#prompt-save-template").html());
+  },
+  render: function (afterFunction) {
+    var self = this;
+    self.template = _.template($("#prompt-save-template").html());
+    $(self.el).html(self.template);
+
+    dialogUtilities.openModelDialog(self.el);
+
+    $("#prompt-save-accept").die("click").live("click", function (evt) {
+      $("#save-as-sbgnml").trigger('click');
+      afterFunction();
+      $(self.el).dialog('close');
+    });
+    
+    $("#prompt-save-reject").die("click").live("click", function (evt) {
+      afterFunction();
+      $(self.el).dialog('close');
+    });
+    
+    $("#prompt-save-cancel").die("click").live("click", function (evt) {
+      $(self.el).dialog('close');
+    });
+
+    return this;
+  }
+});
+
 var SBGNLayout = Backbone.View.extend({
   defaultLayoutProperties: {
     name: 'cose-bilkent',
