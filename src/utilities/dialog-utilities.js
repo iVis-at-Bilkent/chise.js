@@ -1,5 +1,5 @@
 var dialogUtilities = {
-  openModelDialog: function (el, options) {
+  openDialog: function (el, options) {
 //    var opts = $.extend({}, this.dialogOptions, options);
     $(el).dialog(
         $.extend( {}, {
