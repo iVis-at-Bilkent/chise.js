@@ -3,7 +3,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .css({
       "border-color": "#555",
       "border-width": "1.5px",
-      'background-color': '#f6f6f6',
+      'background-color': '#FFFFFF',
       'font-size': 11,
 //          'shape': 'data(sbgnclass)',
       'background-opacity': 0.5,
@@ -47,10 +47,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .css({
       'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
     })
-    .selector("node[sbgnclass='association']")
-    .css({
-      'background-color': '#6B6B6B'
-    })
+//    .selector("node[sbgnclass='association']")
+//    .css({
+//      'background-color': '#6B6B6B'
+//    })
     .selector("node[sbgnclass='tag']")
     .css({
       'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
@@ -83,7 +83,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .css({
       'border-width': 3.75,
       'background-opacity': 0,
-      'background-color': '#FFFFFF',
+//      'background-color': '#FFFFFF',
       'content': function(ele){
         return getElementContent(ele);
       },
