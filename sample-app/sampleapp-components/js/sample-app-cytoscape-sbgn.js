@@ -322,6 +322,8 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.expandCollapse(getExpandCollapseOptions());
         
+        cy.autoPan();
+        
         cy.contextMenus({
           menuItemClasses: ['customized-context-menus-menu-item']
         });
