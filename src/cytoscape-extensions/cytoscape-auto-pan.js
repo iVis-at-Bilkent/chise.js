@@ -10,12 +10,12 @@
     
     function bindCyEvents() {
       
-      cy.on('mousedown', 'node', function() {
+      cy.on('tapstart', 'node', function() {
         var node = this;
         currentNode = node;
       });
       
-      cy.on('mousemove', function() {
+      cy.on('tapdrag', function() {
         if(currentNode === undefined) {
           return;
         }
@@ -69,7 +69,7 @@
         }
       });
       
-      cy.on('mouseup', function() {
+      cy.on('tapend', function() {
         currentNode = undefined;
       });
     }
