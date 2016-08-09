@@ -20,6 +20,7 @@
     "cytoscape-expand-collapse": "latest",
     "cytoscape-grid-guide": "latest",
     "cytoscape-node-resize": "latest",
+    "cytoscape-auto-pan-on-out-of-canvas-bounds": "latest",
     "cytoscape-panzoom": "~2.4.0",
     "cytoscape-qtip": "~2.3.0",
     "cytoscape-undo-redo": "latest",
