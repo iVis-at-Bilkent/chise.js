@@ -892,7 +892,7 @@ var PromptSave = Backbone.View.extend({
     self.template = _.template($("#prompt-save-template").html());
     $(self.el).html(self.template);
 
-    dialogUtilities.openDialog(self.el);
+    dialogUtilities.openDialog(self.el, {width: "auto", height: "auto", "minHeight": "none"});
 
     $("#prompt-save-accept").die("click").live("click", function (evt) {
       $("#save-as-sbgnml").trigger('click');
