@@ -22,7 +22,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         if(!ele.data('sbgnclonemarker')){
           return 0;
         }
-        return ele._private.style['background-opacity'].value;
+        return ele.css('background-opacity');
       }
     })
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
@@ -185,18 +185,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'width': 15,
       'height': 15
     })
-    .selector('edge.not-highlighted')
-    .css({
-      'opacity': 0.3,
-      'text-opacity': 0.3,
-      'background-opacity': 0.3
-    })
-    .selector('node.not-highlighted')
-    .css({
-      'border-opacity': 0.3,
-      'text-opacity': 0.3,
-      'background-opacity': 0.3
-    })
     .selector('edge.meta')
     .css({
       'line-color': '#C4C4C4',
@@ -262,7 +250,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         if(!ele.data('sbgnclonemarker')){
           return 0;
         }
-        return ele._private.style['background-opacity'].value;
+        return ele.css('background-opacity');
       }
     });
 // end of sbgnStyleSheet
