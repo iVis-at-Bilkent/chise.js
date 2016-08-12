@@ -141,7 +141,7 @@
     context.rotate(-Math.PI / 2);
 
     var textProp = {'centerX': 0, 'centerY': 13 / 2,
-      'opacity': edge.css('text-opacity'),
+      'opacity': edge.css('text-opacity') * edge.css('opacity'),
       'width': 13, 'label': cardinality};
     $$.sbgn.drawCardinalityText(context, textProp);
 
@@ -198,7 +198,7 @@
       context.rotate(Math.PI / 2);
 
       var textProp = {'centerX': -carProp.distanceToNode + carProp.boxLength / 2, 'centerY': -carProp.boxLength / 2,
-        'opacity': edge.css('text-opacity'),
+        'opacity': edge.css('text-opacity') * edge.css('opacity'),
         'width': carProp.boxLength, 'label': cardinality};
       $$.sbgn.drawCardinalityText(context, textProp);
 
@@ -238,7 +238,7 @@
           stateCenterY = centerY - beginPosY;
 
           var textProp = {'centerX': stateCenterX, 'centerY': stateCenterY,
-            'opacity': node.css('text-opacity'),
+            'opacity': node.css('text-opacity') * node.css('opacity'),
             'width': stateWidth, 'height': stateHeight};
 
           if (state.clazz == "state variable") {//draw ellipse
@@ -267,7 +267,7 @@
           stateCenterY = centerY + beginPosY;
 
           var textProp = {'centerX': stateCenterX, 'centerY': stateCenterY,
-            'opacity': node.css('text-opacity'),
+            'opacity': node.css('text-opacity') * node.css('opacity'),
             'width': stateWidth, 'height': stateHeight};
 
           if (state.clazz == "state variable") {//draw ellipse
@@ -374,7 +374,7 @@
       var stateCenterY = state.bbox.y * node.height() / 100 + centerY;
 
       var textProp = {'centerX': stateCenterX, 'centerY': stateCenterY,
-        'opacity': node.css('text-opacity'),
+        'opacity': node.css('text-opacity') * node.css('opacity'),
         'width': stateWidth, 'height': stateHeight};
 
       if (state.clazz == "state variable") {//draw ellipse
