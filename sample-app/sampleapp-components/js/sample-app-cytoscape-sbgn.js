@@ -424,25 +424,31 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.viewUtilities({
           node: {
-                highlighted: {}, // styles for when nodes are highlighted.
-                unhighlighted: { // styles for when nodes are unhighlighted.
-                    'opacity': 0.3,
-                    'text-opacity': 0.3
-                },
-                hidden: {
-                    "display": "none"
-                }
+            highlighted: {
+              'border-color': 'yellow'
+            }, // styles for when nodes are highlighted.
+            unhighlighted: {// styles for when nodes are unhighlighted.
+              'opacity': function (ele) {
+                return ele.css('opacity');
+              }
             },
-            edge: {
-                highlighted: {}, // styles for when edges are highlighted.
-                unhighlighted: { // styles for when edges are unhighlighted.
-                    'opacity': 0.3,
-                    'text-opacity': 0.3
-                },
-                hidden: {
-                    "display": "none"
-                }
+            hidden: {
+              "display": "none"
             }
+          },
+          edge: {
+            highlighted: {
+              'line-color': 'yellow'
+            }, // styles for when edges are highlighted.
+            unhighlighted: {// styles for when edges are unhighlighted.
+              'opacity': function (ele) {
+                return ele.css('opacity');
+              }
+            },
+            hidden: {
+              "display": "none"
+            }
+          }
         });
 
         var fixedAspectRatioModeTypes = ["source and sink", "process", "omitted process", "uncertain process", "association", "dissociation", "and", "or", "not"];
