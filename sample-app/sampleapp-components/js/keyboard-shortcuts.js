@@ -18,6 +18,10 @@
         cy.elements().select();
         return false;
     });
+    mt.bind(["del"], function () {
+        $("#delete-selected-simple").trigger('click');
+        return false;
+    });
   /*  mt.bind(["ctrl", "command"], function () {
         window.ctrlKeyDown = true;
     }, "keydown");
