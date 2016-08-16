@@ -425,7 +425,7 @@ var SBGNContainer = Backbone.View.extend({
         cy.viewUtilities({
           node: {
             highlighted: {
-              'border-color': 'yellow'
+              'border-width': '10px'
             }, // styles for when nodes are highlighted.
             unhighlighted: {// styles for when nodes are unhighlighted.
               'opacity': function (ele) {
@@ -438,7 +438,7 @@ var SBGNContainer = Backbone.View.extend({
           },
           edge: {
             highlighted: {
-              'line-color': 'yellow'
+              'width': '10px'
             }, // styles for when edges are highlighted.
             unhighlighted: {// styles for when edges are unhighlighted.
               'opacity': function (ele) {
