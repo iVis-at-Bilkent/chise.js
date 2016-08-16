@@ -128,7 +128,42 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'width': 1.5,
       'target-arrow-color': '#555',
       'source-arrow-color': '#555',
+      'text-border-color': function(ele){
+        if(ele.selected()) {
+          return '#d67614';
+        }
+        return ele.data('lineColor') || ele.css('line-color');
+      },
+      'color': function(ele){
+        if(ele.selected()) {
+          return '#d67614';
+        }
+        return ele.data('lineColor') || ele.css('line-color');
+      }
 //          'target-arrow-shape': 'data(sbgnclass)'
+    })
+    .selector("edge[sbgncardinality > 0]")
+    .css({
+      'text-rotation': 'autorotate',
+      'text-background-shape': 'rectangle',
+      'text-border-opacity': '1',
+      'text-border-width': '1'
+    })
+    .selector("edge[sbgnclass='consumption'][sbgncardinality > 0]")
+    .css({
+      'source-label': function(ele) {
+        return '' + ele.data('sbgncardinality');
+      },
+      'source-text-margin-y': '-10',
+      'source-text-offset': 20
+    })
+    .selector("edge[sbgnclass='production'][sbgncardinality > 0]")
+    .css({
+      'target-label': function(ele) {
+        return '' + ele.data('sbgncardinality');
+      },
+      'target-text-margin-y': '-10',
+      'target-text-offset': 20
     })
     .selector("edge[sbgnclass]")
     .css({
@@ -143,12 +178,12 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("edge[sbgnclass='consumption']")
     .css({
-      'line-style': 'consumption'
+//      'line-style': 'consumption'
     })
     .selector("edge[sbgnclass='production']")
     .css({
       'target-arrow-fill': 'filled',
-      'line-style': 'production'
+//      'line-style': 'production'
     })
     .selector("edge:selected")
     .css({
