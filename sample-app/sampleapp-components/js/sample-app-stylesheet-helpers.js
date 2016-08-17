@@ -169,3 +169,11 @@ var getDynamicLabelTextSize = function (ele) {
 
   return textHeight;
 };
+
+var getCardinalityDistance = function(ele) {
+  var srcPos = ele.source().position();
+  var tgtPos = ele.target().position();
+
+  var distance = Math.sqrt( Math.pow( ( srcPos.x - tgtPos.x ), 2) + Math.pow( ( srcPos.y - tgtPos.y ), 2) );
+  return distance * 0.15;
+};

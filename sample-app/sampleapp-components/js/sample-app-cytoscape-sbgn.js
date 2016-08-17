@@ -155,7 +155,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         return '' + ele.data('sbgncardinality');
       },
       'source-text-margin-y': '-10',
-      'source-text-offset': 20
+      'source-text-offset': function(ele) {
+        return getCardinalityDistance(ele);
+      }
     })
     .selector("edge[sbgnclass='production'][sbgncardinality > 0]")
     .css({
@@ -163,7 +165,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         return '' + ele.data('sbgncardinality');
       },
       'target-text-margin-y': '-10',
-      'target-text-offset': 20
+      'target-text-offset': function(ele) {
+        return getCardinalityDistance(ele);
+      }
     })
     .selector("edge[sbgnclass]")
     .css({
@@ -813,6 +817,10 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('unselect', function (event) {
           inspectorUtilities.handleSBGNInspector();
+        });
+        
+        cy.on('drag', 'node', function (event) {
+          cy.style().update();
         });
 
         cy.on('tap', function (event) {
