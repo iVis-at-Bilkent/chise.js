@@ -134,12 +134,12 @@ var getElementContent = function (ele) {
 
 var getLabelTextSize = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
-  if (sbgnclass.endsWith('process')) {
-    return 18;
+  
+  if(!sbgnStyleRules['adjust-node-label-font-size-automatically'] || sbgnclass.endsWith('process') 
+          || sbgnclass === 'complex' || sbgnclass === 'compartment') {
+    return ele.data('labelsize');
   }
-  else if(sbgnclass === 'complex' || sbgnclass === 'compartment') {
-    return 16;
-  }
+  
   return getDynamicLabelTextSize(ele);
 };
 

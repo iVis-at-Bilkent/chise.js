@@ -1064,7 +1064,8 @@ var SBGNProperties = Backbone.View.extend({
     dynamicLabelSize: sbgnStyleRules['dynamic-label-size'],
     fitLabelsToNodes: sbgnStyleRules['fit-labels-to-nodes'],
     rearrangeAfterExpandCollapse: sbgnStyleRules['rearrange-after-expand-collapse'],
-    animateOnDrawingChanges: sbgnStyleRules['animate-on-drawing-changes']
+    animateOnDrawingChanges: sbgnStyleRules['animate-on-drawing-changes'],
+    adjustNodeLabelFontSizeAutomatically: sbgnStyleRules['adjust-node-label-font-size-automatically']
   },
   currentSBGNProperties: null,
   initialize: function () {
@@ -1095,6 +1096,8 @@ var SBGNProperties = Backbone.View.extend({
           document.getElementById("rearrange-after-expand-collapse").checked;
       self.currentSBGNProperties.animateOnDrawingChanges =
           document.getElementById("animate-on-drawing-changes").checked;
+      self.currentSBGNProperties.adjustNodeLabelFontSizeAutomatically =
+          document.getElementById("adjust-node-label-font-size-automatically").checked;
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {
@@ -1119,6 +1122,13 @@ var SBGNProperties = Backbone.View.extend({
 
       sbgnStyleRules['animate-on-drawing-changes'] =
           self.currentSBGNProperties.animateOnDrawingChanges;
+  
+      //Refresh node label sizes if needed
+      if (sbgnStyleRules['adjust-node-label-font-size-automatically'] != self.currentSBGNProperties.adjustNodeLabelFontSizeAutomatically) {
+        sbgnStyleRules['adjust-node-label-font-size-automatically'] = self.currentSBGNProperties.adjustNodeLabelFontSizeAutomatically;
+        cy.nodes().removeClass('changeLabelTextSize');
+        cy.nodes().addClass('changeLabelTextSize');
+      }
     });
 
     $("#default-sbgn").die("click").live("click", function (evt) {

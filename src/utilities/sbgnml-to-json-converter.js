@@ -151,6 +151,17 @@ var sbgnmlToJson = {
       nodeObj.parent = parent;
     }
   },
+  getDefaultLabelSize: function(sbgnclass) {
+    if(sbgnclass.endsWith('process')) {
+      return 18;
+    }
+    else if(sbgnclass === 'complex' || sbgnclass === 'compartment') {
+      return 16;
+    }
+    else {
+      return 20;
+    }
+  },
   addCytoscapeJsNode: function (ele, jsonArray, parent, compartments) {
     var self = this;
     var nodeObj = new Object();
@@ -165,6 +176,8 @@ var sbgnmlToJson = {
     nodeObj.sbgnlabel = $(ele).children('label').attr('text');
     //add state and info box information
     nodeObj.sbgnstatesandinfos = self.stateAndInfoProp(ele, nodeObj.sbgnbbox);
+    // add default label size information
+    nodeObj.labelsize = self.getDefaultLabelSize($(ele).attr('class'));
     //adding parent information
     self.addParentInfoToNode(ele, nodeObj, parent, compartments);
 
