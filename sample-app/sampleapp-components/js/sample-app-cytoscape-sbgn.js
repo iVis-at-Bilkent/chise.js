@@ -291,6 +291,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         }
         return ele.css('background-opacity');
       }
+    }).selector("node.noderesized")
+    .css({
+      'width': 'data(width)',
+      'height': 'data(height)'
     });
 // end of sbgnStyleSheet
 
@@ -691,17 +695,32 @@ var SBGNContainer = Backbone.View.extend({
 
           refreshPaddings();
         });
+        
+        cy.on("resizeend", function(event, type, nodes) {
+          nodes.removeClass('changeLabelTextSize');
+          nodes.addClass('changeLabelTextSize');
+        });
 
-        cy.on("afterDo", function(actionName, args){
+        cy.on("afterDo", function(event, actionName, args){
           refreshUndoRedoButtonsStatus();
         });
 
-        cy.on("afterUndo", function(actionName, args){
+        cy.on("afterUndo", function(event, actionName, args){
           refreshUndoRedoButtonsStatus();
+          
+          if(actionName === 'resize') {
+            args.nodes.removeClass('changeLabelTextSize');
+            args.nodes.addClass('changeLabelTextSize');
+          }
         });
 
-        cy.on("afterRedo", function(actionName, args){
+        cy.on("afterRedo", function(event, actionName, args){
           refreshUndoRedoButtonsStatus();
+          
+          if(actionName === 'resize') {
+            args.nodes.removeClass('changeLabelTextSize');
+            args.nodes.addClass('changeLabelTextSize');
+          }
         });
 
         cy.on("mousedown", "node", function () {

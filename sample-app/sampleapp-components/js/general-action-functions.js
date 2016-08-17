@@ -102,12 +102,12 @@ var generalActionFunctions = {
       node._private.data.sbgnbbox.w = node.data('width') || node.width();
       node._private.data.sbgnbbox.h = node.data('height') || node.height();
 
-      node.removeClass('noderesize-resized');
-      node.addClass('noderesize-resized');
+      node.removeClass('noderesized');
+      node.addClass('noderesized');
     }
 
-    nodes.removeClass('noderesize-resized');
-    nodes.addClass('noderesize-resized');
+    nodes.removeClass('noderesized');
+    nodes.addClass('noderesized');
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
       inspectorUtilities.handleSBGNInspector();
