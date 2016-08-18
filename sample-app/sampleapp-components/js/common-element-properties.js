@@ -412,3 +412,63 @@ var isLogicalOperator = function (sbgnclass) {
 var convenientToEquivalence = function (sbgnclass) {
   return (sbgnclass == 'tag' || sbgnclass == 'terminal');
 };
+
+var getCommonLabelFontSize = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var labelSizeOfFirstElement = elements[0].data('labelsize');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('labelsize') != labelSizeOfFirstElement){
+      return null;
+    }
+  }
+  
+  return labelSizeOfFirstElement;
+};
+
+var getCommonLabelFontFamily = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var fontFamilyOfFirstElement = elements[0].data('fontfamily');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('fontfamily') != fontFamilyOfFirstElement){
+      return null;
+    }
+  }
+  
+  return fontFamilyOfFirstElement;
+};
+
+var getCommonLabelFontWeight = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var fontWeightOfFirstElement = elements[0].data('fontweight');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('fontweight') != fontWeightOfFirstElement){
+      return null;
+    }
+  }
+  
+  return fontWeightOfFirstElement;
+};
+
+var getCommonLabelFontStyle = function(elements){
+  if(elements.length == 0){
+    return null;
+  }
+  
+  var fontStyleOfFirstElement = elements[0].data('fontstyle');
+  for(var i = 1; i < elements.length; i++){
+    if(elements[i].data('fontstyle') != fontStyleOfFirstElement){
+      return null;
+    }
+  }
+  
+  return fontStyleOfFirstElement;
+};

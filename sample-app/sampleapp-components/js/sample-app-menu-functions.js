@@ -658,6 +658,7 @@ $(document).ready(function () {
     $("#sbgn-properties").click(function (e) {
       sbgnProperties.render();
     });
+    
     $("#grid-properties").click(function (e) {
       gridProperties.render();
     });

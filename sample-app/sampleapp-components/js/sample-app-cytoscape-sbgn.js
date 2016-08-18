@@ -8,7 +8,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
 //          'shape': 'data(sbgnclass)',
       'background-opacity': 0.5,
       'text-opacity': 1,
-      'opacity': 1
+      'opacity': 1,
+      'font-weight': 'data(fontweight)',
+      'font-family': 'data(fontfamily)',
+      'font-style': 'data(fontstyle)'
     })
     .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
     .css({
@@ -1474,6 +1477,96 @@ var ReactionTemplate = Backbone.View.extend({
       self.copyProperties();
       $(self.el).dialog('close');
     });
+
+    return this;
+  }
+});
+
+var FontProperties = Backbone.View.extend({
+  defaultFontProperties: {
+    fontFamily: 'Helvetica',
+    fontSize: '',
+    fontWeight: 'normal',
+    fontStyle: 'normal'
+  },
+  currentFontProperties: undefined,
+  copyProperties: function () {
+    this.currentFontProperties = _.clone(this.defaultFontProperties);
+  },
+  getFontFamilyHtml: function(self) {
+    if(self == null){
+      self = this;
+    }
+    
+    var fontFamilies = ["Helvetica"];
+    var fontFamilyOptionIds = ["font-properties-font-family-helvetica"];
+    
+    var html = "";
+    html += "<select id='font-properties-select-font-family' class='input-medium layout-text' name='font-properties-select'>";
+    
+    for ( var i = 0; i < fontFamilies.length; i++ ) {
+      var fontFamily = fontFamilies[i];
+      var optionId = fontFamilyOptionIds[i];
+      var optionStr = "<option id='" + optionId + "'" 
+              + " value='" + fontFamily + "'";
+      
+      if (fontFamily === self.currentFontProperties.fontFamily) {
+        optionStr += " selected";
+      }
+      
+      optionStr += "> ";
+      optionStr += fontFamily;
+      optionStr += " </option>";
+    }
+    
+    html += optionStr;
+    
+    html += "</select>";
+    
+    return html;
+  },
+  initialize: function () {
+    var self = this;
+    self.defaultFontProperties.getFontFamilyHtml = function(){
+      return self.getFontFamilyHtml(self);
+    };
+    self.copyProperties();
+    self.template = _.template($("#font-properties-template").html(), self.defaultFontProperties);
+  },
+  extendProperties: function (eles) {
+    var self = this;
+    var commonProperties = {};
+    
+    var commonFontSize = getCommonLabelFontSize(eles);
+    var commonFontWeight = getCommonLabelFontWeight(eles);
+    var commonFontFamily = getCommonLabelFontFamily(eles);
+    var commonFontStyle = getCommonLabelFontStyle(eles);
+    
+    if( commonFontSize != null ) {
+      commonProperties.fontSize = commonFontSize;
+    }
+    
+    if( commonFontWeight != null ) {
+      commonProperties.fontWeight = commonFontWeight;
+    }
+    
+    if( commonFontFamily != null ) {
+      commonProperties.fontFamily = commonFontFamily;
+    }
+    
+    if( commonFontStyle != null ) {
+      commonProperties.fontStyle = commonFontStyle;
+    }
+    
+    self.currentFontProperties = $.extend({}, this.defaultFontProperties, commonProperties);
+  },
+  render: function (eles) {
+    var self = this;
+    self.extendProperties(eles);
+    self.template = _.template($("#font-properties-template").html(), self.currentFontProperties);
+    $(self.el).html(self.template);
+
+    dialogUtilities.openDialog(self.el);
 
     return this;
   }

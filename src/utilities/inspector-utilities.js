@@ -1,4 +1,12 @@
 var inspectorUtilities = {};
+
+// Define inspectorUtilities.fontProperties on document ready
+$(document).ready(function () {
+  inspectorUtilities.fontProperties = new FontProperties({
+    el: '#font-properties-table'
+  });
+});
+
 inspectorUtilities.relocateStateAndInfos = function (stateAndInfos) {
   var length = stateAndInfos.length;
   if (length == 0) {
@@ -297,6 +305,10 @@ inspectorUtilities.handleSBGNInspector = function () {
               + "<input id='inspector-background-opacity' class='inspector-input-box' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(backgroundOpacity)
               + "'/>" + "</td></tr>"; 
       
+      html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Font</font>" + "</td><td style='padding-left: 5px;'>"
+              + "<label id='inspector-font' class='inspector-input-box' style='width: " + buttonwidth + "px;'>"
+              + "..." + "<label/>" + "</td></tr>"; 
+      
       commonStateAndInfos = getCommonStateAndInfos(selectedEles);
       
       if(commonStateAndInfos){
@@ -564,6 +576,10 @@ inspectorUtilities.handleSBGNInspector = function () {
         };
         
         cy.undoRedo().do("changeStyleCss", param);
+      });
+      
+      $("#inspector-font").on('click', function () {
+        inspectorUtilities.fontProperties.render(selectedEles);
       });
     }
     else {

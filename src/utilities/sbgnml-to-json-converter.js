@@ -178,6 +178,12 @@ var sbgnmlToJson = {
     nodeObj.sbgnstatesandinfos = self.stateAndInfoProp(ele, nodeObj.sbgnbbox);
     // add default label size information
     nodeObj.labelsize = self.getDefaultLabelSize($(ele).attr('class'));
+    // add default font family
+    nodeObj.fontfamily = 'Helvetica';
+    // add default font weight
+    nodeObj.fontweight = 'normal';
+    // add default font style
+    nodeObj.fontstyle = 'normal';
     //adding parent information
     self.addParentInfoToNode(ele, nodeObj, parent, compartments);
 

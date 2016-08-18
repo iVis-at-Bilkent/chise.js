@@ -459,6 +459,10 @@
         <div id="grid-properties-table" title="Grid Properties" >
             <!-- sbgn properties table will be shown here -->
         </div>
+        
+        <div id="font-properties-table" title="Font Properties" >
+            <!-- sbgn properties table will be shown here -->
+        </div>
 
         <!--<div id="biogene-container" style="display: none">
         </div>-->
@@ -970,6 +974,66 @@
             <td colspan=2 align="center">
             <button id="create-template" class="btn btn-default" >Create</button>
             <button id="cancel-template" class="btn btn-default">Cancel</button>
+            </td>
+            </tr>
+            
+            </table>
+        </script>
+        
+        <script type="text/template" id="font-properties-template">
+            <table class="table-condensed layout-table">
+          
+            <tr>
+            <td style="padding-bottom: 10px;" align="right" valign="middle">
+            <span class="add-on layout-text"> <b> Font Family </b> </span>
+            </td>
+            
+            <td>
+            <%= getFontFamilyHtml() %>
+            </td>
+            </tr>
+    
+            <tr>
+            <td style="padding-bottom: 10px;" align="right" valign="middle">
+            <span class="add-on layout-text"> <b> Font Size </b> </span>
+            </td>
+            <td>
+            <input id="font-properties-font-size" type="text" min="1" class="input-small layout-text integer-input" value= <%= fontSize %> >
+            </td>
+            </tr>
+          
+            <tr>
+            <td style="padding-bottom: 10px;" align="right" valign="middle">
+            <span class="add-on layout-text"> <b> Font Weight </b> </span>
+            </td>
+            
+            <td>
+            <select id="font-properties-select-font-weight" class='input-medium layout-text' name="font-weight-select">
+            <option id="font-properties-font-weight-lighter" value="lighter" <% if (fontWeight == 'lighter'){ %> selected<%}%> > Lighter </option>
+            <option id="font-properties-font-weight-normal" value="normal" <% if (fontWeight == 'normal'){ %> selected<%}%> > Normal </option>
+            <option id="font-properties-font-weight-bold" value="bold" <% if (fontWeight == 'bold'){ %> selected<%}%> > Bold </option>
+            <option id="font-properties-font-weight-bolder" value="bolder" <% if (fontWeight == 'bolder'){ %> selected<%}%> > Bolder </option>
+            </select>
+            </td>
+            </tr>
+    
+            <tr>
+            <td style="padding-bottom: 10px;" align="right" valign="middle">
+            <span class="add-on layout-text"> <b> Font Type </b> </span>
+            </td>
+            
+            <td>
+            <select id="font-properties-select-font-style" class='input-medium layout-text' name="font-style-select">
+            <option id="font-properties-font-style-normal" value="normal" <% if (fontStyle == 'normal'){ %> selected<%}%> > Normal </option>
+            <option id="font-properties-font-style-italic" value="italic" <% if (fontStyle == 'italic'){ %> selected<%}%> > Italic </option>
+            <option id="font-properties-font-style-oblique" value="oblique" <% if (fontStyle == 'oblique'){ %> selected<%}%> > Oblique </option>
+            </select>
+            </td>
+            </tr>
+            
+            <tr>
+            <td colspan=2 align="center">
+            <button id="set-font-properties" class="btn btn-default" >Set</button>
             </td>
             </tr>
             
