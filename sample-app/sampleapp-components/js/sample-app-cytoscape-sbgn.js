@@ -993,7 +993,8 @@ var SBGNLayout = Backbone.View.extend({
     templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
     templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
 
-    self.template = _.template($("#layout-settings-template").html(), templateProperties);
+    self.template = _.template($("#layout-settings-template").html());
+    self.template = self.template(templateProperties);
   },
   copyProperties: function () {
     this.currentLayoutProperties = _.clone(this.defaultLayoutProperties);
@@ -1020,7 +1021,8 @@ var SBGNLayout = Backbone.View.extend({
     templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
     templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
 
-    self.template = _.template($("#layout-settings-template").html(), templateProperties);
+    self.template = _.template($("#layout-settings-template").html());
+    self.template = self.template(templateProperties);
     $(self.el).html(self.template);
 
     dialogUtilities.openDialog(self.el);
@@ -1053,7 +1055,8 @@ var SBGNLayout = Backbone.View.extend({
       templateProperties.tilingPaddingVertical = sbgnStyleRules['tiling-padding-vertical'];
       templateProperties.tilingPaddingHorizontal = sbgnStyleRules['tiling-padding-horizontal'];
 
-      self.template = _.template($("#layout-settings-template").html(), templateProperties);
+      self.template = _.template($("#layout-settings-template").html());
+      self.template = self.template(templateProperties);
       $(self.el).html(self.template);
     });
 
@@ -1074,14 +1077,16 @@ var SBGNProperties = Backbone.View.extend({
   initialize: function () {
     var self = this;
     self.copyProperties();
-    self.template = _.template($("#sbgn-properties-template").html(), self.currentSBGNProperties);
+    self.template = _.template($("#sbgn-properties-template").html());
+    self.template = self.template(self.currentSBGNProperties);
   },
   copyProperties: function () {
     this.currentSBGNProperties = _.clone(this.defaultSBGNProperties);
   },
   render: function () {
     var self = this;
-    self.template = _.template($("#sbgn-properties-template").html(), self.currentSBGNProperties);
+    self.template = _.template($("#sbgn-properties-template").html());
+    self.template = self.template(self.currentSBGNProperties);
     $(self.el).html(self.template);
 
     dialogUtilities.openDialog(self.el);
@@ -1136,7 +1141,8 @@ var SBGNProperties = Backbone.View.extend({
 
     $("#default-sbgn").die("click").live("click", function (evt) {
       self.copyProperties();
-      self.template = _.template($("#sbgn-properties-template").html(), self.currentSBGNProperties);
+      self.template = _.template($("#sbgn-properties-template").html());
+      self.template = self.template(self.currentSBGNProperties);
       $(self.el).html(self.template);
     });
 
@@ -1159,14 +1165,16 @@ var GridProperties = Backbone.View.extend({
   initialize: function () {
     var self = this;
     self.copyProperties();
-    self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
+    self.template = _.template($("#grid-properties-template").html());
+    self.template = self.template(self.currentGridProperties);
   },
   copyProperties: function () {
     this.currentGridProperties = _.clone(this.defaultGridProperties);
   },
   render: function () {
     var self = this;
-    self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
+    self.template = _.template($("#grid-properties-template").html());
+    self.template = self.template(self.currentGridProperties);
     $(self.el).html(self.template);
 
     dialogUtilities.openDialog(self.el);
@@ -1212,7 +1220,8 @@ var GridProperties = Backbone.View.extend({
 
     $("#default-grid").die("click").live("click", function (evt) {
       self.copyProperties();
-      self.template = _.template($("#grid-properties-template").html(), self.currentGridProperties);
+      self.template = _.template($("#grid-properties-template").html());
+      self.template = self.template(self.currentGridProperties);
       $(self.el).html(self.template);
     });
 
@@ -1232,14 +1241,16 @@ var PathsBetweenQuery = Backbone.View.extend({
   initialize: function () {
     var self = this;
     self.copyProperties();
-    self.template = _.template($("#query-pathsbetween-template").html(), self.currentQueryParameters);
+    self.template = _.template($("#query-pathsbetween-template").html());
+    self.template = self.template(self.currentQueryParameters);
   },
   copyProperties: function () {
     this.currentQueryParameters = _.clone(this.defaultQueryParameters);
   },
   render: function () {
     var self = this;
-    self.template = _.template($("#query-pathsbetween-template").html(), self.currentQueryParameters);
+    self.template = _.template($("#query-pathsbetween-template").html());
+    self.template = self.template(self.currentQueryParameters);
     $(self.el).html(self.template);
 
     $("#query-pathsbetween-enable-shortest-k-alteration").change(function(e){
@@ -1382,14 +1393,16 @@ var ReactionTemplate = Backbone.View.extend({
   initialize: function () {
     var self = this;
     self.copyProperties();
-    self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+    self.template = _.template($("#reaction-template").html());
+    self.template = self.template(self.currentTemplateParameters);
   },
   copyProperties: function () {
     this.currentTemplateParameters = jQuery.extend(true, [], this.defaultTemplateParameters);
   },
   render: function () {
     var self = this;
-    self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+    self.template = _.template($("#reaction-template").html());
+    self.template = self.template(self.currentTemplateParameters);
     $(self.el).html(self.template);
 
      dialogUtilities.openDialog(self.el, {width:'auto'});
@@ -1399,7 +1412,8 @@ var ReactionTemplate = Backbone.View.extend({
       var valueSelected = this.value;
       self.currentTemplateParameters.templateType = valueSelected;
 
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1408,7 +1422,8 @@ var ReactionTemplate = Backbone.View.extend({
     $("#template-reaction-enable-complex-name").die("change").live("change", function(e){
       self.currentTemplateParameters.templateReactionEnableComplexName =
           !self.currentTemplateParameters.templateReactionEnableComplexName;
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1416,7 +1431,8 @@ var ReactionTemplate = Backbone.View.extend({
 
     $("#template-reaction-complex-name").die("change").live("change", function(e){
       self.currentTemplateParameters.templateReactionComplexName = $(this).attr('value');
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1425,7 +1441,8 @@ var ReactionTemplate = Backbone.View.extend({
     $("#template-reaction-add-button").die("click").live("click",function (event) {
       self.currentTemplateParameters.macromoleculeList.push("");
 
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1436,7 +1453,8 @@ var ReactionTemplate = Backbone.View.extend({
       var value = $(this).attr('value');
       self.currentTemplateParameters.macromoleculeList[index] = value;
 
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1450,7 +1468,8 @@ var ReactionTemplate = Backbone.View.extend({
       var index = parseInt($(this).attr('name'));
       self.currentTemplateParameters.macromoleculeList.splice(index, 1);
 
-      self.template = _.template($("#reaction-template").html(), self.currentTemplateParameters);
+      self.template = _.template($("#reaction-template").html());
+      self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
 
       $(self.el).dialog({width:'auto'});
@@ -1531,7 +1550,8 @@ var FontProperties = Backbone.View.extend({
       return self.getFontFamilyHtml(self);
     };
     self.copyProperties();
-    self.template = _.template($("#font-properties-template").html(), self.defaultFontProperties);
+    self.template = _.template($("#font-properties-template").html());
+    self.template = self.template(self.defaultFontProperties);
   },
   extendProperties: function (eles) {
     var self = this;
@@ -1563,7 +1583,8 @@ var FontProperties = Backbone.View.extend({
   render: function (eles) {
     var self = this;
     self.extendProperties(eles);
-    self.template = _.template($("#font-properties-template").html(), self.currentFontProperties);
+    self.template = _.template($("#font-properties-template").html());
+    self.template = self.template(self.currentFontProperties);
     $(self.el).html(self.template);
 
     dialogUtilities.openDialog(self.el);
