@@ -12,7 +12,6 @@
   },
   "homepage": "https://github.com/iVis-at-Bilkent/sbgnviz-js/",
   "dependencies": {
-    "jquery": "1.7.4",
     "backbone": "0.9.10",
     "cytoscape-clipboard": "latest",
     "cytoscape-context-menus": "latest",
@@ -27,6 +26,7 @@
     "cytoscape-undo-redo": "latest",
     "cytoscape-view-utilities": "latest",
     "filesaverjs": "~0.2.2",
+    "jQuery": "1.7.4",
     "mousetrap": "^1.6.0",
     "ocanvas": "^2.8.5",
     "qtip2": "~3.0.2"
