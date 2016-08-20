@@ -1503,10 +1503,10 @@ var ReactionTemplate = Backbone.View.extend({
 
 var FontProperties = Backbone.View.extend({
   defaultFontProperties: {
-    fontFamily: 'Helvetica',
+    fontFamily: sbgnElementUtilities.defaultFontProperties.fontfamily,
     fontSize: '',
-    fontWeight: 'normal',
-    fontStyle: 'normal'
+    fontWeight: sbgnElementUtilities.defaultFontProperties.fontweight,
+    fontStyle: sbgnElementUtilities.defaultFontProperties.fontstyle
   },
   currentFontProperties: undefined,
   copyProperties: function () {

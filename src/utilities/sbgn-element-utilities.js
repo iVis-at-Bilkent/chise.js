@@ -1,4 +1,20 @@
 var sbgnElementUtilities = {
+    defaultFontProperties: {
+      fontfamily: 'Helvetica',
+      fontweight: 'normal',
+      fontstyle: 'normal'
+    },
+    getDefaultLabelSize: function(sbgnclass) {
+      if(sbgnclass.endsWith('process')) {
+        return 18;
+      }
+      else if(sbgnclass === 'complex' || sbgnclass === 'compartment') {
+        return 16;
+      }
+      else {
+        return 20;
+      }
+    },
     //the list of the element classes handled by the tool
     handledElements: {'unspecified entity': true, 'simple chemical': true, 'macromolecule': true,
         'nucleic acid feature': true, 'perturbing agent': true, 'source and sink': true,

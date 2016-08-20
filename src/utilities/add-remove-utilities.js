@@ -88,7 +88,11 @@ var addRemoveUtilities = {
         y: y
       },
       sbgnstatesandinfos: [],
-      ports: []
+      ports: [],
+      labelsize: sbgnElementUtilities.getDefaultLabelSize(sbgnclass),
+      fontfamily: sbgnElementUtilities.defaultFontProperties.fontfamily,
+      fontweight: sbgnElementUtilities.defaultFontProperties.fontweight,
+      fontstyle: sbgnElementUtilities.defaultFontProperties.fontstyle
     };
     
     if(parent){
