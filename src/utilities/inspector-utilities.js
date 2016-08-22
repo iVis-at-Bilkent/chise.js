@@ -66,7 +66,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
-          valueOrVariable: $(this).attr('value'),
+          valueOrVariable: $(this).val(),
           type: 'value',
           nodes: nodes,
           stateAndInfos: stateAndInfos,
@@ -79,7 +79,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
       $(".inspector-state-variable-variable").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
-          valueOrVariable: $(this).attr('value'),
+          valueOrVariable: $(this).val(),
           type: 'variable',
           nodes: nodes,
           stateAndInfos: stateAndInfos,
@@ -98,7 +98,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
         var param = {
           state: $(this).data("state"),
-          text: $(this).attr('value'),
+          text: $(this).val(),
           stateAndInfos: stateAndInfos,
           nodes: nodes,
           width: width
@@ -459,9 +459,9 @@ inspectorUtilities.handleSBGNInspector = function () {
         defaults['background-opacity'] = selected.css('background-opacity');
       });
 
-      $("#inspector-node-width, #inspector-node-height").bind('change').on('change', function () {
-        var w = parseFloat($("#inspector-node-width").attr("value"));
-        var h = parseFloat($("#inspector-node-height").attr("value"));
+      $("#inspector-node-width, #inspector-node-height").change( function () {
+        var w = parseFloat($("#inspector-node-width").val());
+        var h = parseFloat($("#inspector-node-height").val());
         
         if( $(this).attr('id') === 'inspector-node-width' ) {
           h = undefined;
@@ -567,10 +567,10 @@ inspectorUtilities.handleSBGNInspector = function () {
         cy.undoRedo().do("changeStyleCss", param);
       });
 
-      $("#inspector-border-width").bind('change').on('change', function () {
+      $("#inspector-border-width").change( function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-border-width").attr("value"),
+          data: $("#inspector-border-width").val(),
           dataType: "border-width",
           firstTime: true
         };
@@ -603,8 +603,8 @@ inspectorUtilities.handleSBGNInspector = function () {
         cy.undoRedo().do("changeStyleData", param);
       });
 
-      $("#inspector-cardinality").bind('change').on('change', function () {
-        var data = Math.round($("#inspector-cardinality").attr("value"));
+      $("#inspector-cardinality").change( function () {
+        var data = Math.round($("#inspector-cardinality").val());
 
         if (data < 0) {
           if (commonSBGNCardinality == 0) {
@@ -623,10 +623,10 @@ inspectorUtilities.handleSBGNInspector = function () {
         cy.undoRedo().do("changeStyleData", param);
       });
 
-      $("#inspector-width").bind('change').on('change', function () {
+      $("#inspector-width").change( function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-width").attr("value"),
+          data: $("#inspector-width").val(),
           dataType: "width",
           firstTime: true
         };

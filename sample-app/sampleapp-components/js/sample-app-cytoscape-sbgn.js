@@ -936,18 +936,18 @@ var PromptSave = Backbone.View.extend({
 
     dialogUtilities.openDialog(self.el, {width: "auto", height: "auto", "minHeight": "none"});
 
-    $("#prompt-save-accept").die("click").live("click", function (evt) {
+    $(document).off("click", "#prompt-save-accept").on("click", "#prompt-save-accept", function (evt) {
       $("#save-as-sbgnml").trigger('click');
       afterFunction();
       $(self.el).dialog('close');
     });
     
-    $("#prompt-save-reject").die("click").live("click", function (evt) {
+    $(document).off("click", "#prompt-save-reject").on("click", "#prompt-save-reject", function (evt) {
       afterFunction();
       $(self.el).dialog('close');
     });
     
-    $("#prompt-save-cancel").die("click").live("click", function (evt) {
+    $(document).off("click", "#prompt-save-cancel").on("click", "#prompt-save-cancel", function (evt) {
       $(self.el).dialog('close');
     });
 
@@ -1027,7 +1027,7 @@ var SBGNLayout = Backbone.View.extend({
 
     dialogUtilities.openDialog(self.el);
 
-    $("#save-layout").die("click").live("click", function (evt) {
+    $(document).off("click", "#save-layout").on("click", "#save-layout", function (evt) {
       self.currentLayoutProperties.nodeRepulsion = Number(document.getElementById("node-repulsion").value);
       self.currentLayoutProperties.idealEdgeLength = Number(document.getElementById("ideal-edge-length").value);
       self.currentLayoutProperties.edgeElasticity = Number(document.getElementById("edge-elasticity").value);
@@ -1045,7 +1045,7 @@ var SBGNLayout = Backbone.View.extend({
       sbgnStyleRules['tiling-padding-horizontal'] = Number(document.getElementById("tiling-padding-horizontal").value);
     });
 
-    $("#default-layout").die("click").live("click", function (evt) {
+    $(document).off("click", "#default-layout").on("click", "#default-layout", function (evt) {
       self.copyProperties();
 
       sbgnStyleRules['tiling-padding-vertical'] = defaultSbgnStyleRules['tiling-padding-vertical'];
@@ -1091,7 +1091,7 @@ var SBGNProperties = Backbone.View.extend({
 
     dialogUtilities.openDialog(self.el);
 
-    $("#save-sbgn").die("click").live("click", function (evt) {
+    $(document).off("click", "#save-sbgn").on("click", "#save-sbgn", function (evt) {
 
       var param = {};
       param.firstTime = true;
@@ -1139,7 +1139,7 @@ var SBGNProperties = Backbone.View.extend({
       }
     });
 
-    $("#default-sbgn").die("click").live("click", function (evt) {
+    $(document).off("click", "#default-sbgn").on("click", "#default-sbgn", function (evt) {
       self.copyProperties();
       self.template = _.template($("#sbgn-properties-template").html());
       self.template = self.template(self.currentSBGNProperties);
@@ -1179,7 +1179,7 @@ var GridProperties = Backbone.View.extend({
 
     dialogUtilities.openDialog(self.el);
 
-    $("#save-grid").die("click").live("click", function (evt) {
+    $(document).off("click", "#save-grid").on("click", "#save-grid", function (evt) {
 
       var param = {};
       param.firstTime = true;
@@ -1218,7 +1218,7 @@ var GridProperties = Backbone.View.extend({
       });
     });
 
-    $("#default-grid").die("click").live("click", function (evt) {
+    $(document).off("click", "#default-grid").on("click", "#default-grid", function (evt) {
       self.copyProperties();
       self.template = _.template($("#grid-properties-template").html());
       self.template = self.template(self.currentGridProperties);
@@ -1265,7 +1265,7 @@ var PathsBetweenQuery = Backbone.View.extend({
 //    $(self.el).dialog({width:'auto'});
     dialogUtilities.openDialog(self.el, {width:'auto'});
 
-    $("#save-query-pathsbetween").die("click").live("click", function (evt) {
+    $(document).off("click", "#save-query-pathsbetween").on("click", "#save-query-pathsbetween", function (evt) {
 
       self.currentQueryParameters.geneSymbols = document.getElementById("query-pathsbetween-gene-symbols").value;
       self.currentQueryParameters.lengthLimit = Number(document.getElementById("query-pathsbetween-length-limit").value);
@@ -1325,7 +1325,7 @@ var PathsBetweenQuery = Backbone.View.extend({
       $(self.el).dialog('close');
     });
 
-    $("#cancel-query-pathsbetween").die("click").live("click", function (evt) {
+    $(document).off("click", "#cancel-query-pathsbetween").on("click", "#cancel-query-pathsbetween", function (evt) {
       $(self.el).dialog('close');
     });
 
@@ -1407,7 +1407,7 @@ var ReactionTemplate = Backbone.View.extend({
 
      dialogUtilities.openDialog(self.el, {width:'auto'});
 
-    $('#reaction-template-type-select').die('change').live('change', function (e) {
+    $(document).off('change', '#reaction-template-type-select').on('change', '#reaction-template-type-select', function (e) {
       var optionSelected = $("option:selected", this);
       var valueSelected = this.value;
       self.currentTemplateParameters.templateType = valueSelected;
@@ -1419,7 +1419,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#template-reaction-enable-complex-name").die("change").live("change", function(e){
+    $(document).off("change", "#template-reaction-enable-complex-name").on("change", "#template-reaction-enable-complex-name", function(e){
       self.currentTemplateParameters.templateReactionEnableComplexName =
           !self.currentTemplateParameters.templateReactionEnableComplexName;
       self.template = _.template($("#reaction-template").html());
@@ -1429,7 +1429,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#template-reaction-complex-name").die("change").live("change", function(e){
+    $(document).off("change", "#template-reaction-complex-name").on("change", "#template-reaction-complex-name", function(e){
       self.currentTemplateParameters.templateReactionComplexName = $(this).attr('value');
       self.template = _.template($("#reaction-template").html());
       self.template = self.template(self.currentTemplateParameters);
@@ -1438,7 +1438,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#template-reaction-add-button").die("click").live("click",function (event) {
+    $(document).off("click", "#template-reaction-add-button").on("click", "#template-reaction-add-button", function (event) {
       self.currentTemplateParameters.macromoleculeList.push("");
 
       self.template = _.template($("#reaction-template").html());
@@ -1448,9 +1448,9 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $(".template-reaction-textbox").die('change').live('change', function () {
+    $(document).off("change", ".template-reaction-textbox").on('change', ".template-reaction-textbox", function () {
       var index = parseInt($(this).attr('name'));
-      var value = $(this).attr('value');
+      var value = $(this).val();
       self.currentTemplateParameters.macromoleculeList[index] = value;
 
       self.template = _.template($("#reaction-template").html());
@@ -1460,7 +1460,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $(".template-reaction-delete-button").die("click").live("click",function (event) {
+    $(document).off("click", ".template-reaction-delete-button").on("click", ".template-reaction-delete-button", function (event) {
       if(self.currentTemplateParameters.macromoleculeList.length <= 2){
         return;
       }
@@ -1475,7 +1475,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog({width:'auto'});
     });
 
-    $("#create-template").die("click").die("click").live("click", function (evt) {
+    $(document).off("click", "#create-template").on("click", "#create-template", function (evt) {
       var param = {
         firstTime: true,
         templateType: self.currentTemplateParameters.templateType,
@@ -1492,7 +1492,7 @@ var ReactionTemplate = Backbone.View.extend({
       $(self.el).dialog('close');
     });
 
-    $("#cancel-template").die("click").die("click").live("click", function (evt) {
+    $(document).off("click", "#cancel-template").on("click", "#cancel-template", function (evt) {
       self.copyProperties();
       $(self.el).dialog('close');
     });
