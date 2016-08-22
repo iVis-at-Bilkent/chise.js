@@ -4,14 +4,10 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       "border-color": "#555",
       "border-width": "1.5px",
       'background-color': '#FFFFFF',
-      'font-size': 11,
-//          'shape': 'data(sbgnclass)',
       'background-opacity': 0.5,
       'text-opacity': 1,
       'opacity': 1,
-      'font-weight': 'data(fontweight)',
-      'font-family': 'data(fontfamily)',
-      'font-style': 'data(fontstyle)'
+      'font-size': 11
     })
     .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
     .css({
@@ -30,20 +26,25 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
     .css({
-//          'content': 'data(sbgnlabel)',
       'content': function (ele) {
         return getElementContent(ele);
       },
       'text-valign': 'center',
-      'text-halign': 'center',
-      'font-size': function (ele) {
-        return getLabelTextSize(ele);
-      }
+      'text-halign': 'center'
     })
     .selector("node[sbgnclass]")
     .css({
       'shape': function (ele) {
         return getCyShape(ele);
+      },
+      'font-weight': 'data(fontweight)',
+      'font-family': 'data(fontfamily)',
+      'font-style': 'data(fontstyle)',
+      'font-size': function (ele) {
+        var labelsize = getLabelTextSize(ele);
+        if(labelsize) {
+          return labelsize;
+        }
       }
     })
     .selector("node[sbgnclass='perturbing agent']")
@@ -63,9 +64,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'background-color': '#F4F3EE',
       'text-valign': 'bottom',
       'text-halign': 'center',
-      'font-size': function (ele) {
-        return getLabelTextSize(ele);
-      },
       'width': function(ele){
         if(ele.children() == null || ele.children().length == 0){
           return '36';
@@ -103,10 +101,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         return ele.data('height');
       },
       'text-valign': 'bottom',
-      'text-halign': 'center',
-      'font-size': function (ele) {
-        return getLabelTextSize(ele);
-      }
+      'text-halign': 'center'
     })
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
     .css({
