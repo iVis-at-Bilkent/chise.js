@@ -1507,22 +1507,36 @@ var FontProperties = Backbone.View.extend({
   copyProperties: function () {
     this.currentFontProperties = _.clone(this.defaultFontProperties);
   },
+  fontFamilies: ["Helvetica", "Arial", "Calibri", "Cambria", "Comic Sans MS", "Consolas", "Corsiva"
+    ,"Courier New" ,"Droid Sans", "Droid Serif", "Georgia", "Impact" 
+    ,"Lato", "Roboto", "Source Sans Pro", "Syncopate", "Times New Roman"
+    ,"Trebuchet MS", "Ubuntu", "Verdana"],
+  getOptionIdByFontFamily: function(fontfamily) {
+    var id = "font-properties-font-family-" + fontfamily;
+    return id;
+  },
+  getFontFamilyByOptionId: function(id) {
+    var lastIndex = id.lastIndexOf("-");
+    var fontfamily = id.substr(lastIndex + 1);
+    return fontfamily;
+  },
   getFontFamilyHtml: function(self) {
     if(self == null){
       self = this;
     }
     
-    var fontFamilies = ["Helvetica"];
-    var fontFamilyOptionIds = ["font-properties-font-family-helvetica"];
+    var fontFamilies = self.fontFamilies;
     
     var html = "";
     html += "<select id='font-properties-select-font-family' class='input-medium layout-text' name='font-properties-select'>";
     
+    var optionsStr = "";
+    
     for ( var i = 0; i < fontFamilies.length; i++ ) {
       var fontFamily = fontFamilies[i];
-      var optionId = fontFamilyOptionIds[i];
+      var optionId = self.getOptionIdByFontFamily(fontFamily);
       var optionStr = "<option id='" + optionId + "'" 
-              + " value='" + fontFamily + "'";
+              + " value='" + fontFamily + "' style='" + "font-family: " + fontFamily + "'";
       
       if (fontFamily === self.currentFontProperties.fontFamily) {
         optionStr += " selected";
@@ -1531,9 +1545,11 @@ var FontProperties = Backbone.View.extend({
       optionStr += "> ";
       optionStr += fontFamily;
       optionStr += " </option>";
+      
+      optionsStr += optionStr;
     }
     
-    html += optionStr;
+    html += optionsStr;
     
     html += "</select>";
     
