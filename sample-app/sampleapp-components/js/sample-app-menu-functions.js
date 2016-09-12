@@ -381,7 +381,7 @@ $(document).ready(function () {
       var node = $(this).data('node');
       var param = {
         nodes: cy.collection(node),
-        sbgnlabel: $(this).attr('value'),
+        sbgnlabel: $(this).val(),
         firstTime: true
       };
 

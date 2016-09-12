@@ -527,7 +527,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-border-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-border-color").attr("value"),
+          data: $("#inspector-border-color").val(),
           dataType: "borderColor",
           firstTime: true
         };
@@ -538,7 +538,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-label").on('change', function () {
         var param = {
           nodes: selectedEles,
-          sbgnlabel: $(this).attr('value'),
+          sbgnlabel: $(this).val(),
           firstTime: true
         };
         
@@ -548,7 +548,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-background-opacity").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-background-opacity").attr("value"),
+          data: $("#inspector-background-opacity").val(),
           dataType: "backgroundOpacity",
           firstTime: true
         };
@@ -559,7 +559,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-fill-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-fill-color").attr("value"),
+          data: $("#inspector-fill-color").val(),
           dataType: "background-color",
           firstTime: true
         };
@@ -595,7 +595,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-line-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-line-color").attr("value"),
+          data: $("#inspector-line-color").val(),
           dataType: "lineColor",
           firstTime: true
         };

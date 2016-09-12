@@ -1425,7 +1425,7 @@ var ReactionTemplate = Backbone.View.extend({
     });
 
     $(document).off("change", "#template-reaction-complex-name").on("change", "#template-reaction-complex-name", function(e){
-      self.currentTemplateParameters.templateReactionComplexName = $(this).attr('value');
+      self.currentTemplateParameters.templateReactionComplexName = $(this).val();
       self.template = _.template($("#reaction-template").html());
       self.template = self.template(self.currentTemplateParameters);
       $(self.el).html(self.template);
