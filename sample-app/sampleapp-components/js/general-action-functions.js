@@ -207,5 +207,41 @@ var generalActionFunctions = {
     }
 
     return result;
+  },
+  changeFontProperties: function(param) {
+    var result = {
+    };
+    
+    var eles = param.eles;
+    result.data = {};
+    result.eles = eles;
+    
+    for (var i = 0; i < eles.length; i++) {
+      var ele = eles[i];
+      result.data[ele.id()] = {
+        labelsize: ele.data('labelsize'),
+        fontfamily: ele.data('fontfamily'),
+        fontweight: ele.data('fontweight'),
+        fontstyle: ele.data('fontstyle')
+      };
+    }
+
+    if (param.firstTime) {
+      eles.data('labelsize', param.data['labelsize']);
+      eles.data('fontfamily', param.data['fontfamily']);
+      eles.data('fontweight', param.data['fontweight']);
+      eles.data('fontstyle', param.data['fontstyle']);
+    }
+    else {
+      for (var i = 0; i < eles.length; i++) {
+        var ele = eles[i];
+        ele.data('labelsize', param.data[ele.id()]['labelsize']);
+        ele.data('fontfamily', param.data[ele.id()]['fontfamily']);
+        ele.data('fontweight', param.data[ele.id()]['fontweight']);
+        ele.data('fontstyle', param.data[ele.id()]['fontstyle']);
+      }
+    }
+    
+    return result;
   }
 };

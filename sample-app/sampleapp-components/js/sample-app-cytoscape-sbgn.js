@@ -1499,7 +1499,7 @@ var ReactionTemplate = Backbone.View.extend({
 var FontProperties = Backbone.View.extend({
   defaultFontProperties: {
     fontFamily: sbgnElementUtilities.defaultFontProperties.fontfamily,
-    fontSize: '',
+    fontSize: 20,
     fontWeight: sbgnElementUtilities.defaultFontProperties.fontweight,
     fontStyle: sbgnElementUtilities.defaultFontProperties.fontstyle
   },
@@ -1528,7 +1528,7 @@ var FontProperties = Backbone.View.extend({
     var fontFamilies = self.fontFamilies;
     
     var html = "";
-    html += "<select id='font-properties-select-font-family' class='input-medium layout-text' name='font-properties-select'>";
+    html += "<select id='font-properties-select-font-family' class='input-medium layout-text' name='font-family-select'>";
     
     var optionsStr = "";
     
@@ -1599,6 +1599,24 @@ var FontProperties = Backbone.View.extend({
     $(self.el).html(self.template);
 
     dialogUtilities.openDialog(self.el);
+
+    $(document).off("click", "#set-font-properties").on("click", "#set-font-properties", function (evt) {
+      var param = {
+          eles: eles,
+          data: {
+            labelsize: parseInt($('#font-properties-font-size').val()),
+            fontfamily: $('select[name="font-family-select"] option:selected').val(),
+            fontweight: $('select[name="font-weight-select"] option:selected').val(),
+            fontstyle: $('select[name="font-style-select"] option:selected').val()
+          },
+          firstTime: true
+        };
+
+      cy.undoRedo().do("changeFontProperties", param);
+      
+      self.copyProperties();
+      $(self.el).dialog('close');
+    });
 
     return this;
   }

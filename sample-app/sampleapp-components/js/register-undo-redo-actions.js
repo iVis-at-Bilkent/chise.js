@@ -22,6 +22,7 @@ var registerUndoRedoActions = function () {
   ur.action("changeStyleData", generalActionFunctions.changeStyleData, generalActionFunctions.changeStyleData);
   ur.action("changeStyleCss", generalActionFunctions.changeStyleCss, generalActionFunctions.changeStyleCss);
   ur.action("changeBendPoints", generalActionFunctions.changeBendPoints, generalActionFunctions.changeBendPoints);
+  ur.action("changeFontProperties", generalActionFunctions.changeFontProperties, generalActionFunctions.changeFontProperties);
 
   // register SBGN actions
   ur.action("addStateAndInfo", SBGNActionFunctions.addStateAndInfo, SBGNActionFunctions.removeStateAndInfo);

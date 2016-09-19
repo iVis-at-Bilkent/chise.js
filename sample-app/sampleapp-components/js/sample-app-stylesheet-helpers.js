@@ -135,8 +135,11 @@ var getElementContent = function (ele) {
 var getLabelTextSize = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
   
-  if(!sbgnStyleRules['adjust-node-label-font-size-automatically'] || sbgnclass.endsWith('process') 
-          || sbgnclass === 'complex' || sbgnclass === 'compartment') {
+  if(sbgnclass.endsWith('process') || sbgnclass === 'complex' || sbgnclass === 'compartment') {
+    return sbgnElementUtilities.getDefaultLabelSize(sbgnclass);
+  }
+  
+  if(!sbgnStyleRules['adjust-node-label-font-size-automatically']) {
     return ele.data('labelsize');
   }
   
