@@ -51,6 +51,8 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         if(labelsize) {
           return labelsize;
         }
+       
+        return ele.css('font-size');
       }
     })
     .selector("node[sbgnclass='perturbing agent']")
