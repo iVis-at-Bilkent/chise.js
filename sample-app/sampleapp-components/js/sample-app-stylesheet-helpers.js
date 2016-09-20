@@ -135,6 +135,11 @@ var getElementContent = function (ele) {
 var getLabelTextSize = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
   
+  // These types of nodes cannot have label but this is statement is needed as a workaround
+  if(sbgnclass === 'association' || sbgnclass === 'dissociation') {
+    return 20;
+  }
+  
   if(sbgnclass === 'and' || sbgnclass === 'or' || sbgnclass === 'not') {
     return getDynamicLabelTextSize(ele, 1);
   }
