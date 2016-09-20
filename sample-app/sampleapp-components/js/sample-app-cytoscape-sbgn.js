@@ -37,9 +37,15 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'shape': function (ele) {
         return getCyShape(ele);
       },
-      'font-weight': 'data(fontweight)',
-      'font-family': 'data(fontfamily)',
-      'font-style': 'data(fontstyle)',
+      'font-weight': function(ele) {
+        return ele.data('fontweight') ? ele.data('fontweight') : sbgnElementUtilities.defaultFontProperties.fontweight;
+      },
+      'font-family': function(ele) {
+        return ele.data('fontfamily') ? ele.data('fontfamily') : sbgnElementUtilities.defaultFontProperties.fontfamily;
+      },
+      'font-style': function(ele) {
+        return ele.data('fontstyle') ? ele.data('fontstyle') : sbgnElementUtilities.defaultFontProperties.fontstyle;
+      },
       'font-size': function (ele) {
         var labelsize = getLabelTextSize(ele);
         if(labelsize) {
@@ -873,6 +879,11 @@ var SBGNContainer = Backbone.View.extend({
         cy.on('doubleTap', 'node', function (event) {
           if (modeHandler.mode == 'selection-mode') {
             var node = this;
+            
+            if (!canHaveSBGNLabel( node )) {
+              return;
+            }
+            
             var containerPos = $(cy.container()).position();
             var left = containerPos.left + this.renderedPosition().x;
             left -= $("#node-label-textbox").width() / 2;
@@ -888,7 +899,7 @@ var SBGNContainer = Backbone.View.extend({
             if (sbgnlabel == null) {
               sbgnlabel = "";
             }
-            $("#node-label-textbox").attr('value', sbgnlabel);
+            $("#node-label-textbox").val(sbgnlabel);
             $("#node-label-textbox").data('node', this);
             $("#node-label-textbox").focus();
           }
@@ -1498,16 +1509,16 @@ var ReactionTemplate = Backbone.View.extend({
 
 var FontProperties = Backbone.View.extend({
   defaultFontProperties: {
-    fontFamily: sbgnElementUtilities.defaultFontProperties.fontfamily,
-    fontSize: 20,
-    fontWeight: sbgnElementUtilities.defaultFontProperties.fontweight,
-    fontStyle: sbgnElementUtilities.defaultFontProperties.fontstyle
+    fontFamily: "",
+    fontSize: "",
+    fontWeight: "",
+    fontStyle: ""
   },
   currentFontProperties: undefined,
   copyProperties: function () {
     this.currentFontProperties = _.clone(this.defaultFontProperties);
   },
-  fontFamilies: ["Helvetica", "Arial", "Calibri", "Cambria", "Comic Sans MS", "Consolas", "Corsiva"
+  fontFamilies: ["", "Helvetica", "Arial", "Calibri", "Cambria", "Comic Sans MS", "Consolas", "Corsiva"
     ,"Courier New" ,"Droid Sans", "Droid Serif", "Georgia", "Impact" 
     ,"Lato", "Roboto", "Source Sans Pro", "Syncopate", "Times New Roman"
     ,"Trebuchet MS", "Ubuntu", "Verdana"],
@@ -1601,21 +1612,65 @@ var FontProperties = Backbone.View.extend({
     dialogUtilities.openDialog(self.el);
 
     $(document).off("click", "#set-font-properties").on("click", "#set-font-properties", function (evt) {
+      var data = {};
+      
+      var labelsize = $('#font-properties-font-size').val();
+      var fontfamily = $('select[name="font-family-select"] option:selected').val();
+      var fontweight = $('select[name="font-weight-select"] option:selected').val();
+      var fontstyle = $('select[name="font-style-select"] option:selected').val();
+      
+      if ( labelsize != '' ) {
+        data.labelsize = parseInt(labelsize);
+      }
+      
+      if ( fontfamily != '' ) {
+        data.fontfamily = fontfamily;
+      }
+      
+      if ( fontweight != '' ) {
+        data.fontweight = fontweight;
+      }
+      
+      if ( fontstyle != '' ) {
+        data.fontstyle = fontstyle;
+      }
+      
+      var keys = Object.keys(data);
+      
+      if(keys.length === 0) {
+        return;
+      }
+      
+      var validAction = false;
+      
+      for ( var i = 0; i < eles.length; i++ ) {
+        var ele = eles[i];
+        
+        keys.forEach(function(key, idx) {
+          if ( data[key] != ele.data(key) ) {
+            validAction = true;
+          }
+        }); 
+        
+        if ( validAction ) {
+          break;
+        }
+      }
+      
+      if ( validAction === false ) {
+        return;
+      }
+      
       var param = {
-          eles: eles,
-          data: {
-            labelsize: parseInt($('#font-properties-font-size').val()),
-            fontfamily: $('select[name="font-family-select"] option:selected').val(),
-            fontweight: $('select[name="font-weight-select"] option:selected').val(),
-            fontstyle: $('select[name="font-style-select"] option:selected').val()
-          },
-          firstTime: true
-        };
+        eles: eles,
+        data: data,
+        firstTime: true
+      };
 
       cy.undoRedo().do("changeFontProperties", param);
       
       self.copyProperties();
-      $(self.el).dialog('close');
+//      $(self.el).dialog('close');
     });
 
     return this;

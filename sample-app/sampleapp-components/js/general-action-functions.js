@@ -218,27 +218,28 @@ var generalActionFunctions = {
     
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
-      result.data[ele.id()] = {
-        labelsize: ele.data('labelsize'),
-        fontfamily: ele.data('fontfamily'),
-        fontweight: ele.data('fontweight'),
-        fontstyle: ele.data('fontstyle')
-      };
+      
+      result.data[ele.id()] = {};
+      
+      var data = param.firstTime ? param.data : param.data[ele.id()];
+      
+      for ( var prop in data ) {
+        result.data[ele.id()][prop] = ele.data(prop);
+      }
     }
 
     if (param.firstTime) {
-      eles.data('labelsize', param.data['labelsize']);
-      eles.data('fontfamily', param.data['fontfamily']);
-      eles.data('fontweight', param.data['fontweight']);
-      eles.data('fontstyle', param.data['fontstyle']);
+      for (var prop in param.data) {
+        eles.data(prop, param.data[prop]);
+      }
     }
     else {
       for (var i = 0; i < eles.length; i++) {
         var ele = eles[i];
-        ele.data('labelsize', param.data[ele.id()]['labelsize']);
-        ele.data('fontfamily', param.data[ele.id()]['fontfamily']);
-        ele.data('fontweight', param.data[ele.id()]['fontweight']);
-        ele.data('fontstyle', param.data[ele.id()]['fontstyle']);
+        
+        for (var prop in param.data[ele.id()]) {
+          ele.data(prop, param.data[ele.id()][prop]);
+        }
       }
     }
     

@@ -103,22 +103,22 @@ var getElementContent = function (ele) {
     }
   }
   else if (sbgnclass == 'and') {
-    content = 'AND';
+    return 'AND';
   }
   else if (sbgnclass == 'or') {
-    content = 'OR';
+    return 'OR';
   }
   else if (sbgnclass == 'not') {
-    content = 'NOT';
+    return 'NOT';
   }
   else if (sbgnclass == 'omitted process') {
-    content = '\\\\';
+    return '\\\\';
   }
   else if (sbgnclass == 'uncertain process') {
-    content = '?';
+    return '?';
   }
   else if (sbgnclass == 'dissociation') {
-    content = 'O';
+    return 'O';
   }
 
   var textWidth = ele.css('width') ? parseFloat(ele.css('width')) : ele.data('sbgnbbox').w;
@@ -135,11 +135,15 @@ var getElementContent = function (ele) {
 var getLabelTextSize = function (ele) {
   var sbgnclass = ele.data('sbgnclass');
   
-  if(sbgnclass.endsWith('process') || sbgnclass === 'complex' || sbgnclass === 'compartment') {
-    return sbgnElementUtilities.getDefaultLabelSize(sbgnclass);
+  if(sbgnclass === 'and' || sbgnclass === 'or' || sbgnclass === 'not') {
+    return getDynamicLabelTextSize(ele, 1);
   }
   
-  if(!sbgnStyleRules['adjust-node-label-font-size-automatically']) {
+  if(sbgnclass.endsWith('process')) {
+    return getDynamicLabelTextSize(ele, 1.5);
+  }
+  
+  if(sbgnclass === 'complex' || sbgnclass === 'compartment' || !sbgnStyleRules['adjust-node-label-font-size-automatically']) {
     return ele.data('labelsize');
   }
   
@@ -149,18 +153,19 @@ var getLabelTextSize = function (ele) {
 /*
  * calculates the dynamic label size for the given node
  */
-var getDynamicLabelTextSize = function (ele) {
+var getDynamicLabelTextSize = function (ele, dynamicLabelSizeCoefficient) {
   var dynamicLabelSize = sbgnStyleRules['dynamic-label-size'];
-  var dynamicLabelSizeCoefficient;
-
-  if (dynamicLabelSize == 'small') {
-    dynamicLabelSizeCoefficient = 0.75;
-  }
-  else if (dynamicLabelSize == 'regular') {
-    dynamicLabelSizeCoefficient = 1;
-  }
-  else if (dynamicLabelSize == 'large') {
-    dynamicLabelSizeCoefficient = 1.25;
+  
+  if(dynamicLabelSizeCoefficient === undefined) {
+    if (dynamicLabelSize == 'small') {
+      dynamicLabelSizeCoefficient = 0.75;
+    }
+    else if (dynamicLabelSize == 'regular') {
+      dynamicLabelSizeCoefficient = 1;
+    }
+    else if (dynamicLabelSize == 'large') {
+      dynamicLabelSizeCoefficient = 1.25;
+    }
   }
 
   //This line will be useless and is to be removed later

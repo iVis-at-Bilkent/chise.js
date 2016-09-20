@@ -248,9 +248,26 @@ var canHaveSBGNCardinality = function(ele) {
   return ele.data('sbgnclass') == 'consumption' || ele.data('sbgnclass') == 'production';
 };
 
+var canHaveSBGNLabel = function(ele) {
+  var sbgnclass = typeof ele === 'string' ? ele : ele.data('sbgnclass');
+  
+  return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not' 
+    && sbgnclass != 'association' && sbgnclass != 'dissociation' && !sbgnclass.endsWith('process');
+};
+
 var allCanHaveSBGNCardinality = function(elements){
   for(var i = 0; i < elements.length; i++){
     if(!canHaveSBGNCardinality(elements[i])){
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+var allCanHaveSBGNLabel = function(elements){
+  for(var i = 0; i < elements.length; i++){
+    if(!canHaveSBGNLabel(elements[i])){
       return false;
     }
   }

@@ -89,10 +89,10 @@ var addRemoveUtilities = {
       },
       sbgnstatesandinfos: [],
       ports: [],
-      labelsize: sbgnElementUtilities.getDefaultLabelSize(sbgnclass),
-      fontfamily: sbgnElementUtilities.defaultFontProperties.fontfamily,
-      fontweight: sbgnElementUtilities.defaultFontProperties.fontweight,
-      fontstyle: sbgnElementUtilities.defaultFontProperties.fontstyle
+      labelsize: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.getDefaultLabelSize(sbgnclass) : undefined,
+      fontfamily: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontfamily : undefined,
+      fontweight: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontweight : undefined,
+      fontstyle: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontstyle : undefined
     };
     
     if(parent){

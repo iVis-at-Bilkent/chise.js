@@ -154,6 +154,7 @@ var sbgnmlToJson = {
   addCytoscapeJsNode: function (ele, jsonArray, parent, compartments) {
     var self = this;
     var nodeObj = new Object();
+    var sbgnclass = $(ele).attr('class');
 
     //add id information
     nodeObj.id = $(ele).attr('id');
@@ -166,13 +167,13 @@ var sbgnmlToJson = {
     //add state and info box information
     nodeObj.sbgnstatesandinfos = self.stateAndInfoProp(ele, nodeObj.sbgnbbox);
     // add default label size information
-    nodeObj.labelsize = sbgnElementUtilities.getDefaultLabelSize($(ele).attr('class'));
+    nodeObj.labelsize = canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.getDefaultLabelSize(sbgnclass) : undefined;
     // add default font family
-    nodeObj.fontfamily = sbgnElementUtilities.defaultFontProperties.fontfamily;
+    nodeObj.fontfamily = canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontfamily : undefined;
     // add default font weight
-    nodeObj.fontweight = sbgnElementUtilities.defaultFontProperties.fontweight;
+    nodeObj.fontweight = canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontweight : undefined;
     // add default font style
-    nodeObj.fontstyle = sbgnElementUtilities.defaultFontProperties.fontstyle;
+    nodeObj.fontstyle = canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontstyle : undefined;
     //adding parent information
     self.addParentInfoToNode(ele, nodeObj, parent, compartments);
 

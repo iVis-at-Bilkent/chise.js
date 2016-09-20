@@ -5,8 +5,8 @@ var sbgnElementUtilities = {
       fontstyle: 'normal'
     },
     getDefaultLabelSize: function(sbgnclass) {
-      if(sbgnclass.endsWith('process')) {
-        return 18;
+      if(!canHaveSBGNLabel(sbgnclass)) {
+        return undefined;
       }
       else if(sbgnclass === 'complex' || sbgnclass === 'compartment') {
         return 16;
