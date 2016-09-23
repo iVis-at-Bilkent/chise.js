@@ -66,7 +66,7 @@ var addRemoveUtilities = {
       'border-width': defaults['border-width'],
 //      'border-color': defaults['border-color'],
       'background-color': defaults['background-color'],
-      'font-size': defaults['font-size'],
+//      'font-size': defaults['font-size'],
       'background-opacity': defaults['background-opacity']
     } : {};
     
@@ -89,10 +89,10 @@ var addRemoveUtilities = {
       },
       sbgnstatesandinfos: [],
       ports: [],
-      labelsize: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.getDefaultLabelSize(sbgnclass) : undefined,
-      fontfamily: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontfamily : undefined,
-      fontweight: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontweight : undefined,
-      fontstyle: canHaveSBGNLabel(sbgnclass) ? sbgnElementUtilities.defaultFontProperties.fontstyle : undefined
+      labelsize: canHaveSBGNLabel(sbgnclass) ? ( defaults && defaults.labelsize ) || sbgnElementUtilities.getDefaultLabelSize(sbgnclass) : undefined,
+      fontfamily: canHaveSBGNLabel(sbgnclass) ? ( defaults && defaults.fontfamily ) || sbgnElementUtilities.defaultFontProperties.fontfamily : undefined,
+      fontweight: canHaveSBGNLabel(sbgnclass) ? ( defaults && defaults.fontweight ) || sbgnElementUtilities.defaultFontProperties.fontweight : undefined,
+      fontstyle: canHaveSBGNLabel(sbgnclass) ? ( defaults && defaults.fontstyle ) || sbgnElementUtilities.defaultFontProperties.fontstyle : undefined
     };
     
     if(parent){
