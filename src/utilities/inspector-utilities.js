@@ -510,7 +510,7 @@ inspectorUtilities.handleSBGNInspector = function () {
 
       $('#inspector-is-multimer').on('click', function () {
         var param = {
-          makeMultimer: $('#inspector-is-multimer').attr('checked') == 'checked',
+          makeMultimer: $('#inspector-is-multimer').prop('checked'),
           nodes: selectedEles,
           firstTime: true
         };
@@ -520,7 +520,7 @@ inspectorUtilities.handleSBGNInspector = function () {
 
       $('#inspector-is-clone-marker').on('click', function () {
         var param = {
-          makeCloneMarker: $('#inspector-is-clone-marker').attr('checked') == 'checked',
+          makeCloneMarker: $('#inspector-is-clone-marker').prop('checked'),
           nodes: selectedEles,
           firstTime: true
         };

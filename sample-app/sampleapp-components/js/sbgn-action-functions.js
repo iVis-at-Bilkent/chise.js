@@ -151,7 +151,8 @@ var SBGNActionFunctions = {
       }
     }
 
-    cy.forceRender();
+    cy.style().update();
+    
     if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
       $('#inspector-is-clone-marker').attr("checked", !$('#inspector-is-clone-marker').attr("checked"));
     }
