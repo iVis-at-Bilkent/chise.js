@@ -297,7 +297,7 @@ var getCommonNodeHeight = function(elements){
   
   var heightOfFirstElement = elements[0].height();
   for(var i = 1; i < elements.length; i++){
-    if(elements[i].width() != heightOfFirstElement){
+    if(elements[i].height() != heightOfFirstElement){
       return null;
     }
   }
