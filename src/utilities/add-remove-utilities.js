@@ -119,7 +119,10 @@ var addRemoveUtilities = {
     if (defaults && defaults['sbgnclonemarker']) {
       newNode._private.data.sbgnclonemarker = defaults.sbgnclonemarker;
     }
+    
     newNode.addClass('changeBorderColor');
+    newNode.addClass('changeBackgroundOpacity');
+    
     refreshPaddings();
     return newNode;
   },
