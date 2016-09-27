@@ -266,11 +266,11 @@ inspectorUtilities.handleSBGNInspector = function () {
           var title;
           if(window.inspectorNodeSizeUseAspectRatio) {
             imageName = "lock.png";
-            title = "lock aspect ratio";
+            title = "unlock aspect ratio";
           }
           else {
             imageName = "open-lock.png";
-            title = "unlock aspect ratio";
+            title = "lock aspect ratio";
           }
           
           html += "<img id='inspector-node-sizes-aspect-ratio' style='vertical-align: top; margin-left: 5px;' src='sampleapp-images/";
@@ -501,11 +501,11 @@ inspectorUtilities.handleSBGNInspector = function () {
         // refresh image
         if (window.inspectorNodeSizeUseAspectRatio) {
           imageName = "lock.png";
-          title = "lock aspect ratio";
+          title = "unlock aspect ratio";
         }
         else {
           imageName = "open-lock.png";
-          title = "unlock aspect ratio";
+          title = "lock aspect ratio";
         }
         
         $(this).attr('src', 'sampleapp-images/' + imageName);
