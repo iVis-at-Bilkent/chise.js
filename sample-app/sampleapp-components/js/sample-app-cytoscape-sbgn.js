@@ -703,8 +703,7 @@ var SBGNContainer = Backbone.View.extend({
         });
         
         cy.on("resizeend", function(event, type, nodes) {
-          nodes.removeClass('changeLabelTextSize');
-          nodes.addClass('changeLabelTextSize');
+          nodeResizeEndFunction(nodes);
         });
 
         cy.on("afterDo", function(event, actionName, args){
@@ -715,8 +714,7 @@ var SBGNContainer = Backbone.View.extend({
           refreshUndoRedoButtonsStatus();
           
           if(actionName === 'resize') {
-            args.nodes.removeClass('changeLabelTextSize');
-            args.nodes.addClass('changeLabelTextSize');
+            nodeResizeEndFunction(args.nodes);
           }
         });
 
@@ -724,8 +722,7 @@ var SBGNContainer = Backbone.View.extend({
           refreshUndoRedoButtonsStatus();
           
           if(actionName === 'resize') {
-            args.nodes.removeClass('changeLabelTextSize');
-            args.nodes.addClass('changeLabelTextSize');
+            nodeResizeEndFunction(args.nodes);
           }
         });
 
