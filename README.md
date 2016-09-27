@@ -5,7 +5,7 @@ ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilk
 
 ## Software
 
-<font color="#B3A31D"><b>A sample application using ChiSE can be found [here](http://www.cs.bilkent.edu.tr/~ivis/ChiSE.js_daily/sample-app/).</b></font>
+<font color="#B3A31D"><b>A sample application using ChiSE can be found [here](http://www.cs.bilkent.edu.tr/~ivis/ChiSE.js/sample-app/).</b></font>
 
 ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). Instructions for obtaining a working copy of the project can be found [here](https://github.com/iVis-at-Bilkent/chise.js/wiki/Obtaining-A-Working-Copy). ChiSE works on every platform that have javascript support including mobile devices.
 <br/>
