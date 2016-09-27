@@ -528,6 +528,10 @@ var SBGNContainer = Backbone.View.extend({
             return fixedAspectRatioModeTypes.indexOf(sbgnclass) >= 0;
           },// with only 4 active grapples (at corners)
           isNoResizeMode: function (node) { return node.is(".noResizeMode, :parent") }, // no active grapples
+          
+          isFixedAspectRatioResizeMode: function(node) {
+            return window.nodeResizeUseAspectRatio;
+          },
 
           cursors: { // See http://www.w3schools.com/cssref/tryit.asp?filename=trycss_cursor
             // May take any "cursor" css property

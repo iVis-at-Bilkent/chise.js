@@ -264,7 +264,7 @@ inspectorUtilities.handleSBGNInspector = function () {
         if( someMustNotBeSquare(selectedEles) ) {
           var imageName;
           var title;
-          if(window.inspectorNodeSizeUseAspectRatio) {
+          if(window.nodeResizeUseAspectRatio) {
             imageName = "lock.png";
             title = "unlock aspect ratio";
           }
@@ -478,7 +478,7 @@ inspectorUtilities.handleSBGNInspector = function () {
           w = undefined;
         }
         
-        var useAspectRatio = window.inspectorNodeSizeUseAspectRatio;
+        var useAspectRatio = window.nodeResizeUseAspectRatio;
 
         var param = {
           nodes: selectedEles,
@@ -492,14 +492,14 @@ inspectorUtilities.handleSBGNInspector = function () {
       });
 
       $('#inspector-node-sizes-aspect-ratio').on('click', function() {
-        if(window.inspectorNodeSizeUseAspectRatio == null) {
-          window.inspectorNodeSizeUseAspectRatio = false;
+        if(window.nodeResizeUseAspectRatio == null) {
+          window.nodeResizeUseAspectRatio = false;
         }
         
-        window.inspectorNodeSizeUseAspectRatio = !window.inspectorNodeSizeUseAspectRatio;
+        window.nodeResizeUseAspectRatio = !window.nodeResizeUseAspectRatio;
         
         // refresh image
-        if (window.inspectorNodeSizeUseAspectRatio) {
+        if (window.nodeResizeUseAspectRatio) {
           imageName = "lock.png";
           title = "unlock aspect ratio";
         }
@@ -510,6 +510,8 @@ inspectorUtilities.handleSBGNInspector = function () {
         
         $(this).attr('src', 'sampleapp-images/' + imageName);
         $(this).attr('title', title);
+        
+        cy.style().update();
       });
 
       $('#inspector-is-multimer').on('click', function () {
