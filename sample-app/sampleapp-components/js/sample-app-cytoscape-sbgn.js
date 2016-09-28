@@ -69,7 +69,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node[sbgnclass='complex']")
     .css({
-      'background-color': '#F4F3EE',
+//      'background-color': '#F4F3EE',
       'text-valign': 'bottom',
       'text-halign': 'center',
       'width': function(ele){
