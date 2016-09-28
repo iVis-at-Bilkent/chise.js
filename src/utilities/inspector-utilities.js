@@ -242,7 +242,7 @@ inspectorUtilities.handleSBGNInspector = function () {
               + "'/>" + "</td></tr>";
       }
       
-      if( includesNotCollapsedNorParentElement(selectedEles) ) {
+      if( includesParentElement(selectedEles) ) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Width</font>" + "</td><td style='padding-left: 5px;'>"
                 + "<input id='inspector-node-width' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
 

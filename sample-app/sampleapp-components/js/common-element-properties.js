@@ -362,14 +362,14 @@ var someMustNotBeSquare = function(nodes) {
   return false;
 };
 
-var isCollapsedOrParent = function(node) {
-  return (node.data('collapsedChildren') != null || ( node.children() && node.children().length > 0 ));
+var isParent = function(node) {
+  return ( node.children() && node.children().length > 0 );
 };
 
-var includesNotCollapsedNorParentElement = function(nodes) {
+var includesParentElement = function(nodes) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    if ( !isCollapsedOrParent(node) ) {
+    if ( !isParent(node) ) {
       return true;
     }
   }

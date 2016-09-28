@@ -72,18 +72,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
 //      'background-color': '#F4F3EE',
       'text-valign': 'bottom',
       'text-halign': 'center',
-      'width': function(ele){
-        if(ele.children() == null || ele.children().length == 0){
-          return '36';
-        }
-        return ele.data('width');
-      },
-      'height': function(ele){
-        if(ele.children() == null || ele.children().length == 0){
-          return '36';
-        }
-        return ele.data('height');
-      },
       'content': function(ele){
         return getElementContent(ele);
       }
@@ -96,25 +84,18 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'content': function(ele){
         return getElementContent(ele);
       },
-      'width': function(ele){
-        if(ele.children() == null || ele.children().length == 0){
-          return '36';
-        }
-        return ele.data('width');
-      },
-      'height': function(ele){
-        if(ele.children() == null || ele.children().length == 0){
-          return '36';
-        }
-        return ele.data('height');
-      },
       'text-valign': 'bottom',
       'text-halign': 'center'
     })
-    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='compartment'][sbgnclass!='submap']")
+    .selector("node[sbgnbbox]")
     .css({
       'width': 'data(sbgnbbox.w)',
       'height': 'data(sbgnbbox.h)'
+    })
+    .selector("node[expanded-collapsed='collapsed']")
+    .css({
+      'width': 36,
+      'height': 36
     })
     .selector("node:selected")
     .css({
