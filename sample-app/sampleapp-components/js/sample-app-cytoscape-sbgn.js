@@ -832,8 +832,6 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('tap', function (event) {
           $('input').blur();
-//          $("#node-label-textbox").blur();
-          cy.nodes(":selected").length;
 
           if (modeHandler.mode == "add-node-mode") {
             var cyPosX = event.cyPosition.x;

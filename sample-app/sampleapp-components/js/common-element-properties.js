@@ -419,7 +419,8 @@ var isPNClass = function (sbgnclass) {
           || sbgnclass == 'omitted process'
           || sbgnclass == 'uncertain process'
           || sbgnclass == 'association'
-          || sbgnclass == 'dissociation');
+          || sbgnclass == 'dissociation'
+          || sbgnclass == 'phenotype');
 };
 
 var isLogicalOperator = function (sbgnclass) {
