@@ -5,6 +5,9 @@ var registerUndoRedoActions = function () {
       ctrl_z: false, // undo
       ctrl_y: false, // redo
       ctrl_shift_z: false // redo
+    },
+    undoableDrag: function() {
+      return window.ctrlKeyDown !== true;
     }
   });
 
