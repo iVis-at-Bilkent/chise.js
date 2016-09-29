@@ -958,7 +958,7 @@ var SBGNLayout = Backbone.View.extend({
     animationEasing: 'cubic-bezier(0.19, 1, 0.22, 1)',
     animate: 'end',
     animationDuration: 1000,
-    randomize: true,
+    randomize: false,
     tilingPaddingVertical: function () {
       return calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10));
     },
