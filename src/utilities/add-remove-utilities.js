@@ -78,8 +78,6 @@ var addRemoveUtilities = {
       sbgnclass += " multimer";
     }
     var data = {
-      width: width,
-      height: height,
       sbgnclass: sbgnclass,
       sbgnbbox: {
         h: height,

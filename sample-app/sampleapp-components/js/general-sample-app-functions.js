@@ -270,8 +270,8 @@ var nodeResizeEndFunction = function (nodes) {
     node.removeStyle('width');
     node.removeStyle('height');
 
-    node.data('width', w);
-    node.data('height', h);
+    node.data('sbgnbbox').w = w;
+    node.data('sbgnbbox').h = h;
   }
 
   nodes.removeClass('noderesized');

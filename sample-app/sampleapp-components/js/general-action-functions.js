@@ -67,8 +67,8 @@ var generalActionFunctions = {
 
       if (param.performOperation) {
         if (param.sizeMap) {
-          node.data("width", param.sizeMap[node.id()].w);
-          node.data("height", param.sizeMap[node.id()].h);
+          node.data("sbgnbbox").w = param.sizeMap[node.id()].w;
+          node.data("sbgnbbox").h = param.sizeMap[node.id()].h;
         }
         else {
           var ratio = undefined;
@@ -80,27 +80,24 @@ var generalActionFunctions = {
               ratio = param.width / node.width();
             }
 
-            node.data("width", param.width);
+            node.data("sbgnbbox").w = param.width;
           }
           else if (param.height) {
             if (param.useAspectRatio || eleMustBeSquare) {
               ratio = param.height / node.height();
             }
 
-            node.data("height", param.height);
+            node.data("sbgnbbox").h = param.height;
           }
 
           if (ratio && !param.height) {
-            node.data("height", node.height() * ratio);
+            node.data("sbgnbbox").h = node.height() * ratio;
           }
           else if (ratio && !param.width) {
-            node.data("width", node.width() * ratio);
+            node.data("sbgnbbox").w = node.width() * ratio;
           }
         }
       }
-
-      node._private.data.sbgnbbox.w = node.data('width') || node.width();
-      node._private.data.sbgnbbox.h = node.data('height') || node.height();
 
       node.removeClass('noderesized');
       node.addClass('noderesized');

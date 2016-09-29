@@ -280,8 +280,8 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       }
     }).selector("node.noderesized")
     .css({
-      'width': 'data(width)',
-      'height': 'data(height)'
+      'width': 'data(sbgnbbox.w)',
+      'height': 'data(sbgnbbox.h)'
     });
 // end of sbgnStyleSheet
 
