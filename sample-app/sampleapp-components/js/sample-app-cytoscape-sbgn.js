@@ -727,14 +727,18 @@ var SBGNContainer = Backbone.View.extend({
             var newParent;
             if (self != cy) {
               newParent = self;
+              
+              if(newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
+                newParent = newParent.parent()[0];
+              }
             }
             var node = window.nodeToDragAndDrop;
 
-            if (newParent && self.data("sbgnclass") != "complex" && self.data("sbgnclass") != "compartment") {
+            if(newParent && newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
               return;
             }
 
-            if (newParent && self.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))) {
+            if (newParent && newParent.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))) {
               return;
             }
 
