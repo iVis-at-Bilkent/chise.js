@@ -109,7 +109,7 @@ var getExpandCollapseOptions = function() {
 $(document).ready(function () {
   loadSample('neuronal_muscle_signalling.xml', function() {
     $(document).keydown(function (e) {
-        if (e.ctrlKey && e.target.nodeName === 'BODY') {
+        if (numberInputUtilities.isCtrlOrCommandPressed(e)) {
             window.ctrlKeyDown = true;
           }
     });
