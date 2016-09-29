@@ -116,21 +116,7 @@ var addRemoveActionFunctions = {
     var newCompound;
 
     if (param.firstTime) {
-      var eles = cy.add({
-        group: "nodes",
-        data: {
-          sbgnclass: param.compundType,
-          parent: oldParentId,
-          sbgnbbox: {
-          },
-          sbgnstatesandinfos: [],
-          ports: []
-        }
-      });
-
-      newCompound = eles[eles.length - 1];
-      newCompound._private.data.sbgnbbox.h = newCompound.height();
-      newCompound._private.data.sbgnbbox.w = newCompound.width();
+      newCompound = addRemoveUtilities.addNode(undefined, undefined, param.compundType, oldParentId, true);
     }
     else {
       newCompound = param.removedCompund.restore();
