@@ -99,6 +99,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node:selected")
     .css({
+      'border-color': '#d67614',
       'target-arrow-color': '#000',
       'text-outline-color': '#000'})
     .selector("node:active")
@@ -245,7 +246,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     })
     .selector("node.changeBorderColor:selected")
     .css({
-    //  'border-color': '#d67614'
+      'border-color': '#d67614'
     })
     .selector("edge.changeLineColor")
     .css({
@@ -340,13 +341,13 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.expandCollapse(getExpandCollapseOptions());
         
-        cy.autopanOnDrag();
+        //cy.autopanOnDrag();
         
         var contextMenus = cy.contextMenus({
           menuItemClasses: ['customized-context-menus-menu-item']
         });
         
-        cy.edgeBendEditing({
+        /*cy.edgeBendEditing({
           // this function specifies the positions of bend points
           bendPositionsFunction: function(ele) {
             return ele.data('bendPointPositions');
@@ -355,7 +356,7 @@ var SBGNContainer = Backbone.View.extend({
           undoable: true,
           // title of remove bend point menu item
           removeBendMenuItemTitle: "Delete Bend Point"
-        });
+        });*/
         
         contextMenus.appendMenuItems([
           {
