@@ -341,13 +341,13 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.expandCollapse(getExpandCollapseOptions());
         
-        //cy.autopanOnDrag();
+        cy.autopanOnDrag();
         
         var contextMenus = cy.contextMenus({
           menuItemClasses: ['customized-context-menus-menu-item']
         });
         
-        /*cy.edgeBendEditing({
+        cy.edgeBendEditing({
           // this function specifies the positions of bend points
           bendPositionsFunction: function(ele) {
             return ele.data('bendPointPositions');
@@ -356,7 +356,7 @@ var SBGNContainer = Backbone.View.extend({
           undoable: true,
           // title of remove bend point menu item
           removeBendMenuItemTitle: "Delete Bend Point"
-        });*/
+        });
         
         contextMenus.appendMenuItems([
           {
