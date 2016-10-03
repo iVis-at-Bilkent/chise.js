@@ -224,7 +224,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'source-arrow-color': '#d67614',
       'target-arrow-color': '#d67614'
     })
-    .selector("node.changeBackgroundOpacity")
+    .selector("node.changeBackgroundOpacity[backgroundOpacity]")
     .css({
       'background-opacity': 'data(backgroundOpacity)'
     })
@@ -712,19 +712,18 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        cy.on("mousedown", "node", function () {
+        cy.on("mousedown", "node", function (event) {
           var self = this;
           if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
             enableDragAndDropMode();
-            window.nodeToDragAndDrop = self;
+            window.nodesToDragAndDrop = self.union(cy.nodes(':selected'));
+            window.dragAndDropStartPosition = event.cyPosition;
           }
         });
 
         cy.on("mouseup", function (event) {
           var self = event.cyTarget;
           if (window.dragAndDropModeEnabled) {
-            var nodesData = getNodesData();
-            nodesData.firstTime = true;
             var newParent;
             if (self != cy) {
               newParent = self;
@@ -733,30 +732,47 @@ var SBGNContainer = Backbone.View.extend({
                 newParent = newParent.parent()[0];
               }
             }
-            var node = window.nodeToDragAndDrop;
+            var nodes = window.nodesToDragAndDrop;
 
             if(newParent && newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
               return;
             }
 
-            if (newParent && newParent.data("sbgnclass") == "complex" && !isEPNClass(node.data("sbgnclass"))) {
+            if (newParent && newParent.data("sbgnclass") == "complex") {
+              nodes = nodes.filter(function(i, ele) {
+                return isEPNClass(ele.data("sbgnclass"));
+              });
+            }
+            
+            nodes = nodes.filter(function(i, ele) {
+              if(!newParent) {
+                return ele.data('parent') != null;
+              }
+              return ele.data('parent') !== newParent.id();
+            });
+            
+            if (newParent) {
+              nodes = nodes.difference( newParent.ancestors() );
+            }
+            
+            if(nodes.length === 0) {
               return;
             }
 
             disableDragAndDropMode();
-
-            if (node.parent()[0] == newParent || node._private.data.parent == node.id()) {
-              return;
-            }
+            var parentData = newParent ? newParent.id() : null;
 
             var param = {
-              newParent: newParent,
-              node: node,
-              nodesData: nodesData,
-              posX: event.cyPosition.x,
-              posY: event.cyPosition.y
+              firstTime: true,
+              parentData: parentData, // It keeps the newParentId (Just an id for each nodes for the first time)
+              nodes: nodes,
+              posDiffX: event.cyPosition.x - window.dragAndDropStartPosition.x,
+              posDiffY: event.cyPosition.y - window.dragAndDropStartPosition.y
             };
-
+            
+            window.dragAndDropStartPosition = null;
+            window.nodesToDragAndDrop = null;
+            
             cy.undoRedo().do("changeParent", param);
           }
         });

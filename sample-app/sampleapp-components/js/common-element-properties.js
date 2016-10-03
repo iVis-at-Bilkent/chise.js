@@ -318,7 +318,7 @@ var enableDragAndDropMode = function () {
 
 var disableDragAndDropMode = function () {
   window.dragAndDropModeEnabled = null;
-  window.nodeToDragAndDrop = null;
+  window.nodesToDragAndDrop = null;
   $("#sbgn-network-container canvas").removeClass("target-cursor");
   cy.autolock(false);
   cy.autounselectify(false);

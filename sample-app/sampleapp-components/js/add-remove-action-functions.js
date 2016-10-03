@@ -40,69 +40,60 @@ var addRemoveActionFunctions = {
     return param;
   },
   changeParent: function (param) {
-    //If there is an inner param firstly call the function with it
-    //Inner param is created if the change parent operation requires 
-    //another change parent operation in it.
-    if (param.innerParam) {
-      this.changeParent(param.innerParam);
-    }
-
-    var node = param.node;
-    var oldParentId = node._private.data.parent;
-    var oldParent = node.parent()[0];
-    var newParent = param.newParent;
-    var nodesData = param.nodesData;
     var result = {
-      node: node,
-      newParent: oldParent
     };
+    var nodes = param.nodes;
 
-    result.nodesData = getNodesData();
 
-    //If new parent is not null some checks should be performed
-    if (newParent) {
-      //check if the node was the anchestor of it's new parent 
-      var wasAnchestorOfNewParent = false;
-      var temp = newParent.parent()[0];
-      while (temp != null) {
-        if (temp == node) {
-          wasAnchestorOfNewParent = true;
-          break;
-        }
-        temp = temp.parent()[0];
+    result.posDiffX = -1 * param.posDiffX;
+    result.posDiffY = -1 * param.posDiffY;
+
+    result.parentData = {}; // For undo / redo cases it keeps the previous parent info per node
+
+    // Fill parent data
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      result.parentData[node.id()] = node.data('parent');
+    }
+    
+    var newParentId;
+    
+    if (param.firstTime) {
+      newParentId = param.parentData == undefined ? null : param.parentData;
+      nodes = nodes.move({"parent": newParentId});
+      
+      nodes = nodes.filter(function(i, ele) {
+        return ele.isNode();
+      });
+    }
+    else {
+      var nodesMap = {};
+      
+      for ( var i = 0; i < nodes.length; i++ ) {
+        nodesMap[nodes[i].id()] = true;
       }
-      //if so firstly remove the parent from inside of the node
-      if (wasAnchestorOfNewParent) {
-        var parentOfNewParent = newParent.parent()[0];
-        addRemoveUtilities.changeParent(newParent, newParent._private.data.parent, node._private.data.parent);
-        oldParentId = node._private.data.parent;
-        //We have an internal change parent operation to redo this operation 
-        //we need an inner param to call the function with it at the beginning
-        result.innerParam = {
-          node: newParent,
-          newParent: parentOfNewParent,
-          nodesData: {
-            firstTime: true
-          }
-        };
+      
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        
+        newParentId = param.parentData[node.id()] == undefined ? null : param.parentData[node.id()];
+        node = node.move({"parent": newParentId});
       }
+      
+      nodes = cy.nodes().filter(function(i, ele){
+        return nodesMap[ele.id()];
+      });
     }
 
-    //Change the parent of the node
-    addRemoveUtilities.changeParent(node, oldParentId, newParent ? newParent._private.data.id : undefined);
+    var posDiff = {
+      x: param.posDiffX,
+      y: param.posDiffY
+    };
+    
+    sbgnElementUtilities.moveNodes(posDiff, nodes);
 
-    if (param.posX && param.posY) {
-      var positionDiff = {
-        x: param.posX - node.position('x'),
-        y: param.posY - node.position('y')
-      };
-
-      sbgnElementUtilities.moveNodes(positionDiff, node);
-    }
-
-    cy.nodes().updateCompoundBounds();
-
-    generalActionFunctions.returnToPositionsAndSizesConditionally(nodesData);
+    refreshPaddings();
+    result.nodes = nodes;
 
     return result;
   },
