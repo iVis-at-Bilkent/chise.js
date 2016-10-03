@@ -89,7 +89,19 @@ var addRemoveActionFunctions = {
     sbgnElementUtilities.moveNodes(posDiff, nodes.nodes());
 
     refreshPaddings();
-    result.nodes = nodes;
+    
+    var transferedNodeMap = {};
+    
+    // Map the nodes included in the original node list
+    for ( var i = 0; i < param.nodes.length; i++ ) {
+      var node = param.nodes[i];
+      transferedNodeMap[node.id()] = true;
+    }
+    
+    // We should eleminate the nodes which are not included in orijinal node list
+    result.nodes = nodes.filter(function(i, ele) {
+      return (ele.isEdge() || transferedNodeMap[ele.id()]);
+    });
 
     return result;
   },
