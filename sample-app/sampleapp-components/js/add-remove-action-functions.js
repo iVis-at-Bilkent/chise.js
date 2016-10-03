@@ -42,8 +42,10 @@ var addRemoveActionFunctions = {
   changeParent: function (param) {
     var result = {
     };
-    var nodes = param.nodes;
-
+    
+    // param.nodes is expected to be nodes in first time call but it may include edges as well in undo / redo cases
+    // because of the reason that 'node.move()' returns edges as well (When we eleminate edges the functionality is damaged)
+    var nodes = param.nodes; 
 
     result.posDiffX = -1 * param.posDiffX;
     result.posDiffY = -1 * param.posDiffY;
@@ -61,28 +63,19 @@ var addRemoveActionFunctions = {
     if (param.firstTime) {
       newParentId = param.parentData == undefined ? null : param.parentData;
       nodes = nodes.move({"parent": newParentId});
-      
-      nodes = nodes.filter(function(i, ele) {
-        return ele.isNode();
-      });
     }
     else {
-      var nodesMap = {};
-      
-      for ( var i = 0; i < nodes.length; i++ ) {
-        nodesMap[nodes[i].id()] = true;
-      }
+      var resultingNodes = cy.collection();
       
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         
         newParentId = param.parentData[node.id()] == undefined ? null : param.parentData[node.id()];
         node = node.move({"parent": newParentId});
+        
+        resultingNodes = resultingNodes.add(node);
       }
-      
-      nodes = cy.nodes().filter(function(i, ele){
-        return nodesMap[ele.id()];
-      });
+      nodes = resultingNodes;
     }
 
     var posDiff = {
@@ -90,7 +83,10 @@ var addRemoveActionFunctions = {
       y: param.posDiffY
     };
     
-    sbgnElementUtilities.moveNodes(posDiff, nodes);
+    // Actually the variable 'nodes' is expected to store only nodes but because of the reason that 'node.move()' returns
+    // edges as well it includes both nodes and edges (When we eleminate edges the functionality is damaged) so in this
+    // function call we should use 'nodes.nodes()'
+    sbgnElementUtilities.moveNodes(posDiff, nodes.nodes());
 
     refreshPaddings();
     result.nodes = nodes;
