@@ -758,6 +758,8 @@ var SBGNContainer = Backbone.View.extend({
             if(nodes.length === 0) {
               return;
             }
+            
+            nodes = sbgnElementUtilities.getTopMostNodes(nodes);
 
             disableDragAndDropMode();
             var parentData = newParent ? newParent.id() : null;
