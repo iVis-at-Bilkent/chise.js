@@ -607,7 +607,10 @@ $(document).ready(function () {
         var sbgnclass = element.data("sbgnclass")
         return isEPNClass(sbgnclass);
       });
+      
       selected = sbgnElementUtilities.getTopMostNodes(selected);
+      
+      // All elements should have the same parent
       if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
         return;
       }
@@ -622,7 +625,12 @@ $(document).ready(function () {
     $("#make-compound-compartment").click(function (e) {
       var selected = cy.nodes(":selected");
       selected = sbgnElementUtilities.getTopMostNodes(selected);
-      if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
+      
+      // All elements should have the same parent and the common parent should not be a 'complex'
+      // because the old common parent will be the parent of the new compartment after this operation and
+      // 'complexes' cannot include 'compartments'
+      if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)
+              || cy.nodes(':selected').parent().data('sbgnclass') === 'complex' ) {
         return;
       }
 
