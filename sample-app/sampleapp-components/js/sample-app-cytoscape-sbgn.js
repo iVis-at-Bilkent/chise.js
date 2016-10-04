@@ -849,7 +849,7 @@ var SBGNContainer = Backbone.View.extend({
           inspectorUtilities.handleSBGNInspector();
         });
         
-        cy.on('drag', 'node', function (event) {
+        cy.on('tapend', 'node', function (event) {
           cy.style().update();
         });
 
