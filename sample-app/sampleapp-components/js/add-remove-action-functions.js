@@ -43,9 +43,22 @@ var addRemoveActionFunctions = {
     var result = {
     };
     
-    // param.nodes is expected to be nodes in first time call but it may include edges as well in undo / redo cases
-    // because of the reason that 'node.move()' returns edges as well (When we eleminate edges the functionality is damaged)
     var nodes = param.nodes; 
+    
+    var transferedNodeMap = {};
+    
+    // Map the nodes included in the original node list
+    for ( var i = 0; i < param.nodes.length; i++ ) {
+      var node = param.nodes[i];
+      transferedNodeMap[node.id()] = true;
+    }
+    
+    if(!param.firstTime) {
+      // If it is not the first time get the updated nodes
+      nodes = cy.nodes().filter(function(i, ele) {
+        return (transferedNodeMap[ele.id()]);
+      });
+    }
 
     result.posDiffX = -1 * param.posDiffX;
     result.posDiffY = -1 * param.posDiffY;
@@ -62,20 +75,15 @@ var addRemoveActionFunctions = {
     
     if (param.firstTime) {
       newParentId = param.parentData == undefined ? null : param.parentData;
-      nodes = nodes.move({"parent": newParentId});
+      nodes.move({"parent": newParentId});
     }
     else {
-      var resultingNodes = cy.collection();
-      
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         
         newParentId = param.parentData[node.id()] == undefined ? null : param.parentData[node.id()];
-        node = node.move({"parent": newParentId});
-        
-        resultingNodes = resultingNodes.add(node);
+        node.move({"parent": newParentId});
       }
-      nodes = resultingNodes;
     }
 
     var posDiff = {
@@ -83,25 +91,14 @@ var addRemoveActionFunctions = {
       y: param.posDiffY
     };
     
-    // Actually the variable 'nodes' is expected to store only nodes but because of the reason that 'node.move()' returns
-    // edges as well it includes both nodes and edges (When we eleminate edges the functionality is damaged) so in this
-    // function call we should use 'nodes.nodes()'
-    sbgnElementUtilities.moveNodes(posDiff, nodes.nodes());
+    // We should get the updated nodes to move them
+    result.nodes = cy.nodes().filter(function(i, ele) {
+      return (transferedNodeMap[ele.id()]);
+    });
+    
+    sbgnElementUtilities.moveNodes(posDiff, result.nodes);
 
     refreshPaddings();
-    
-    var transferedNodeMap = {};
-    
-    // Map the nodes included in the original node list
-    for ( var i = 0; i < param.nodes.length; i++ ) {
-      var node = param.nodes[i];
-      transferedNodeMap[node.id()] = true;
-    }
-    
-    // We should eleminate the nodes which are not included in orijinal node list
-    result.nodes = nodes.filter(function(i, ele) {
-      return (ele.isEdge() || transferedNodeMap[ele.id()]);
-    });
 
     return result;
   },
