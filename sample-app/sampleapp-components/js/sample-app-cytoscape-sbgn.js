@@ -135,7 +135,9 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'text-rotation': 'autorotate',
       'text-background-shape': 'rectangle',
       'text-border-opacity': '1',
-      'text-border-width': '1'
+      'text-border-width': '1',
+      'text-background-color': 'white',
+      'text-background-opacity': '1'
     })
     .selector("edge[sbgnclass='consumption'][sbgncardinality > 0]")
     .css({
