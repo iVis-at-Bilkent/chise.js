@@ -241,5 +241,32 @@ var generalActionFunctions = {
     }
     
     return result;
+  },
+  showAndPerformIncrementalLayout: function(param) {
+    var eles = param.eles;
+    
+    var result = {};
+    result.positionAndSizes = generalActionFunctions.getNodePositionsAndSizes();
+    result.eles = eles.showEles();
+    
+    if(param.positionAndSizes) {
+      generalActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
+    }
+    else {
+      triggerIncrementalLayout();
+    }
+    
+    return result;
+  },
+  undoShowAndPerformIncrementalLayout: function(param) {
+    var eles = param.eles;
+    
+    var result = {};
+    result.positionAndSizes = generalActionFunctions.getNodePositionsAndSizes();
+    result.eles = eles.hideEles();
+    
+    generalActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
+    
+    return result;
   }
 };

@@ -93,6 +93,7 @@ var beforePerformLayout = function(){
 
 //A function to trigger incremental layout. Its definition is inside document.ready()
 var triggerIncrementalLayout;
+var triggerIncrementalLayoutAfterExpandCollapse;
 
 var getExpandCollapseOptions = function() {
   return {
@@ -329,9 +330,6 @@ $(document).ready(function () {
     });
 
     triggerIncrementalLayout = function(){
-      if(!sbgnStyleRules['rearrange-after-expand-collapse']) {
-        return;
-      }
       beforePerformLayout();
 
       var preferences = {
@@ -347,8 +345,16 @@ $(document).ready(function () {
       sbgnLayoutProp.applyLayout(preferences, false); // layout must not be undoable
     };
 
+    triggerIncrementalLayoutAfterExpandCollapse = function(){
+      if(!sbgnStyleRules['rearrange-after-expand-collapse']) {
+        return;
+      }
+      
+      triggerIncrementalLayout();
+    };
+
     // set layoutBy option of expand collapse extension
-    cy.setExpandCollapseOption('layoutBy', triggerIncrementalLayout);
+    cy.setExpandCollapseOption('layoutBy', triggerIncrementalLayoutAfterExpandCollapse);
 
     $("body").on("change", "#file-input", function (e) {
       if ($("#file-input").val() == "") {

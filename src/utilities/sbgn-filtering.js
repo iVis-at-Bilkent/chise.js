@@ -16,18 +16,28 @@ var sbgnFiltering = {
 
     getProcessesOfSelected: function(){
         var selectedEles = cy.elements(":selected");
-        selectedEles = this.expandNodes(selectedEles);
-        return selectedEles;
+        return this.getProcessesOfGivenEles(selectedEles);
     },
     
     getNeighboursOfSelected: function(){
         var selectedEles = cy.elements(":selected");
-        selectedEles = selectedEles.add(selectedEles.parents("node[sbgnclass='complex']"));
-        selectedEles = selectedEles.add(selectedEles.descendants());
-        var neighborhoodEles = selectedEles.neighborhood();
-        var elesToHighlight = selectedEles.add(neighborhoodEles);
-        elesToHighlight = elesToHighlight.add(elesToHighlight.descendants());
-        return elesToHighlight;
+        return this.getNeighboursOfGivenEles(selectedEles);
+    },
+    
+    getProcessesOfGivenEles: function(eles){
+        var processesOfGivenEles = eles;
+        processesOfGivenEles = this.expandNodes(processesOfGivenEles);
+        return processesOfGivenEles;
+    },
+    
+    getNeighboursOfGivenEles: function(eles){
+        var neighbourOfGivenEles = eles;
+        neighbourOfGivenEles = neighbourOfGivenEles.add(neighbourOfGivenEles.parents("node[sbgnclass='complex']"));
+        neighbourOfGivenEles = neighbourOfGivenEles.add(neighbourOfGivenEles.descendants());
+        var neighborhoodEles = neighbourOfGivenEles.neighborhood();
+        var result = neighbourOfGivenEles.add(neighborhoodEles);
+        result = result.add(result.descendants());
+        return result;
     },
 
     expandNodes: function(nodesToShow){

@@ -444,6 +444,26 @@ var SBGNContainer = Backbone.View.extend({
               cy.elements().unselect();
               cy.elements('[sbgnclass="' + sbgnclass + '"]').select();
             }
+          },
+          {
+            id: 'ctx-menu-show-hidden-neighbours', 
+            title: 'Show Hidden Neighbours', 
+            selector: 'node', 
+            onClickFunction: function (event) { 
+              // TODO move this content to another function (We should find a suitable code base for it) 
+              // and call that function here
+              var cyTarget = event.cyTarget;
+              var hiddenNeighbours = sbgnFiltering.getNeighboursOfGivenEles(cyTarget).filter(':hidden');
+              if(hiddenNeighbours.length === 0) {
+                return;
+              }
+              
+              var param = {
+                eles: hiddenNeighbours
+              };
+              
+              cy.undoRedo().do("showAndPerformIncrementalLayout", param);
+            }
           }
         ]);
 
