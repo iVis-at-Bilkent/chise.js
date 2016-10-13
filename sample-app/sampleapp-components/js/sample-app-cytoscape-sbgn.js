@@ -450,19 +450,8 @@ var SBGNContainer = Backbone.View.extend({
             title: 'Show Hidden Neighbors', 
             selector: 'node', 
             onClickFunction: function (event) { 
-              // TODO move this content to another function (We should find a suitable code base for it) 
-              // and call that function here
               var cyTarget = event.cyTarget;
-              var hiddenNeighbours = sbgnFiltering.getProcessesOfGivenEles(cyTarget).filter(':hidden');
-              if(hiddenNeighbours.length === 0) {
-                return;
-              }
-              
-              var param = {
-                eles: hiddenNeighbours
-              };
-              
-              cy.undoRedo().do("showAndPerformIncrementalLayout", param);
+              showHiddenNeighbors(cyTarget);
             }
           }
         ]);

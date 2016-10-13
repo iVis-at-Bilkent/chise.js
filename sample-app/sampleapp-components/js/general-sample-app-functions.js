@@ -277,3 +277,16 @@ var nodeResizeEndFunction = function (nodes) {
   nodes.removeClass('noderesized');
   nodes.addClass('noderesized');
 };
+
+var showHiddenNeighbors = function (eles) {
+  var hiddenNeighbours = sbgnFiltering.getProcessesOfGivenEles(eles).filter(':hidden');
+  if (hiddenNeighbours.length === 0) {
+    return;
+  }
+
+  var param = {
+    eles: hiddenNeighbours
+  };
+
+  cy.undoRedo().do("showAndPerformIncrementalLayout", param);
+};

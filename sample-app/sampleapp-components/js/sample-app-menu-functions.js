@@ -506,6 +506,17 @@ $(document).ready(function () {
 
   //    cy.undoRedo().do("showAll", {});
     });
+    
+    $("#show-hidden-neighbors-of-selected").click(function (e) {
+      var selected = cy.nodes(':selected');
+      
+      if (selected.length == 0) {
+        return;
+      }
+      
+      showHiddenNeighbors(selected);
+    });
+
 
     $("#delete-selected-smart").click(function (e) {
       if(cy.$(":selected").length == 0){
