@@ -446,14 +446,14 @@ var SBGNContainer = Backbone.View.extend({
             }
           },
           {
-            id: 'ctx-menu-show-hidden-neighbours', 
-            title: 'Show Hidden Neighbours', 
+            id: 'ctx-menu-show-hidden-neighbors', 
+            title: 'Show Hidden Neighbors', 
             selector: 'node', 
             onClickFunction: function (event) { 
               // TODO move this content to another function (We should find a suitable code base for it) 
               // and call that function here
               var cyTarget = event.cyTarget;
-              var hiddenNeighbours = sbgnFiltering.getNeighboursOfGivenEles(cyTarget).filter(':hidden');
+              var hiddenNeighbours = sbgnFiltering.getProcessesOfGivenEles(cyTarget).filter(':hidden');
               if(hiddenNeighbours.length === 0) {
                 return;
               }
