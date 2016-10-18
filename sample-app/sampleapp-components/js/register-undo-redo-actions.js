@@ -17,7 +17,6 @@ var registerUndoRedoActions = function () {
   ur.action("addEdge", addRemoveActionFunctions.addEdge, addRemoveActionFunctions.removeEdges);
   ur.action("deleteSelected", addRemoveActionFunctions.deleteSelected, addRemoveActionFunctions.restoreSelected);
   ur.action("createCompoundForSelectedNodes", addRemoveActionFunctions.createCompoundForSelectedNodes, addRemoveActionFunctions.removeCompound);
-  ur.action("changeParent", addRemoveActionFunctions.changeParent, addRemoveActionFunctions.changeParent);
 
   // register general actions
   ur.action("resizeNode", generalActionFunctions.resizeNode, generalActionFunctions.resizeNode);

@@ -711,6 +711,9 @@ var SBGNContainer = Backbone.View.extend({
             args.nodes.unselect();
             args.nodes.removeData('tapstarted');
           }
+          else if (actionName === 'changeParent') {
+            refreshPaddings();
+          }
         });
 
         cy.on("afterUndo", function(event, actionName, args){
@@ -719,6 +722,9 @@ var SBGNContainer = Backbone.View.extend({
           if(actionName === 'resize') {
             nodeResizeEndFunction(args.nodes);
           }
+          else if (actionName === 'changeParent') {
+            refreshPaddings();
+          }
         });
 
         cy.on("afterRedo", function(event, actionName, args){
@@ -726,6 +732,9 @@ var SBGNContainer = Backbone.View.extend({
           
           if(actionName === 'resize') {
             nodeResizeEndFunction(args.nodes);
+          }
+          else if (actionName === 'changeParent') {
+            refreshPaddings();
           }
         });
 
