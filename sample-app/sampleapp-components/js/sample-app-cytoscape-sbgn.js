@@ -705,6 +705,12 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on("afterDo", function(event, actionName, args){
           refreshUndoRedoButtonsStatus();
+          
+          if(actionName === 'expand' || actionName === 'collapse') {
+            args.nodes.filter('[tapstarted]').data('selected-by-expand-collapse', true);
+            args.nodes.unselect();
+            args.nodes.removeData('tapstarted');
+          }
         });
 
         cy.on("afterUndo", function(event, actionName, args){
@@ -835,14 +841,19 @@ var SBGNContainer = Backbone.View.extend({
 //        var selectAgain;
         window.firstSelectedNode = null;
         cy.on('select', 'node', function (event) {
+          var node = this;
 //          if (cancelSelection) {
 //            this.unselect();
 //            cancelSelection = null;
 //            selectAgain.select();
 //            selectAgain = null;
 //          }
+          if (node.data('selected-by-expand-collapse')) {
+            node.unselect();
+          }
+
           if (cy.nodes(':selected').filter(':visible').length == 1) {
-            window.firstSelectedNode = this;
+            window.firstSelectedNode = node;
           }
         });
 
@@ -858,6 +869,12 @@ var SBGNContainer = Backbone.View.extend({
 
         cy.on('unselect', function (event) {
           inspectorUtilities.handleSBGNInspector();
+        });
+        
+        cy.on('tapstart', 'node', function (event) {
+          var node = this;
+          cy.nodes().removeData('tapstarted');
+          node.data('tapstarted', true);
         });
         
         cy.on('tapend', 'node', function (event) {

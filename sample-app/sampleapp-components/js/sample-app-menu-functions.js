@@ -701,6 +701,10 @@ $(document).ready(function () {
     });
 
     $("#collapse-selected").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var nodes = cy.nodes(":selected").filter("[expanded-collapsed='expanded']");
       var thereIs = nodes.collapsibleNodes().length > 0;
 
@@ -715,6 +719,10 @@ $(document).ready(function () {
     });
 
     $("#collapse-complexes").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var complexes = cy.nodes("[sbgnclass='complex'][expanded-collapsed='expanded']");
       var thereIs = complexes.collapsibleNodes().length > 0;
 
@@ -735,6 +743,10 @@ $(document).ready(function () {
     });
 
     $("#expand-selected").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var nodes = cy.nodes(":selected").filter("[expanded-collapsed='collapsed']");
       var thereIs = nodes.expandableNodes().length > 0;
 
@@ -749,6 +761,10 @@ $(document).ready(function () {
     });
 
     $("#expand-complexes").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var nodes = cy.nodes(":selected").filter("[sbgnclass='complex'][expanded-collapsed='collapsed']");
       var thereIs = nodes.expandableNodes().length > 0;
 
@@ -769,6 +785,10 @@ $(document).ready(function () {
     });
 
     $("#collapse-all").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var nodes = cy.nodes(':visible').filter("[expanded-collapsed='expanded']");
       var thereIs = nodes.collapsibleNodes().length > 0;
 
@@ -783,6 +803,10 @@ $(document).ready(function () {
     });
 
     $("#expand-all").click(function (e) {
+      // Remove data used to unselect nodes selected by expand-collapse
+      cy.nodes().removeData('selected-by-expand-collapse');
+      cy.nodes().removeData('tapstarted');
+      
       var nodes = cy.nodes(':visible').filter("[expanded-collapsed='collapsed']");
       var thereIs = nodes.expandableNodes().length > 0;
 
