@@ -859,6 +859,7 @@ var SBGNContainer = Backbone.View.extend({
 //          }
           if (node.data('selected-by-expand-collapse')) {
             node.unselect();
+            node.removeData('selected-by-expand-collapse');
           }
 
           if (cy.nodes(':selected').filter(':visible').length == 1) {
