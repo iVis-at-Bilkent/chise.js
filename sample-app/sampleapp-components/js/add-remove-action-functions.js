@@ -45,10 +45,26 @@ var addRemoveActionFunctions = {
    */
   createCompoundForSelectedNodes: function (param) {
     var nodesToMakeCompound = param.nodesToMakeCompound;
-    var oldParentId = nodesToMakeCompound[0].data("parent");
     var newCompound;
 
+    // If this is a redo action refresh the nodes to make compound (We need this because after ele.move() references to eles changes)
+    if (!param.firstTime) {
+      var nodesToMakeCompoundIds = {};
+      
+      nodesToMakeCompound.each(function(i,ele){
+        nodesToMakeCompoundIds[ele.id()] = true;
+      });
+      
+      var allNodes = cy.nodes();
+      
+      nodesToMakeCompound = allNodes.filter(function(i,ele) {
+        return nodesToMakeCompoundIds[ele.id()];
+      });
+    }
+
     if (param.firstTime) {
+      var oldParentId = nodesToMakeCompound[0].data("parent");
+      // The parent of new compound will be the old parent of the nodes to make compound
       newCompound = addRemoveUtilities.addNode(undefined, undefined, param.compundType, oldParentId, true);
     }
     else {
@@ -57,16 +73,19 @@ var addRemoveActionFunctions = {
 
     var newCompoundId = newCompound.id();
 
-    addRemoveUtilities.changeParent(nodesToMakeCompound, oldParentId, newCompoundId);
+    nodesToMakeCompound.move({parent: newCompoundId});
+
+    refreshPaddings();
 
     return newCompound;
   },
   removeCompound: function (compoundToRemove) {
     var compoundId = compoundToRemove.id();
     var newParentId = compoundToRemove.data("parent");
+    newParentId = newParentId === undefined ? null : newParentId;
     var childrenOfCompound = compoundToRemove.children();
 
-    addRemoveUtilities.changeParent(childrenOfCompound, compoundId, newParentId);
+    childrenOfCompound.move({parent: newParentId});
     var removedCompund = compoundToRemove.remove();
 
     var param = {
