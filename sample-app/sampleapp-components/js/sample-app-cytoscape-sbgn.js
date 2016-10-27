@@ -493,7 +493,6 @@ var SBGNContainer = Backbone.View.extend({
           }
         });
 
-        var fixedAspectRatioModeTypes = ["source and sink", "process", "omitted process", "uncertain process", "association", "dissociation", "and", "or", "not"];
         cy.nodeResize({
           padding: 2, // spacing between node and grapples/rectangle
           undoable: true, // and if cy.undoRedo exists
@@ -518,13 +517,9 @@ var SBGNContainer = Backbone.View.extend({
 
           isFixedAspectRatioResizeMode: function (node) {
             var sbgnclass = node.data("sbgnclass");
-            return fixedAspectRatioModeTypes.indexOf(sbgnclass) >= 0;
+            return mustBeSquare(sbgnclass);
           },// with only 4 active grapples (at corners)
           isNoResizeMode: function (node) { return node.is(".noResizeMode, :parent") }, // no active grapples
-          
-          isFixedAspectRatioResizeMode: function(node) {
-            return window.nodeResizeUseAspectRatio;
-          },
 
           cursors: { // See http://www.w3schools.com/cssref/tryit.asp?filename=trycss_cursor
             // May take any "cursor" css property
