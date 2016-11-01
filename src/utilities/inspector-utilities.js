@@ -61,7 +61,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
               + "<span width='" + width / 5 + "'px>@</span>"
               + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable inspector-input-box' style='width: "
               + width / 2.5 + "px;' value='" + stringAfterValueCheck(state.state.variable)
-              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info inspector-input-box' src='sampleapp-images/delete.png'></img></div>");
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info inspector-input-box' src='sample-app/sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
         var param = {
@@ -93,7 +93,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
       var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label inspector-input-box' style='width: "
               + total + "px;' value='" + stringAfterValueCheck(state.label.text)
-              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sampleapp-images/delete.png'></img></div>");
+              + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sample-app/sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
         var param = {
@@ -122,8 +122,8 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
     $(".just-added-inspector-input").data("state", state);
     $(".just-added-inspector-input").removeClass("just-added-inspector-input");
   }
-  $("#inspector-state-variables").append("<img id='inspector-add-state-variable' src='sampleapp-images/add.png'/>");
-  $("#inspector-unit-of-informations").append("<img id='inspector-add-unit-of-information' src='sampleapp-images/add.png'/>");
+  $("#inspector-state-variables").append("<img id='inspector-add-state-variable' src='sample-app/sampleapp-images/add.png'/>");
+  $("#inspector-unit-of-informations").append("<img id='inspector-add-unit-of-information' src='sample-app/sampleapp-images/add.png'/>");
 
   $("#inspector-add-state-variable").click(function () {
     var obj = {};
@@ -273,7 +273,7 @@ inspectorUtilities.handleSBGNInspector = function () {
             title = "lock aspect ratio";
           }
           
-          html += "<img id='inspector-node-sizes-aspect-ratio' style='vertical-align: top; margin-left: 5px;' src='sampleapp-images/";
+          html += "<img id='inspector-node-sizes-aspect-ratio' style='vertical-align: top; margin-left: 5px;' src='sample-app/sampleapp-images/";
           html += imageName;
           html += "'";
           
@@ -508,7 +508,7 @@ inspectorUtilities.handleSBGNInspector = function () {
           title = "lock aspect ratio";
         }
         
-        $(this).attr('src', 'sampleapp-images/' + imageName);
+        $(this).attr('src', 'sample-app/sampleapp-images/' + imageName);
         $(this).attr('title', title);
         
         cy.style().update();

@@ -149,7 +149,7 @@ body {
 }
 
 .target-cursor {
-    cursor: url(../../sampleapp-images/drag-target.cur), pointer!important;
+    cursor: url(../../sample-app/sampleapp-images/drag-target.cur), pointer!important;
 }
 
 #sbgn-inspector-and-canvas {
