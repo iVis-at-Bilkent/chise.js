@@ -4,9 +4,9 @@ var easyCreationActionFunctions = {
     var eles;
 
     if (firstTime) {
-      var defaultMacromoleculProperties = addRemoveUtilities.defaultsMap["macromolecule"];
+      var defaultMacromoleculProperties = sbgnElementUtilities.defaultSizes["macromolecule"];
       var templateType = param.templateType;
-      var processWidth = addRemoveUtilities.defaultsMap[templateType] ? addRemoveUtilities.defaultsMap[templateType].width : 50;
+      var processWidth = sbgnElementUtilities.defaultSizes[templateType] ? sbgnElementUtilities.defaultSizes[templateType].width : 50;
       var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
       var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
       var processPosition = param.processPosition;
@@ -26,7 +26,7 @@ var easyCreationActionFunctions = {
       }
 
       //Create the process in template type
-      var process = addRemoveUtilities.addNode(processPosition.x, processPosition.y, templateType);
+      var process = sbgnElementUtilities.addNode(processPosition.x, processPosition.y, templateType);
       process.data('justAdded', true);
 
       //Define the starting y position
@@ -34,17 +34,17 @@ var easyCreationActionFunctions = {
 
       //Create the free macromolecules
       for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = addRemoveUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+        var newNode = sbgnElementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
         newNode.data('justAdded', true);
         newNode.data('sbgnlabel', macromoleculeList[i]);
 
         //create the edge connected to the new macromolecule
         var newEdge;
         if (templateType === 'association') {
-          newEdge = addRemoveUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+          newEdge = sbgnElementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
         }
         else {
-          newEdge = addRemoveUtilities.addEdge(process.id(), newNode.id(), 'production');
+          newEdge = sbgnElementUtilities.addEdge(process.id(), newNode.id(), 'production');
         }
 
         newEdge.data('justAdded', true);
@@ -55,7 +55,7 @@ var easyCreationActionFunctions = {
 
       //Create the complex including macromolecules inside of it
       //Temprorarily add it to the process position we will move it according to the last size of it
-      var complex = addRemoveUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+      var complex = sbgnElementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
       complex.data('justAdded', true);
       complex.data('justAddedLayoutNode', true);
 
@@ -67,16 +67,16 @@ var easyCreationActionFunctions = {
       //create the edge connnected to the complex
       var edgeOfComplex;
       if (templateType === 'association') {
-        edgeOfComplex = addRemoveUtilities.addEdge(process.id(), complex.id(), 'production');
+        edgeOfComplex = sbgnElementUtilities.addEdge(process.id(), complex.id(), 'production');
       }
       else {
-        edgeOfComplex = addRemoveUtilities.addEdge(complex.id(), process.id(), 'consumption');
+        edgeOfComplex = sbgnElementUtilities.addEdge(complex.id(), process.id(), 'consumption');
       }
       edgeOfComplex.data('justAdded', true);
 
       //Create the macromolecules inside the complex
       for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = addRemoveUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
+        var newNode = sbgnElementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
         newNode.data('justAdded', true);
         newNode.data('sbgnlabel', macromoleculeList[i]);
         newNode.data('justAddedLayoutNode', true);

@@ -1,7 +1,43 @@
+var defaultSbgnStyleRules = {
+  'compound-padding': 10,
+  'dynamic-label-size': 'regular',
+  'fit-labels-to-nodes': false,
+  'rearrange-after-expand-collapse': true,
+  'tiling-padding-vertical': 20,
+  'tiling-padding-horizontal': 20,
+  'animate-on-drawing-changes': true,
+  'adjust-node-label-font-size-automatically': false,
+  'show-grid': false,
+  'snap-to-grid': false,
+  'discrete-drag': false,
+  'grid-size': 20,
+  'auto-resize-nodes': false,
+  'show-alignment-guidelines': true,
+  'guideline-tolerance': 2.0,
+  'guideline-color': "#0B9BCD"
+};
+
+var sbgnStyleRules = _.clone(this.defaultSbgnStyleRules);
+
 //Override String endsWith method for IE
 String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+function enableDragAndDropMode() {
+  window.dragAndDropModeEnabled = true;
+  $("#sbgn-network-container canvas").addClass("target-cursor");
+  cy.autolock(true);
+  cy.autounselectify(true);
+}
+
+function disableDragAndDropMode() {
+  window.dragAndDropModeEnabled = null;
+  window.nodesToDragAndDrop = null;
+  $("#sbgn-network-container canvas").removeClass("target-cursor");
+  cy.autolock(false);
+  cy.autounselectify(false);
+}
 
 function dynamicResize()
 {
@@ -70,11 +106,11 @@ var initilizeUnselectedDataOfElements = function () {
     var edge = edges[i];
     edge.data("lineColor", edge.css('line-color'));
   }
-  
+
   nodes.addClass('changeBorderColor');
   nodes.addClass('changeBackgroundOpacity');
   edges.addClass('changeLineColor');
-  
+
   cy.endBatch();
 };
 
@@ -188,7 +224,7 @@ var nodeQtipFunction = function (node) {
  */
 var refreshUndoRedoButtonsStatus = function () {
   var ur = cy.undoRedo();
-  
+
   if (ur.isUndoStackEmpty()) {
     $("#undo-last-action").parent("li").addClass("disabled");
   }
@@ -204,7 +240,7 @@ var refreshUndoRedoButtonsStatus = function () {
   }
 };
 
-var resetUndoRedoButtons = function() {
+var resetUndoRedoButtons = function () {
   $("#undo-last-action").parent("li").addClass("disabled");
   $("#redo-last-action").parent("li").addClass("disabled");
 };
@@ -279,7 +315,7 @@ var nodeResizeEndFunction = function (nodes) {
 };
 
 var showHiddenNeighbors = function (eles) {
-  var hiddenNeighbours = sbgnFiltering.getProcessesOfGivenEles(eles).filter(':hidden');
+  var hiddenNeighbours = sbgnElementUtilities.getProcessesOfGivenEles(eles).filter(':hidden');
   if (hiddenNeighbours.length === 0) {
     return;
   }

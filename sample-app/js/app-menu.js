@@ -519,15 +519,14 @@ $(document).ready(function () {
 
 
     $("#delete-selected-smart").click(function (e) {
-      if(cy.$(":selected").length == 0){
+      var sel = cy.$(":selected");
+      if (sel.length == 0) {
         return;
       }
-
-      var param = {
-        firstTime: true
-      };
-
-      cy.undoRedo().do("deleteSelected", param);
+      cy.undoRedo().do("deleteElesSmart", {
+        firstTime: true,
+        eles: sel
+      });
     });
 
     $("#delete-selected-smart-icon").click(function (e) {
@@ -535,7 +534,7 @@ $(document).ready(function () {
     });
 
     $("#neighbors-of-selected").click(function (e) {
-      var elesToHighlight = sbgnFiltering.getNeighboursOfSelected();
+      var elesToHighlight = sbgnElementUtilities.getNeighboursOfSelected();
 
       if(elesToHighlight.length === 0) {
         return;
@@ -575,7 +574,7 @@ $(document).ready(function () {
 
       nodesToSelect.select();
 
-      var nodesToHighlight = sbgnFiltering.getProcessesOfSelected();
+      var nodesToHighlight = sbgnElementUtilities.getProcessesOfSelected();
       cy.undoRedo().do("highlight", nodesToHighlight);
     });
 
@@ -590,7 +589,7 @@ $(document).ready(function () {
     });
 
     $("#processes-of-selected").click(function (e) {
-      var elesToHighlight = sbgnFiltering.getProcessesOfSelected();
+      var elesToHighlight = sbgnElementUtilities.getProcessesOfSelected();
 
       if(elesToHighlight.length === 0) {
         return;
@@ -608,7 +607,7 @@ $(document).ready(function () {
 
     $("#remove-highlights").click(function (e) {
 
-      if (sbgnFiltering.noneIsNotHighlighted()){
+      if (sbgnElementUtilities.noneIsNotHighlighted()){
         return;
       }
 
@@ -622,7 +621,7 @@ $(document).ready(function () {
     $("#make-compound-complex").click(function (e) {
       var selected = cy.nodes(":selected").filter(function (i, element) {
         var sbgnclass = element.data("sbgnclass")
-        return isEPNClass(sbgnclass);
+        return sbgnElementUtilities.isEPNClass(sbgnclass);
       });
       
       selected = sbgnElementUtilities.getTopMostNodes(selected);
@@ -673,7 +672,9 @@ $(document).ready(function () {
       if(selectedEles.length == 0){
         return;
       }
-      cy.undoRedo().do("removeEles", selectedEles);
+      cy.undoRedo().do("deleteElesSimple", {
+        eles: selectedEles
+      });
     });
 
     $("#delete-selected-simple-icon").click(function (e) {

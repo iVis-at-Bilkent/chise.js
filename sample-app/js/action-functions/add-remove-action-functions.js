@@ -3,39 +3,41 @@ var addRemoveActionFunctions = {
     var result;
     if (param.firstTime) {
       var newNode = param.newNode;
-      result = addRemoveUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
+      result = sbgnElementUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
     }
     else {
-      result = addRemoveUtilities.restoreEles(param);
+      result = sbgnElementUtilities.restoreEles(param);
     }
     return result;
   },
   removeNodes: function (nodesToBeDeleted) {
-    return addRemoveUtilities.removeNodes(nodesToBeDeleted);
+    return sbgnElementUtilities.removeNodes(nodesToBeDeleted);
   },
-  removeEles: function (elesToBeRemoved) {
-    return addRemoveUtilities.removeEles(elesToBeRemoved);
+  deleteElesSimple: function (param) {
+    return sbgnElementUtilities.deleteElesSimple(param.eles);
   },
   restoreEles: function (eles) {
-    return addRemoveUtilities.restoreEles(eles);
+    var param = {};
+    param.eles = sbgnElementUtilities.restoreEles(eles);
+    return param;
   },
   addEdge: function (param) {
     var result;
     if (param.firstTime) {
       var newEdge = param.newEdge;
-      result = addRemoveUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
+      result = sbgnElementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
     }
     else {
-      result = addRemoveUtilities.restoreEles(param);
+      result = sbgnElementUtilities.restoreEles(param);
     }
     return result;
   },
   removeEdges: function (edgesToBeDeleted) {
-    return addRemoveUtilities.removeEdges(edgesToBeDeleted);
+    return sbgnElementUtilities.removeEdges(edgesToBeDeleted);
   },
   restoreSelected: function (eles) {
     var param = {};
-    param.eles = addRemoveUtilities.restoreEles(eles);
+    param.eles = sbgnElementUtilities.restoreEles(eles);
     param.firstTime = false;
     return param;
   },
@@ -65,7 +67,7 @@ var addRemoveActionFunctions = {
     if (param.firstTime) {
       var oldParentId = nodesToMakeCompound[0].data("parent");
       // The parent of new compound will be the old parent of the nodes to make compound
-      newCompound = addRemoveUtilities.addNode(undefined, undefined, param.compundType, oldParentId, true);
+      newCompound = sbgnElementUtilities.addNode(undefined, undefined, param.compundType, oldParentId, true);
     }
     else {
       newCompound = param.removedCompund.restore();
@@ -95,10 +97,10 @@ var addRemoveActionFunctions = {
 
     return param;
   },
-  deleteSelected: function (param) {
+  deleteElesSmart: function (param) {
     if (param.firstTime) {
-      return sbgnFiltering.deleteSelected();
+      return sbgnElementUtilities.deleteElesSmart(param.eles);
     }
-    return addRemoveUtilities.removeElesSimply(param.eles);
+    return sbgnElementUtilities.removeElesSimply(param.eles);
   },
 };

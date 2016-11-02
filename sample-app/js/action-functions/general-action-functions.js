@@ -72,7 +72,7 @@ var generalActionFunctions = {
         }
         else {
           var ratio = undefined;
-          var eleMustBeSquare = mustBeSquare(node.data('sbgnclass'));
+          var eleMustBeSquare = sbgnElementUtilities.mustBeSquare(node.data('sbgnclass'));
 
           // Note that both param.width and param.height cannot be truthy
           if (param.width) {

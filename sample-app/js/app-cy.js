@@ -27,7 +27,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
     .css({
       'content': function (ele) {
-        return getElementContent(ele);
+        return sbgnElementUtilities.getElementContent(ele);
       },
       'text-valign': 'center',
       'text-halign': 'center'
@@ -35,7 +35,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node[sbgnclass]")
     .css({
       'shape': function (ele) {
-        return getCyShape(ele);
+        return sbgnElementUtilities.getCyShape(ele);
       },
       'font-weight': function(ele) {
         return ele.data('fontweight') ? ele.data('fontweight') : sbgnElementUtilities.defaultFontProperties.fontweight;
@@ -47,7 +47,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         return ele.data('fontstyle') ? ele.data('fontstyle') : sbgnElementUtilities.defaultFontProperties.fontstyle;
       },
       'font-size': function (ele) {
-        var labelsize = getLabelTextSize(ele);
+        var labelsize = sbgnElementUtilities.getLabelTextSize(ele);
         if(labelsize) {
           return labelsize;
         }
@@ -73,7 +73,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'text-valign': 'bottom',
       'text-halign': 'center',
       'content': function(ele){
-        return getElementContent(ele);
+        return sbgnElementUtilities.getElementContent(ele);
       }
     })
     .selector("node[sbgnclass='compartment']")
@@ -82,7 +82,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'background-opacity': 0,
 //      'background-color': '#FFFFFF',
       'content': function(ele){
-        return getElementContent(ele);
+        return sbgnElementUtilities.getElementContent(ele);
       },
       'text-valign': 'bottom',
       'text-halign': 'center'
@@ -146,7 +146,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       },
       'source-text-margin-y': '-10',
       'source-text-offset': function(ele) {
-        return getCardinalityDistance(ele);
+        return sbgnElementUtilities.getCardinalityDistance(ele);
       }
     })
     .selector("edge[sbgnclass='production'][sbgncardinality > 0]")
@@ -156,13 +156,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       },
       'target-text-margin-y': '-10',
       'target-text-offset': function(ele) {
-        return getCardinalityDistance(ele);
+        return sbgnElementUtilities.getCardinalityDistance(ele);
       }
     })
     .selector("edge[sbgnclass]")
     .css({
       'target-arrow-shape': function (ele) {
-        return getCyArrowShape(ele);
+        return sbgnElementUtilities.getCyArrowShape(ele);
       },
       'source-arrow-shape': 'none'
     })
@@ -233,13 +233,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node.changeLabelTextSize")
     .css({
       'font-size': function (ele) {
-        return getLabelTextSize(ele);
+        return sbgnElementUtilities.getLabelTextSize(ele);
       }
     })
     .selector("node.changeContent")
     .css({
       'content': function (ele) {
-        return getElementContent(ele);
+        return sbgnElementUtilities.getElementContent(ele);
       }
     })
     .selector("node.changeBorderColor")
@@ -374,7 +374,9 @@ var SBGNContainer = Backbone.View.extend({
             title: 'Delete',
             selector: 'node, edge', 
             onClickFunction: function (event) { 
-              cy.undoRedo().do("removeEles", event.cyTarget);
+              cy.undoRedo().do("deleteElesSimple", {
+                eles: event.cyTarget
+              });
             }
           },
           {
@@ -517,7 +519,7 @@ var SBGNContainer = Backbone.View.extend({
 
           isFixedAspectRatioResizeMode: function (node) {
             var sbgnclass = node.data("sbgnclass");
-            return mustBeSquare(sbgnclass);
+            return sbgnElementUtilities.mustBeSquare(sbgnclass);
           },// with only 4 active grapples (at corners)
           isNoResizeMode: function (node) { return node.is(".noResizeMode, :parent") }, // no active grapples
 
@@ -555,8 +557,8 @@ var SBGNContainer = Backbone.View.extend({
             if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
                 || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
                 || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
-              if (!isEPNClass(sourceClass) || !isPNClass(targetClass)) {
-                if (isPNClass(sourceClass) && isEPNClass(targetClass)) {
+              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
+                if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
                   var temp = source;
                   source = target;
@@ -568,8 +570,8 @@ var SBGNContainer = Backbone.View.extend({
               }
             }
             else if (sbgnclass == 'production') {
-              if (!isPNClass(sourceClass) || !isEPNClass(targetClass)) {
-                if (isEPNClass(sourceClass) && isPNClass(targetClass)) {
+              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
+                if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
                   var temp = source;
                   source = target;
@@ -582,8 +584,8 @@ var SBGNContainer = Backbone.View.extend({
             }
             else if (sbgnclass == 'logic arc') {
               var invalid = false;
-              if (!isEPNClass(sourceClass) || !isLogicalOperator(targetClass)) {
-                if (isLogicalOperator(sourceClass) && isEPNClass(targetClass)) {
+              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isLogicalOperator(targetClass)) {
+                if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
                   //If just the direction is not valid reverse the direction
                   var temp = source;
                   source = target;
@@ -595,7 +597,7 @@ var SBGNContainer = Backbone.View.extend({
               }
               
               // the case that both sides are logical operators are valid too
-              if(isLogicalOperator(sourceClass) && isLogicalOperator(targetClass)) {
+              if(sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isLogicalOperator(targetClass)) {
                 invalid = false;
               }
               
@@ -604,8 +606,8 @@ var SBGNContainer = Backbone.View.extend({
               }
             }
             else if (sbgnclass == 'equivalence arc') {
-              if (!(isEPNClass(sourceClass) && convenientToEquivalence(targetClass))
-                  && !(isEPNClass(targetClass) && convenientToEquivalence(sourceClass))) {
+              if (!(sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.convenientToEquivalence(targetClass))
+                  && !(sbgnElementUtilities.isEPNClass(targetClass) && sbgnElementUtilities.convenientToEquivalence(sourceClass))) {
                 return;
               }
             }
@@ -761,7 +763,7 @@ var SBGNContainer = Backbone.View.extend({
 
             if (newParent && newParent.data("sbgnclass") == "complex") {
               nodes = nodes.filter(function(i, ele) {
-                return isEPNClass(ele.data("sbgnclass"));
+                return sbgnElementUtilities.isEPNClass(ele.data("sbgnclass"));
               });
             }
             
@@ -918,7 +920,7 @@ var SBGNContainer = Backbone.View.extend({
           if (modeHandler.mode == 'selection-mode') {
             var node = this;
             
-            if (!canHaveSBGNLabel( node )) {
+            if (!sbgnElementUtilities.canHaveSBGNLabel( node )) {
               return;
             }
             
@@ -1617,10 +1619,10 @@ var FontProperties = Backbone.View.extend({
     var self = this;
     var commonProperties = {};
     
-    var commonFontSize = getCommonLabelFontSize(eles);
-    var commonFontWeight = getCommonLabelFontWeight(eles);
-    var commonFontFamily = getCommonLabelFontFamily(eles);
-    var commonFontStyle = getCommonLabelFontStyle(eles);
+    var commonFontSize = sbgnElementUtilities.getCommonLabelFontSize(eles);
+    var commonFontWeight = sbgnElementUtilities.getCommonLabelFontWeight(eles);
+    var commonFontFamily = sbgnElementUtilities.getCommonLabelFontFamily(eles);
+    var commonFontStyle = sbgnElementUtilities.getCommonLabelFontStyle(eles);
     
     if( commonFontSize != null ) {
       commonProperties.fontSize = commonFontSize;

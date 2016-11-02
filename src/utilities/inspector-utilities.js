@@ -57,10 +57,10 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
     var state = stateAndInfos[i];
     if (state.clazz == "state variable") {
       $("#inspector-state-variables").append("<div><input type='text' class='just-added-inspector-input inspector-state-variable-value inspector-input-box' style='width: "
-              + width / 5 + "px;' value='" + stringAfterValueCheck(state.state.value) + "'/>"
+              + width / 5 + "px;' value='" + (state.state.value || '') + "'/>"
               + "<span width='" + width / 5 + "'px>@</span>"
               + "<input type='text' class='just-added-inspector-input inspector-state-variable-variable inspector-input-box' style='width: "
-              + width / 2.5 + "px;' value='" + stringAfterValueCheck(state.state.variable)
+              + width / 2.5 + "px;' value='" + (state.state.variable || '')
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info inspector-input-box' src='sample-app/sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
@@ -92,7 +92,7 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
     else if (state.clazz == "unit of information") {
       var total = width / 1.25;
       $("#inspector-unit-of-informations").append("<div><input type='text' class='just-added-inspector-input inspector-unit-of-information-label inspector-input-box' style='width: "
-              + total + "px;' value='" + stringAfterValueCheck(state.label.text)
+              + total + "px;' value='" + (state.label.text || '')
               + "'/><img width='12px' height='12px' class='just-added-inspector-input inspector-delete-state-and-info' src='sample-app/sampleapp-images/delete.png'></img></div>");
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
@@ -178,16 +178,16 @@ inspectorUtilities.handleSBGNInspector = function () {
   
   var width = $("#sbgn-inspector").width() * 0.45;
   
-  var allNodes = allAreNode(selectedEles);
-  var allEdges = allAreEdge(selectedEles);
+  var allNodes = sbgnElementUtilities.allAreNode(selectedEles);
+  var allEdges = sbgnElementUtilities.allAreEdge(selectedEles);
   
   if (allNodes || allEdges) {
-    var sbgnlabel = getCommonLabel(selectedEles);
+    var sbgnlabel = sbgnElementUtilities.getCommonLabel(selectedEles);
     if (sbgnlabel == null) {
       sbgnlabel = "";
     }
 
-    var classInfo = getCommonSBGNClass(selectedEles);
+    var classInfo = sbgnElementUtilities.getCommonSBGNClass(selectedEles);
     if (classInfo == 'and' || classInfo == 'or' || classInfo == 'not') {
       classInfo = classInfo.toUpperCase();
     }
@@ -221,28 +221,28 @@ inspectorUtilities.handleSBGNInspector = function () {
     if (allNodes) {
       type = "node";
       
-      var borderColor = getCommonBorderColor(selectedEles);
+      var borderColor = sbgnElementUtilities.getCommonBorderColor(selectedEles);
       borderColor = borderColor?borderColor:'#FFFFFF';
       
-      var backgroundColor = getCommonFillColor(selectedEles);
+      var backgroundColor = sbgnElementUtilities.getCommonFillColor(selectedEles);
       backgroundColor = backgroundColor?backgroundColor:'#FFFFFF';
       
-      var borderWidth = getCommonBorderWidth(selectedEles);
+      var borderWidth = sbgnElementUtilities.getCommonBorderWidth(selectedEles);
       
-      var backgroundOpacity = getCommonBackgroundOpacity(selectedEles);
+      var backgroundOpacity = sbgnElementUtilities.getCommonBackgroundOpacity(selectedEles);
       backgroundOpacity = backgroundOpacity?backgroundOpacity:0.5;
       
-      var nodeWidth = getCommonNodeWidth(selectedEles);
+      var nodeWidth = sbgnElementUtilities.getCommonNodeWidth(selectedEles);
 
-      var nodeHeight = getCommonNodeHeight(selectedEles);
+      var nodeHeight = sbgnElementUtilities.getCommonNodeHeight(selectedEles);
       
-      if (allCanHaveSBGNLabel(selectedEles)) {
+      if (sbgnElementUtilities.allCanHaveSBGNLabel(selectedEles)) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Label</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-label' class='inspector-input-box' type='text' style='width: " + width / 1.25 + "px;' value='" + sbgnlabel
               + "'/>" + "</td></tr>";
       }
       
-      if( includesParentElement(selectedEles) ) {
+      if( sbgnElementUtilities.includesParentElement(selectedEles) ) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Width</font>" + "</td><td style='padding-left: 5px;'>"
                 + "<input id='inspector-node-width' class='inspector-input-box float-input' type='text' min='0' style='width: " + buttonwidth + "px;'";
 
@@ -261,7 +261,7 @@ inspectorUtilities.handleSBGNInspector = function () {
 
         html += "/>";
         
-        if( someMustNotBeSquare(selectedEles) ) {
+        if( sbgnElementUtilities.someMustNotBeSquare(selectedEles) ) {
           var imageName;
           var title;
           if(window.nodeResizeUseAspectRatio) {
@@ -307,16 +307,16 @@ inspectorUtilities.handleSBGNInspector = function () {
               + "<input id='inspector-background-opacity' class='inspector-input-box' type='range' step='0.01' min='0' max='1' style='width: " + buttonwidth + "px;' value='" + parseFloat(backgroundOpacity)
               + "'/>" + "</td></tr>"; 
       
-      if (allCanHaveSBGNLabel(selectedEles)) {
+      if (sbgnElementUtilities.allCanHaveSBGNLabel(selectedEles)) {
         html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Font</font>" + "</td><td style='padding-left: 5px;'>"
               + "<label id='inspector-font' class='inspector-input-box' style='width: " + buttonwidth + "px;'>"
               + "..." + "<label/>" + "</td></tr>"; 
       }
       
-      commonStateAndInfos = getCommonStateAndInfos(selectedEles);
+      commonStateAndInfos = sbgnElementUtilities.getCommonStateAndInfos(selectedEles);
       
       if(commonStateAndInfos){
-        if (allCanHaveStateVariable(selectedEles)) {
+        if (sbgnElementUtilities.allCanHaveStateVariable(selectedEles)) {
           fillStateAndInfos = true;
           
           html += "<tr><td colspan='2'><hr class='inspector-divider'></td></tr>";
@@ -324,7 +324,7 @@ inspectorUtilities.handleSBGNInspector = function () {
                   + "<td id='inspector-state-variables' style='padding-left: 5px; width: '" + width + "'></td></tr>";
         }
 
-        if (allCanHaveUnitOfInformation(selectedEles)) {
+        if (sbgnElementUtilities.canHaveUnitOfInformation(selectedEles)) {
           fillStateAndInfos = true;
           
           html += "<tr><td colspan='2'><hr class='inspector-divider'></td></tr>";
@@ -333,12 +333,12 @@ inspectorUtilities.handleSBGNInspector = function () {
         }
       }
       
-      commonIsMultimer = getCommonIsMultimer(selectedEles);
-      commonIsCloned = getCommonIsCloned(selectedEles);
-//      multimerCheck = ( commonIsMultimer !== null ) && allCanBeMultimer(selectedEles);
-//      clonedCheck = ( commonIsCloned !== null ) && allCanBeCloned(selectedEles);
-      multimerCheck = allCanBeMultimer(selectedEles);
-      clonedCheck = allCanBeCloned(selectedEles);
+      commonIsMultimer = sbgnElementUtilities.getCommonIsMultimer(selectedEles);
+      commonIsCloned = sbgnElementUtilities.getCommonIsCloned(selectedEles);
+//      multimerCheck = ( commonIsMultimer !== null ) && sbgnElementUtilities.allCanBeMultimer(selectedEles);
+//      clonedCheck = ( commonIsCloned !== null ) && sbgnElementUtilities.allCanBeCloned(selectedEles);
+      multimerCheck = sbgnElementUtilities.allCanBeMultimer(selectedEles);
+      clonedCheck = sbgnElementUtilities.allCanBeCloned(selectedEles);
       
       multimerCheck = multimerCheck?multimerCheck:false;
       clonedCheck = clonedCheck?clonedCheck:false;
@@ -360,10 +360,10 @@ inspectorUtilities.handleSBGNInspector = function () {
     else {
       type = "edge";
       
-      var commonLineColor = getCommonLineColor(selectedEles);
+      var commonLineColor = sbgnElementUtilities.getCommonLineColor(selectedEles);
       commonLineColor = commonLineColor?commonLineColor:'#FFFFFF';
       
-      var commonLineWidth = getCommonLineWidth(selectedEles);
+      var commonLineWidth = sbgnElementUtilities.getCommonLineWidth(selectedEles);
       
       html += "<tr><td style='width: " + width + "px; text-align:right; padding-right: 5px;'>" + "<font class='sbgn-label-font'>Fill Color</font>" + "</td><td style='padding-left: 5px;'>"
               + "<input id='inspector-line-color' class='inspector-input-box' type='color' style='width: " + buttonwidth + "px;' value='" + commonLineColor
@@ -378,8 +378,8 @@ inspectorUtilities.handleSBGNInspector = function () {
       
       html += "/>" + "</td></tr>";
       
-      if (allCanHaveSBGNCardinality(selectedEles)) {
-        var cardinality = getCommonSBGNCardinality(selectedEles);
+      if (sbgnElementUtilities.canHaveSBGNCardinality(selectedEles)) {
+        var cardinality = sbgnElementUtilities.getCommonSBGNCardinality(selectedEles);
         commonSBGNCardinality = cardinality;
         
         if (cardinality <= 0) {
@@ -448,10 +448,10 @@ inspectorUtilities.handleSBGNInspector = function () {
           sbgnclass = sbgnclass.replace(' multimer', '');
           multimer = true;
         }
-        if (addRemoveUtilities.defaultsMap[sbgnclass] == null) {
-          addRemoveUtilities.defaultsMap[sbgnclass] = {};
+        if (sbgnElementUtilities.defaultSizes[sbgnclass] == null) {
+          sbgnElementUtilities.defaultSizes[sbgnclass] = {};
         }
-        var defaults = addRemoveUtilities.defaultsMap[sbgnclass];
+        var defaults = sbgnElementUtilities.defaultSizes[sbgnclass];
         defaults.width = selected.width();
         defaults.height = selected.height();
         defaults.sbgnclonemarker = selected._private.data.sbgnclonemarker;
@@ -594,10 +594,10 @@ inspectorUtilities.handleSBGNInspector = function () {
     }
     else {
       $('#inspector-set-as-default-button').on('click', function () {
-        if (addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] == null) {
-          addRemoveUtilities.defaultsMap[selected.data('sbgnclass')] = {};
+        if (sbgnElementUtilities.defaultSizes[selected.data('sbgnclass')] == null) {
+          sbgnElementUtilities.defaultSizes[selected.data('sbgnclass')] = {};
         }
-        var defaults = addRemoveUtilities.defaultsMap[selected.data('sbgnclass')];
+        var defaults = sbgnElementUtilities.defaultSizes[selected.data('sbgnclass')];
         defaults['line-color'] = selected.data('lineColor');
         defaults['width'] = selected.css('width');
       });
