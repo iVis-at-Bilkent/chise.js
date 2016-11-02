@@ -371,7 +371,7 @@ $(document).ready(function () {
 
     $("#node-legend").click(function (e) {
       e.preventDefault();
-      fancyboxUtilities.openFancybox($("#node-legend-template"), {
+      dialogUtilities.openFancybox($("#node-legend-template"), {
                 'autoDimensions': false,
                 'width': 504,
                 'height': 325
@@ -396,7 +396,7 @@ $(document).ready(function () {
 
     $("#edge-legend").click(function (e) {
       e.preventDefault();
-      fancyboxUtilities.openFancybox($("#edge-legend-template"), {
+      dialogUtilities.openFancybox($("#edge-legend-template"), {
                 'autoDimensions': false,
                 'width': 325,
                 'height': 285
@@ -405,7 +405,7 @@ $(document).ready(function () {
 
     $("#quick-help").click(function (e) {
       e.preventDefault();
-      fancyboxUtilities.openFancybox($("#quick-help-template"), {
+      dialogUtilities.openFancybox($("#quick-help-template"), {
                 'autoDimensions': false,
                 'width': 420,
                 'height': "auto"
@@ -420,7 +420,7 @@ $(document).ready(function () {
 
     $("#about").click(function (e) {
       e.preventDefault();
-      fancyboxUtilities.openFancybox($("#about-template"), {
+      dialogUtilities.openFancybox($("#about-template"), {
                 'autoDimensions': false,
                 'width': 300,
                 'height': 250
