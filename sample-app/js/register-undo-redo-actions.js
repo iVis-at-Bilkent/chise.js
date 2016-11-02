@@ -12,29 +12,29 @@ var registerUndoRedoActions = function () {
   });
 
   // register add remove actions
-  ur.action("addNode", addRemoveActionFunctions.addNode, addRemoveActionFunctions.removeNodes);
-  ur.action("deleteElesSimple", addRemoveActionFunctions.deleteElesSimple, addRemoveActionFunctions.restoreEles);
-  ur.action("addEdge", addRemoveActionFunctions.addEdge, addRemoveActionFunctions.removeEdges);
-  ur.action("deleteElesSmart", addRemoveActionFunctions.deleteElesSmart, addRemoveActionFunctions.restoreSelected);
-  ur.action("createCompoundForSelectedNodes", addRemoveActionFunctions.createCompoundForSelectedNodes, addRemoveActionFunctions.removeCompound);
+  ur.action("addNode", undoRedoActionFunctions.addNode, undoRedoActionFunctions.removeNodes);
+  ur.action("deleteElesSimple", undoRedoActionFunctions.deleteElesSimple, undoRedoActionFunctions.restoreEles);
+  ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.removeEdges);
+  ur.action("deleteElesSmart", undoRedoActionFunctions.deleteElesSmart, undoRedoActionFunctions.restoreSelected);
+  ur.action("createCompoundForSelectedNodes", undoRedoActionFunctions.createCompoundForSelectedNodes, undoRedoActionFunctions.removeCompound);
 
   // register general actions
-  ur.action("resizeNode", generalActionFunctions.resizeNode, generalActionFunctions.resizeNode);
-  ur.action("changeNodeLabel", generalActionFunctions.changeNodeLabel, generalActionFunctions.changeNodeLabel);
-  ur.action("changeStyleData", generalActionFunctions.changeStyleData, generalActionFunctions.changeStyleData);
-  ur.action("changeStyleCss", generalActionFunctions.changeStyleCss, generalActionFunctions.changeStyleCss);
-  ur.action("changeBendPoints", generalActionFunctions.changeBendPoints, generalActionFunctions.changeBendPoints);
-  ur.action("changeFontProperties", generalActionFunctions.changeFontProperties, generalActionFunctions.changeFontProperties);
-  ur.action("showAndPerformIncrementalLayout", generalActionFunctions.showAndPerformIncrementalLayout, generalActionFunctions.undoShowAndPerformIncrementalLayout);
+  ur.action("resizeNode", undoRedoActionFunctions.resizeNode, undoRedoActionFunctions.resizeNode);
+  ur.action("changeNodeLabel", undoRedoActionFunctions.changeNodeLabel, undoRedoActionFunctions.changeNodeLabel);
+  ur.action("changeStyleData", undoRedoActionFunctions.changeStyleData, undoRedoActionFunctions.changeStyleData);
+  ur.action("changeStyleCss", undoRedoActionFunctions.changeStyleCss, undoRedoActionFunctions.changeStyleCss);
+  ur.action("changeBendPoints", undoRedoActionFunctions.changeBendPoints, undoRedoActionFunctions.changeBendPoints);
+  ur.action("changeFontProperties", undoRedoActionFunctions.changeFontProperties, undoRedoActionFunctions.changeFontProperties);
+  ur.action("showAndPerformIncrementalLayout", undoRedoActionFunctions.showAndPerformIncrementalLayout, undoRedoActionFunctions.undoShowAndPerformIncrementalLayout);
 
   // register SBGN actions
-  ur.action("addStateAndInfo", SBGNActionFunctions.addStateAndInfo, SBGNActionFunctions.removeStateAndInfo);
-  ur.action("changeStateVariable", SBGNActionFunctions.changeStateVariable, SBGNActionFunctions.changeStateVariable);
-  ur.action("changeUnitOfInformation", SBGNActionFunctions.changeUnitOfInformation, SBGNActionFunctions.changeUnitOfInformation);
-  ur.action("changeIsMultimerStatus", SBGNActionFunctions.changeIsMultimerStatus, SBGNActionFunctions.changeIsMultimerStatus);
-  ur.action("changeIsCloneMarkerStatus", SBGNActionFunctions.changeIsCloneMarkerStatus, SBGNActionFunctions.changeIsCloneMarkerStatus);
-  ur.action("removeStateAndInfo", SBGNActionFunctions.removeStateAndInfo, SBGNActionFunctions.addStateAndInfo);
+  ur.action("addStateAndInfo", undoRedoActionFunctions.addStateAndInfo, undoRedoActionFunctions.removeStateAndInfo);
+  ur.action("changeStateVariable", undoRedoActionFunctions.changeStateVariable, undoRedoActionFunctions.changeStateVariable);
+  ur.action("changeUnitOfInformation", undoRedoActionFunctions.changeUnitOfInformation, undoRedoActionFunctions.changeUnitOfInformation);
+  ur.action("changeIsMultimerStatus", undoRedoActionFunctions.changeIsMultimerStatus, undoRedoActionFunctions.changeIsMultimerStatus);
+  ur.action("changeIsCloneMarkerStatus", undoRedoActionFunctions.changeIsCloneMarkerStatus, undoRedoActionFunctions.changeIsCloneMarkerStatus);
+  ur.action("removeStateAndInfo", undoRedoActionFunctions.removeStateAndInfo, undoRedoActionFunctions.addStateAndInfo);
   
   // register easy creation actions
-  ur.action("createTemplateReaction", easyCreationActionFunctions.createTemplateReaction, addRemoveActionFunctions.removeEles);
+  ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.removeEles);
 };
