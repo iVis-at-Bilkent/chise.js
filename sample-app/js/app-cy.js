@@ -1,3 +1,25 @@
+var sbgnNetworkContainer;
+
+$(document).ready(function ()
+{
+  sbgnNetworkContainer = $('#sbgn-network-container');
+  // create and init cytoscape:
+  var cy = cytoscape({
+    container: sbgnNetworkContainer,
+    style: sbgnStyleSheet,
+    showOverlay: false, minZoom: 0.125, maxZoom: 16,
+    boxSelectionEnabled: true,
+    motionBlur: true,
+    wheelSensitivity: 0.1,
+    ready: function() {
+      window.cy = this;
+      registerUndoRedoActions();
+      cytoscapeExtensionsAndContextMenu();
+      bindCyEvents();
+    }
+  });
+});
+
 var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node")
     .css({
@@ -288,6 +310,630 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     });
 // end of sbgnStyleSheet
 
+function removeQtip(e) {
+  if (this.qtipTimeOutFcn != null) {
+    clearTimeout(this.qtipTimeOutFcn);
+    this.qtipTimeOutFcn = null;
+  }
+  this.mouseover = false;           //make preset layout to redraw the nodes
+  this.removeData("showingTooltip");
+  cy.off('mouseout', 'node', removeQtip);
+  cy.off("drag", "node", removeQtip);
+  $(".qtip").remove();
+  cy.forceRender();
+}
+
+function cytoscapeExtensionsAndContextMenu() {
+  // register the extensions
+
+  cy.expandCollapse(getExpandCollapseOptions());
+
+  cy.autopanOnDrag();
+
+  var contextMenus = cy.contextMenus({
+    menuItemClasses: ['customized-context-menus-menu-item']
+  });
+
+  cy.edgeBendEditing({
+    // this function specifies the positions of bend points
+    bendPositionsFunction: function (ele) {
+      return ele.data('bendPointPositions');
+    },
+    // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
+    undoable: true,
+    // title of remove bend point menu item
+    removeBendMenuItemTitle: "Delete Bend Point"
+  });
+
+  contextMenus.appendMenuItems([
+    {
+      id: 'ctx-menu-sbgn-properties',
+      title: 'Properties...',
+      coreAsWell: true,
+      onClickFunction: function (event) {
+        $("#sbgn-properties").trigger("click");
+      }
+    },
+    {
+      id: 'ctx-menu-delete',
+      title: 'Delete',
+      selector: 'node, edge',
+      onClickFunction: function (event) {
+        cy.undoRedo().do("deleteElesSimple", {
+          eles: event.cyTarget
+        });
+      }
+    },
+    {
+      id: 'ctx-menu-delete-selected',
+      title: 'Delete Selected',
+      onClickFunction: function () {
+        $("#delete-selected-simple").trigger('click');
+      },
+      coreAsWell: true // Whether core instance have this item on cxttap
+    },
+    {
+      id: 'ctx-menu-hide-selected',
+      title: 'Hide Selected',
+      onClickFunction: function () {
+        $("#hide-selected").trigger('click');
+      },
+      coreAsWell: true // Whether core instance have this item on cxttap
+    },
+    {
+      id: 'ctx-menu-show-all',
+      title: 'Show All',
+      onClickFunction: function () {
+        $("#show-all").trigger('click');
+      },
+      coreAsWell: true // Whether core instance have this item on cxttap
+    },
+    {
+      id: 'ctx-menu-expand', // ID of menu item
+      title: 'Expand', // Title of menu item
+      // Filters the elements to have this menu item on cxttap
+      // If the selector is not truthy no elements will have this menu item on cxttap
+      selector: 'node[expanded-collapsed="collapsed"]',
+      onClickFunction: function (event) { // The function to be executed on click
+        cy.undoRedo().do("expand", {
+          nodes: event.cyTarget
+        });
+      }
+    },
+    {
+      id: 'ctx-menu-collapse',
+      title: 'Collapse',
+      selector: 'node[expanded-collapsed="expanded"]',
+      onClickFunction: function (event) {
+        cy.undoRedo().do("collapse", {
+          nodes: event.cyTarget
+        });
+      }
+    },
+    {
+      id: 'ctx-menu-perform-layout',
+      title: 'Perform Layout',
+      onClickFunction: function () {
+        if (modeHandler.mode == "selection-mode") {
+          $("#perform-layout").trigger('click');
+        }
+      },
+      coreAsWell: true // Whether core instance have this item on cxttap
+    },
+    {
+      id: 'ctx-menu-select-all-object-of-this-type',
+      title: 'Select Objects of This Type',
+      selector: 'node, edge',
+      onClickFunction: function (event) {
+        var cyTarget = event.cyTarget;
+        var sbgnclass = cyTarget.data('sbgnclass');
+
+        cy.elements().unselect();
+        cy.elements('[sbgnclass="' + sbgnclass + '"]').select();
+      }
+    },
+    {
+      id: 'ctx-menu-show-hidden-neighbors',
+      title: 'Show Hidden Neighbors',
+      selector: 'node',
+      onClickFunction: function (event) {
+        var cyTarget = event.cyTarget;
+        showHiddenNeighbors(cyTarget);
+      }
+    }
+  ]);
+
+  cy.clipboard({
+    clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
+    shortcuts: {
+      enabled: false, // Whether keyboard shortcuts are enabled
+      undoable: true // and if undoRedo extension exists
+    }
+  });
+
+  cy.viewUtilities({
+    node: {
+      highlighted: {
+        'border-width': '10px'
+      }, // styles for when nodes are highlighted.
+      unhighlighted: {// styles for when nodes are unhighlighted.
+        'opacity': function (ele) {
+          return ele.css('opacity');
+        }
+      },
+      hidden: {
+        "display": "none"
+      }
+    },
+    edge: {
+      highlighted: {
+        'width': '10px'
+      }, // styles for when edges are highlighted.
+      unhighlighted: {// styles for when edges are unhighlighted.
+        'opacity': function (ele) {
+          return ele.css('opacity');
+        }
+      },
+      hidden: {
+        "display": "none"
+      }
+    }
+  });
+
+  cy.nodeResize({
+    padding: 2, // spacing between node and grapples/rectangle
+    undoable: true, // and if cy.undoRedo exists
+
+    grappleSize: 7, // size of square dots
+    grappleColor: "#d67614", // color of grapples
+    inactiveGrappleStroke: "inside 1px #d67614",
+    boundingRectangle: true, // enable/disable bounding rectangle
+    boundingRectangleLineDash: [1.5, 1.5], // line dash of bounding rectangle
+    boundingRectangleLineColor: "darkgray",
+    boundingRectangleLineWidth: 1.5,
+    zIndex: 999,
+    minWidth: function (node) {
+      var data = node.data("resizeMinWidth");
+      return data ? data : 10;
+    }, // a function returns min width of node
+    minHeight: function (node) {
+      var data = node.data("resizeMinHeight");
+      return data ? data : 10;
+    }, // a function returns min height of node
+
+    isFixedAspectRatioResizeMode: function (node) {
+      var sbgnclass = node.data("sbgnclass");
+      return sbgnElementUtilities.mustBeSquare(sbgnclass);
+    }, // with only 4 active grapples (at corners)
+    isNoResizeMode: function (node) {
+      return node.is(".noResizeMode, :parent")
+    }, // no active grapples
+
+    cursors: {// See http://www.w3schools.com/cssref/tryit.asp?filename=trycss_cursor
+      // May take any "cursor" css property
+      default: "default", // to be set after resizing finished or mouseleave
+      inactive: "not-allowed",
+      nw: "nw-resize",
+      n: "n-resize",
+      ne: "ne-resize",
+      e: "e-resize",
+      se: "se-resize",
+      s: "s-resize",
+      sw: "sw-resize",
+      w: "w-resize"
+    }
+  });
+
+  refreshPaddings();
+  initilizeUnselectedDataOfElements();
+
+  //For adding edges interactively
+  cy.edgehandles({
+    complete: function (sourceNode, targetNodes, addedEntities) {
+      // fired when edgehandles is done and entities are added
+      var param = {};
+      var source = sourceNode.id();
+      var target = targetNodes[0].id();
+      var sourceClass = sourceNode.data('sbgnclass');
+      var targetClass = targetNodes[0].data('sbgnclass');
+      var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
+
+      if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
+              || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
+              || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
+        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
+          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+            //If just the direction is not valid reverse the direction
+            var temp = source;
+            source = target;
+            target = temp;
+          }
+          else {
+            return;
+          }
+        }
+      }
+      else if (sbgnclass == 'production') {
+        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
+          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+            //If just the direction is not valid reverse the direction
+            var temp = source;
+            source = target;
+            target = temp;
+          }
+          else {
+            return;
+          }
+        }
+      }
+      else if (sbgnclass == 'logic arc') {
+        var invalid = false;
+        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isLogicalOperator(targetClass)) {
+          if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+            //If just the direction is not valid reverse the direction
+            var temp = source;
+            source = target;
+            target = temp;
+          }
+          else {
+            invalid = true;
+          }
+        }
+
+        // the case that both sides are logical operators are valid too
+        if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isLogicalOperator(targetClass)) {
+          invalid = false;
+        }
+
+        if (invalid) {
+          return;
+        }
+      }
+      else if (sbgnclass == 'equivalence arc') {
+        if (!(sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.convenientToEquivalence(targetClass))
+                && !(sbgnElementUtilities.isEPNClass(targetClass) && sbgnElementUtilities.convenientToEquivalence(sourceClass))) {
+          return;
+        }
+      }
+
+      param.newEdge = {
+        source: source,
+        target: target,
+        sbgnclass: sbgnclass
+      };
+      param.firstTime = true;
+
+      cy.undoRedo().do("addEdge", param);
+
+      if (!modeHandler.sustainMode) {
+        modeHandler.setSelectionMode();
+      }
+
+      cy.edges()[cy.edges().length - 1].select();
+    }
+  });
+
+  cy.edgehandles('drawoff');
+
+  var panProps = ({
+    fitPadding: 10,
+    fitSelector: ':visible',
+    animateOnFit: function () {
+      return sbgnStyleRules['animate-on-drawing-changes'];
+    },
+    animateOnZoom: function () {
+      return sbgnStyleRules['animate-on-drawing-changes'];
+    }
+  });
+
+  sbgnNetworkContainer.cytoscapePanzoom(panProps);
+
+
+  cy.gridGuide({
+    drawGrid: sbgnStyleRules['show-grid'],
+    snapToGrid: sbgnStyleRules['snap-to-grid'],
+    discreteDrag: sbgnStyleRules['discrete-drag'],
+    gridSpacing: sbgnStyleRules['grid-size'],
+    resize: sbgnStyleRules['auto-resize-nodes'],
+    guidelines: sbgnStyleRules['show-alignment-guidelines'],
+    guidelinesTolerance: sbgnStyleRules['guideline-tolerance'],
+    guidelinesStyle: {
+      strokeStyle: sbgnStyleRules['guideline-color']
+    }
+  });
+}
+
+function bindCyEvents() {
+  // listen events
+
+  cy.on("beforeCollapse", "node", function (event) {
+    var node = this;
+    //The children info of complex nodes should be shown when they are collapsed
+    if (node._private.data.sbgnclass == "complex") {
+      //The node is being collapsed store infolabel to use it later
+      var infoLabel = getInfoLabel(node);
+      node._private.data.infoLabel = infoLabel;
+    }
+  });
+
+  cy.on("afterCollapse", "node", function (event) {
+    var node = this;
+    refreshPaddings();
+
+    if (node._private.data.sbgnclass == "complex") {
+      node.addClass('changeContent');
+    }
+  });
+
+  cy.on("beforeExpand", "node", function (event) {
+    var node = this;
+    node.removeData("infoLabel");
+  });
+
+  cy.on("afterExpand", "node", function (event) {
+    var node = this;
+    cy.nodes().updateCompoundBounds();
+
+    //Don't show children info when the complex node is expanded
+    if (node._private.data.sbgnclass == "complex") {
+      node.removeStyle('content');
+    }
+
+    refreshPaddings();
+  });
+
+  cy.on("resizeend", function (event, type, nodes) {
+    nodeResizeEndFunction(nodes);
+  });
+
+  cy.on("afterDo", function (event, actionName, args) {
+    refreshUndoRedoButtonsStatus();
+
+    if (actionName === 'expand' || actionName === 'collapse') {
+      args.nodes.filter('[tapstarted]').data('selected-by-expand-collapse', true);
+      args.nodes.unselect();
+      args.nodes.removeData('tapstarted');
+    }
+    else if (actionName === 'changeParent') {
+      refreshPaddings();
+    }
+  });
+
+  cy.on("afterUndo", function (event, actionName, args) {
+    refreshUndoRedoButtonsStatus();
+
+    if (actionName === 'resize') {
+      nodeResizeEndFunction(args.nodes);
+    }
+    else if (actionName === 'changeParent') {
+      refreshPaddings();
+    }
+  });
+
+  cy.on("afterRedo", function (event, actionName, args) {
+    refreshUndoRedoButtonsStatus();
+
+    if (actionName === 'resize') {
+      nodeResizeEndFunction(args.nodes);
+    }
+    else if (actionName === 'changeParent') {
+      refreshPaddings();
+    }
+  });
+
+  cy.on("mousedown", "node", function (event) {
+    var self = this;
+    if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
+      enableDragAndDropMode();
+      window.nodesToDragAndDrop = self.union(cy.nodes(':selected'));
+      window.dragAndDropStartPosition = event.cyPosition;
+    }
+  });
+
+  cy.on("mouseup", function (event) {
+    var self = event.cyTarget;
+    if (window.dragAndDropModeEnabled) {
+      var newParent;
+      if (self != cy) {
+        newParent = self;
+
+        if (newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
+          newParent = newParent.parent()[0];
+        }
+      }
+      var nodes = window.nodesToDragAndDrop;
+
+      if (newParent && newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
+        return;
+      }
+
+      if (newParent && newParent.data("sbgnclass") == "complex") {
+        nodes = nodes.filter(function (i, ele) {
+          return sbgnElementUtilities.isEPNClass(ele.data("sbgnclass"));
+        });
+      }
+
+      nodes = nodes.filter(function (i, ele) {
+        if (!newParent) {
+          return ele.data('parent') != null;
+        }
+        return ele.data('parent') !== newParent.id();
+      });
+
+      if (newParent) {
+        nodes = nodes.difference(newParent.ancestors());
+      }
+
+      if (nodes.length === 0) {
+        return;
+      }
+
+      nodes = sbgnElementUtilities.getTopMostNodes(nodes);
+
+      disableDragAndDropMode();
+      var parentData = newParent ? newParent.id() : null;
+
+      var param = {
+        firstTime: true,
+        parentData: parentData, // It keeps the newParentId (Just an id for each nodes for the first time)
+        nodes: nodes,
+        posDiffX: event.cyPosition.x - window.dragAndDropStartPosition.x,
+        posDiffY: event.cyPosition.y - window.dragAndDropStartPosition.y
+      };
+
+      window.dragAndDropStartPosition = null;
+      window.nodesToDragAndDrop = null;
+
+      cy.undoRedo().do("changeParent", param);
+    }
+  });
+
+  cy.on("mouseover", "node", function (e) {
+    e.cy.$("[showingTooltip]").trigger("hideTooltip");
+    e.cyTarget.trigger("showTooltip");
+  });
+
+
+  cy.on("hideTooltip", "node", removeQtip);
+
+  cy.on('showTooltip', 'node', function (e) {
+    var node = this;
+
+    if (node.renderedStyle("label") == node.data("sbgnlabel") && node.data("sbgnstatesandinfos").length == 0 && node.data("sbgnclass") != "complex")
+      return;
+
+    node.data("showingTooltip", true);
+    $(".qtip").remove();
+
+    if (e.originalEvent.shiftKey)
+      return;
+
+    node.qtipTimeOutFcn = setTimeout(function () {
+      nodeQtipFunction(node);
+    }, 1000);
+    
+    cy.on('mouseout', 'node', removeQtip);
+    cy.on("drag", "node", removeQtip)
+  });
+
+//        var cancelSelection;
+//        var selectAgain;
+  window.firstSelectedNode = null;
+  cy.on('select', 'node', function (event) {
+    var node = this;
+//          if (cancelSelection) {
+//            this.unselect();
+//            cancelSelection = null;
+//            selectAgain.select();
+//            selectAgain = null;
+//          }
+    if (node.data('selected-by-expand-collapse')) {
+      node.unselect();
+      node.removeData('selected-by-expand-collapse');
+    }
+
+    if (cy.nodes(':selected').filter(':visible').length == 1) {
+      window.firstSelectedNode = node;
+    }
+  });
+
+  cy.on('unselect', 'node', function (event) {
+    if (window.firstSelectedNode == this) {
+      window.firstSelectedNode = null;
+    }
+  });
+
+  cy.on('select', function (event) {
+    inspectorUtilities.handleSBGNInspector();
+  });
+
+  cy.on('unselect', function (event) {
+    inspectorUtilities.handleSBGNInspector();
+  });
+
+  cy.on('tapstart', 'node', function (event) {
+    var node = this;
+    cy.nodes().removeData('tapstarted');
+    node.data('tapstarted', true);
+  });
+
+  cy.on('tapend', 'node', function (event) {
+    cy.style().update();
+  });
+
+  cy.on('tap', function (event) {
+    $('input').blur();
+
+    if (modeHandler.mode == "add-node-mode") {
+      var cyPosX = event.cyPosition.x;
+      var cyPosY = event.cyPosition.y;
+      var param = {};
+      var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
+
+      param.newNode = {
+        x: cyPosX,
+        y: cyPosY,
+        sbgnclass: sbgnclass
+      };
+      param.firstTime = true;
+
+      cy.undoRedo().do("addNode", param);
+
+      if (!modeHandler.sustainMode) {
+        modeHandler.setSelectionMode();
+      }
+
+      cy.nodes()[cy.nodes().length - 1].select();
+    }
+  });
+
+  var tappedBefore = null;
+
+  cy.on('doubleTap', 'node', function (event) {
+    if (modeHandler.mode == 'selection-mode') {
+      var node = this;
+
+      if (!sbgnElementUtilities.canHaveSBGNLabel(node)) {
+        return;
+      }
+
+      var containerPos = $(cy.container()).position();
+      var left = containerPos.left + this.renderedPosition().x;
+      left -= $("#node-label-textbox").width() / 2;
+      left = left.toString() + 'px';
+      var top = containerPos.top + this.renderedPosition().y;
+      top -= $("#node-label-textbox").height() / 2;
+      top = top.toString() + 'px';
+
+      $("#node-label-textbox").css('left', left);
+      $("#node-label-textbox").css('top', top);
+      $("#node-label-textbox").show();
+      var sbgnlabel = this._private.data.sbgnlabel;
+      if (sbgnlabel == null) {
+        sbgnlabel = "";
+      }
+      $("#node-label-textbox").val(sbgnlabel);
+      $("#node-label-textbox").data('node', this);
+      $("#node-label-textbox").focus();
+    }
+  });
+
+  cy.on('tap', 'node', function (event) {
+    var node = this;
+
+    var tappedNow = event.cyTarget;
+    setTimeout(function () {
+      tappedBefore = null;
+    }, 300);
+    if (tappedBefore === tappedNow) {
+      tappedNow.trigger('doubleTap');
+      tappedBefore = null;
+    } else {
+      tappedBefore = tappedNow;
+    }
+  });
+}
+
 var NotyView = Backbone.View.extend({
   render: function () {
     //this.model["theme"] = " twitter bootstrap";
@@ -296,675 +942,6 @@ var NotyView = Backbone.View.extend({
     this.model["text"] = "Right click on a gene to see its details!";
 
     noty(this.model);
-    return this;
-  }
-});
-
-var SBGNContainer = Backbone.View.extend({
-  cyStyle: sbgnStyleSheet,
-  render: function () {
-    (new NotyView({
-      template: "#noty-info",
-      model: {}
-    })).render();
-
-    var container = $(this.el);
-    // container.html("");
-    // container.append(_.template($("#loading-template").html()));
-
-
-    var cytoscapeJsGraph = (this.model.cytoscapeJsGraph);
-
-    var positionMap = {};
-    //add position information to data for preset layout
-    for (var i = 0; i < cytoscapeJsGraph.nodes.length; i++) {
-      var xPos = cytoscapeJsGraph.nodes[i].data.sbgnbbox.x;
-      var yPos = cytoscapeJsGraph.nodes[i].data.sbgnbbox.y;
-      positionMap[cytoscapeJsGraph.nodes[i].data.id] = {'x': xPos, 'y': yPos};
-    }
-
-    var cyOptions = {
-      elements: cytoscapeJsGraph,
-      style: sbgnStyleSheet,
-      layout: {
-        name: 'preset',
-        positions: positionMap
-      },
-      showOverlay: false, minZoom: 0.125, maxZoom: 16,
-      boxSelectionEnabled: true,
-      motionBlur: true,
-      wheelSensitivity: 0.1,
-      ready: function ()
-      {
-        window.cy = this;
-        registerUndoRedoActions();
-
-        // register the extensions
-
-        cy.expandCollapse(getExpandCollapseOptions());
-        
-        cy.autopanOnDrag();
-        
-        var contextMenus = cy.contextMenus({
-          menuItemClasses: ['customized-context-menus-menu-item']
-        });
-        
-        cy.edgeBendEditing({
-          // this function specifies the positions of bend points
-          bendPositionsFunction: function(ele) {
-            return ele.data('bendPointPositions');
-          },
-          // whether the bend editing operations are undoable (requires cytoscape-undo-redo.js)
-          undoable: true,
-          // title of remove bend point menu item
-          removeBendMenuItemTitle: "Delete Bend Point"
-        });
-        
-        contextMenus.appendMenuItems([
-          {
-            id: 'ctx-menu-sbgn-properties',
-            title: 'Properties...',
-            coreAsWell: true,
-            onClickFunction: function (event) { 
-              $("#sbgn-properties").trigger("click");
-            }
-          },
-          {
-            id: 'ctx-menu-delete',
-            title: 'Delete',
-            selector: 'node, edge', 
-            onClickFunction: function (event) { 
-              cy.undoRedo().do("deleteElesSimple", {
-                eles: event.cyTarget
-              });
-            }
-          },
-          {
-            id: 'ctx-menu-delete-selected', 
-            title: 'Delete Selected', 
-            onClickFunction: function () { 
-              $("#delete-selected-simple").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-hide-selected', 
-            title: 'Hide Selected', 
-            onClickFunction: function () { 
-              $("#hide-selected").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-show-all', 
-            title: 'Show All', 
-            onClickFunction: function () { 
-              $("#show-all").trigger('click');
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-expand', // ID of menu item
-            title: 'Expand', // Title of menu item
-            // Filters the elements to have this menu item on cxttap
-            // If the selector is not truthy no elements will have this menu item on cxttap
-            selector: 'node[expanded-collapsed="collapsed"]', 
-            onClickFunction: function (event) { // The function to be executed on click
-              cy.undoRedo().do("expand", {
-                nodes: event.cyTarget
-              });
-            }
-          },
-          {
-            id: 'ctx-menu-collapse',
-            title: 'Collapse',
-            selector: 'node[expanded-collapsed="expanded"]', 
-            onClickFunction: function (event) {
-              cy.undoRedo().do("collapse", {
-                nodes: event.cyTarget
-              });
-            }
-          },
-          {
-            id: 'ctx-menu-perform-layout', 
-            title: 'Perform Layout', 
-            onClickFunction: function () { 
-              if (modeHandler.mode == "selection-mode") {
-                $("#perform-layout").trigger('click');
-              }
-            },
-            coreAsWell: true // Whether core instance have this item on cxttap
-          },
-          {
-            id: 'ctx-menu-select-all-object-of-this-type', 
-            title: 'Select Objects of This Type', 
-            selector: 'node, edge', 
-            onClickFunction: function (event) { 
-              var cyTarget = event.cyTarget;
-              var sbgnclass = cyTarget.data('sbgnclass');
-              
-              cy.elements().unselect();
-              cy.elements('[sbgnclass="' + sbgnclass + '"]').select();
-            }
-          },
-          {
-            id: 'ctx-menu-show-hidden-neighbors', 
-            title: 'Show Hidden Neighbors', 
-            selector: 'node', 
-            onClickFunction: function (event) { 
-              var cyTarget = event.cyTarget;
-              showHiddenNeighbors(cyTarget);
-            }
-          }
-        ]);
-
-        cy.clipboard({
-          clipboardSize: 5, // Size of clipboard. 0 means unlimited. If size is exceeded, first added item in clipboard will be removed.
-          shortcuts: {
-            enabled: false, // Whether keyboard shortcuts are enabled
-            undoable: true // and if undoRedo extension exists
-          }
-        });
-
-        cy.viewUtilities({
-          node: {
-            highlighted: {
-              'border-width': '10px'
-            }, // styles for when nodes are highlighted.
-            unhighlighted: {// styles for when nodes are unhighlighted.
-              'opacity': function (ele) {
-                return ele.css('opacity');
-              }
-            },
-            hidden: {
-              "display": "none"
-            }
-          },
-          edge: {
-            highlighted: {
-              'width': '10px'
-            }, // styles for when edges are highlighted.
-            unhighlighted: {// styles for when edges are unhighlighted.
-              'opacity': function (ele) {
-                return ele.css('opacity');
-              }
-            },
-            hidden: {
-              "display": "none"
-            }
-          }
-        });
-
-        cy.nodeResize({
-          padding: 2, // spacing between node and grapples/rectangle
-          undoable: true, // and if cy.undoRedo exists
-
-          grappleSize: 7, // size of square dots
-          grappleColor: "#d67614", // color of grapples
-          inactiveGrappleStroke: "inside 1px #d67614",
-          boundingRectangle: true, // enable/disable bounding rectangle
-          boundingRectangleLineDash: [1.5, 1.5], // line dash of bounding rectangle
-          boundingRectangleLineColor: "darkgray",
-          boundingRectangleLineWidth: 1.5,
-          zIndex: 999,
-
-          minWidth: function (node) {
-            var data = node.data("resizeMinWidth");
-            return data ? data : 10;
-          }, // a function returns min width of node
-          minHeight: function (node) {
-            var data = node.data("resizeMinHeight");
-            return data ? data : 10;
-          }, // a function returns min height of node
-
-          isFixedAspectRatioResizeMode: function (node) {
-            var sbgnclass = node.data("sbgnclass");
-            return sbgnElementUtilities.mustBeSquare(sbgnclass);
-          },// with only 4 active grapples (at corners)
-          isNoResizeMode: function (node) { return node.is(".noResizeMode, :parent") }, // no active grapples
-
-          cursors: { // See http://www.w3schools.com/cssref/tryit.asp?filename=trycss_cursor
-            // May take any "cursor" css property
-            default: "default", // to be set after resizing finished or mouseleave
-            inactive: "not-allowed",
-            nw: "nw-resize",
-            n: "n-resize",
-            ne: "ne-resize",
-            e: "e-resize",
-            se: "se-resize",
-            s: "s-resize",
-            sw: "sw-resize",
-            w: "w-resize"
-          }
-        });
-
-        var edges = cy.edges();
-
-        refreshPaddings();
-        initilizeUnselectedDataOfElements();
-
-        //For adding edges interactively
-        cy.edgehandles({
-          complete: function (sourceNode, targetNodes, addedEntities) {
-            // fired when edgehandles is done and entities are added
-            var param = {};
-            var source = sourceNode.id();
-            var target = targetNodes[0].id();
-            var sourceClass = sourceNode.data('sbgnclass');
-            var targetClass = targetNodes[0].data('sbgnclass');
-            var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
-
-            if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
-                || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-                || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
-              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-                if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
-                  //If just the direction is not valid reverse the direction
-                  var temp = source;
-                  source = target;
-                  target = temp;
-                }
-                else {
-                  return;
-                }
-              }
-            }
-            else if (sbgnclass == 'production') {
-              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-                if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
-                  //If just the direction is not valid reverse the direction
-                  var temp = source;
-                  source = target;
-                  target = temp;
-                }
-                else {
-                  return;
-                }
-              }
-            }
-            else if (sbgnclass == 'logic arc') {
-              var invalid = false;
-              if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isLogicalOperator(targetClass)) {
-                if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
-                  //If just the direction is not valid reverse the direction
-                  var temp = source;
-                  source = target;
-                  target = temp;
-                }
-                else {
-                  invalid = true;
-                }
-              }
-              
-              // the case that both sides are logical operators are valid too
-              if(sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isLogicalOperator(targetClass)) {
-                invalid = false;
-              }
-              
-              if( invalid ) {
-                return;
-              }
-            }
-            else if (sbgnclass == 'equivalence arc') {
-              if (!(sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.convenientToEquivalence(targetClass))
-                  && !(sbgnElementUtilities.isEPNClass(targetClass) && sbgnElementUtilities.convenientToEquivalence(sourceClass))) {
-                return;
-              }
-            }
-
-            param.newEdge = {
-              source: source,
-              target: target,
-              sbgnclass: sbgnclass
-            };
-            param.firstTime = true;
-
-            cy.undoRedo().do("addEdge", param);
-            
-            if( !modeHandler.sustainMode ) {
-              modeHandler.setSelectionMode();
-            }
-            
-            cy.edges()[cy.edges().length - 1].select();
-          }
-        });
-
-        cy.edgehandles('drawoff');
-
-        var panProps = ({
-          fitPadding: 10,
-          fitSelector: ':visible',
-          animateOnFit: function(){
-            return sbgnStyleRules['animate-on-drawing-changes'];
-          },
-          animateOnZoom: function(){
-            return sbgnStyleRules['animate-on-drawing-changes'];
-          }
-        });
-
-        container.cytoscapePanzoom(panProps);
-
-
-        cy.gridGuide({
-          drawGrid: sbgnStyleRules['show-grid'],
-          snapToGrid: sbgnStyleRules['snap-to-grid'],
-          discreteDrag: sbgnStyleRules['discrete-drag'],
-          gridSpacing: sbgnStyleRules['grid-size'],
-          resize: sbgnStyleRules['auto-resize-nodes'],
-          guidelines: sbgnStyleRules['show-alignment-guidelines'],
-          guidelinesTolerance: sbgnStyleRules['guideline-tolerance'],
-          guidelinesStyle: {
-            strokeStyle: sbgnStyleRules['guideline-color']
-          }
-        });
-
-        // listen events
-
-        cy.on("beforeCollapse", "node", function (event) {
-          var node = this;
-          //The children info of complex nodes should be shown when they are collapsed
-          if (node._private.data.sbgnclass == "complex") {
-            //The node is being collapsed store infolabel to use it later
-            var infoLabel = getInfoLabel(node);
-            node._private.data.infoLabel = infoLabel;
-          }
-        });
-
-        cy.on("afterCollapse", "node", function (event) {
-          var node = this;
-          refreshPaddings();
-
-          if (node._private.data.sbgnclass == "complex") {
-            node.addClass('changeContent');
-          }
-        });
-
-        cy.on("beforeExpand", "node", function (event) {
-          var node = this;
-          node.removeData("infoLabel");
-        });
-
-        cy.on("afterExpand", "node", function (event) {
-          var node = this;
-          cy.nodes().updateCompoundBounds();
-
-          //Don't show children info when the complex node is expanded
-          if (node._private.data.sbgnclass == "complex") {
-            node.removeStyle('content');
-          }
-
-          refreshPaddings();
-        });
-        
-        cy.on("resizeend", function(event, type, nodes) {
-          nodeResizeEndFunction(nodes);
-        });
-
-        cy.on("afterDo", function(event, actionName, args){
-          refreshUndoRedoButtonsStatus();
-          
-          if(actionName === 'expand' || actionName === 'collapse') {
-            args.nodes.filter('[tapstarted]').data('selected-by-expand-collapse', true);
-            args.nodes.unselect();
-            args.nodes.removeData('tapstarted');
-          }
-          else if (actionName === 'changeParent') {
-            refreshPaddings();
-          }
-        });
-
-        cy.on("afterUndo", function(event, actionName, args){
-          refreshUndoRedoButtonsStatus();
-          
-          if(actionName === 'resize') {
-            nodeResizeEndFunction(args.nodes);
-          }
-          else if (actionName === 'changeParent') {
-            refreshPaddings();
-          }
-        });
-
-        cy.on("afterRedo", function(event, actionName, args){
-          refreshUndoRedoButtonsStatus();
-          
-          if(actionName === 'resize') {
-            nodeResizeEndFunction(args.nodes);
-          }
-          else if (actionName === 'changeParent') {
-            refreshPaddings();
-          }
-        });
-
-        cy.on("mousedown", "node", function (event) {
-          var self = this;
-          if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
-            enableDragAndDropMode();
-            window.nodesToDragAndDrop = self.union(cy.nodes(':selected'));
-            window.dragAndDropStartPosition = event.cyPosition;
-          }
-        });
-
-        cy.on("mouseup", function (event) {
-          var self = event.cyTarget;
-          if (window.dragAndDropModeEnabled) {
-            var newParent;
-            if (self != cy) {
-              newParent = self;
-              
-              if(newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
-                newParent = newParent.parent()[0];
-              }
-            }
-            var nodes = window.nodesToDragAndDrop;
-
-            if(newParent && newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
-              return;
-            }
-
-            if (newParent && newParent.data("sbgnclass") == "complex") {
-              nodes = nodes.filter(function(i, ele) {
-                return sbgnElementUtilities.isEPNClass(ele.data("sbgnclass"));
-              });
-            }
-            
-            nodes = nodes.filter(function(i, ele) {
-              if(!newParent) {
-                return ele.data('parent') != null;
-              }
-              return ele.data('parent') !== newParent.id();
-            });
-            
-            if (newParent) {
-              nodes = nodes.difference( newParent.ancestors() );
-            }
-            
-            if(nodes.length === 0) {
-              return;
-            }
-            
-            nodes = sbgnElementUtilities.getTopMostNodes(nodes);
-
-            disableDragAndDropMode();
-            var parentData = newParent ? newParent.id() : null;
-
-            var param = {
-              firstTime: true,
-              parentData: parentData, // It keeps the newParentId (Just an id for each nodes for the first time)
-              nodes: nodes,
-              posDiffX: event.cyPosition.x - window.dragAndDropStartPosition.x,
-              posDiffY: event.cyPosition.y - window.dragAndDropStartPosition.y
-            };
-            
-            window.dragAndDropStartPosition = null;
-            window.nodesToDragAndDrop = null;
-            
-            cy.undoRedo().do("changeParent", param);
-          }
-        });
-
-
-        function removeQtip(e) {
-          if (this.qtipTimeOutFcn != null) {
-            clearTimeout(this.qtipTimeOutFcn);
-            this.qtipTimeOutFcn = null;
-          }
-          this.mouseover = false;           //make preset layout to redraw the nodes
-          this.removeData("showingTooltip");
-          cy.off('mouseout', 'node', removeQtip);
-          cy.off("drag", "node", removeQtip);
-          $(".qtip").remove();
-          cy.forceRender();
-        }
-
-        cy.on("mouseover", "node", function (e) {
-          e.cy.$("[showingTooltip]").trigger("hideTooltip");
-          e.cyTarget.trigger("showTooltip");
-        });
-
-
-        cy.on("hideTooltip", "node", removeQtip);
-
-        cy.on('showTooltip', 'node', function (e) {
-          var node = this;
-          
-          if (node.renderedStyle("label") == node.data("sbgnlabel") && node.data("sbgnstatesandinfos").length == 0 &&  node.data("sbgnclass") != "complex")
-              return;
-
-           node.data("showingTooltip", true);
-          $(".qtip").remove();
-
-          if (e.originalEvent.shiftKey)
-            return;
-
-          node.qtipTimeOutFcn = setTimeout(function () {
-            nodeQtipFunction(node);
-          }, 1000);
-          cy.on('mouseout', 'node', removeQtip);
-          cy.on("drag", "node", removeQtip)
-        });
-
-//        var cancelSelection;
-//        var selectAgain;
-        window.firstSelectedNode = null;
-        cy.on('select', 'node', function (event) {
-          var node = this;
-//          if (cancelSelection) {
-//            this.unselect();
-//            cancelSelection = null;
-//            selectAgain.select();
-//            selectAgain = null;
-//          }
-          if (node.data('selected-by-expand-collapse')) {
-            node.unselect();
-            node.removeData('selected-by-expand-collapse');
-          }
-
-          if (cy.nodes(':selected').filter(':visible').length == 1) {
-            window.firstSelectedNode = node;
-          }
-        });
-
-        cy.on('unselect', 'node', function (event) {
-          if (window.firstSelectedNode == this) {
-            window.firstSelectedNode = null;
-          }
-        });
-
-        cy.on('select', function (event) {
-          inspectorUtilities.handleSBGNInspector();
-        });
-
-        cy.on('unselect', function (event) {
-          inspectorUtilities.handleSBGNInspector();
-        });
-        
-        cy.on('tapstart', 'node', function (event) {
-          var node = this;
-          cy.nodes().removeData('tapstarted');
-          node.data('tapstarted', true);
-        });
-        
-        cy.on('tapend', 'node', function (event) {
-          cy.style().update();
-        });
-
-        cy.on('tap', function (event) {
-          $('input').blur();
-
-          if (modeHandler.mode == "add-node-mode") {
-            var cyPosX = event.cyPosition.x;
-            var cyPosY = event.cyPosition.y;
-            var param = {};
-            var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedNodeType];
-
-            param.newNode = {
-              x: cyPosX,
-              y: cyPosY,
-              sbgnclass: sbgnclass
-            };
-            param.firstTime = true;
-
-            cy.undoRedo().do("addNode", param);
-            
-            if( !modeHandler.sustainMode ) {
-              modeHandler.setSelectionMode();
-            }
-            
-            cy.nodes()[cy.nodes().length - 1].select();
-          }
-        });
-
-        var tappedBefore = null;
-
-        cy.on('doubleTap', 'node', function (event) {
-          if (modeHandler.mode == 'selection-mode') {
-            var node = this;
-            
-            if (!sbgnElementUtilities.canHaveSBGNLabel( node )) {
-              return;
-            }
-            
-            var containerPos = $(cy.container()).position();
-            var left = containerPos.left + this.renderedPosition().x;
-            left -= $("#node-label-textbox").width() / 2;
-            left = left.toString() + 'px';
-            var top = containerPos.top + this.renderedPosition().y;
-            top -= $("#node-label-textbox").height() / 2;
-            top = top.toString() + 'px';
-
-            $("#node-label-textbox").css('left', left);
-            $("#node-label-textbox").css('top', top);
-            $("#node-label-textbox").show();
-            var sbgnlabel = this._private.data.sbgnlabel;
-            if (sbgnlabel == null) {
-              sbgnlabel = "";
-            }
-            $("#node-label-textbox").val(sbgnlabel);
-            $("#node-label-textbox").data('node', this);
-            $("#node-label-textbox").focus();
-          }
-        });
-
-        cy.on('tap', 'node', function (event) {
-          var node = this;
-
-          var tappedNow = event.cyTarget;
-          setTimeout(function () {
-            tappedBefore = null;
-          }, 300);
-          if (tappedBefore === tappedNow) {
-            tappedNow.trigger('doubleTap');
-            tappedBefore = null;
-          } else {
-            tappedBefore = tappedNow;
-          }
-        });
-      }
-    };
-
-    container.html("");
-    endSpinner("load-file-spinner");
-    container.cy(cyOptions);
     return this;
   }
 });
@@ -1360,10 +1337,7 @@ var PathsBetweenQuery = Backbone.View.extend({
             type: 'GET',
             success: function(data)
             {
-              (new SBGNContainer({
-                el: '#sbgn-network-container',
-                model: {cytoscapeJsGraph: sbgnmlToJson.convert(data)}
-              })).render();
+              sbgnvizUpdate(sbgnmlToJson.convert(data));
               inspectorUtilities.handleSBGNInspector();
             }
           });

@@ -1,3 +1,12 @@
+//Override String endsWith method for IE
+String.prototype.endsWith = function (suffix) {
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+function getFirstSelectedNode() {
+  return window.firstSelectedNode ? window.firstSelectedNode : cy.nodes(":selected")[0];
+}
+
 var defaultSbgnStyleRules = {
   'compound-padding': 10,
   'dynamic-label-size': 'regular',
@@ -19,9 +28,75 @@ var defaultSbgnStyleRules = {
 
 var sbgnStyleRules = _.clone(this.defaultSbgnStyleRules);
 
-//Override String endsWith method for IE
-String.prototype.endsWith = function (suffix) {
-  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+//A function to trigger incremental layout. 
+var triggerIncrementalLayout = function () {
+  beforePerformLayout();
+
+  var preferences = {
+    randomize: false,
+    animate: sbgnStyleRules['animate-on-drawing-changes'] ? 'end' : false,
+    fit: false
+  };
+
+  if (sbgnLayoutProp.currentLayoutProperties.animate === 'during') {
+    delete preferences.animate;
+  }
+
+  sbgnLayoutProp.applyLayout(preferences, false); // layout must not be undoable
+};
+
+var sbgnvizUpdate = function (cyGraph) {
+  console.log('cy update called');
+  
+  // Reset undo/redo stack and buttons when a new graph is loaded
+  cy.undoRedo().reset();
+  resetUndoRedoButtons();
+  
+  cy.startBatch();
+
+  // clear data
+  cy.remove('*');
+
+  cy.add(cyGraph);
+
+  cy.nodes().addClass('changeLabelTextSize');
+
+  //add position information to data for preset layout
+  var positionMap = {};
+  for (var i = 0; i < cyGraph.nodes.length; i++) {
+    var xPos = cyGraph.nodes[i].data.sbgnbbox.x;
+    var yPos = cyGraph.nodes[i].data.sbgnbbox.y;
+    positionMap[cyGraph.nodes[i].data.id] = {'x': xPos, 'y': yPos};
+  }
+  cy.layout({
+        name: 'preset',
+        positions: positionMap
+      }
+  );
+
+  refreshPaddings();
+
+  cy.endBatch();
+
+  window.firstSelectedNode = null;
+};
+
+var getExpandCollapseOptions = function() {
+  return {
+    fisheye: function(){
+      return sbgnStyleRules['rearrange-after-expand-collapse'];
+    },
+    animate: function(){
+      return sbgnStyleRules['animate-on-drawing-changes'];
+    },
+    layoutBy: function(){
+      if(!sbgnStyleRules['rearrange-after-expand-collapse']) {
+        return;
+      }
+      
+      triggerIncrementalLayout();
+    }
+  };
 };
 
 function enableDragAndDropMode() {
