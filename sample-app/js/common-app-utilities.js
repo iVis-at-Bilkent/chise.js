@@ -73,12 +73,13 @@ var sbgnvizUpdate = function (cyGraph) {
   );
   
   cy.nodes().addClass('changeLabelTextSize');
-
+  
   cy.endBatch();
 
   refreshPaddings();
   initilizeUnselectedDataOfElements();
-
+  cy.edgeBendEditing('get').initBendPoints(cy.edges());
+  
   window.firstSelectedNode = null;
 };
 
