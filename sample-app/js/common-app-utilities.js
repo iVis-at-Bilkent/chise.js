@@ -59,8 +59,6 @@ var sbgnvizUpdate = function (cyGraph) {
 
   cy.add(cyGraph);
 
-  cy.nodes().addClass('changeLabelTextSize');
-
   //add position information to data for preset layout
   var positionMap = {};
   for (var i = 0; i < cyGraph.nodes.length; i++) {
@@ -73,10 +71,13 @@ var sbgnvizUpdate = function (cyGraph) {
         positions: positionMap
       }
   );
-
-  refreshPaddings();
+  
+  cy.nodes().addClass('changeLabelTextSize');
 
   cy.endBatch();
+
+  refreshPaddings();
+  initilizeUnselectedDataOfElements();
 
   window.firstSelectedNode = null;
 };

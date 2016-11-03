@@ -524,9 +524,6 @@ function cytoscapeExtensionsAndContextMenu() {
     }
   });
 
-  refreshPaddings();
-  initilizeUnselectedDataOfElements();
-
   //For adding edges interactively
   cy.edgehandles({
     complete: function (sourceNode, targetNodes, addedEntities) {
