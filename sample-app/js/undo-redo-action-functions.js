@@ -10,10 +10,10 @@ var undoRedoActionFunctions = {
     else {
       result = sbgnElementUtilities.restoreEles(param);
     }
-    return result;
-  },
-  removeNodes: function (nodesToBeDeleted) {
-    return sbgnElementUtilities.removeNodes(nodesToBeDeleted);
+    
+    return {
+      eles: result
+    };
   },
   deleteElesSimple: function (param) {
     return sbgnElementUtilities.deleteElesSimple(param.eles);
@@ -32,16 +32,10 @@ var undoRedoActionFunctions = {
     else {
       result = sbgnElementUtilities.restoreEles(param);
     }
-    return result;
-  },
-  removeEdges: function (edgesToBeDeleted) {
-    return sbgnElementUtilities.removeEdges(edgesToBeDeleted);
-  },
-  restoreSelected: function (eles) {
-    var param = {};
-    param.eles = sbgnElementUtilities.restoreEles(eles);
-    param.firstTime = false;
-    return param;
+    
+    return {
+      eles: result
+    };
   },
   /*
    * This method assumes that param.nodesToMakeCompound contains at least one node

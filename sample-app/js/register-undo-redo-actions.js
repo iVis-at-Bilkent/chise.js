@@ -12,10 +12,10 @@ var registerUndoRedoActions = function () {
   });
 
   // register add remove actions
-  ur.action("addNode", undoRedoActionFunctions.addNode, undoRedoActionFunctions.removeNodes);
+  ur.action("addNode", undoRedoActionFunctions.addNode, undoRedoActionFunctions.deleteElesSimple);
   ur.action("deleteElesSimple", undoRedoActionFunctions.deleteElesSimple, undoRedoActionFunctions.restoreEles);
-  ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.removeEdges);
-  ur.action("deleteElesSmart", undoRedoActionFunctions.deleteElesSmart, undoRedoActionFunctions.restoreSelected);
+  ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.deleteElesSimple);
+  ur.action("deleteElesSmart", undoRedoActionFunctions.deleteElesSmart, undoRedoActionFunctions.restoreEles);
   ur.action("createCompoundForSelectedNodes", undoRedoActionFunctions.createCompoundForSelectedNodes, undoRedoActionFunctions.removeCompound);
 
   // register general actions
