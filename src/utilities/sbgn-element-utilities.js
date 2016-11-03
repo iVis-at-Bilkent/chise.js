@@ -351,12 +351,9 @@ var sbgnElementUtilities = {
   deleteElesSmart: function (eles) {
     var allNodes = cy.nodes();
     cy.elements().unselect();
-    var nodesToShow = this.extendRemainingNodes(eles, allNodes);
-    var nodesNotToShow = allNodes.not(nodesToShow);
-    var connectedEdges = nodesNotToShow.connectedEdges();
-    var removedEles = connectedEdges.remove();
-    removedEles = removedEles.union(nodesNotToShow.remove());
-    return removedEles;
+    var nodesToKeep = this.extendRemainingNodes(eles, allNodes);
+    var nodesNotToKeep = allNodes.not(nodesToKeep);
+    return nodesNotToKeep.remove();
   },
   // Section End
   // Add remove utilities
