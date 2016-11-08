@@ -351,7 +351,7 @@ function toolbarButtonsAndMenu() {
     });
   });
 
-  $("#neighbors-of-selected,#neighbors-of-selected-icon").click(function (e) {
+  $("#neighbors-of-selected,#highlight-neighbors-of-selected-icon").click(function (e) {
     var elesToHighlight = sbgnElementUtilities.getNeighboursOfSelected();
 
     if (elesToHighlight.length === 0) {
