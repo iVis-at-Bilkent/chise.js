@@ -508,8 +508,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var nodes = cy.nodes(":selected").filter("[expanded-collapsed='expanded']");
-    var thereIs = nodes.collapsibleNodes().length > 0;
+    var nodes = cy.nodes(":selected").collapsibleNodes();
+    var thereIs = nodes.length > 0;
 
     if (!thereIs) {
       return;
@@ -526,8 +526,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var complexes = cy.nodes("[sbgnclass='complex'][expanded-collapsed='expanded']");
-    var thereIs = complexes.collapsibleNodes().length > 0;
+    var complexes = cy.nodes("[sbgnclass='complex']").collapsibleNodes();
+    var thereIs = complexes.length > 0;
 
     if (!thereIs) {
       return;
@@ -544,8 +544,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var nodes = cy.nodes(":selected").filter("[expanded-collapsed='collapsed']");
-    var thereIs = nodes.expandableNodes().length > 0;
+    var nodes = cy.nodes(":selected").expandableNodes();
+    var thereIs = nodes.length > 0;
 
     if (!thereIs) {
       return;
@@ -562,8 +562,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var nodes = cy.nodes(":selected").filter("[sbgnclass='complex'][expanded-collapsed='collapsed']");
-    var thereIs = nodes.expandableNodes().length > 0;
+    var nodes = cy.nodes("[sbgnclass='complex']").expandableNodes();
+    var thereIs = nodes.length > 0;
 
     if (!thereIs) {
       return;
@@ -580,8 +580,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var nodes = cy.nodes(':visible').filter("[expanded-collapsed='expanded']");
-    var thereIs = nodes.collapsibleNodes().length > 0;
+    var nodes = cy.nodes(':visible').collapsibleNodes();
+    var thereIs = nodes.length > 0;
 
     if (!thereIs) {
       return;
@@ -598,8 +598,8 @@ function toolbarButtonsAndMenu() {
     cy.nodes().removeData('selected-by-expand-collapse');
     cy.nodes().removeData('tapstarted');
 
-    var nodes = cy.nodes(':visible').filter("[expanded-collapsed='collapsed']");
-    var thereIs = nodes.expandableNodes().length > 0;
+    var nodes = cy.nodes(':visible').expandableNodes();
+    var thereIs = nodes.length > 0;
 
     if (!thereIs) {
       return;

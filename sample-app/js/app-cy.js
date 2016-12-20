@@ -114,10 +114,11 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'width': 'data(sbgnbbox.w)',
       'height': 'data(sbgnbbox.h)'
     })
-    .selector("node[expanded-collapsed='collapsed']")
+    .selector("node.cy-expand-collapse-collapsed-node")
     .css({
       'width': 36,
-      'height': 36
+      'height': 36,
+      'border-style': 'dashed'
     })
     .selector("node:selected")
     .css({
@@ -236,13 +237,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'width': 15,
       'height': 15
     })
-    .selector('edge.meta')
+    .selector('edge.cy-expand-collapse-meta-edge')
     .css({
       'line-color': '#C4C4C4',
       'source-arrow-color': '#C4C4C4',
       'target-arrow-color': '#C4C4C4'
     })
-    .selector("edge.meta:selected")
+    .selector("edge.cy-expand-collapse-meta-edge:selected")
     .css({
       'line-color': '#d67614',
       'source-arrow-color': '#d67614',
@@ -284,13 +285,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'source-arrow-color': '#d67614',
       'target-arrow-color': '#d67614'
     })
-    .selector('edge.changeLineColor.meta')
+    .selector('edge.changeLineColor.cy-expand-collapse-meta-edge')
     .css({
       'line-color': '#C4C4C4',
       'source-arrow-color': '#C4C4C4',
       'target-arrow-color': '#C4C4C4'
     })
-    .selector("edge.changeLineColor.meta:selected")
+    .selector("edge.changeLineColor.cy-expand-collapse-meta-edge:selected")
     .css({
       'line-color': '#d67614',
       'source-arrow-color': '#d67614',
@@ -395,7 +396,7 @@ function cytoscapeExtensionsAndContextMenu() {
       title: 'Expand', // Title of menu item
       // Filters the elements to have this menu item on cxttap
       // If the selector is not truthy no elements will have this menu item on cxttap
-      selector: 'node[expanded-collapsed="collapsed"]',
+      selector: 'node.cy-expand-collapse-collapsed-node',
       onClickFunction: function (event) { // The function to be executed on click
         cy.undoRedo().do("expand", {
           nodes: event.cyTarget
@@ -405,7 +406,7 @@ function cytoscapeExtensionsAndContextMenu() {
     {
       id: 'ctx-menu-collapse',
       title: 'Collapse',
-      selector: 'node[expanded-collapsed!="collapsed"][sbgnclass="complex"],[expanded-collapsed!="collapsed"][sbgnclass="compartment"]',
+      selector: 'node:parent',
       onClickFunction: function (event) {
         cy.undoRedo().do("collapse", {
           nodes: event.cyTarget
