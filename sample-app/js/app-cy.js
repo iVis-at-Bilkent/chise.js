@@ -689,12 +689,7 @@ function bindCyEvents() {
   cy.on("afterDo", function (event, actionName, args) {
     refreshUndoRedoButtonsStatus();
 
-    if (actionName === 'expand' || actionName === 'collapse') {
-      args.nodes.filter('[tapstarted]').data('selected-by-expand-collapse', true);
-      args.nodes.unselect();
-      args.nodes.removeData('tapstarted');
-    }
-    else if (actionName === 'changeParent') {
+    if (actionName === 'changeParent') {
       refreshPaddings();
     }
   });
@@ -827,10 +822,6 @@ function bindCyEvents() {
 //            selectAgain.select();
 //            selectAgain = null;
 //          }
-    if (node.data('selected-by-expand-collapse')) {
-      node.unselect();
-      node.removeData('selected-by-expand-collapse');
-    }
 
     if (cy.nodes(':selected').filter(':visible').length == 1) {
       window.firstSelectedNode = node;
@@ -849,12 +840,6 @@ function bindCyEvents() {
 
   cy.on('unselect', function (event) {
     inspectorUtilities.handleSBGNInspector();
-  });
-
-  cy.on('tapstart', 'node', function (event) {
-    var node = this;
-    cy.nodes().removeData('tapstarted');
-    node.data('tapstarted', true);
   });
 
   cy.on('tapend', 'node', function (event) {

@@ -504,10 +504,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#collapse-selected,#collapse-selected-icon").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var nodes = cy.nodes(":selected").collapsibleNodes();
     var thereIs = nodes.length > 0;
 
@@ -522,10 +518,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#collapse-complexes").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var complexes = cy.nodes("[sbgnclass='complex']").collapsibleNodes();
     var thereIs = complexes.length > 0;
 
@@ -540,10 +532,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#expand-selected,#expand-selected-icon").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var nodes = cy.nodes(":selected").expandableNodes();
     var thereIs = nodes.length > 0;
 
@@ -558,10 +546,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#expand-complexes").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var nodes = cy.nodes("[sbgnclass='complex']").expandableNodes();
     var thereIs = nodes.length > 0;
 
@@ -576,10 +560,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#collapse-all").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var nodes = cy.nodes(':visible').collapsibleNodes();
     var thereIs = nodes.length > 0;
 
@@ -594,10 +574,6 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#expand-all").click(function (e) {
-    // Remove data used to unselect nodes selected by expand-collapse
-    cy.nodes().removeData('selected-by-expand-collapse');
-    cy.nodes().removeData('tapstarted');
-
     var nodes = cy.nodes(':visible').expandableNodes();
     var thereIs = nodes.length > 0;
 
