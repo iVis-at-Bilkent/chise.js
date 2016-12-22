@@ -682,8 +682,8 @@ function bindCyEvents() {
     refreshPaddings();
   });
 
-  cy.on("resizeend", function (event, type, nodes) {
-    nodeResizeEndFunction(nodes);
+  cy.on("noderesize.resizeend", function (event, type, node) {
+    nodeResizeEndFunction(node);
   });
 
   cy.on("afterDo", function (event, actionName, args) {
@@ -703,7 +703,7 @@ function bindCyEvents() {
     refreshUndoRedoButtonsStatus();
 
     if (actionName === 'resize') {
-      nodeResizeEndFunction(args.nodes);
+      nodeResizeEndFunction(args.node);
     }
     else if (actionName === 'changeParent') {
       refreshPaddings();
@@ -714,7 +714,7 @@ function bindCyEvents() {
     refreshUndoRedoButtonsStatus();
 
     if (actionName === 'resize') {
-      nodeResizeEndFunction(args.nodes);
+      nodeResizeEndFunction(args.node);
     }
     else if (actionName === 'changeParent') {
       refreshPaddings();

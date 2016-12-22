@@ -22,7 +22,7 @@
     "cytoscape-edge-bend-editing": "^1.5.0",
     "cytoscape-expand-collapse": "^2.0.3",
     "cytoscape-grid-guide": "^1.0.4",
-    "cytoscape-node-resize": "^1.0.10",
+    "cytoscape-node-resize": "^2.0.0",
     "cytoscape-autopan-on-drag": "^2.0.1",
     "cytoscape-panzoom": "~2.4.0",
     "cytoscape-qtip": "~2.3.0",
