@@ -541,8 +541,8 @@ function cytoscapeExtensionsAndContextMenu() {
       if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
               || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
               || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
-        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isPNClass(targetClass)) {
+          if (sbgnElementUtilities.isPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
             //If just the direction is not valid reverse the direction
             var temp = source;
             source = target;
@@ -554,8 +554,8 @@ function cytoscapeExtensionsAndContextMenu() {
         }
       }
       else if (sbgnclass == 'production') {
-        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+        if (!sbgnElementUtilities.isPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
+          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isPNClass(targetClass)) {
             //If just the direction is not valid reverse the direction
             var temp = source;
             source = target;
