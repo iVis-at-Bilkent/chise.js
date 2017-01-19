@@ -49,7 +49,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
     .css({
       'content': function (ele) {
-        return sbgnElementUtilities.getElementContent(ele);
+        return elementUtilities.getElementContent(ele);
       },
       'text-valign': 'center',
       'text-halign': 'center'
@@ -57,19 +57,19 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node[sbgnclass]")
     .css({
       'shape': function (ele) {
-        return sbgnElementUtilities.getCyShape(ele);
+        return elementUtilities.getCyShape(ele);
       },
       'font-weight': function(ele) {
-        return ele.data('fontweight') ? ele.data('fontweight') : sbgnElementUtilities.defaultFontProperties.fontweight;
+        return ele.data('fontweight') ? ele.data('fontweight') : elementUtilities.defaultFontProperties.fontweight;
       },
       'font-family': function(ele) {
-        return ele.data('fontfamily') ? ele.data('fontfamily') : sbgnElementUtilities.defaultFontProperties.fontfamily;
+        return ele.data('fontfamily') ? ele.data('fontfamily') : elementUtilities.defaultFontProperties.fontfamily;
       },
       'font-style': function(ele) {
-        return ele.data('fontstyle') ? ele.data('fontstyle') : sbgnElementUtilities.defaultFontProperties.fontstyle;
+        return ele.data('fontstyle') ? ele.data('fontstyle') : elementUtilities.defaultFontProperties.fontstyle;
       },
       'font-size': function (ele) {
-        var labelsize = sbgnElementUtilities.getLabelTextSize(ele);
+        var labelsize = elementUtilities.getLabelTextSize(ele);
         if(labelsize) {
           return labelsize;
         }
@@ -95,7 +95,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'text-valign': 'bottom',
       'text-halign': 'center',
       'content': function(ele){
-        return sbgnElementUtilities.getElementContent(ele);
+        return elementUtilities.getElementContent(ele);
       }
     })
     .selector("node[sbgnclass='compartment']")
@@ -104,7 +104,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'background-opacity': 0,
 //      'background-color': '#FFFFFF',
       'content': function(ele){
-        return sbgnElementUtilities.getElementContent(ele);
+        return elementUtilities.getElementContent(ele);
       },
       'text-valign': 'bottom',
       'text-halign': 'center'
@@ -169,7 +169,7 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       },
       'source-text-margin-y': '-10',
       'source-text-offset': function(ele) {
-        return sbgnElementUtilities.getCardinalityDistance(ele);
+        return elementUtilities.getCardinalityDistance(ele);
       }
     })
     .selector("edge[sbgnclass='production'][sbgncardinality > 0]")
@@ -179,13 +179,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       },
       'target-text-margin-y': '-10',
       'target-text-offset': function(ele) {
-        return sbgnElementUtilities.getCardinalityDistance(ele);
+        return elementUtilities.getCardinalityDistance(ele);
       }
     })
     .selector("edge[sbgnclass]")
     .css({
       'target-arrow-shape': function (ele) {
-        return sbgnElementUtilities.getCyArrowShape(ele);
+        return elementUtilities.getCyArrowShape(ele);
       },
       'source-arrow-shape': 'none'
     })
@@ -256,13 +256,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node.changeLabelTextSize")
     .css({
       'font-size': function (ele) {
-        return sbgnElementUtilities.getLabelTextSize(ele);
+        return elementUtilities.getLabelTextSize(ele);
       }
     })
     .selector("node.changeContent")
     .css({
       'content': function (ele) {
-        return sbgnElementUtilities.getElementContent(ele);
+        return elementUtilities.getElementContent(ele);
       }
     })
     .selector("node.changeBorderColor")
@@ -506,7 +506,7 @@ function cytoscapeExtensionsAndContextMenu() {
 
     isFixedAspectRatioResizeMode: function (node) {
       var sbgnclass = node.data("sbgnclass");
-      return sbgnElementUtilities.mustBeSquare(sbgnclass);
+      return elementUtilities.mustBeSquare(sbgnclass);
     }, // with only 4 active grapples (at corners)
     isNoResizeMode: function (node) {
       return node.is(".noResizeMode, :parent")
@@ -541,8 +541,8 @@ function cytoscapeExtensionsAndContextMenu() {
       if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
               || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
               || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
-        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isEPNClass(targetClass)) {
+          if (elementUtilities.isEPNClass(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
             //If just the direction is not valid reverse the direction
             var temp = source;
             source = target;
@@ -554,8 +554,8 @@ function cytoscapeExtensionsAndContextMenu() {
         }
       }
       else if (sbgnclass == 'production') {
-        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isEPNClass(targetClass)) {
-          if (sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isEPNClass(targetClass)) {
+          if (elementUtilities.isEPNClass(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
             //If just the direction is not valid reverse the direction
             var temp = source;
             source = target;
@@ -568,8 +568,8 @@ function cytoscapeExtensionsAndContextMenu() {
       }
       else if (sbgnclass == 'logic arc') {
         var invalid = false;
-        if (!sbgnElementUtilities.isEPNClass(sourceClass) || !sbgnElementUtilities.isLogicalOperator(targetClass)) {
-          if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isEPNClass(targetClass)) {
+        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isLogicalOperator(targetClass)) {
+          if (elementUtilities.isLogicalOperator(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
             //If just the direction is not valid reverse the direction
             var temp = source;
             source = target;
@@ -581,7 +581,7 @@ function cytoscapeExtensionsAndContextMenu() {
         }
 
         // the case that both sides are logical operators are valid too
-        if (sbgnElementUtilities.isLogicalOperator(sourceClass) && sbgnElementUtilities.isLogicalOperator(targetClass)) {
+        if (elementUtilities.isLogicalOperator(sourceClass) && elementUtilities.isLogicalOperator(targetClass)) {
           invalid = false;
         }
 
@@ -590,8 +590,8 @@ function cytoscapeExtensionsAndContextMenu() {
         }
       }
       else if (sbgnclass == 'equivalence arc') {
-        if (!(sbgnElementUtilities.isEPNClass(sourceClass) && sbgnElementUtilities.convenientToEquivalence(targetClass))
-                && !(sbgnElementUtilities.isEPNClass(targetClass) && sbgnElementUtilities.convenientToEquivalence(sourceClass))) {
+        if (!(elementUtilities.isEPNClass(sourceClass) && elementUtilities.convenientToEquivalence(targetClass))
+                && !(elementUtilities.isEPNClass(targetClass) && elementUtilities.convenientToEquivalence(sourceClass))) {
           return;
         }
       }
@@ -744,7 +744,7 @@ function bindCyEvents() {
 
       if (newParent && newParent.data("sbgnclass") == "complex") {
         nodes = nodes.filter(function (i, ele) {
-          return sbgnElementUtilities.isEPNClass(ele.data("sbgnclass"));
+          return elementUtilities.isEPNClass(ele.data("sbgnclass"));
         });
       }
 
@@ -763,7 +763,7 @@ function bindCyEvents() {
         return;
       }
 
-      nodes = sbgnElementUtilities.getTopMostNodes(nodes);
+      nodes = elementUtilities.getTopMostNodes(nodes);
 
       disableDragAndDropMode();
       var parentData = newParent ? newParent.id() : null;
@@ -878,7 +878,7 @@ function bindCyEvents() {
     if (modeHandler.mode == 'selection-mode') {
       var node = this;
 
-      if (!sbgnElementUtilities.canHaveSBGNLabel(node)) {
+      if (!elementUtilities.canHaveSBGNLabel(node)) {
         return;
       }
 
@@ -1484,7 +1484,7 @@ var ReactionTemplate = Backbone.View.extend({
       var param = {
         firstTime: true,
         templateType: self.currentTemplateParameters.templateType,
-        processPosition: sbgnElementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2}),
+        processPosition: elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2}),
         macromoleculeList: jQuery.extend(true, [], self.currentTemplateParameters.macromoleculeList),
         complexName: self.currentTemplateParameters.templateReactionEnableComplexName?self.currentTemplateParameters.templateReactionComplexName:undefined,
         tilingPaddingVertical: calculateTilingPaddings(parseInt(sbgnStyleRules['tiling-padding-vertical'], 10)),
@@ -1578,10 +1578,10 @@ var FontProperties = Backbone.View.extend({
     var self = this;
     var commonProperties = {};
     
-    var commonFontSize = sbgnElementUtilities.getCommonLabelFontSize(eles);
-    var commonFontWeight = sbgnElementUtilities.getCommonLabelFontWeight(eles);
-    var commonFontFamily = sbgnElementUtilities.getCommonLabelFontFamily(eles);
-    var commonFontStyle = sbgnElementUtilities.getCommonLabelFontStyle(eles);
+    var commonFontSize = elementUtilities.getCommonLabelFontSize(eles);
+    var commonFontWeight = elementUtilities.getCommonLabelFontWeight(eles);
+    var commonFontFamily = elementUtilities.getCommonLabelFontFamily(eles);
+    var commonFontStyle = elementUtilities.getCommonLabelFontStyle(eles);
     
     if( commonFontSize != null ) {
       commonProperties.fontSize = commonFontSize;

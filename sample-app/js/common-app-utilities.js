@@ -392,7 +392,7 @@ var nodeResizeEndFunction = function (nodes) {
 };
 
 var showHiddenNeighbors = function (eles) {
-  var hiddenNeighbours = sbgnElementUtilities.getProcessesOfGivenEles(eles).filter(':hidden');
+  var hiddenNeighbours = elementUtilities.getProcessesOfGivenEles(eles).filter(':hidden');
   if (hiddenNeighbours.length === 0) {
     return;
   }

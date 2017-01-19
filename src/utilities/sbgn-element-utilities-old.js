@@ -1,4 +1,4 @@
-var sbgnElementUtilities = {
+var elementUtilities = {
   processTypes: ['process', 'omitted process', 'uncertain process',
     'association', 'dissociation', 'phenotype'],
   defaultSizes: {
@@ -61,7 +61,7 @@ var sbgnElementUtilities = {
     fontstyle: 'normal'
   },
   getDefaultLabelSize: function (sbgnclass) {
-    if (!sbgnElementUtilities.canHaveSBGNLabel(sbgnclass)) {
+    if (!elementUtilities.canHaveSBGNLabel(sbgnclass)) {
       return undefined;
     }
     else if (sbgnclass === 'complex' || sbgnclass === 'compartment') {
@@ -272,10 +272,10 @@ var sbgnElementUtilities = {
       },
       sbgnstatesandinfos: [],
       ports: [],
-      labelsize: sbgnElementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) || this.getDefaultLabelSize(sbgnclass) : undefined,
-      fontfamily: sbgnElementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) || this.defaultFontProperties.fontfamily : undefined,
-      fontweight: sbgnElementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) || this.defaultFontProperties.fontweight : undefined,
-      fontstyle: sbgnElementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) || this.defaultFontProperties.fontstyle : undefined
+      labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) || this.getDefaultLabelSize(sbgnclass) : undefined,
+      fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) || this.defaultFontProperties.fontfamily : undefined,
+      fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) || this.defaultFontProperties.fontweight : undefined,
+      fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) || this.defaultFontProperties.fontstyle : undefined
     };
 
     if (parent) {
@@ -398,7 +398,7 @@ var sbgnElementUtilities = {
   allCanHaveStateVariable: function (elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
-      if (!sbgnElementUtilities.canHaveStateVariable(ele.data('sbgnclass'))) {
+      if (!elementUtilities.canHaveStateVariable(ele.data('sbgnclass'))) {
         return false;
       }
     }
@@ -408,7 +408,7 @@ var sbgnElementUtilities = {
   allCanHaveUnitOfInformation: function (elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
-      if (!sbgnElementUtilities.canHaveUnitOfInformation(ele.data('sbgnclass'))) {
+      if (!elementUtilities.canHaveUnitOfInformation(ele.data('sbgnclass'))) {
         return false;
       }
     }
@@ -432,7 +432,7 @@ var sbgnElementUtilities = {
   allCanBeCloned: function (elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
-      if (!sbgnElementUtilities.canBeCloned(ele.data('sbgnclass'))) {
+      if (!elementUtilities.canBeCloned(ele.data('sbgnclass'))) {
         return false;
       }
     }
@@ -442,7 +442,7 @@ var sbgnElementUtilities = {
   allCanBeMultimer: function (elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
-      if (!sbgnElementUtilities.canBeMultimer(ele.data('sbgnclass'))) {
+      if (!elementUtilities.canBeMultimer(ele.data('sbgnclass'))) {
         return false;
       }
     }
@@ -600,7 +600,7 @@ var sbgnElementUtilities = {
   },
   allCanHaveSBGNCardinality: function (elements) {
     for (var i = 0; i < elements.length; i++) {
-      if (!sbgnElementUtilities.canHaveSBGNCardinality(elements[i])) {
+      if (!elementUtilities.canHaveSBGNCardinality(elements[i])) {
         return false;
       }
     }
@@ -609,7 +609,7 @@ var sbgnElementUtilities = {
   },
   allCanHaveSBGNLabel: function (elements) {
     for (var i = 0; i < elements.length; i++) {
-      if (!sbgnElementUtilities.canHaveSBGNLabel(elements[i])) {
+      if (!elementUtilities.canHaveSBGNLabel(elements[i])) {
         return false;
       }
     }
@@ -672,7 +672,7 @@ var sbgnElementUtilities = {
   someMustNotBeSquare: function (nodes) {
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
-      if (!sbgnElementUtilities.mustBeSquare(node.data('sbgnclass'))) {
+      if (!elementUtilities.mustBeSquare(node.data('sbgnclass'))) {
         return true;
       }
     }
@@ -685,7 +685,7 @@ var sbgnElementUtilities = {
   includesParentElement: function (nodes) {
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
-      if (!sbgnElementUtilities.isParent(node)) {
+      if (!elementUtilities.isParent(node)) {
         return true;
       }
     }
@@ -904,7 +904,7 @@ var sbgnElementUtilities = {
       width: (sbgnclass == ('complex') || sbgnclass == ('compartment')) ? textWidth * 2 : textWidth
     };
 
-    var font = sbgnElementUtilities.getLabelTextSize(ele) + "px Arial";
+    var font = elementUtilities.getLabelTextSize(ele) + "px Arial";
     return truncateText(textProp, font);
   },
   getLabelTextSize: function (ele) {
@@ -916,18 +916,18 @@ var sbgnElementUtilities = {
     }
 
     if (sbgnclass === 'and' || sbgnclass === 'or' || sbgnclass === 'not') {
-      return sbgnElementUtilities.getDynamicLabelTextSize(ele, 1);
+      return elementUtilities.getDynamicLabelTextSize(ele, 1);
     }
 
     if (sbgnclass.endsWith('process')) {
-      return sbgnElementUtilities.getDynamicLabelTextSize(ele, 1.5);
+      return elementUtilities.getDynamicLabelTextSize(ele, 1.5);
     }
 
     if (sbgnclass === 'complex' || sbgnclass === 'compartment' || !sbgnStyleRules['adjust-node-label-font-size-automatically']) {
       return ele.data('labelsize');
     }
 
-    return sbgnElementUtilities.getDynamicLabelTextSize(ele);
+    return elementUtilities.getDynamicLabelTextSize(ele);
   },
   /*
    * calculates the dynamic label size for the given node

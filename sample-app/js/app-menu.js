@@ -352,7 +352,7 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#neighbors-of-selected,#neighbors-of-selected-icon").click(function (e) {
-    var elesToHighlight = sbgnElementUtilities.getNeighboursOfSelected();
+    var elesToHighlight = elementUtilities.getNeighboursOfSelected();
 
     if (elesToHighlight.length === 0) {
       return;
@@ -388,7 +388,7 @@ function toolbarButtonsAndMenu() {
 
     nodesToSelect.select();
 
-    var nodesToHighlight = sbgnElementUtilities.getProcessesOfSelected();
+    var nodesToHighlight = elementUtilities.getProcessesOfSelected();
     cy.undoRedo().do("highlight", nodesToHighlight);
   });
 
@@ -403,7 +403,7 @@ function toolbarButtonsAndMenu() {
   });
 
   $("#processes-of-selected").click(function (e) {
-    var elesToHighlight = sbgnElementUtilities.getProcessesOfSelected();
+    var elesToHighlight = elementUtilities.getProcessesOfSelected();
 
     if (elesToHighlight.length === 0) {
       return;
@@ -421,7 +421,7 @@ function toolbarButtonsAndMenu() {
 
   $("#remove-highlights,#remove-highlights-icon").click(function (e) {
 
-    if (sbgnElementUtilities.noneIsNotHighlighted()) {
+    if (elementUtilities.noneIsNotHighlighted()) {
       return;
     }
 
@@ -431,13 +431,13 @@ function toolbarButtonsAndMenu() {
   $("#make-compound-complex").click(function (e) {
     var selected = cy.nodes(":selected").filter(function (i, element) {
       var sbgnclass = element.data("sbgnclass")
-      return sbgnElementUtilities.isEPNClass(sbgnclass);
+      return elementUtilities.isEPNClass(sbgnclass);
     });
 
-    selected = sbgnElementUtilities.getTopMostNodes(selected);
+    selected = elementUtilities.getTopMostNodes(selected);
 
     // All elements should have the same parent
-    if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)) {
+    if (selected.length == 0 || !elementUtilities.allHaveTheSameParent(selected)) {
       return;
     }
     var param = {
@@ -445,17 +445,17 @@ function toolbarButtonsAndMenu() {
       nodesToMakeCompound: selected
     };
 
-    cy.undoRedo().do("createCompoundForSelectedNodes", param);
+    cy.undoRedo().do("createCompoundForGivenNodes", param);
   });
 
   $("#make-compound-compartment").click(function (e) {
     var selected = cy.nodes(":selected");
-    selected = sbgnElementUtilities.getTopMostNodes(selected);
+    selected = elementUtilities.getTopMostNodes(selected);
 
     // All elements should have the same parent and the common parent should not be a 'complex'
     // because the old common parent will be the parent of the new compartment after this operation and
     // 'complexes' cannot include 'compartments'
-    if (selected.length == 0 || !sbgnElementUtilities.allHaveTheSameParent(selected)
+    if (selected.length == 0 || !elementUtilities.allHaveTheSameParent(selected)
             || cy.nodes(':selected').parent().data('sbgnclass') === 'complex') {
       return;
     }
@@ -465,7 +465,7 @@ function toolbarButtonsAndMenu() {
       nodesToMakeCompound: selected
     };
 
-    cy.undoRedo().do("createCompoundForSelectedNodes", param);
+    cy.undoRedo().do("createCompoundForGivenNodes", param);
   });
 
   $("#layout-properties").click(function (e) {

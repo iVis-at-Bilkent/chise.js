@@ -5,10 +5,10 @@ var undoRedoActionFunctions = {
     var result;
     if (param.firstTime) {
       var newNode = param.newNode;
-      result = sbgnElementUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
+      result = elementUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
     }
     else {
-      result = sbgnElementUtilities.restoreEles(param);
+      result = elementUtilities.restoreEles(param);
     }
     
     return {
@@ -16,27 +16,27 @@ var undoRedoActionFunctions = {
     };
   },
   deleteElesSimple: function (param) {
-    return sbgnElementUtilities.deleteElesSimple(param.eles);
+    return elementUtilities.deleteElesSimple(param.eles);
   },
   deleteElesSmart: function (param) {
     if (param.firstTime) {
-      return sbgnElementUtilities.deleteElesSmart(param.eles);
+      return elementUtilities.deleteElesSmart(param.eles);
     }
-    return sbgnElementUtilities.deleteElesSimple(param.eles);
+    return elementUtilities.deleteElesSimple(param.eles);
   },
   restoreEles: function (eles) {
     var param = {};
-    param.eles = sbgnElementUtilities.restoreEles(eles);
+    param.eles = elementUtilities.restoreEles(eles);
     return param;
   },
   addEdge: function (param) {
     var result;
     if (param.firstTime) {
       var newEdge = param.newEdge;
-      result = sbgnElementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
+      result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
     }
     else {
-      result = sbgnElementUtilities.restoreEles(param);
+      result = elementUtilities.restoreEles(param);
     }
     
     return {
@@ -47,7 +47,7 @@ var undoRedoActionFunctions = {
    * This method assumes that param.nodesToMakeCompound contains at least one node
    * and all of the nodes including in it have the same parent
    */
-  createCompoundForSelectedNodes: function (param) {
+  createCompoundForGivenNodes: function (param) {
     var nodesToMakeCompound = param.nodesToMakeCompound;
     var newCompound;
 
@@ -69,28 +69,21 @@ var undoRedoActionFunctions = {
     if (param.firstTime) {
       var oldParentId = nodesToMakeCompound[0].data("parent");
       // The parent of new compound will be the old parent of the nodes to make compound
-      newCompound = sbgnElementUtilities.addNode(undefined, undefined, param.compundType, oldParentId, true);
+      newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compundType);
     }
     else {
       newCompound = param.removedCompund.restore();
+      var newCompoundId = newCompound.id();
+
+      nodesToMakeCompound.move({parent: newCompoundId});
+
+      refreshPaddings();
     }
-
-    var newCompoundId = newCompound.id();
-
-    nodesToMakeCompound.move({parent: newCompoundId});
-
-    refreshPaddings();
 
     return newCompound;
   },
   removeCompound: function (compoundToRemove) {
-    var compoundId = compoundToRemove.id();
-    var newParentId = compoundToRemove.data("parent");
-    newParentId = newParentId === undefined ? null : newParentId;
-    var childrenOfCompound = compoundToRemove.children();
-
-    childrenOfCompound.move({parent: newParentId});
-    var removedCompund = compoundToRemove.remove();
+    elementUtilities.removeCompound(compoundToRemove);
 
     var param = {
       nodesToMakeCompound: childrenOfCompound,
@@ -106,14 +99,15 @@ var undoRedoActionFunctions = {
   // Section Start
   // easy creation action functions
   
+  // TODO handle the firstTime case in elementUtilities
   createTemplateReaction: function (param) {
     var firstTime = param.firstTime;
     var eles;
 
     if (firstTime) {
-      var defaultMacromoleculProperties = sbgnElementUtilities.defaultSizes["macromolecule"];
+      var defaultMacromoleculProperties = elementUtilities.defaultSizes["macromolecule"];
       var templateType = param.templateType;
-      var processWidth = sbgnElementUtilities.defaultSizes[templateType] ? sbgnElementUtilities.defaultSizes[templateType].width : 50;
+      var processWidth = elementUtilities.defaultSizes[templateType] ? elementUtilities.defaultSizes[templateType].width : 50;
       var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
       var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
       var processPosition = param.processPosition;
@@ -133,7 +127,7 @@ var undoRedoActionFunctions = {
       }
 
       //Create the process in template type
-      var process = sbgnElementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+      var process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
       process.data('justAdded', true);
 
       //Define the starting y position
@@ -141,17 +135,17 @@ var undoRedoActionFunctions = {
 
       //Create the free macromolecules
       for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = sbgnElementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+        var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
         newNode.data('justAdded', true);
         newNode.data('sbgnlabel', macromoleculeList[i]);
 
         //create the edge connected to the new macromolecule
         var newEdge;
         if (templateType === 'association') {
-          newEdge = sbgnElementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+          newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
         }
         else {
-          newEdge = sbgnElementUtilities.addEdge(process.id(), newNode.id(), 'production');
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
         }
 
         newEdge.data('justAdded', true);
@@ -162,7 +156,7 @@ var undoRedoActionFunctions = {
 
       //Create the complex including macromolecules inside of it
       //Temprorarily add it to the process position we will move it according to the last size of it
-      var complex = sbgnElementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+      var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
       complex.data('justAdded', true);
       complex.data('justAddedLayoutNode', true);
 
@@ -174,16 +168,16 @@ var undoRedoActionFunctions = {
       //create the edge connnected to the complex
       var edgeOfComplex;
       if (templateType === 'association') {
-        edgeOfComplex = sbgnElementUtilities.addEdge(process.id(), complex.id(), 'production');
+        edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
       }
       else {
-        edgeOfComplex = sbgnElementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+        edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
       }
       edgeOfComplex.data('justAdded', true);
 
       //Create the macromolecules inside the complex
       for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = sbgnElementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
+        var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
         newNode.data('justAdded', true);
         newNode.data('sbgnlabel', macromoleculeList[i]);
         newNode.data('justAddedLayoutNode', true);
@@ -212,7 +206,7 @@ var undoRedoActionFunctions = {
 
           var positionDiffX = supposedXPosition - complex.position('x');
           var positionDiffY = supposedYPosition - complex.position('y');
-          sbgnElementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
+          elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
         }
       });
 
@@ -308,38 +302,14 @@ var undoRedoActionFunctions = {
         if (param.sizeMap) {
           node.data("sbgnbbox").w = param.sizeMap[node.id()].w;
           node.data("sbgnbbox").h = param.sizeMap[node.id()].h;
+          
+          node.removeClass('noderesized');
+          node.addClass('noderesized');
         }
         else {
-          var ratio = undefined;
-          var eleMustBeSquare = sbgnElementUtilities.mustBeSquare(node.data('sbgnclass'));
-
-          // Note that both param.width and param.height cannot be truthy
-          if (param.width) {
-            if (param.useAspectRatio || eleMustBeSquare) {
-              ratio = param.width / node.width();
-            }
-
-            node.data("sbgnbbox").w = param.width;
-          }
-          else if (param.height) {
-            if (param.useAspectRatio || eleMustBeSquare) {
-              ratio = param.height / node.height();
-            }
-
-            node.data("sbgnbbox").h = param.height;
-          }
-
-          if (ratio && !param.height) {
-            node.data("sbgnbbox").h = node.height() * ratio;
-          }
-          else if (ratio && !param.width) {
-            node.data("sbgnbbox").w = node.width() * ratio;
-          }
+          elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio);
         }
       }
-
-      node.removeClass('noderesized');
-      node.addClass('noderesized');
     }
 
     nodes.removeClass('noderesized');

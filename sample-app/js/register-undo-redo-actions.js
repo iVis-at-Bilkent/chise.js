@@ -16,7 +16,7 @@ var registerUndoRedoActions = function () {
   ur.action("deleteElesSimple", undoRedoActionFunctions.deleteElesSimple, undoRedoActionFunctions.restoreEles);
   ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.deleteElesSimple);
   ur.action("deleteElesSmart", undoRedoActionFunctions.deleteElesSmart, undoRedoActionFunctions.restoreEles);
-  ur.action("createCompoundForSelectedNodes", undoRedoActionFunctions.createCompoundForSelectedNodes, undoRedoActionFunctions.removeCompound);
+  ur.action("createCompoundForGivenNodes", undoRedoActionFunctions.createCompoundForGivenNodes, undoRedoActionFunctions.removeCompound);
 
   // register general actions
   ur.action("resizeNode", undoRedoActionFunctions.resizeNode, undoRedoActionFunctions.resizeNode);
