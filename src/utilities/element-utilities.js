@@ -1,4 +1,4 @@
-var elementUtilities = {};
+var elementUtilities = {}; // TODO this initialization should be replaced with sbgnviz.elementUtilities or something like that
 
 elementUtilities.defaultSizes = {
   "process": {

@@ -1,4 +1,3 @@
-// TODO this file is to be moved to the sample appication.
 var inspectorUtilities = {};
 
 // Define inspectorUtilities.fontProperties on document ready
