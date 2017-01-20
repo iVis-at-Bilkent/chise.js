@@ -418,7 +418,7 @@ elementUtilities.convenientToEquivalence = function(ele) {
 
 // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
 elementUtilities.relocateStateAndInfos = function (ele) {
-  var stateAndInfos = typeof ele === 'string' ? ele : ele.data('statesandinfos');
+  var stateAndInfos = ( ele.isNode && ele.isNode() ) ? ele.data('statesandinfos') : ele;
   var length = stateAndInfos.length;
   if (length == 0) {
     return;
@@ -456,5 +456,108 @@ elementUtilities.relocateStateAndInfos = function (ele) {
 
     stateAndInfos[3].bbox.x = 25;
     stateAndInfos[3].bbox.y = 50;
+  }
+};
+
+// Change state value or unit of information box of given nodes with given index.
+// Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
+// Value parameter is the new value to set.
+// This method the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+elementUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
+  var result;
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var stateAndInfos = node.data('stateandinfos');
+    var box = stateAndInfos[i];
+    
+    if (box.clazz == "state variable") {
+      if(!result) {
+        result = box.state[type];
+      }
+      
+      box.state[type] = value;
+    }
+    else if (state.clazz == "unit of information") {
+      if(!result) {
+        result = box.label.text;
+      }
+      
+      box.label.text = value;
+    }
+  }
+  
+  return result;
+};
+
+// Add a new state or info box to given nodes.
+// The box is represented by the parameter obj.
+// This method returns the index of the just added box.
+elementUtilities.addStateOrInfoBox = function(nodes, obj) {
+  var index;
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var stateAndInfos = node.data('stateandinfos');
+    stateAndInfos.push(obj);
+    index = stateAndInfos.length - 1;
+    this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
+  }
+  
+  return index;
+};
+
+// Remove the state or info boxes of the given nodes at given index.
+// Returns the removed box.
+elementUtilities.removeStateOrInfoBox = function(nodes, index) {
+  var obj;
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var stateAndInfos = node.data('stateandinfos');
+    if(!obj) {
+      obj = stateAndInfos[index];
+    }
+    stateAndInfos.splice(index, 1); // Remove the box
+    this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
+  }
+  
+  return obj;
+};
+
+// Set multimer status of the given nodes to the given status.
+elementUtilities.setMultimerStatus = function(nodes, status) {
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var sbgnclass = node.data('sbgnclass');
+    var isMultimer = node.data('sbgnclass').endsWith(' multimer');
+
+    if (status) { // Make multimer status true
+      if (!isMultimer) {
+        node.data('sbgnclass', sbgnclass + ' multimer');
+      }
+    }
+    else { // Make multimer status false
+      if (isMultimer) {
+        node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+      }
+    }
+  }
+};
+
+// Set clone marker status of given nodes to the given status.
+elementUtilities.setCloneMarkerStatus = function(nodes, status) {
+  cy.startBatch();
+  
+  nodes.data('clonemarker', status ? true : undefined);
+  var nodesToAddClass = nodes.filter('[class="perturbing agent"]');
+  nodesToAddClass.removeClass('changeClonedStatus');
+  nodesToAddClass.addClass('changeClonedStatus');
+  
+  cy.endBatch();
+};
+
+//elementUtilities.setCloneMarkerStatus = function()
+
+elementUtilities.changeFontProperties = function(eles, data) {
+  for (var prop in data) {
+    eles.data(prop, data[prop]);
   }
 };

@@ -407,7 +407,8 @@ var undoRedoActionFunctions = {
       }
     }
     cy.forceRender();
-
+    
+    // TODO move such calls to sample application maybe by triggering an event
     if (_.isEqual(eles, cy.nodes(':selected'))) {
       inspectorUtilities.handleSBGNInspector();
     }
@@ -435,9 +436,7 @@ var undoRedoActionFunctions = {
     }
 
     if (param.firstTime) {
-      for (var prop in param.data) {
-        eles.data(prop, param.data[prop]);
-      }
+      elementUtilities.changeFontProperties(eles, param.data);
     }
     else {
       for (var i = 0; i < eles.length; i++) {
@@ -485,105 +484,65 @@ var undoRedoActionFunctions = {
   // Section Start
   // sbgn action functions
   
-  changeStateVariable: function (param) {
+  changeStateOrInfoBox: function (param) {
     var result = {
     };
-    var state = param.state;
-    var type = param.type;
-    result.state = state;
-    result.type = type;
-    result.valueOrVariable = state.state[type];
+    result.type = param.type;
     result.nodes = param.nodes;
     result.width = param.width;
-    result.stateAndInfos = param.stateAndInfos;
+    result.index = param.index;
 
-    var index = param.stateAndInfos.indexOf(state);
-    state.state[type] = param.valueOrVariable;
-
-    for (var i = 0; i < param.nodes.length; i++) {
-      param.nodes[i]._private.data.sbgnstatesandinfos = param.stateAndInfos;
-    }
+    result.value = elementUtilities.changeStateOrInfoBox(param.nodes, param.index, param.value, param.type);
 
     cy.forceRender();
-
-    inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.stateAndInfos, param.width);
+    
+    // TODO move such calls to sample application maybe by triggering an event
+    inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.nodes().data('stateandinfos'), param.width);
 
     return result;
   },
-  changeUnitOfInformation: function (param) {
-    var result = {
-    };
-    var state = param.state;
-    result.state = state;
-    result.text = state.label.text;
-    result.node = param.node;
-    result.width = param.width;
-
-    state.label.text = param.text;
-    cy.forceRender();
-
-    if (cy.elements(":selected").length == 1 && cy.elements(":selected")[0] == param.node) {
-      inspectorUtilities.fillInspectorStateAndInfos(param.node, param.width);
-    }
-
-    return result;
-  },
-  addStateAndInfo: function (param) {
+  addStateOrInfoBox: function (param) {
     var obj = param.obj;
     var nodes = param.nodes;
-    var stateAndInfos = param.stateAndInfos;
 
-    stateAndInfos.push(obj);
-    inspectorUtilities.relocateStateAndInfos(stateAndInfos);
-
-    for (var i = 0; i < nodes.length; i++) {
-      nodes[i]._private.data.sbgnstatesandinfos = stateAndInfos;
-    }
+    var index = elementUtilities.addStateOrInfoBox(nodes, obj);
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      inspectorUtilities.fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
+      inspectorUtilities.fillInspectorStateAndInfos(nodes, nodes.data('stateandinfos'), param.width);
     }
     cy.forceRender();
 
     var result = {
       nodes: nodes,
       width: param.width,
-      stateAndInfos: stateAndInfos,
+      index: index,
       obj: obj
     };
     return result;
   },
-  removeStateAndInfo: function (param) {
-    var obj = param.obj;
+  removeStateOrInfoBox: function (param) {
+    var index = param.index;
     var nodes = param.nodes;
-    var stateAndInfos = param.stateAndInfos;
-
-    var index = stateAndInfos.indexOf(obj);
-    stateAndInfos.splice(index, 1);
-
-    for (var i = 0; i < nodes.length; i++) {
-      nodes[i]._private.data.sbgnstatesandinfos = stateAndInfos;
-    }
+    
+    var obj = elementUtilities.removeStateOrInfoBox(nodes, index);
 
     if (_.isEqual(nodes, cy.nodes(':selected'))) {
-      inspectorUtilities.fillInspectorStateAndInfos(nodes, stateAndInfos, param.width);
+      inspectorUtilities.fillInspectorStateAndInfos(nodes, nodes.data('stateandinfos'), param.width);
     }
-    inspectorUtilities.relocateStateAndInfos(stateAndInfos);
     cy.forceRender();
 
     var result = {
       nodes: nodes,
       width: param.width,
-      stateAndInfos: stateAndInfos,
       obj: obj
     };
     return result;
   },
-  changeIsMultimerStatus: function (param) {
+  setMultimerStatus: function (param) {
     var firstTime = param.firstTime;
     var nodes = param.nodes;
-    var makeMultimer = param.makeMultimer;
-    var resultMakeMultimer = {};
+    var status = param.makeMultimer;
+    var resultStatus = {};
 
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
@@ -591,21 +550,16 @@ var undoRedoActionFunctions = {
 
       resultMakeMultimer[node.id()] = isMultimer;
     }
-
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var sbgnclass = node.data('sbgnclass');
-      var isMultimer = node.data('sbgnclass').endsWith(' multimer');
-
-      if ((firstTime && makeMultimer) || (!firstTime && makeMultimer[node.id()])) {
-        if (!isMultimer) {
-          node.data('sbgnclass', sbgnclass + ' multimer');
-        }
-      }
-      else {
-        if (isMultimer) {
-          node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
-        }
+    
+    // If this is the first time change the status of all nodes at once.
+    // If not change status of each seperately to the values mapped to their id.
+    if (firstTime) {
+      elementUtilities.setMultimerStatus(nodes, status);
+    }
+    else {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        elementUtilities.setMultimerStatus(node, status[node.id()]); 
       }
     }
 
@@ -614,27 +568,23 @@ var undoRedoActionFunctions = {
     }
 
     var result = {
-      makeMultimer: resultMakeMultimer,
+      status: resultStatus,
       nodes: nodes
     };
 
     return result;
   },
-  changeIsCloneMarkerStatus: function (param) {
+  setCloneMarkerStatus: function (param) {
     var nodes = param.nodes;
-    var makeCloneMarker = param.makeCloneMarker;
+    var status = param.status;
     var firstTime = param.firstTime;
-    var resultMakeCloneMarker = {};
+    var resultStatus = {};
 
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
-      resultMakeCloneMarker[node.id()] = node._private.data.sbgnclonemarker;
-      var currentMakeCloneMarker = firstTime ? makeCloneMarker : makeCloneMarker[node.id()];
-      node._private.data.sbgnclonemarker = currentMakeCloneMarker ? true : undefined;
-      if (node.data('sbgnclass') === 'perturbing agent') {
-        node.removeClass('changeClonedStatus');
-        node.addClass('changeClonedStatus');
-      }
+      resultStatus[node.id()] = node.data('clonemarker');
+      var currentStatus = firstTime ? status : status[node.id()];
+      elementUtilities.setCloneMarkerStatus(nodes, currentStatus);
     }
 
     cy.style().update();
@@ -644,7 +594,7 @@ var undoRedoActionFunctions = {
     }
 
     var result = {
-      makeCloneMarker: resultMakeCloneMarker,
+      status: resultStatus,
       nodes: nodes
     };
 

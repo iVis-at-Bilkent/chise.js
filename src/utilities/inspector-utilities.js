@@ -1,3 +1,4 @@
+// TODO this file is to be moved to the sample appication.
 var inspectorUtilities = {};
 
 // Define inspectorUtilities.fontProperties on document ready
@@ -6,47 +7,6 @@ $(document).ready(function () {
     el: '#font-properties-table'
   });
 });
-
-inspectorUtilities.relocateStateAndInfos = function (stateAndInfos) {
-  var length = stateAndInfos.length;
-  if (length == 0) {
-    return;
-  }
-  else if (length == 1) {
-    stateAndInfos[0].bbox.x = 0;
-    stateAndInfos[0].bbox.y = -50;
-  }
-  else if (length == 2) {
-    stateAndInfos[0].bbox.x = 0;
-    stateAndInfos[0].bbox.y = -50;
-
-    stateAndInfos[1].bbox.x = 0;
-    stateAndInfos[1].bbox.y = 50;
-  }
-  else if (length == 3) {
-    stateAndInfos[0].bbox.x = -25;
-    stateAndInfos[0].bbox.y = -50;
-
-    stateAndInfos[1].bbox.x = 25;
-    stateAndInfos[1].bbox.y = -50;
-
-    stateAndInfos[2].bbox.x = 0;
-    stateAndInfos[2].bbox.y = 50;
-  }
-  else {
-    stateAndInfos[0].bbox.x = -25;
-    stateAndInfos[0].bbox.y = -50;
-
-    stateAndInfos[1].bbox.x = 25;
-    stateAndInfos[1].bbox.y = -50;
-
-    stateAndInfos[2].bbox.x = -25;
-    stateAndInfos[2].bbox.y = 50;
-
-    stateAndInfos[3].bbox.x = 25;
-    stateAndInfos[3].bbox.y = 50;
-  }
-};
 
 inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, width) {
   //first empty the state variables and infos data in inspector
@@ -65,28 +25,26 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
 
       $(".inspector-state-variable-value").unbind('change').on('change', function () {
         var param = {
-          state: $(this).data("state"),
-          valueOrVariable: $(this).val(),
+          index: i + 0,
+          value: $(this).val(),
           type: 'value',
           nodes: nodes,
-          stateAndInfos: stateAndInfos,
           width: width
         };
         
-        cy.undoRedo().do("changeStateVariable", param);
+        cy.undoRedo().do("changeStateOrInfoBox", param);
       });
 
       $(".inspector-state-variable-variable").unbind('change').on('change', function () {
         var param = {
-          state: $(this).data("state"),
-          valueOrVariable: $(this).val(),
+          index: i + 0,
+          value: $(this).val(),
           type: 'variable',
           nodes: nodes,
-          stateAndInfos: stateAndInfos,
           width: width
         };
         
-        cy.undoRedo().do("changeStateVariable", param);
+        cy.undoRedo().do("changeStateOrInfoBox", param);
       });
     }
     else if (state.clazz == "unit of information") {
@@ -97,9 +55,8 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
 
       $(".inspector-unit-of-information-label").unbind('change').on('change', function () {
         var param = {
-          state: $(this).data("state"),
-          text: $(this).val(),
-          stateAndInfos: stateAndInfos,
+          index: i + 0,
+          value: $(this).val(),
           nodes: nodes,
           width: width
         };
@@ -110,16 +67,15 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
 
     $(".inspector-delete-state-and-info").unbind('click').click(function (event) {
       var param = {
-        obj: $(this).data("state"),
+        index: i + 0,
         nodes: nodes,
-        stateAndInfos: stateAndInfos,
         width: width
       };
       
-      cy.undoRedo().do("removeStateAndInfo", param);
+      cy.undoRedo().do("removeStateOrInfoBox", param);
     });
 
-    $(".just-added-inspector-input").data("state", state);
+//    $(".just-added-inspector-input").data("state", state);
     $(".just-added-inspector-input").removeClass("just-added-inspector-input");
   }
   $("#inspector-state-variables").append("<img id='inspector-add-state-variable' src='sample-app/sampleapp-images/add.png'/>");
@@ -140,11 +96,10 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
     var param = {
       obj: obj,
       nodes: nodes,
-      stateAndInfos: stateAndInfos,
       width: width
     };
     
-    cy.undoRedo().do("addStateAndInfo", param);
+    cy.undoRedo().do("addStateOrInfoBox", param);
   });
 
   $("#inspector-add-unit-of-information").click(function () {
@@ -160,11 +115,10 @@ inspectorUtilities.fillInspectorStateAndInfos = function (nodes, stateAndInfos, 
     var param = {
       obj: obj,
       nodes: nodes,
-      width: width,
-      stateAndInfos: stateAndInfos
+      width: width
     };
     
-    cy.undoRedo().do("addStateAndInfo", param);
+    cy.undoRedo().do("addStateOrInfoBox", param);
   });
 }
 
@@ -516,22 +470,22 @@ inspectorUtilities.handleSBGNInspector = function () {
 
       $('#inspector-is-multimer').on('click', function () {
         var param = {
-          makeMultimer: $('#inspector-is-multimer').prop('checked'),
+          status: $('#inspector-is-multimer').prop('checked'),
           nodes: selectedEles,
           firstTime: true
         };
         
-        cy.undoRedo().do("changeIsMultimerStatus", param);
+        cy.undoRedo().do("setMultimerStatus", param);
       });
 
       $('#inspector-is-clone-marker').on('click', function () {
         var param = {
-          makeCloneMarker: $('#inspector-is-clone-marker').prop('checked'),
+          status: $('#inspector-is-clone-marker').prop('checked'),
           nodes: selectedEles,
           firstTime: true
         };
         
-        cy.undoRedo().do("changeIsCloneMarkerStatus", param);
+        cy.undoRedo().do("setCloneMarkerStatus", param);
       });
 
       $("#inspector-border-color").on('change', function () {

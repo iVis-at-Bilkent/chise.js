@@ -28,12 +28,12 @@ var registerUndoRedoActions = function () {
   ur.action("showAndPerformIncrementalLayout", undoRedoActionFunctions.showAndPerformIncrementalLayout, undoRedoActionFunctions.undoShowAndPerformIncrementalLayout);
 
   // register SBGN actions
-  ur.action("addStateAndInfo", undoRedoActionFunctions.addStateAndInfo, undoRedoActionFunctions.removeStateAndInfo);
-  ur.action("changeStateVariable", undoRedoActionFunctions.changeStateVariable, undoRedoActionFunctions.changeStateVariable);
+  ur.action("addStateAndInfo", undoRedoActionFunctions.addStateAndInfo, undoRedoActionFunctions.removeStateOrInfoBox);
+  ur.action("changeStateOrInfoBox", undoRedoActionFunctions.changeStateOrInfoBox, undoRedoActionFunctions.changeStateOrInfoBox);
   ur.action("changeUnitOfInformation", undoRedoActionFunctions.changeUnitOfInformation, undoRedoActionFunctions.changeUnitOfInformation);
-  ur.action("changeIsMultimerStatus", undoRedoActionFunctions.changeIsMultimerStatus, undoRedoActionFunctions.changeIsMultimerStatus);
-  ur.action("changeIsCloneMarkerStatus", undoRedoActionFunctions.changeIsCloneMarkerStatus, undoRedoActionFunctions.changeIsCloneMarkerStatus);
-  ur.action("removeStateAndInfo", undoRedoActionFunctions.removeStateAndInfo, undoRedoActionFunctions.addStateAndInfo);
+  ur.action("setMultimerStatus", undoRedoActionFunctions.setMultimerStatus, undoRedoActionFunctions.setMultimerStatus);
+  ur.action("setCloneMarkerStatus", undoRedoActionFunctions.setCloneMarkerStatus, undoRedoActionFunctions.setCloneMarkerStatus);
+  ur.action("removeStateOrInfoBox", undoRedoActionFunctions.removeStateOrInfoBox, undoRedoActionFunctions.addStateAndInfo);
   
   // register easy creation actions
   ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.removeEles);
