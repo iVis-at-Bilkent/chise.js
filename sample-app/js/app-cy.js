@@ -536,70 +536,26 @@ function cytoscapeExtensionsAndContextMenu() {
       var target = targetNodes[0].id();
       var sourceClass = sourceNode.data('sbgnclass');
       var targetClass = targetNodes[0].data('sbgnclass');
-      var sbgnclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
-
-      if (sbgnclass == 'consumption' || sbgnclass == 'modulation'
-              || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-              || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation') {
-        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isEPNClass(targetClass)) {
-          if (elementUtilities.isEPNClass(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
-            //If just the direction is not valid reverse the direction
-            var temp = source;
-            source = target;
-            target = temp;
-          }
-          else {
-            return;
-          }
-        }
+      var edgeclass = modeHandler.elementsHTMLNameToName[modeHandler.selectedEdgeType];
+  
+      // Get the validation result
+      var validation = elementUtilities.validateArrowEnds(edgeclass, sourceClass, targetClass);
+      
+      // If validation result is 'invalid' cancel the operation
+      if (validation === 'invalid') {
+        return;
       }
-      else if (sbgnclass == 'production') {
-        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isEPNClass(targetClass)) {
-          if (elementUtilities.isEPNClass(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
-            //If just the direction is not valid reverse the direction
-            var temp = source;
-            source = target;
-            target = temp;
-          }
-          else {
-            return;
-          }
-        }
-      }
-      else if (sbgnclass == 'logic arc') {
-        var invalid = false;
-        if (!elementUtilities.isEPNClass(sourceClass) || !elementUtilities.isLogicalOperator(targetClass)) {
-          if (elementUtilities.isLogicalOperator(sourceClass) && elementUtilities.isEPNClass(targetClass)) {
-            //If just the direction is not valid reverse the direction
-            var temp = source;
-            source = target;
-            target = temp;
-          }
-          else {
-            invalid = true;
-          }
-        }
-
-        // the case that both sides are logical operators are valid too
-        if (elementUtilities.isLogicalOperator(sourceClass) && elementUtilities.isLogicalOperator(targetClass)) {
-          invalid = false;
-        }
-
-        if (invalid) {
-          return;
-        }
-      }
-      else if (sbgnclass == 'equivalence arc') {
-        if (!(elementUtilities.isEPNClass(sourceClass) && elementUtilities.convenientToEquivalence(targetClass))
-                && !(elementUtilities.isEPNClass(targetClass) && elementUtilities.convenientToEquivalence(sourceClass))) {
-          return;
-        }
+      // If validation result is 'reverse' reverse the source-target pair before creating the edge
+      if (validation === 'reverse') {
+        var temp = source;
+        source = target;
+        target = temp;
       }
 
       param.newEdge = {
         source: source,
         target: target,
-        sbgnclass: sbgnclass
+        sbgnclass: edgeclass
       };
       param.firstTime = true;
 

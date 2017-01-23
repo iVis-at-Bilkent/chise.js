@@ -6,15 +6,14 @@
     libs.sbgnviz = _libs.sbgnviz || sbgnviz;
     libs.saveAs = _libs.filesaverjs ? _libs.filesaverjs.saveAs : saveAs;
     
+    libs.sbgnviz(_options, _libs); // Initilize sbgnviz
+    
     // Set the libraries to access them from any file
     var libUtilities = require('./utilities/lib-utilities');
     libUtilities.setLibs(libs);
     
     var optionUtilities = require('./utilities/option-utilities');
-    var options = optionUtilities.extendOptions(_options);
-    
-    sbgnRenderer();
-    sbgnCyInstance();
+    var options = optionUtilities.extendOptions(_options); // Extends the default options with the given options
     
     // Expose the api here
   };

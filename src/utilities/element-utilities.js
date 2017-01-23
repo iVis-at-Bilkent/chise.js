@@ -1,4 +1,6 @@
-var elementUtilities = {}; // TODO this initialization should be replaced with sbgnviz.elementUtilities or something like that
+// Extends sbgnviz.elementUtilities
+var libs = require('./lib-utilities').getLibs();
+var elementUtilities = libs.elementUtilities;
 
 elementUtilities.defaultSizes = {
   "process": {
@@ -181,10 +183,10 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
 };
 
 /*
-* This method assumes that param.nodesToMakeCompound contains at least one node
-* and all of the nodes including in it have the same parent. It creates a compound fot the given nodes an having the given type.
-*/
-elementUtilities.createCompoundForGivenNodes = function(nodesToMakeCompound, compundType) {
+ * This method assumes that param.nodesToMakeCompound contains at least one node
+ * and all of the nodes including in it have the same parent. It creates a compound fot the given nodes an having the given type.
+ */
+elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compundType) {
   var oldParentId = nodesToMakeCompound[0].data("parent");
   // The parent of new compound will be the old parent of the nodes to make compound
   var newCompound = elementUtilities.addNode(undefined, undefined, compundType, oldParentId, true);
@@ -194,7 +196,7 @@ elementUtilities.createCompoundForGivenNodes = function(nodesToMakeCompound, com
   return newCompound;
 };
 
-elementUtilities.removeCompound = function(compoundToRemove) {
+elementUtilities.removeCompound = function (compoundToRemove) {
   var compoundId = compoundToRemove.id();
   var newParentId = compoundToRemove.data("parent");
   newParentId = newParentId === undefined ? null : newParentId;
@@ -205,7 +207,7 @@ elementUtilities.removeCompound = function(compoundToRemove) {
 };
 
 // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
-elementUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
+elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var ratio = undefined;
@@ -234,7 +236,7 @@ elementUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
     else if (ratio && !width) {
       node.data("sbgnbbox").w = node.width() * ratio;
     }
-    
+
     node.removeClass('noderesized');
     node.addClass('noderesized');
   }
@@ -250,24 +252,24 @@ elementUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
 // property is not common for all elements. dataOrCss parameter specify whether to check the property on data or css.
 // The default value for it is data. If propertyName parameter is given as a function instead of a string representing the 
 // property name then use what that function returns.
-elementUtilities.getCommonProperty = function(elements, propertyName, dataOrCss) {
+elementUtilities.getCommonProperty = function (elements, propertyName, dataOrCss) {
   if (elements.length == 0) {
     return null;
   }
-  
+
   var isFunction;
   // If we are not comparing the properties directly users can specify a function as well
   if (typeof propertyName === 'function') {
     isFunction = true;
   }
-  
+
   // Use data as default
   if (!isFunction && !dataOrCss) {
     dataOrCss = 'data';
   }
-  
+
   var value = isFunction ? propertyName(elements[0]) : elements[0][dataOrCss](propertyName);
-  
+
   for (var i = 1; i < elements.length; i++) {
     if (isFunction ? propertyName(elements[i]) : elements[i][dataOrCss](propertyName) != value) {
       return null;
@@ -278,7 +280,7 @@ elementUtilities.getCommonProperty = function(elements, propertyName, dataOrCss)
 };
 
 // Returns if the function returns a truthy value for all of the given elements.
-elementUtilities.trueForAllElements = function(elements, fcn) {
+elementUtilities.trueForAllElements = function (elements, fcn) {
   for (var i = 0; i < elements.length; i++) {
     if (!fcn(elements[i])) {
       return false;
@@ -291,7 +293,7 @@ elementUtilities.trueForAllElements = function(elements, fcn) {
 // Returns whether the give element can have sbgncardinality
 elementUtilities.canHaveSBGNCardinality = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-  
+
   return ele.data('class') == 'consumption' || ele.data('class') == 'production';
 };
 
@@ -306,7 +308,7 @@ elementUtilities.canHaveSBGNLabel = function (ele) {
 // Returns whether the give element have unit of information
 elementUtilities.canHaveUnitOfInformation = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-  
+
   if (sbgnclass == 'simple chemical'
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
@@ -320,7 +322,7 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
 // Returns whether the give element have state variable
 elementUtilities.canHaveStateVariable = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-  
+
   if (sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
@@ -333,7 +335,7 @@ elementUtilities.canHaveStateVariable = function (ele) {
 // Returns whether the given ele should be square in shape
 elementUtilities.mustBeSquare = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-  
+
   return (sbgnclass.indexOf('process') != -1 || sbgnclass == 'source and sink'
           || sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not'
           || sbgnclass == 'association' || sbgnclass == 'dissociation');
@@ -353,7 +355,7 @@ elementUtilities.someMustNotBeSquare = function (nodes) {
 
 // Returns whether the gives element can be cloned
 elementUtilities.canBeCloned = function (ele) {
-  var sbgnclass = ( typeof ele === 'string' ? ele : ele.data('class') ).replace(" multimer", "");
+  var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
 
   var list = {
     'unspecified entity': true,
@@ -369,7 +371,7 @@ elementUtilities.canBeCloned = function (ele) {
 
 // Returns whether the gives element can be cloned
 elementUtilities.canBeMultimer = function (ele) {
-  var sbgnclass = ( typeof ele === 'string' ? ele : ele.data('class') ).replace(" multimer", "");
+  var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
 
   var list = {
     'macromolecule': true,
@@ -382,9 +384,9 @@ elementUtilities.canBeMultimer = function (ele) {
 };
 
 // Returns whether the given element is an EPN
-elementUtilities.isEPNClass = function(ele) {
-  var sbgnclass = ( typeof ele === 'string' ? ele : ele.data('class') ).replace(" multimer", "");
-  
+elementUtilities.isEPNClass = function (ele) {
+  var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
+
   return (sbgnclass == 'unspecified entity'
           || sbgnclass == 'simple chemical'
           || sbgnclass == 'macromolecule'
@@ -393,9 +395,9 @@ elementUtilities.isEPNClass = function(ele) {
 };
 
 // Returns whether the given element is a PN
-elementUtilities.isPNClass = function(ele) {
-  var sbgnclass = ( typeof ele === 'string' ? ele : ele.data('class') ).replace(" multimer", "");
-  
+elementUtilities.isPNClass = function (ele) {
+  var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
+
   return (sbgnclass == 'process'
           || sbgnclass == 'omitted process'
           || sbgnclass == 'uncertain process'
@@ -411,14 +413,14 @@ elementUtilities.isLogicalOperator = function (ele) {
 };
 
 // Returns whether the class of given element is a equivalance class
-elementUtilities.convenientToEquivalence = function(ele) {
+elementUtilities.convenientToEquivalence = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
   return (sbgnclass == 'tag' || sbgnclass == 'terminal');
 };
 
 // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
 elementUtilities.relocateStateAndInfos = function (ele) {
-  var stateAndInfos = ( ele.isNode && ele.isNode() ) ? ele.data('statesandinfos') : ele;
+  var stateAndInfos = (ele.isNode && ele.isNode()) ? ele.data('statesandinfos') : ele;
   var length = stateAndInfos.length;
   if (length == 0) {
     return;
@@ -463,36 +465,36 @@ elementUtilities.relocateStateAndInfos = function (ele) {
 // Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
 // Value parameter is the new value to set.
 // This method the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
-elementUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
+elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
   var result;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var stateAndInfos = node.data('stateandinfos');
     var box = stateAndInfos[i];
-    
+
     if (box.clazz == "state variable") {
-      if(!result) {
+      if (!result) {
         result = box.state[type];
       }
-      
+
       box.state[type] = value;
     }
     else if (state.clazz == "unit of information") {
-      if(!result) {
+      if (!result) {
         result = box.label.text;
       }
-      
+
       box.label.text = value;
     }
   }
-  
+
   return result;
 };
 
 // Add a new state or info box to given nodes.
 // The box is represented by the parameter obj.
 // This method returns the index of the just added box.
-elementUtilities.addStateOrInfoBox = function(nodes, obj) {
+elementUtilities.addStateOrInfoBox = function (nodes, obj) {
   var index;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
@@ -501,29 +503,29 @@ elementUtilities.addStateOrInfoBox = function(nodes, obj) {
     index = stateAndInfos.length - 1;
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
-  
+
   return index;
 };
 
 // Remove the state or info boxes of the given nodes at given index.
 // Returns the removed box.
-elementUtilities.removeStateOrInfoBox = function(nodes, index) {
+elementUtilities.removeStateOrInfoBox = function (nodes, index) {
   var obj;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var stateAndInfos = node.data('stateandinfos');
-    if(!obj) {
+    if (!obj) {
       obj = stateAndInfos[index];
     }
     stateAndInfos.splice(index, 1); // Remove the box
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
-  
+
   return obj;
 };
 
 // Set multimer status of the given nodes to the given status.
-elementUtilities.setMultimerStatus = function(nodes, status) {
+elementUtilities.setMultimerStatus = function (nodes, status) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var sbgnclass = node.data('sbgnclass');
@@ -543,21 +545,86 @@ elementUtilities.setMultimerStatus = function(nodes, status) {
 };
 
 // Set clone marker status of given nodes to the given status.
-elementUtilities.setCloneMarkerStatus = function(nodes, status) {
+elementUtilities.setCloneMarkerStatus = function (nodes, status) {
   cy.startBatch();
-  
+
   nodes.data('clonemarker', status ? true : undefined);
   var nodesToAddClass = nodes.filter('[class="perturbing agent"]');
   nodesToAddClass.removeClass('changeClonedStatus');
   nodesToAddClass.addClass('changeClonedStatus');
-  
+
   cy.endBatch();
 };
 
 //elementUtilities.setCloneMarkerStatus = function()
 
-elementUtilities.changeFontProperties = function(eles, data) {
+elementUtilities.changeFontProperties = function (eles, data) {
   for (var prop in data) {
     eles.data(prop, data[prop]);
   }
 };
+
+// This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
+// It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
+// if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
+elementUtilities.validateArrowEnds = function (edge, source, target) {
+  var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
+  var sourceclass = typeof source === 'string' ? source : source.data('class');
+  var targetclass = typeof target === 'string' ? target : target.data('class');
+
+  if (edgeclass == 'consumption' || edgeclass == 'modulation'
+          || edgeclass == 'stimulation' || edgeclass == 'catalysis'
+          || edgeclass == 'inhibition' || edgeclass == 'necessary stimulation') {
+    if (!this.isEPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
+      if (this.isEPNClass(sourceclass) && this.isEPNClass(targetclass)) {
+        //If just the direction is not valid reverse the direction
+        return 'reverse';
+      }
+      else {
+        return 'invalid';
+      }
+    }
+  }
+  else if (edgeclass == 'production') {
+    if (!this.isEPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
+      if (this.isEPNClass(sourceclass) && this.isEPNClass(targetclass)) {
+        //If just the direction is not valid reverse the direction
+        return 'reverse';
+      }
+      else {
+        return 'invalid';
+      }
+    }
+  }
+  else if (edgeclass == 'logic arc') {
+    var invalid = false;
+    if (!this.isEPNClass(sourceclass) || !this.isLogicalOperator(targetclass)) {
+      if (this.isLogicalOperator(sourceclass) && this.isEPNClass(targetclass)) {
+        //If just the direction is not valid reverse the direction
+        return 'reverse';
+      }
+      else {
+        invalid = true;
+      }
+    }
+
+    // the case that both sides are logical operators are valid too
+    if (this.isLogicalOperator(sourceclass) && this.isLogicalOperator(targetclass)) {
+      invalid = false;
+    }
+
+    if (invalid) {
+      return 'invalid';
+    }
+  }
+  else if (edgeclass == 'equivalence arc') {
+    if (!(this.isEPNClass(sourceclass) && this.convenientToEquivalence(targetclass))
+            && !(this.isEPNClass(targetclass) && this.convenientToEquivalence(sourceclass))) {
+      return 'invalid';
+    }
+  }
+  
+  return 'valid';
+};
+
+module.exports = elementUtilities;
