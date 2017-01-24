@@ -14,7 +14,7 @@ var registerUndoRedoActions = function () {
   ur.action("createCompoundForGivenNodes", undoRedoActionFunctions.createCompoundForGivenNodes, undoRedoActionFunctions.removeCompound);
 
   // register general actions
-  ur.action("resizeNode", undoRedoActionFunctions.resizeNode, undoRedoActionFunctions.resizeNode);
+  ur.action("resizeNodes", undoRedoActionFunctions.resizeNodes, undoRedoActionFunctions.resizeNodes);
   ur.action("changeNodeLabel", undoRedoActionFunctions.changeNodeLabel, undoRedoActionFunctions.changeNodeLabel);
   ur.action("changeStyleData", undoRedoActionFunctions.changeStyleData, undoRedoActionFunctions.changeStyleData);
   ur.action("changeStyleCss", undoRedoActionFunctions.changeStyleCss, undoRedoActionFunctions.changeStyleCss);

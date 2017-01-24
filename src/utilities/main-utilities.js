@@ -75,3 +75,66 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
     elementUtilities.createCompoundForGivenNodes(nodes, compoundType);
   }
 };
+
+/*
+ * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+ * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+ */
+mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  if (!options.undoable) {
+    elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+  }
+  else {
+    var param = {
+      templateType: templateType,
+      macromoleculeList: macromoleculeList,
+      complexName: complexName,
+      processPosition: processPosition,
+      tilingPaddingVertical: tilingPaddingVertical,
+      tilingPaddingHorizontal: tilingPaddingHorizontal,
+      edgeLength: edgeLength
+    };
+    
+    cy.undoRedo().do("createTemplateReaction", param);
+  }
+};
+
+/*
+ * Resize given nodes if useAspectRatio is truthy one of width or height should not be set. 
+ * Considers undoable option.
+ */
+mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
+  if (options.undoable) {
+    var param = {
+      nodes: nodes,
+      width: width,
+      height: height,
+      useAspectRatio: useAspectRatio,
+      performOperation: true
+    };
+    
+    cy.undoRedo().do("resizeNodes", param);
+  }
+  else {
+    elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+  }
+};
+
+/*
+ * Changes the label of the given nodes to the given label. Considers undoable option.
+ */
+mainUtilities.changeNodeLabel = function(nodes, label) {
+  if (options.undoable) {
+    nodes.data('label', label);
+  }
+  else {
+    var param = {
+      nodes: nodes,
+      label: label,
+      firstTime: true
+    };
+    
+    cy.undoRedo().do("changeNodeLabel", param);
+  }
+};
+

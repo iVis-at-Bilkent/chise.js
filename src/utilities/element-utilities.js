@@ -196,6 +196,9 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
   return newCompound;
 };
 
+/*
+ * Removes a compound. Before the removal operation moves the children of that compound to the parent of the compound.
+ */
 elementUtilities.removeCompound = function (compoundToRemove) {
   var compoundId = compoundToRemove.id();
   var newParentId = compoundToRemove.data("parent");
@@ -204,6 +207,134 @@ elementUtilities.removeCompound = function (compoundToRemove) {
 
   childrenOfCompound.move({parent: newParentId});
   var removedCompund = compoundToRemove.remove();
+};
+
+/*
+ * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+ * in the complex. Parameters are explained below.
+ * templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
+ * macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
+ * complexName: The name of the complex in the reaction.
+ * processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
+ * tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
+ * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
+ * edgeLength: The distance between the process and the macromolecules at the both sides.
+ */
+elementUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  var defaultMacromoleculProperties = elementUtilities.defaultSizes["macromolecule"];
+  var templateType = templateType;
+  var processWidth = elementUtilities.defaultSizes[templateType] ? elementUtilities.defaultSizes[templateType].width : 50;
+  var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
+  var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
+  var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+  var macromoleculeList = macromoleculeList;
+  var complexName = complexName;
+  var numOfMacromolecules = macromoleculeList.length;
+  var tilingPaddingVertical = tilingPaddingVertical ? tilingPaddingVertical : 15;
+  var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
+  var edgeLength = edgeLength ? edgeLength : 60;
+
+  var xPositionOfFreeMacromolecules;
+  if (templateType === 'association') {
+    xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+  }
+  else {
+    xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+  }
+
+  //Create the process in template type
+  var process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+  process.data('justAdded', true);
+
+  //Define the starting y position
+  var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+
+  //Create the free macromolecules
+  for (var i = 0; i < numOfMacromolecules; i++) {
+    var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+    newNode.data('justAdded', true);
+    newNode.data('sbgnlabel', macromoleculeList[i]);
+
+    //create the edge connected to the new macromolecule
+    var newEdge;
+    if (templateType === 'association') {
+      newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+    }
+    else {
+      newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
+    }
+
+    newEdge.data('justAdded', true);
+
+    //update the y position
+    yPosition += macromoleculeHeight + tilingPaddingVertical;
+  }
+
+  //Create the complex including macromolecules inside of it
+  //Temprorarily add it to the process position we will move it according to the last size of it
+  var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+  complex.data('justAdded', true);
+  complex.data('justAddedLayoutNode', true);
+
+  //If a name is specified for the complex set its label accordingly
+  if (complexName) {
+    complex.data('sbgnlabel', complexName);
+  }
+
+  //create the edge connnected to the complex
+  var edgeOfComplex;
+  if (templateType === 'association') {
+    edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
+  }
+  else {
+    edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+  }
+  edgeOfComplex.data('justAdded', true);
+
+  //Create the macromolecules inside the complex
+  for (var i = 0; i < numOfMacromolecules; i++) {
+    var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
+    newNode.data('justAdded', true);
+    newNode.data('sbgnlabel', macromoleculeList[i]);
+    newNode.data('justAddedLayoutNode', true);
+  }
+
+  var layoutNodes = cy.nodes('[justAddedLayoutNode]');
+  layoutNodes.removeData('justAddedLayoutNode');
+  layoutNodes.layout({
+    name: 'cose-bilkent',
+    randomize: false,
+    fit: false,
+    animate: false,
+    tilingPaddingVertical: tilingPaddingVertical,
+    tilingPaddingHorizontal: tilingPaddingHorizontal,
+    stop: function () {
+      //re-position the nodes inside the complex
+      var supposedXPosition;
+      var supposedYPosition = processPosition.y;
+
+      if (templateType === 'association') {
+        supposedXPosition = processPosition.x + edgeLength + processWidth / 2 + complex.outerWidth() / 2;
+      }
+      else {
+        supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
+      }
+
+      var positionDiffX = supposedXPosition - complex.position('x');
+      var positionDiffY = supposedYPosition - complex.position('y');
+      elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
+    }
+  });
+
+  //filter the just added elememts to return them and remove just added mark
+  var eles = cy.elements('[justAdded]');
+  eles.removeData('justAdded');
+  
+  refreshPaddings();
+  cy.elements().unselect();
+  eles.select();
+  
+  return eles; // Return the just added elements
 };
 
 // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
@@ -219,7 +350,7 @@ elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
         ratio = width / node.width();
       }
 
-      node.data("sbgnbbox").w = width;
+      node.data("bbox").w = width;
     }
 
     if (height) {
@@ -227,14 +358,14 @@ elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
         ratio = height / node.height();
       }
 
-      node.data("sbgnbbox").h = height;
+      node.data("bbox").h = height;
     }
 
     if (ratio && !height) {
-      node.data("sbgnbbox").h = node.height() * ratio;
+      node.data("bbox").h = node.height() * ratio;
     }
     else if (ratio && !width) {
-      node.data("sbgnbbox").w = node.width() * ratio;
+      node.data("bbox").w = node.width() * ratio;
     }
 
     node.removeClass('noderesized');
@@ -623,7 +754,7 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
       return 'invalid';
     }
   }
-  
+
   return 'valid';
 };
 

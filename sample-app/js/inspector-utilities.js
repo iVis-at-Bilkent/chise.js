@@ -441,7 +441,7 @@ inspectorUtilities.handleSBGNInspector = function () {
           performOperation: true
         };
         
-        cy.undoRedo().do("resizeNode", param);
+        cy.undoRedo().do("resizeNodes", param);
       });
 
       $('#inspector-node-sizes-aspect-ratio').on('click', function() {
@@ -501,7 +501,7 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-label").on('change', function () {
         var param = {
           nodes: selectedEles,
-          sbgnlabel: $(this).val(),
+          label: $(this).val(),
           firstTime: true
         };
         

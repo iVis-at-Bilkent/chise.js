@@ -227,7 +227,7 @@ function toolbarButtonsAndMenu() {
     var node = $(this).data('node');
     var param = {
       nodes: cy.collection(node),
-      sbgnlabel: $(this).val(),
+      label: $(this).val(),
       firstTime: true
     };
 
