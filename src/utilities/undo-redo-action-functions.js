@@ -187,8 +187,8 @@ undoRedoActionFunctions.resizeNodes = function (param) {
         node.data("sbgnbbox").w = param.sizeMap[node.id()].w;
         node.data("sbgnbbox").h = param.sizeMap[node.id()].h;
 
-        node.removeClass('noderesized');
-        node.addClass('noderesized');
+//        node.removeClass('noderesized');
+//        node.addClass('noderesized');
       }
       else {
         elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio);
@@ -196,12 +196,11 @@ undoRedoActionFunctions.resizeNodes = function (param) {
     }
   }
 
-  nodes.removeClass('noderesized');
-  nodes.addClass('noderesized');
+  cy.style().update();
+//  nodes.removeClass('noderesized');
+//  nodes.addClass('noderesized');
 
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    inspectorUtilities.handleSBGNInspector();
-  }
+  // TODO handle sbgn inspector after this call
 
   return result;
 };
@@ -227,78 +226,77 @@ undoRedoActionFunctions.changeNodeLabel = function (param) {
       node._private.data.label = param.label[node.id()];
     }
   }
-
+  
+  // TODO reconsider adding class
   nodes.removeClass('changeContent');
   nodes.addClass('changeContent');
 
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    inspectorUtilities.handleSBGNInspector();
-  }
+  // TODO handle sbgn inspector after this call
 
   return result;
 };
 
-undoRedoActionFunctions.changeStyleData = function (param) {
+undoRedoActionFunctions.changeData = function (param) {
   var result = {
   };
   var eles = param.eles;
 
-  result.dataType = param.dataType;
-  result.data = {};
+  result.name = param.name;
+  result.valueMap = {};
   result.eles = eles;
 
   for (var i = 0; i < eles.length; i++) {
     var ele = eles[i];
-    result.data[ele.id()] = ele.data(param.dataType);
+    result.valueMap[ele.id()] = ele.data(param.name);
   }
 
   if (param.firstTime) {
-    eles.data(param.dataType, param.data);
+    eles.data(param.name, param.value);
   }
   else {
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
-      ele.data(param.dataType, param.data[ele.id()]);
+      ele.data(param.name, param.valueMap[ele.id()]);
     }
   }
 
-  cy.forceRender();
+  //  cy.forceRender();
+  cy.style().update(); // Update style
 
-  if (_.isEqual(eles, cy.nodes(':selected'))) {
-    inspectorUtilities.handleSBGNInspector();
-  }
+  // TODO handle sbgn inspector after this call
 
   return result;
 };
 
-undoRedoActionFunctions.changeStyleCss = function (param) {
+undoRedoActionFunctions.changeCss = function (param) {
   var result = {
   };
   var eles = param.eles;
-  result.dataType = param.dataType;
-  result.data = {};
+  result.name = param.name;
+  result.valueMap = {};
   result.eles = eles;
 
   for (var i = 0; i < eles.length; i++) {
     var ele = eles[i];
-    result.data[ele.id()] = ele.css(param.dataType);
+    result.valueMap[ele.id()] = ele.css(param.name);
   }
 
   if (param.firstTime) {
-    eles.css(param.dataType, param.data);
+    eles.css(param.name, param.value);
   }
   else {
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
-      ele.css(param.dataType, param.data[ele.id()]);
+      ele.css(param.name, param.valueMap[ele.id()]);
     }
   }
-  cy.forceRender();
+//  cy.forceRender();
+  cy.style().update(); // Update style
 
   // TODO move such calls to sample application maybe by triggering an event
-  if (_.isEqual(eles, cy.nodes(':selected'))) {
-    inspectorUtilities.handleSBGNInspector();
-  }
+//  if (_.isEqual(eles, cy.nodes(':selected'))) {
+//    inspectorUtilities.handleSBGNInspector();
+//  }
 
   return result;
 };
@@ -339,6 +337,7 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
   return result;
 };
 
+// TODO reconsider this operation of undo of it.
 undoRedoActionFunctions.showAndPerformIncrementalLayout = function (param) {
   var eles = param.eles;
 
@@ -379,7 +378,6 @@ undoRedoActionFunctions.changeStateOrInfoBox = function (param) {
   };
   result.type = param.type;
   result.nodes = param.nodes;
-  result.width = param.width;
   result.index = param.index;
 
   result.value = elementUtilities.changeStateOrInfoBox(param.nodes, param.index, param.value, param.type);
@@ -387,7 +385,7 @@ undoRedoActionFunctions.changeStateOrInfoBox = function (param) {
   cy.forceRender();
 
   // TODO move such calls to sample application maybe by triggering an event
-  inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.nodes().data('stateandinfos'), param.width);
+//  inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.nodes().data('stateandinfos'), param.width);
 
   return result;
 };
@@ -398,14 +396,11 @@ undoRedoActionFunctions.addStateOrInfoBox = function (param) {
 
   var index = elementUtilities.addStateOrInfoBox(nodes, obj);
 
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    inspectorUtilities.fillInspectorStateAndInfos(nodes, nodes.data('stateandinfos'), param.width);
-  }
+  
   cy.forceRender();
 
   var result = {
     nodes: nodes,
-    width: param.width,
     index: index,
     obj: obj
   };
@@ -418,14 +413,11 @@ undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
 
   var obj = elementUtilities.removeStateOrInfoBox(nodes, index);
 
-  if (_.isEqual(nodes, cy.nodes(':selected'))) {
-    inspectorUtilities.fillInspectorStateAndInfos(nodes, nodes.data('stateandinfos'), param.width);
-  }
+  // TODO fill inspector state and infos after this call
   cy.forceRender();
 
   var result = {
     nodes: nodes,
-    width: param.width,
     obj: obj
   };
   return result;
@@ -434,7 +426,7 @@ undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
 undoRedoActionFunctions.setMultimerStatus = function (param) {
   var firstTime = param.firstTime;
   var nodes = param.nodes;
-  var status = param.makeMultimer;
+  var status = param.status;
   var resultStatus = {};
 
   for (var i = 0; i < nodes.length; i++) {

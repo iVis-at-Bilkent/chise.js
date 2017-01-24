@@ -16,8 +16,9 @@ var registerUndoRedoActions = function () {
   // register general actions
   ur.action("resizeNodes", undoRedoActionFunctions.resizeNodes, undoRedoActionFunctions.resizeNodes);
   ur.action("changeNodeLabel", undoRedoActionFunctions.changeNodeLabel, undoRedoActionFunctions.changeNodeLabel);
-  ur.action("changeStyleData", undoRedoActionFunctions.changeStyleData, undoRedoActionFunctions.changeStyleData);
-  ur.action("changeStyleCss", undoRedoActionFunctions.changeStyleCss, undoRedoActionFunctions.changeStyleCss);
+  // TODO remove this
+  ur.action("changeData", undoRedoActionFunctions.changeData, undoRedoActionFunctions.changeData);
+  ur.action("changeCss", undoRedoActionFunctions.changeCss, undoRedoActionFunctions.changeCss);
   ur.action("changeBendPoints", undoRedoActionFunctions.changeBendPoints, undoRedoActionFunctions.changeBendPoints);
   ur.action("changeFontProperties", undoRedoActionFunctions.changeFontProperties, undoRedoActionFunctions.changeFontProperties);
   ur.action("showAndPerformIncrementalLayout", undoRedoActionFunctions.showAndPerformIncrementalLayout, undoRedoActionFunctions.undoShowAndPerformIncrementalLayout);

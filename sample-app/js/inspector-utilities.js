@@ -490,12 +490,12 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-border-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-border-color").val(),
-          dataType: "borderColor",
+          value: $("#inspector-border-color").val(),
+          name: "border-color",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleData", param);
+        cy.undoRedo().do("changeCss", param);
       });
 
       $("#inspector-label").on('change', function () {
@@ -511,34 +511,34 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-background-opacity").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-background-opacity").val(),
-          dataType: "backgroundOpacity",
+          value: $("#inspector-background-opacity").val(),
+          name: "background-opacity",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleData", param);
+        cy.undoRedo().do("changeCss", param);
       });
 
       $("#inspector-fill-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-fill-color").val(),
-          dataType: "background-color",
+          value: $("#inspector-fill-color").val(),
+          name: "background-color",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleCss", param);
+        cy.undoRedo().do("changeCss", param);
       });
 
       $("#inspector-border-width").change( function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-border-width").val(),
-          dataType: "border-width",
+          value: $("#inspector-border-width").val(),
+          name: "border-width",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleCss", param);
+        cy.undoRedo().do("changeCss", param);
       });
       
       $("#inspector-font").on('click', function () {
@@ -558,12 +558,12 @@ inspectorUtilities.handleSBGNInspector = function () {
       $("#inspector-line-color").on('change', function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-line-color").val(),
-          dataType: "lineColor",
+          value: $("#inspector-line-color").val(),
+          name: "line-color",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleData", param);
+        cy.undoRedo().do("changeCss", param);
       });
 
       $("#inspector-cardinality").change( function () {
@@ -578,23 +578,23 @@ inspectorUtilities.handleSBGNInspector = function () {
         }
         var param = {
           eles: selectedEles,
-          data: data,
-          dataType: "sbgncardinality",
+          value: data,
+          name: "cardinality",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleData", param);
+        cy.undoRedo().do("changeData", param);
       });
 
       $("#inspector-width").change( function () {
         var param = {
           eles: selectedEles,
-          data: $("#inspector-width").val(),
-          dataType: "width",
+          value: $("#inspector-width").val(),
+          name: "width",
           firstTime: true
         };
         
-        cy.undoRedo().do("changeStyleCss", param);
+        cy.undoRedo().do("changeCss", param);
       });
     }
   }

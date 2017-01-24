@@ -6,6 +6,46 @@ function mainUtilities() {
 ;
 
 /*
+ * Adds a new node with the given class and at the given coordinates.
+ */
+mainUtilities.addNode = function(x, y , nodeclass) {
+  if (options.undoable) {
+    return elementUtilities.addNode(x, y, nodeclass);
+  }
+  else {
+    var param = {
+      newNode : {
+        x: x,
+        y: y,
+        class: nodeclass
+      }
+    };
+    
+    cy.undoRedo().do("addNode", param);
+  }
+};
+
+/*
+ * Adds a new edge with the given class and having the given source and target ids
+ */
+mainUtilities.addEdge = function(source, target , edgeclass) {
+  if (options.undoable) {
+    return elementUtilities.addEdge(source, target, edgeclass);
+  }
+  else {
+    var param = {
+      newEdge : {
+        source: source,
+        target: target,
+        sbgnclass: edgeclass
+      }
+    };
+    
+    cy.undoRedo().do("addEdge", param);
+  }
+};
+
+/*
  * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
  */
 mainUtilities.cloneElements = function (eles) {
@@ -138,3 +178,111 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
   }
 };
 
+/*
+ * Change font properties for given eles use the given font data.
+ * Considers undoable option.
+ */
+mainUtilities.changeFontProperties = function(eles, data) {
+  if (options.undoable) {
+    var param = {
+      eles: eles,
+      data: data,
+      firstTime: true
+    };
+
+    cy.undoRedo().do("changeFontProperties", param);
+  }
+  else {
+    elementUtilities.changeFontProperties(eles, data);
+  }
+};
+
+/*
+ * Change state value or unit of information box of given nodes with given index.
+ * Considers undoable option.
+ * For more information about the parameters see elementUtilities.changeStateOrInfoBox
+ */
+mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
+  if (options.undoable) {
+    var param = {
+      index: index,
+      value: value,
+      type: type,
+      nodes: nodes
+    };
+  }
+  else {
+    return elementUtilities.changeStateOrInfoBox(nodes, index, value, type);
+  }
+};
+
+// Add a new state or info box to given nodes.
+// The box is represented by the parameter obj.
+// Considers undoable option.
+mainUtilities.addStateOrInfoBox = function(nodes, obj) {
+  if (options.undoable) {
+    elementUtilities.addStateOrInfoBox(nodes, obj);
+  }
+  else {
+    var param = {
+      obj: obj,
+      nodes: nodes
+    };
+    
+    cy.undoRedo().do("addStateOrInfoBox", param);
+  }
+};
+
+// Remove the state or info boxes of the given nodes at given index.
+// Considers undoable option.
+mainUtilities.removeStateOrInfoBox = function(nodes, index) {
+  if (options.undoable) {
+    elementUtilities.removeStateOrInfoBox(nodes, index);
+  }
+  else {
+    var param = {
+      index: index,
+      nodes: nodes
+    };
+
+    cy.undoRedo().do("removeStateOrInfoBox", param);
+  }
+};
+
+/*
+ * Set multimer status of the given nodes to the given status.
+ * Considers undoable option.
+ */
+mainUtilities.setMultimerStatus = function(nodes, status) {
+  if (options.undoable) {
+    var param = {
+      status: status,
+      nodes: nodes,
+      firstTime: true
+    };
+
+    cy.undoRedo().do("setMultimerStatus", param);
+  }
+  else {
+    elementUtilities.setMultimerStatus(nodes, status);
+  }
+};
+
+/*
+ * Set clone marker status of given nodes to the given status.
+ * Considers undoable option.
+ */ 
+mainUtilities.setCloneMarkerStatus = function(nodes, status) {
+  if (options.undoable) {
+    var param = {
+      status: status,
+      nodes: nodes,
+      firstTime: true
+    };
+
+    cy.undoRedo().do("setCloneMarkerStatus", param);
+  }
+  else {
+    elementUtilities.setCloneMarkerStatus(nodes, status);
+  }
+};
