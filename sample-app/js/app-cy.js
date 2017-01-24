@@ -24,14 +24,39 @@ var sbgnStyleSheet = cytoscape.stylesheet()
     .selector("node[class]")
     .css({
       'font-weight': function(ele) {
-        return ele.data('fontweight') ? ele.data('fontweight') : elementUtilities.defaultFontProperties.fontweight;
+        if (ele.data('fontweight')) { // If fontweight data is set return it.
+          return ele.data('fontweight');
+        }
+        
+        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
+          ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
+        }
+        
+        return elementUtilities.defaultFontProperties.fontweight; // For safety reason
       },
       'font-family': function(ele) {
-        return ele.data('fontfamily') ? ele.data('fontfamily') : elementUtilities.defaultFontProperties.fontfamily;
+        if (ele.data('fontfamily')) { // If fontfamily data is set return it.
+          return ele.data('fontfamily');
+        }
+        
+        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
+          ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
+        }
+        
+        return elementUtilities.defaultFontProperties.fontfamily; // For safety reason
       },
       'font-style': function(ele) {
-        return ele.data('fontstyle') ? ele.data('fontstyle') : elementUtilities.defaultFontProperties.fontstyle;
+        if (ele.data('fontstyle')) { // If fontstyle data is set return it.
+          return ele.data('fontstyle');
+        }
+        
+        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
+          ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
+        }
+        
+        return elementUtilities.defaultFontProperties.fontstyle; // For safety reason
       },
+      // TODO rewrite this function and override elementUtilities.getLabelTextSize
       'font-size': function (ele) {
         var labelsize = elementUtilities.getLabelTextSize(ele);
         if(labelsize) {
