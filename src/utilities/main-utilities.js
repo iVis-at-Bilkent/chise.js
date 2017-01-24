@@ -2,8 +2,7 @@
  * The main utilities to be exposed directly.
  */
 function mainUtilities() {
-}
-;
+};
 
 /*
  * Adds a new node with the given class and at the given coordinates.
@@ -286,3 +285,5 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
     elementUtilities.setCloneMarkerStatus(nodes, status);
   }
 };
+
+module.exports = mainUtilities;

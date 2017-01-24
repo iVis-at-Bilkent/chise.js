@@ -34,3 +34,5 @@ var registerUndoRedoActions = function () {
   // register easy creation actions
   ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.removeEles);
 };
+
+module.exports = registerUndoRedoActions;
