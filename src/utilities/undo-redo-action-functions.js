@@ -187,8 +187,8 @@ undoRedoActionFunctions.resizeNodes = function (param) {
         node.data("sbgnbbox").w = param.sizeMap[node.id()].w;
         node.data("sbgnbbox").h = param.sizeMap[node.id()].h;
 
-//        node.removeClass('noderesized');
-//        node.addClass('noderesized');
+        node.removeClass('noderesized');
+        node.addClass('noderesized');
       }
       else {
         elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio);
@@ -196,9 +196,9 @@ undoRedoActionFunctions.resizeNodes = function (param) {
     }
   }
 
-  cy.style().update();
-//  nodes.removeClass('noderesized');
-//  nodes.addClass('noderesized');
+//  cy.style().update();
+  nodes.removeClass('noderesized');
+  nodes.addClass('noderesized');
 
   // TODO handle sbgn inspector after this call
 

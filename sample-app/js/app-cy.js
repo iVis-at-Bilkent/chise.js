@@ -21,44 +21,8 @@ $(document).ready(function ()
 });
 
 var sbgnStyleSheet = cytoscape.stylesheet()
-    .selector("node")
+    .selector("node[class]")
     .css({
-      "border-color": "#555",
-      "border-width": "1.5px",
-      'background-color': '#FFFFFF',
-      'background-opacity': 0.5,
-      'text-opacity': 1,
-      'opacity': 1,
-      'font-size': 11
-    })
-    .selector("node[?sbgnclonemarker][sbgnclass='perturbing agent']")
-    .css({
-      'background-image': 'sample-app/sampleapp-images/clone_bg.png',
-      'background-position-x': '50%',
-      'background-position-y': '100%',
-      'background-width': '100%',
-      'background-height': '25%',
-      'background-fit': 'none',
-      'background-image-opacity': function (ele) {
-        if(!ele.data('sbgnclonemarker')){
-          return 0;
-        }
-        return ele.css('background-opacity');
-      }
-    })
-    .selector("node[sbgnclass][sbgnclass!='complex'][sbgnclass!='process'][sbgnclass!='association'][sbgnclass!='dissociation'][sbgnclass!='compartment'][sbgnclass!='source and sink']")
-    .css({
-      'content': function (ele) {
-        return elementUtilities.getElementContent(ele);
-      },
-      'text-valign': 'center',
-      'text-halign': 'center'
-    })
-    .selector("node[sbgnclass]")
-    .css({
-      'shape': function (ele) {
-        return elementUtilities.getCyShape(ele);
-      },
       'font-weight': function(ele) {
         return ele.data('fontweight') ? ele.data('fontweight') : elementUtilities.defaultFontProperties.fontweight;
       },
@@ -77,137 +41,6 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         return ele.css('font-size');
       }
     })
-    .selector("node[sbgnclass='perturbing agent']")
-    .css({
-      'shape-polygon-points': '-1, -1,   -0.5, 0,  -1, 1,   1, 1,   0.5, 0, 1, -1'
-    })
-//    .selector("node[sbgnclass='association']")
-//    .css({
-//      'background-color': '#6B6B6B'
-//    })
-    .selector("node[sbgnclass='tag']")
-    .css({
-      'shape-polygon-points': '-1, -1,   0.25, -1,   1, 0,    0.25, 1,    -1, 1'
-    })
-    .selector("node[sbgnclass='complex']")
-    .css({
-//      'background-color': '#F4F3EE',
-      'text-valign': 'bottom',
-      'text-halign': 'center',
-      'content': function(ele){
-        return elementUtilities.getElementContent(ele);
-      }
-    })
-    .selector("node[sbgnclass='compartment']")
-    .css({
-      'border-width': 3.75,
-      'background-opacity': 0,
-//      'background-color': '#FFFFFF',
-      'content': function(ele){
-        return elementUtilities.getElementContent(ele);
-      },
-      'text-valign': 'bottom',
-      'text-halign': 'center'
-    })
-    .selector("node[sbgnbbox]")
-    .css({
-      'width': 'data(sbgnbbox.w)',
-      'height': 'data(sbgnbbox.h)'
-    })
-    .selector("node.cy-expand-collapse-collapsed-node")
-    .css({
-      'width': 36,
-      'height': 36,
-      'border-style': 'dashed'
-    })
-    .selector("node:selected")
-    .css({
-      'border-color': '#d67614',
-      'target-arrow-color': '#000',
-      'text-outline-color': '#000'})
-    .selector("node:active")
-    .css({
-      'background-opacity': 0.7, 'overlay-color': '#d67614',
-      'overlay-padding': '14'
-    })
-    .selector("edge")
-    .css({
-      'curve-style': 'bezier',
-      'line-color': '#555',
-      'target-arrow-fill': 'hollow',
-      'source-arrow-fill': 'hollow',
-      'width': 1.5,
-      'target-arrow-color': '#555',
-      'source-arrow-color': '#555',
-      'text-border-color': function(ele){
-        if(ele.selected()) {
-          return '#d67614';
-        }
-        return ele.data('lineColor') || ele.css('line-color');
-      },
-      'color': function(ele){
-        if(ele.selected()) {
-          return '#d67614';
-        }
-        return ele.data('lineColor') || ele.css('line-color');
-      }
-//          'target-arrow-shape': 'data(sbgnclass)'
-    })
-    .selector("edge[sbgncardinality > 0]")
-    .css({
-      'text-rotation': 'autorotate',
-      'text-background-shape': 'rectangle',
-      'text-border-opacity': '1',
-      'text-border-width': '1',
-      'text-background-color': 'white',
-      'text-background-opacity': '1'
-    })
-    .selector("edge[sbgnclass='consumption'][sbgncardinality > 0]")
-    .css({
-      'source-label': function(ele) {
-        return '' + ele.data('sbgncardinality');
-      },
-      'source-text-margin-y': '-10',
-      'source-text-offset': function(ele) {
-        return elementUtilities.getCardinalityDistance(ele);
-      }
-    })
-    .selector("edge[sbgnclass='production'][sbgncardinality > 0]")
-    .css({
-      'target-label': function(ele) {
-        return '' + ele.data('sbgncardinality');
-      },
-      'target-text-margin-y': '-10',
-      'target-text-offset': function(ele) {
-        return elementUtilities.getCardinalityDistance(ele);
-      }
-    })
-    .selector("edge[sbgnclass]")
-    .css({
-      'target-arrow-shape': function (ele) {
-        return elementUtilities.getCyArrowShape(ele);
-      },
-      'source-arrow-shape': 'none'
-    })
-    .selector("edge[sbgnclass='inhibition']")
-    .css({
-      'target-arrow-fill': 'filled'
-    })
-    .selector("edge[sbgnclass='consumption']")
-    .css({
-//      'line-style': 'consumption'
-    })
-    .selector("edge[sbgnclass='production']")
-    .css({
-      'target-arrow-fill': 'filled',
-//      'line-style': 'production'
-    })
-    .selector("edge:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
     .selector("edge:active")
     .css({
       'background-opacity': 0.7, 'overlay-color': '#d67614',
@@ -218,93 +51,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
       'selection-box-color': '#d67614',
       'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
     })
-    .selector(".ui-cytoscape-edgehandles-source")
-    .css({
-      'border-color': '#5CC2ED',
-      'border-width': 3
-    })
-    .selector(".ui-cytoscape-edgehandles-target, node.ui-cytoscape-edgehandles-preview")
-    .css({
-      'background-color': '#5CC2ED'
-    })
-    .selector("edge.ui-cytoscape-edgehandles-preview")
-    .css({
-      'line-color': '#5CC2ED'
-    })
-    .selector("node.ui-cytoscape-edgehandles-preview, node.intermediate")
-    .css({
-      'shape': 'rectangle',
-      'width': 15,
-      'height': 15
-    })
-    .selector('edge.cy-expand-collapse-meta-edge')
-    .css({
-      'line-color': '#C4C4C4',
-      'source-arrow-color': '#C4C4C4',
-      'target-arrow-color': '#C4C4C4'
-    })
-    .selector("edge.cy-expand-collapse-meta-edge:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
-    .selector("node.changeBackgroundOpacity[backgroundOpacity]")
-    .css({
-      'background-opacity': 'data(backgroundOpacity)'
-    })
-    .selector("node.changeLabelTextSize")
-    .css({
-      'font-size': function (ele) {
-        return elementUtilities.getLabelTextSize(ele);
-      }
-    })
     .selector("node.changeContent")
     .css({
       'content': function (ele) {
         return elementUtilities.getElementContent(ele);
       }
     })
-    .selector("node.changeBorderColor")
-    .css({
-      'border-color': 'data(borderColor)'
-    })
-    .selector("node.changeBorderColor:selected")
-    .css({
-      'border-color': '#d67614'
-    })
-    .selector("edge.changeLineColor")
-    .css({
-      'line-color': 'data(lineColor)',
-      'source-arrow-color': 'data(lineColor)',
-      'target-arrow-color': 'data(lineColor)'
-    })
-    .selector("edge.changeLineColor:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    })
-    .selector('edge.changeLineColor.cy-expand-collapse-meta-edge')
-    .css({
-      'line-color': '#C4C4C4',
-      'source-arrow-color': '#C4C4C4',
-      'target-arrow-color': '#C4C4C4'
-    })
-    .selector("edge.changeLineColor.cy-expand-collapse-meta-edge:selected")
-    .css({
-      'line-color': '#d67614',
-      'source-arrow-color': '#d67614',
-      'target-arrow-color': '#d67614'
-    }).selector("node.changeClonedStatus")
-    .css({
-      'background-image-opacity': function (ele) {
-        if(!ele.data('sbgnclonemarker')){
-          return 0;
-        }
-        return ele.css('background-opacity');
-      }
-    }).selector("node.noderesized")
+    .selector("node.noderesized")
     .css({
       'width': 'data(sbgnbbox.w)',
       'height': 'data(sbgnbbox.h)'
