@@ -3,96 +3,13 @@ var sbgnNetworkContainer;
 $(document).ready(function ()
 {
   sbgnNetworkContainer = $('#sbgn-network-container');
-  // create and init cytoscape:
-  var cy = cytoscape({
-    container: sbgnNetworkContainer,
-    style: sbgnStyleSheet,
-    showOverlay: false, minZoom: 0.125, maxZoom: 16,
-    boxSelectionEnabled: true,
-    motionBlur: true,
-    wheelSensitivity: 0.1,
-    ready: function() {
-      window.cy = this;
-      registerUndoRedoActions();
-      cytoscapeExtensionsAndContextMenu();
-      bindCyEvents();
-    }
+  
+  cy.ready(function() {
+    registerUndoRedoActions();
+    cytoscapeExtensionsAndContextMenu();
+    bindCyEvents();
   });
 });
-
-var sbgnStyleSheet = cytoscape.stylesheet()
-    .selector("node[class]")
-    .css({
-      'font-weight': function(ele) {
-        if (ele.data('fontweight')) { // If fontweight data is set return it.
-          return ele.data('fontweight');
-        }
-        
-        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
-          ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
-        }
-        
-        return elementUtilities.defaultFontProperties.fontweight; // For safety reason
-      },
-      'font-family': function(ele) {
-        if (ele.data('fontfamily')) { // If fontfamily data is set return it.
-          return ele.data('fontfamily');
-        }
-        
-        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
-          ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
-        }
-        
-        return elementUtilities.defaultFontProperties.fontfamily; // For safety reason
-      },
-      'font-style': function(ele) {
-        if (ele.data('fontstyle')) { // If fontstyle data is set return it.
-          return ele.data('fontstyle');
-        }
-        
-        if (elementUtilities.canHaveSBGNLabel(ele)) { // Else if this element can have label set it to default
-          ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
-        }
-        
-        return elementUtilities.defaultFontProperties.fontstyle; // For safety reason
-      }
-    })
-    .selector("node[class='complex'],node[class='compartment'],node.cancel-dynamic-label-size[fontsize]")
-    .css({
-      'font-size': function (ele) {
-        return ele.data('fontsize');
-      }
-    })
-    .selector("core")
-    .css({
-      'selection-box-color': '#d67614',
-      'selection-box-opacity': '0.2', 'selection-box-border-color': '#d67614'
-    })
-    .selector("node.changeContent")
-    .css({
-      'content': function (ele) {
-        return elementUtilities.getElementContent(ele);
-      }
-    })
-    .selector("node.noderesized")
-    .css({
-      'width': 'data(sbgnbbox.w)',
-      'height': 'data(sbgnbbox.h)'
-    });
-// end of sbgnStyleSheet
-
-function removeQtip(e) {
-  if (this.qtipTimeOutFcn != null) {
-    clearTimeout(this.qtipTimeOutFcn);
-    this.qtipTimeOutFcn = null;
-  }
-  this.mouseover = false;           //make preset layout to redraw the nodes
-  this.removeData("showingTooltip");
-  cy.off('mouseout', 'node', removeQtip);
-  cy.off("drag", "node", removeQtip);
-  $(".qtip").remove();
-  cy.forceRender();
-}
 
 function cytoscapeExtensionsAndContextMenu() {
   // register the extensions
@@ -372,76 +289,6 @@ function cytoscapeExtensionsAndContextMenu() {
 function bindCyEvents() {
   // listen events
 
-  cy.on("beforeCollapse", "node", function (event) {
-    var node = this;
-    //The children info of complex nodes should be shown when they are collapsed
-    if (node._private.data.sbgnclass == "complex") {
-      //The node is being collapsed store infolabel to use it later
-      var infoLabel = getInfoLabel(node);
-      node._private.data.infoLabel = infoLabel;
-    }
-  });
-
-  cy.on("afterCollapse", "node", function (event) {
-    var node = this;
-    refreshPaddings();
-
-    if (node._private.data.sbgnclass == "complex") {
-      node.addClass('changeContent');
-    }
-  });
-
-  cy.on("beforeExpand", "node", function (event) {
-    var node = this;
-    node.removeData("infoLabel");
-  });
-
-  cy.on("afterExpand", "node", function (event) {
-    var node = this;
-    cy.nodes().updateCompoundBounds();
-
-    //Don't show children info when the complex node is expanded
-    if (node._private.data.sbgnclass == "complex") {
-      node.removeStyle('content');
-    }
-
-    refreshPaddings();
-  });
-
-  cy.on("noderesize.resizeend", function (event, type, node) {
-    nodeResizeEndFunction(node);
-  });
-
-  cy.on("afterDo", function (event, actionName, args) {
-    refreshUndoRedoButtonsStatus();
-
-    if (actionName === 'changeParent') {
-      refreshPaddings();
-    }
-  });
-
-  cy.on("afterUndo", function (event, actionName, args) {
-    refreshUndoRedoButtonsStatus();
-
-    if (actionName === 'resize') {
-      nodeResizeEndFunction(args.node);
-    }
-    else if (actionName === 'changeParent') {
-      refreshPaddings();
-    }
-  });
-
-  cy.on("afterRedo", function (event, actionName, args) {
-    refreshUndoRedoButtonsStatus();
-
-    if (actionName === 'resize') {
-      nodeResizeEndFunction(args.node);
-    }
-    else if (actionName === 'changeParent') {
-      refreshPaddings();
-    }
-  });
-
   cy.on("mousedown", "node", function (event) {
     var self = this;
     if (modeHandler.mode == 'selection-mode' && window.ctrlKeyDown) {
@@ -458,19 +305,19 @@ function bindCyEvents() {
       if (self != cy) {
         newParent = self;
 
-        if (newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
+        if (newParent.data("class") != "complex" && newParent.data("sbgnclass") != "compartment") {
           newParent = newParent.parent()[0];
         }
       }
       var nodes = window.nodesToDragAndDrop;
 
-      if (newParent && newParent.data("sbgnclass") != "complex" && newParent.data("sbgnclass") != "compartment") {
+      if (newParent && newParent.data("class") != "complex" && newParent.data("class") != "compartment") {
         return;
       }
 
-      if (newParent && newParent.data("sbgnclass") == "complex") {
+      if (newParent && newParent.data("class") == "complex") {
         nodes = nodes.filter(function (i, ele) {
-          return elementUtilities.isEPNClass(ele.data("sbgnclass"));
+          return elementUtilities.isEPNClass(ele);
         });
       }
 
@@ -508,46 +355,10 @@ function bindCyEvents() {
       cy.undoRedo().do("changeParent", param);
     }
   });
-
-  cy.on("mouseover", "node", function (e) {
-    e.cy.$("[showingTooltip]").trigger("hideTooltip");
-    e.cyTarget.trigger("showTooltip");
-  });
-
-
-  cy.on("hideTooltip", "node", removeQtip);
-
-  cy.on('showTooltip', 'node', function (e) {
-    var node = this;
-
-    if (node.renderedStyle("label") == node.data("sbgnlabel") && node.data("sbgnstatesandinfos").length == 0 && node.data("sbgnclass") != "complex")
-      return;
-
-    node.data("showingTooltip", true);
-    $(".qtip").remove();
-
-    if (e.originalEvent.shiftKey)
-      return;
-
-    node.qtipTimeOutFcn = setTimeout(function () {
-      nodeQtipFunction(node);
-    }, 1000);
-    
-    cy.on('mouseout', 'node', removeQtip);
-    cy.on("drag", "node", removeQtip)
-  });
-
-//        var cancelSelection;
-//        var selectAgain;
+  
   window.firstSelectedNode = null;
   cy.on('select', 'node', function (event) {
     var node = this;
-//          if (cancelSelection) {
-//            this.unselect();
-//            cancelSelection = null;
-//            selectAgain.select();
-//            selectAgain = null;
-//          }
 
     if (cy.nodes(':selected').filter(':visible').length == 1) {
       window.firstSelectedNode = node;
@@ -566,10 +377,6 @@ function bindCyEvents() {
 
   cy.on('unselect', function (event) {
     inspectorUtilities.handleSBGNInspector();
-  });
-
-  cy.on('tapend', 'node', function (event) {
-    cy.style().update();
   });
 
   cy.on('tap', function (event) {
@@ -840,6 +647,8 @@ var SBGNProperties = Backbone.View.extend({
           document.getElementById("animate-on-drawing-changes").checked;
       self.currentSBGNProperties.adjustNodeLabelFontSizeAutomatically =
           document.getElementById("adjust-node-label-font-size-automatically").checked;
+
+      // TODO handle add/remove classes below most probably many of these classes no more exist
 
       //Refresh paddings if needed
       if (sbgnStyleRules['compound-padding'] != self.currentSBGNProperties.compoundPadding) {

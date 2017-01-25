@@ -175,6 +175,8 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
     
     cy.undoRedo().do("changeNodeLabel", param);
   }
+  
+  cy.style().update();
 };
 
 /*

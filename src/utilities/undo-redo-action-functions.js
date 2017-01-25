@@ -227,9 +227,7 @@ undoRedoActionFunctions.changeNodeLabel = function (param) {
     }
   }
   
-  // TODO reconsider adding class
-  nodes.removeClass('changeContent');
-  nodes.addClass('changeContent');
+  // cy.style().update();
 
   // TODO handle sbgn inspector after this call
 

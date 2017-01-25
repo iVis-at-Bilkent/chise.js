@@ -689,7 +689,7 @@ elementUtilities.setCloneMarkerStatus = function (nodes, status) {
 
 //elementUtilities.setCloneMarkerStatus = function()
 
-// TODO consider moving this to the sample app
+// Change font properties of the given elements with given font data
 elementUtilities.changeFontProperties = function (eles, data) {
   for (var prop in data) {
     eles.data(prop, data[prop]);

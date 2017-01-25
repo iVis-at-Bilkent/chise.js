@@ -370,27 +370,6 @@ var refreshPaddings = function () {
   compounds.css('padding-bottom', calc_padding);
 };
 
-// This function is to be called after nodes are resized throuh the node resize extension or through undo/redo actions
-var nodeResizeEndFunction = function (nodes) {
-  nodes.removeClass('changeLabelTextSize');
-  nodes.addClass('changeLabelTextSize');
-
-  for (var i = 0; i < nodes.length; i++) {
-    var node = nodes[i];
-    var w = node.width();
-    var h = node.height();
-
-    node.removeStyle('width');
-    node.removeStyle('height');
-
-    node.data('sbgnbbox').w = w;
-    node.data('sbgnbbox').h = h;
-  }
-
-  nodes.removeClass('noderesized');
-  nodes.addClass('noderesized');
-};
-
 var showHiddenNeighbors = function (eles) {
   var hiddenNeighbours = elementUtilities.getProcessesOfGivenEles(eles).filter(':hidden');
   if (hiddenNeighbours.length === 0) {

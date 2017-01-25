@@ -15,6 +15,10 @@
     var optionUtilities = require('./utilities/option-utilities');
     var options = optionUtilities.extendOptions(_options); // Extends the default options with the given options
     
+    // Update style and bind events
+    var cyStyleAndEvents = require('./utilities/cy-style-and-events');
+    cyStyleAndEvents(libs.sbgnviz);
+    
     // Expose the api here
   };
   
