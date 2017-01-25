@@ -1,6 +1,6 @@
 // Extends sbgnviz.elementUtilities
 var libs = require('./lib-utilities').getLibs();
-var elementUtilities = libs.elementUtilities;
+var elementUtilities = libs.sbgnviz.elementUtilities;
 
 elementUtilities.defaultSizes = {
   "process": {

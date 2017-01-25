@@ -1,9 +1,9 @@
-var registerUndoRedoActions = function () {
+var undoRedoActionFunctions = require('undo-redo-action-functions');
+
+var registerUndoRedoActions = function (undoableDrag) {
   // create undo-redo instance
   var ur = cy.undoRedo({
-    undoableDrag: function() {
-      return window.ctrlKeyDown !== true;
-    }
+    undoableDrag: undoableDrag
   });
 
   // register add remove actions

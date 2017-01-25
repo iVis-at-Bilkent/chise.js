@@ -19,7 +19,22 @@
     var cyStyleAndEvents = require('./utilities/cy-style-and-events');
     cyStyleAndEvents(libs.sbgnviz);
     
-    // Expose the api here
+    // Register undo/redo actions
+    var registerUndoRedoActions = require('./register-undo-redo-actions');
+    registerUndoRedoActions(options.undoableDrag);
+    
+    var mainUtilities = require('./utilities/main-utilities');
+    var elementUtilities = require('./utilities/element-utilities');
+    var undoRedoActionFunctions = require('./utilities/undo-redo-action-functions');
+    // Expose the api
+    // Expose each main utility seperately
+    for (var prop in mainUtilities) {
+      chise[prop] = mainUtilities[prop];
+    }
+    
+    // Expose elementUtilities and undoRedoActionFunctions as is
+    chise.elementUtilities = elementUtilities;
+    chise.undoRedoActionFunctions = undoRedoActionFunctions;
   };
   
   if ( typeof module !== 'undefined' && module.exports ) {

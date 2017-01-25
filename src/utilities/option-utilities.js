@@ -22,7 +22,9 @@ var defaults = {
   // The selector of the component containing the sbgn network
   networkContainerSelector: '#sbgn-network-container',
   // Whether the actions are undoable, requires cytoscape-undo-redo extension
-  undoable: true
+  undoable: true,
+  // Whether to have undoable drag feature in undo/redo extension. This options will be passed to undo/redo extension
+  undoableDrag: true
 };
 
 var optionUtilities = function () {
