@@ -55,21 +55,13 @@ var sbgnStyleSheet = cytoscape.stylesheet()
         }
         
         return elementUtilities.defaultFontProperties.fontstyle; // For safety reason
-      },
-      // TODO rewrite this function and override elementUtilities.getLabelTextSize
-      'font-size': function (ele) {
-        var labelsize = elementUtilities.getLabelTextSize(ele);
-        if(labelsize) {
-          return labelsize;
-        }
-       
-        return ele.css('font-size');
       }
     })
-    .selector("edge:active")
+    .selector("node[class='complex'],node[class='compartment'],node.cancel-dynamic-label-size[fontsize]")
     .css({
-      'background-opacity': 0.7, 'overlay-color': '#d67614',
-      'overlay-padding': '8'
+      'font-size': function (ele) {
+        return ele.data('fontsize');
+      }
     })
     .selector("core")
     .css({
