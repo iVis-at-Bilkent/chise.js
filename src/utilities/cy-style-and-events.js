@@ -103,7 +103,9 @@ module.exports = function (sbgnviz) {
       ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
     }
   });
-    
+  
+  cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
+  
   upateStyleSheet();
   bindCyEvents();
 };
