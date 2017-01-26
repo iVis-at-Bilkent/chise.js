@@ -1,4 +1,4 @@
-var undoRedoActionFunctions = require('undo-redo-action-functions');
+var undoRedoActionFunctions = require('./undo-redo-action-functions');
 
 var registerUndoRedoActions = function (undoableDrag) {
   // create undo-redo instance

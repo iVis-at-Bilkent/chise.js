@@ -20,7 +20,7 @@
     cyStyleAndEvents(libs.sbgnviz);
     
     // Register undo/redo actions
-    var registerUndoRedoActions = require('./register-undo-redo-actions');
+    var registerUndoRedoActions = require('./utilities/register-undo-redo-actions');
     registerUndoRedoActions(options.undoableDrag);
     
     var mainUtilities = require('./utilities/main-utilities');
