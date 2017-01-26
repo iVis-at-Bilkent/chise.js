@@ -63,7 +63,7 @@ elementUtilities.defaultFontProperties = {
   fontstyle: 'normal'
 };
 
-elemetUtilities.getDefaultLabelSize = function (sbgnclass) {
+elementUtilities.getDefaultLabelSize = function (sbgnclass) {
   if (!elementUtilities.canHaveSBGNLabel(sbgnclass)) {
     return undefined;
   }
@@ -78,7 +78,7 @@ elemetUtilities.getDefaultLabelSize = function (sbgnclass) {
 // Section Start
 // Add remove utilities
 
-elemetUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
+elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
   var defaultSizes = this.defaultSizes;
   var defaults = defaultSizes[sbgnclass];
 

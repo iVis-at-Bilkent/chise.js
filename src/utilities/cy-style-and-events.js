@@ -1,3 +1,7 @@
+var elementUtilities = require('./element-utilities');
+var libs = require('./lib-utilities').getLibs();
+var $ = libs.jQuery;
+
 module.exports = function (sbgnviz) {
   //Helpers
   
@@ -94,18 +98,20 @@ module.exports = function (sbgnviz) {
   };
   // Helpers End
   
-  // Initilize font related data of the elements which can have label
-  cy.nodes().each(function(ele) {
-    if (elementUtilities.canHaveSBGNLabel(ele)) {
-      ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele));
-      ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
-      ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
-      ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
-    }
+  $(document).ready(function() {
+    // Initilize font related data of the elements which can have label
+    cy.nodes().each(function(ele) {
+      if (elementUtilities.canHaveSBGNLabel(ele)) {
+        ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele));
+        ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
+        ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
+        ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
+      }
+    });
+
+    cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
+
+    upateStyleSheet();
+    bindCyEvents();
   });
-  
-  cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
-  
-  upateStyleSheet();
-  bindCyEvents();
 };

@@ -15,16 +15,13 @@
     var optionUtilities = require('./utilities/option-utilities');
     var options = optionUtilities.extendOptions(_options); // Extends the default options with the given options
     
-    var cyStyleAndEvents = _dereq_('./utilities/cy-style-and-events');
-    var registerUndoRedoActions = _dereq_('./utilities/register-undo-redo-actions');
+    // Update style and bind events
+    var cyStyleAndEvents = require('./utilities/cy-style-and-events');
+    cyStyleAndEvents(libs.sbgnviz);
     
-    // These events acceses globale cy instance which is set on document.ready
-    $(document).ready(function() {
-      // Update style and bind events
-      cyStyleAndEvents(libs.sbgnviz);
-      // Register undo/redo actions
-      registerUndoRedoActions(options.undoableDrag);
-    });
+    // Register undo/redo actions
+    var registerUndoRedoActions = require('./utilities/register-undo-redo-actions');
+    registerUndoRedoActions(options.undoableDrag);
     
     var mainUtilities = require('./utilities/main-utilities');
     var elementUtilities = require('./utilities/element-utilities');

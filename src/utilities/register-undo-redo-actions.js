@@ -1,4 +1,6 @@
 var undoRedoActionFunctions = require('./undo-redo-action-functions');
+var libs = require('./lib-utilities').getLibs();
+var $ = libs.jQuery;
 
 var registerUndoRedoActions = function (undoableDrag) {
   // create undo-redo instance
@@ -35,4 +37,8 @@ var registerUndoRedoActions = function (undoableDrag) {
   ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.removeEles);
 };
 
-module.exports = registerUndoRedoActions;
+module.exports = function(undoableDrag) {
+  $(document).ready(function() {
+    registerUndoRedoActions(undoableDrag);
+  });
+};
