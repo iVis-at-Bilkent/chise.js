@@ -36,7 +36,7 @@ mainUtilities.addEdge = function(source, target , edgeclass) {
       newEdge : {
         source: source,
         target: target,
-        sbgnclass: edgeclass
+        class: edgeclass
       }
     };
     

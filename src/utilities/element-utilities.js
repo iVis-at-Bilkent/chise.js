@@ -104,7 +104,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
   }
   var data = {
     class: sbgnclass,
-    sbgnbbox: {
+    bbox: {
       h: height,
       w: width,
       x: x,
