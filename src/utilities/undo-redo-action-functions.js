@@ -9,7 +9,7 @@ undoRedoActionFunctions.addNode = function (param) {
   var result;
   if (param.firstTime) {
     var newNode = param.newNode;
-    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.sbgnclass);
+    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.class);
   }
   else {
     result = elementUtilities.restoreEles(param);
@@ -24,7 +24,7 @@ undoRedoActionFunctions.addEdge = function (param) {
   var result;
   if (param.firstTime) {
     var newEdge = param.newEdge;
-    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.sbgnclass);
+    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.class);
   }
   else {
     result = elementUtilities.restoreEles(param);
@@ -184,8 +184,8 @@ undoRedoActionFunctions.resizeNodes = function (param) {
 
     if (param.performOperation) {
       if (param.sizeMap) {
-        node.data("sbgnbbox").w = param.sizeMap[node.id()].w;
-        node.data("sbgnbbox").h = param.sizeMap[node.id()].h;
+        node.data("bbox").w = param.sizeMap[node.id()].w;
+        node.data("bbox").h = param.sizeMap[node.id()].h;
 
         node.removeClass('noderesized');
         node.addClass('noderesized');
@@ -429,7 +429,7 @@ undoRedoActionFunctions.setMultimerStatus = function (param) {
 
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var isMultimer = node.data('sbgnclass').endsWith(' multimer');
+    var isMultimer = node.data('class').endsWith(' multimer');
 
     resultMakeMultimer[node.id()] = isMultimer;
   }

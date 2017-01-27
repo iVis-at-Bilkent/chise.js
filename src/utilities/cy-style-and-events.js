@@ -18,8 +18,8 @@ module.exports = function (sbgnviz) {
       node.removeStyle('width');
       node.removeStyle('height');
 
-      node.data('sbgnbbox').w = w;
-      node.data('sbgnbbox').h = h;
+      node.data('bbox').w = w;
+      node.data('bbox').h = h;
     }
 
     nodes.removeClass('noderesized');
@@ -102,7 +102,7 @@ module.exports = function (sbgnviz) {
     // Initilize font related data of the elements which can have label
     cy.nodes().each(function(ele) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
-        ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele));
+        ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele.data('class')));
         ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
         ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
         ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);

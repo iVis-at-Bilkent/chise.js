@@ -103,7 +103,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     sbgnclass += " multimer";
   }
   var data = {
-    sbgnclass: sbgnclass,
+    class: sbgnclass,
     sbgnbbox: {
       h: height,
       w: width,
@@ -166,7 +166,7 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
     data: {
       source: source,
       target: target,
-      sbgnclass: sbgnclass
+      class: sbgnclass
     },
     css: css
   });
@@ -253,7 +253,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   for (var i = 0; i < numOfMacromolecules; i++) {
     var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
     newNode.data('justAdded', true);
-    newNode.data('sbgnlabel', macromoleculeList[i]);
+    newNode.data('label', macromoleculeList[i]);
 
     //create the edge connected to the new macromolecule
     var newEdge;
@@ -278,7 +278,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
 
   //If a name is specified for the complex set its label accordingly
   if (complexName) {
-    complex.data('sbgnlabel', complexName);
+    complex.data('label', complexName);
   }
 
   //create the edge connnected to the complex
@@ -295,7 +295,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   for (var i = 0; i < numOfMacromolecules; i++) {
     var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
     newNode.data('justAdded', true);
-    newNode.data('sbgnlabel', macromoleculeList[i]);
+    newNode.data('label', macromoleculeList[i]);
     newNode.data('justAddedLayoutNode', true);
   }
 
@@ -342,7 +342,7 @@ elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var ratio = undefined;
-    var eleMustBeSquare = elementUtilities.mustBeSquare(node.data('sbgnclass'));
+    var eleMustBeSquare = elementUtilities.mustBeSquare(node.data('class'));
 
     // Note that both width and height should not be set if useAspectRatio is truthy
     if (width) {
@@ -659,17 +659,17 @@ elementUtilities.removeStateOrInfoBox = function (nodes, index) {
 elementUtilities.setMultimerStatus = function (nodes, status) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var sbgnclass = node.data('sbgnclass');
-    var isMultimer = node.data('sbgnclass').endsWith(' multimer');
+    var sbgnclass = node.data('class');
+    var isMultimer = node.data('class').endsWith(' multimer');
 
     if (status) { // Make multimer status true
       if (!isMultimer) {
-        node.data('sbgnclass', sbgnclass + ' multimer');
+        node.data('class', sbgnclass + ' multimer');
       }
     }
     else { // Make multimer status false
       if (isMultimer) {
-        node.data('sbgnclass', sbgnclass.replace(' multimer', ''));
+        node.data('class', sbgnclass.replace(' multimer', ''));
       }
     }
   }
