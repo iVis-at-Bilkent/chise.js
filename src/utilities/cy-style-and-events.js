@@ -98,9 +98,9 @@ module.exports = function (sbgnviz) {
   };
   // Helpers End
   
-  $(document).ready(function() {
+  $(document).on('updateGraphEnd', function(event) {
     // Initilize font related data of the elements which can have label
-    cy.nodes().each(function(ele) {
+    cy.nodes().each(function(i, ele) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
         ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele.data('class')));
         ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
