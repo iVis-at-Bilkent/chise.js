@@ -122,7 +122,7 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
   
   if (cy.undoRedo()) {
     var param = {
-      compundType: compoundType,
+      compoundType: compoundType,
       nodesToMakeCompound: nodes
     };
 

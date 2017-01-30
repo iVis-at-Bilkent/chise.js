@@ -188,10 +188,10 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
  * This method assumes that param.nodesToMakeCompound contains at least one node
  * and all of the nodes including in it have the same parent. It creates a compound fot the given nodes an having the given type.
  */
-elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compundType) {
+elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compoundType) {
   var oldParentId = nodesToMakeCompound[0].data("parent");
   // The parent of new compound will be the old parent of the nodes to make compound
-  var newCompound = elementUtilities.addNode(undefined, undefined, compundType, oldParentId);
+  var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, oldParentId);
   var newCompoundId = newCompound.id();
   nodesToMakeCompound.move({parent: newCompoundId});
   sbgnviz.refreshPaddings();
@@ -200,6 +200,7 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
 
 /*
  * Removes a compound. Before the removal operation moves the children of that compound to the parent of the compound.
+ * Returns old children of the compound which are moved to another parent and the removed compound to restore back later.
  */
 elementUtilities.removeCompound = function (compoundToRemove) {
   var compoundId = compoundToRemove.id();
@@ -208,7 +209,12 @@ elementUtilities.removeCompound = function (compoundToRemove) {
   var childrenOfCompound = compoundToRemove.children();
 
   childrenOfCompound.move({parent: newParentId});
-  var removedCompund = compoundToRemove.remove();
+  var removedCompound = compoundToRemove.remove();
+  
+  return {
+    childrenOfCompound: childrenOfCompound,
+    removedCompound: removedCompound
+  };
 };
 
 /*

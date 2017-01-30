@@ -62,7 +62,7 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
     newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compundType);
   }
   else {
-    newCompound = param.removedCompund.restore();
+    newCompound = param.removedCompound.restore();
     var newCompoundId = newCompound.id();
 
     nodesToMakeCompound.move({parent: newCompoundId});
@@ -74,11 +74,11 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
 };
 
 undoRedoActionFunctions.removeCompound = function (compoundToRemove) {
-  elementUtilities.removeCompound(compoundToRemove);
+  var result = elementUtilities.removeCompound(compoundToRemove);
 
   var param = {
-    nodesToMakeCompound: childrenOfCompound,
-    removedCompund: removedCompund
+    nodesToMakeCompound: result.childrenOfCompound,
+    removedCompound: result.removedCompound
   };
 
   return param;
