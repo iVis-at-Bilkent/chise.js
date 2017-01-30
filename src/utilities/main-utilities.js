@@ -183,6 +183,7 @@ mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
 mainUtilities.changeNodeLabel = function(nodes, label) {
   if (!options.undoable) {
     nodes.data('label', label);
+    cy.style().update();
   }
   else {
     var param = {
@@ -193,8 +194,6 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
     
     cy.undoRedo().do("changeNodeLabel", param);
   }
-  
-  cy.style().update();
 };
 
 /*
