@@ -1,6 +1,7 @@
 // Extends sbgnviz.elementUtilities
 var libs = require('./lib-utilities').getLibs();
-var elementUtilities = libs.sbgnviz.elementUtilities;
+var sbgnviz = libs.sbgnviz;
+var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
 elementUtilities.defaultSizes = {
@@ -147,7 +148,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
   newNode.addClass('changeBorderColor');
   newNode.addClass('changeBackgroundOpacity');
 
-  refreshPaddings();
+  sbgnviz.refreshPaddings();
   return newNode;
 };
 
@@ -193,7 +194,7 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
   var newCompound = elementUtilities.addNode(undefined, undefined, compundType, oldParentId, true);
   var newCompoundId = newCompound.id();
   nodesToMakeCompound.move({parent: newCompoundId});
-  refreshPaddings();
+  sbgnviz.refreshPaddings();
   return newCompound;
 };
 
@@ -331,7 +332,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   var eles = cy.elements('[justAdded]');
   eles.removeData('justAdded');
   
-  refreshPaddings();
+  sbgnviz.refreshPaddings();
   cy.elements().unselect();
   eles.select();
   

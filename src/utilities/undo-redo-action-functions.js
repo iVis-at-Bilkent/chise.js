@@ -1,6 +1,7 @@
 // Extends sbgnviz.undoRedoActionFunctions
 var libs = require('./lib-utilities').getLibs();
-var undoRedoActionFunctions = libs.sbgnviz.undoRedoActionFunctions;
+var sbgnviz = libs.sbgnviz;
+var undoRedoActionFunctions = sbgnviz.undoRedoActionFunctions;
 var elementUtilities = require('./element-utilities');
 
 // Section Start
@@ -66,7 +67,7 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
 
     nodesToMakeCompound.move({parent: newCompoundId});
 
-    refreshPaddings();
+    sbgnviz.refreshPaddings();
   }
 
   return newCompound;
@@ -100,7 +101,7 @@ undoRedoActionFunctions.createTemplateReaction = function (param) {
     eles = param;
     cy.add(eles);
     
-    refreshPaddings();
+    sbgnviz.refreshPaddings();
     cy.elements().unselect();
     eles.select();
   }
