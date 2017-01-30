@@ -1,3 +1,5 @@
+var options = require('./option-utilities').getOptions();
+
 /*
  * The main utilities to be exposed directly.
  */
