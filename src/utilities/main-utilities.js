@@ -256,7 +256,7 @@ mainUtilities.addStateOrInfoBox = function(nodes, obj) {
 // Remove the state or info boxes of the given nodes at given index.
 // Considers undoable option.
 mainUtilities.removeStateOrInfoBox = function(nodes, index) {
-  if (options.undoable) {
+  if (!options.undoable) {
     elementUtilities.removeStateOrInfoBox(nodes, index);
   }
   else {
