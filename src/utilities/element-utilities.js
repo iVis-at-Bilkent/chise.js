@@ -783,46 +783,4 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   return 'valid';
 };
 
-/*
- * Change style/css of given eles by setting getting property name to the given value.
- * Considers undoable option.
- */
-elementUtilities.changeCss = function(eles, name, value) {
-  if (options.undoable) {
-    eles.css(name, value);
-    cy.style().update();
-  }
-  else {
-    var param = {
-      eles: eles,
-      value: value,
-      name: name,
-      firstTime: true
-    };
-    
-    cy.undoRedo().do("changeCss", param);
-  }
-};
-
-/*
- * Change data of given eles by setting getting property name to the given value.
- * Considers undoable option.
- */
-elementUtilities.changeData = function(eles, name, value) {
-  if (options.undoable) {
-    eles.data(name, value);
-    cy.style().update();
-  }
-  else {
-    var param = {
-      eles: eles,
-      value: value,
-      name: name,
-      firstTime: true
-    };
-    
-    cy.undoRedo().do("changeData", param);
-  }
-};
-
 module.exports = elementUtilities;
