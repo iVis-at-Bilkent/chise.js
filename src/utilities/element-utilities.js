@@ -626,6 +626,9 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
       box.label.text = value;
     }
   }
+  
+  // Trigger rendering by updating the stylesheet
+  cy.style().update();
 
   return result;
 };
@@ -643,6 +646,9 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
 
+  // Trigger rendering by updating the stylesheet
+  cy.style().update();
+
   return index;
 };
 
@@ -659,6 +665,9 @@ elementUtilities.removeStateOrInfoBox = function (nodes, index) {
     stateAndInfos.splice(index, 1); // Remove the box
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
+  
+  // Trigger rendering by updating the stylesheet
+  cy.style().update();
 
   return obj;
 };
