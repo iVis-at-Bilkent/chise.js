@@ -709,8 +709,8 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   if (edgeclass == 'consumption' || edgeclass == 'modulation'
           || edgeclass == 'stimulation' || edgeclass == 'catalysis'
           || edgeclass == 'inhibition' || edgeclass == 'necessary stimulation') {
-    if (!this.isEPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
-      if (this.isEPNClass(sourceclass) && this.isEPNClass(targetclass)) {
+    if (!this.isEPNClass(sourceclass) || !this.isPNClass(targetclass)) {
+      if (this.isPNClass(sourceclass) && this.isEPNClass(targetclass)) {
         //If just the direction is not valid reverse the direction
         return 'reverse';
       }
@@ -720,8 +720,8 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
     }
   }
   else if (edgeclass == 'production') {
-    if (!this.isEPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
-      if (this.isEPNClass(sourceclass) && this.isEPNClass(targetclass)) {
+    if (!this.isPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
+      if (this.isEPNClass(sourceclass) && this.isPNClass(targetclass)) {
         //If just the direction is not valid reverse the direction
         return 'reverse';
       }

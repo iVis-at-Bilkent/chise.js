@@ -11,7 +11,7 @@ function mainUtilities() {
  * Adds a new node with the given class and at the given coordinates.
  */
 mainUtilities.addNode = function(x, y , nodeclass) {
-  if (options.undoable) {
+  if (!options.undoable) {
     return elementUtilities.addNode(x, y, nodeclass);
   }
   else {
@@ -32,7 +32,7 @@ mainUtilities.addNode = function(x, y , nodeclass) {
  */
 mainUtilities.addEdge = function(source, target , edgeclass) {
   // Get the validation result
-  var validation = elementUtilities.validateArrowEnds(edgeclass, source, target);
+  var validation = elementUtilities.validateArrowEnds(edgeclass, cy.getElementById(source), cy.getElementById(target));
 
   // If validation result is 'invalid' cancel the operation
   if (validation === 'invalid') {
@@ -46,7 +46,7 @@ mainUtilities.addEdge = function(source, target , edgeclass) {
     target = temp;
   }
       
-  if (options.undoable) {
+  if (!options.undoable) {
     return elementUtilities.addEdge(source, target, edgeclass);
   }
   else {
