@@ -191,7 +191,7 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
 elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compundType) {
   var oldParentId = nodesToMakeCompound[0].data("parent");
   // The parent of new compound will be the old parent of the nodes to make compound
-  var newCompound = elementUtilities.addNode(undefined, undefined, compundType, oldParentId, true);
+  var newCompound = elementUtilities.addNode(undefined, undefined, compundType, oldParentId);
   var newCompoundId = newCompound.id();
   nodesToMakeCompound.move({parent: newCompoundId});
   sbgnviz.refreshPaddings();
