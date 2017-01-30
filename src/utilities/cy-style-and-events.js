@@ -67,16 +67,12 @@ module.exports = function (sbgnviz) {
     });
 
     cy.on("afterDo", function (event, actionName, args) {
-      refreshUndoRedoButtonsStatus();
-
       if (actionName === 'changeParent') {
         sbgnviz.refreshPaddings();
       }
     });
 
     cy.on("afterUndo", function (event, actionName, args) {
-      refreshUndoRedoButtonsStatus();
-
       if (actionName === 'resize') {
         nodeResizeEndFunction(args.node);
       }
@@ -86,8 +82,6 @@ module.exports = function (sbgnviz) {
     });
 
     cy.on("afterRedo", function (event, actionName, args) {
-      refreshUndoRedoButtonsStatus();
-
       if (actionName === 'resize') {
         nodeResizeEndFunction(args.node);
       }
