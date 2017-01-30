@@ -181,7 +181,7 @@ mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
  * Changes the label of the given nodes to the given label. Considers undoable option.
  */
 mainUtilities.changeNodeLabel = function(nodes, label) {
-  if (options.undoable) {
+  if (!options.undoable) {
     nodes.data('label', label);
   }
   else {
