@@ -238,7 +238,7 @@ mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
 // The box is represented by the parameter obj.
 // Considers undoable option.
 mainUtilities.addStateOrInfoBox = function(nodes, obj) {
-  if (options.undoable) {
+  if (!options.undoable) {
     elementUtilities.addStateOrInfoBox(nodes, obj);
   }
   else {
