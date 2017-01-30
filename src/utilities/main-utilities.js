@@ -311,7 +311,7 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
  * Change style/css of given eles by setting getting property name to the given value.
  * Considers undoable option.
  */
-elementUtilities.changeCss = function(eles, name, value) {
+mainUtilities.changeCss = function(eles, name, value) {
   if (!options.undoable) {
     eles.css(name, value);
     cy.style().update();
@@ -332,7 +332,7 @@ elementUtilities.changeCss = function(eles, name, value) {
  * Change data of given eles by setting getting property name to the given value.
  * Considers undoable option.
  */
-elementUtilities.changeData = function(eles, name, value) {
+mainUtilities.changeData = function(eles, name, value) {
   if (!options.undoable) {
     eles.data(name, value);
     cy.style().update();
