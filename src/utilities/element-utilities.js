@@ -694,19 +694,21 @@ elementUtilities.setMultimerStatus = function (nodes, status) {
         node.data('class', sbgnclass.replace(' multimer', ''));
       }
     }
+    
+    cy.style().update();
   }
 };
 
 // Set clone marker status of given nodes to the given status.
 elementUtilities.setCloneMarkerStatus = function (nodes, status) {
-  cy.startBatch();
-
-  nodes.data('clonemarker', status ? true : undefined);
-  var nodesToAddClass = nodes.filter('[class="perturbing agent"]');
-  nodesToAddClass.removeClass('changeClonedStatus');
-  nodesToAddClass.addClass('changeClonedStatus');
-
-  cy.endBatch();
+  if (status) {
+    nodes.data('clonemarker', true);
+  }
+  else {
+    nodes.removeData('clonemarker');
+  }
+  
+  cy.style().update();
 };
 
 //elementUtilities.setCloneMarkerStatus = function()

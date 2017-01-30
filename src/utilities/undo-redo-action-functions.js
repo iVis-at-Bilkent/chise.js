@@ -435,7 +435,7 @@ undoRedoActionFunctions.setMultimerStatus = function (param) {
     var node = nodes[i];
     var isMultimer = node.data('class').endsWith(' multimer');
 
-    resultMakeMultimer[node.id()] = isMultimer;
+    resultStatus[node.id()] = isMultimer;
   }
 
   // If this is the first time change the status of all nodes at once.
@@ -450,9 +450,9 @@ undoRedoActionFunctions.setMultimerStatus = function (param) {
     }
   }
 
-  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
-    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
-  }
+//  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+//    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
+//  }
 
   var result = {
     status: resultStatus,
@@ -472,14 +472,12 @@ undoRedoActionFunctions.setCloneMarkerStatus = function (param) {
     var node = nodes[i];
     resultStatus[node.id()] = node.data('clonemarker');
     var currentStatus = firstTime ? status : status[node.id()];
-    elementUtilities.setCloneMarkerStatus(nodes, currentStatus);
+    elementUtilities.setCloneMarkerStatus(node, currentStatus);
   }
 
-  cy.style().update();
-
-  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
-    $('#inspector-is-clone-marker').attr("checked", !$('#inspector-is-clone-marker').attr("checked"));
-  }
+//  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+//    $('#inspector-is-clone-marker').attr("checked", !$('#inspector-is-clone-marker').attr("checked"));
+//  }
 
   var result = {
     status: resultStatus,
