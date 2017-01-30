@@ -608,7 +608,7 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
   var result;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var stateAndInfos = node.data('stateandinfos');
+    var stateAndInfos = node.data('statesandinfos');
     var box = stateAndInfos[i];
 
     if (box.clazz == "state variable") {
@@ -637,7 +637,7 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
   var index;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var stateAndInfos = node.data('stateandinfos');
+    var stateAndInfos = node.data('statesandinfos');
     stateAndInfos.push(obj);
     index = stateAndInfos.length - 1;
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
@@ -652,7 +652,7 @@ elementUtilities.removeStateOrInfoBox = function (nodes, index) {
   var obj;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var stateAndInfos = node.data('stateandinfos');
+    var stateAndInfos = node.data('statesandinfos');
     if (!obj) {
       obj = stateAndInfos[index];
     }
