@@ -26,7 +26,15 @@
     var mainUtilities = require('./utilities/main-utilities');
     var elementUtilities = require('./utilities/element-utilities');
     var undoRedoActionFunctions = require('./utilities/undo-redo-action-functions');
+    
     // Expose the api
+    
+    // Expose the properties inherited from sbgnviz
+    // then override some of these properties and expose some new properties
+    for (var prop in libs.sbgnviz) {
+      chise[prop] = libs.sbgnviz[prop];
+    }
+    
     // Expose each main utility seperately
     for (var prop in mainUtilities) {
       chise[prop] = mainUtilities[prop];
