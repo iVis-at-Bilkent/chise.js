@@ -112,7 +112,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
       x: x,
       y: y
     },
-    sbgnstatesandinfos: [],
+    statesandinfos: [],
     ports: [],
     labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) || this.getDefaultLabelSize(sbgnclass) : undefined,
     fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) || this.defaultFontProperties.fontfamily : undefined,
