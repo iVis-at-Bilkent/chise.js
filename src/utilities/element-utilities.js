@@ -1,6 +1,7 @@
 // Extends sbgnviz.elementUtilities
 var libs = require('./lib-utilities').getLibs();
 var sbgnviz = libs.sbgnviz;
+var jQuery = $ = libs.jQuery;
 var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
@@ -641,7 +642,11 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var stateAndInfos = node.data('statesandinfos');
-    stateAndInfos.push(obj);
+    
+    // Clone the object to avoid referencing issues
+    var clone = jQuery.extend(true, {}, obj);
+    
+    stateAndInfos.push(clone);
     index = stateAndInfos.length - 1;
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }

@@ -228,6 +228,8 @@ mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
       type: type,
       nodes: nodes
     };
+    
+    cy.undoRedo().do("changeStateOrInfoBox", param);
   }
   else {
     return elementUtilities.changeStateOrInfoBox(nodes, index, value, type);
