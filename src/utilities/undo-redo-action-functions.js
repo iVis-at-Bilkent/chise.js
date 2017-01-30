@@ -106,7 +106,9 @@ undoRedoActionFunctions.createTemplateReaction = function (param) {
     eles.select();
   }
 
-  return eles;
+  return {
+    eles: eles
+  };
 };
 
 // Section End
