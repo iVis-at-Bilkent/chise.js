@@ -1,6 +1,7 @@
 // Extends sbgnviz.undoRedoActionFunctions
 var libs = require('./lib-utilities').getLibs();
 var undoRedoActionFunctions = libs.sbgnviz.undoRedoActionFunctions;
+var elementUtilities = require('./element-utilities');
 
 // Section Start
 // add/remove action functions

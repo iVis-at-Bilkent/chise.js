@@ -1,4 +1,5 @@
 var options = require('./option-utilities').getOptions();
+var elementUtilities = require('./element-utilities');
 
 /*
  * The main utilities to be exposed directly.
