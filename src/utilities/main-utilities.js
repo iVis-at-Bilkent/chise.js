@@ -31,6 +31,21 @@ mainUtilities.addNode = function(x, y , nodeclass) {
  * Adds a new edge with the given class and having the given source and target ids
  */
 mainUtilities.addEdge = function(source, target , edgeclass) {
+  // Get the validation result
+  var validation = elementUtilities.validateArrowEnds(edgeclass, source, target);
+
+  // If validation result is 'invalid' cancel the operation
+  if (validation === 'invalid') {
+    return;
+  }
+  
+  // If validation result is 'reverse' reverse the source-target pair before creating the edge
+  if (validation === 'reverse') {
+    var temp = source;
+    source = target;
+    target = temp;
+  }
+      
   if (options.undoable) {
     return elementUtilities.addEdge(source, target, edgeclass);
   }
