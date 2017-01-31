@@ -104,7 +104,10 @@ module.exports = function (sbgnviz) {
     });
 
     cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
-
+  });
+  
+  // Do these just one time
+  $(document).one('updateGraphEnd', function(event) {
     upateStyleSheet();
     bindCyEvents();
   });
