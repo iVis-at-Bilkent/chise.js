@@ -47,7 +47,7 @@ module.exports = function (sbgnviz) {
         return ele.data('fontstyle');
       }
     })
-    .selector("node[class='complex'],node[class='compartment'],node.cancel-dynamic-label-size[labelsize]")
+    .selector("node[class='complex'][labelsize],node[class='compartment'][labelsize],node.cancel-dynamic-label-size[labelsize]")
     .style({
       'font-size': function (ele) {
         return ele.data('labelsize');
