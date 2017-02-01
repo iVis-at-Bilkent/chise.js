@@ -59,7 +59,7 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
   if (param.firstTime) {
     var oldParentId = nodesToMakeCompound[0].data("parent");
     // The parent of new compound will be the old parent of the nodes to make compound
-    newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compundType);
+    newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compoundType);
   }
   else {
     newCompound = param.removedCompound.restore();
