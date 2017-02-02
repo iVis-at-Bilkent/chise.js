@@ -134,6 +134,57 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
 };
 
 /*
+ * Move the nodes to a new parent and change their position if possDiff params are set.
+ * Considers undoable option and checks if the operation is valid.
+ */
+mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
+  var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
+  if (newParent && newParent.data("class") != "complex" && newParent.data("class") != "compartment") {
+    return;
+  }
+
+  if (newParent && newParent.data("class") == "complex") {
+    nodes = nodes.filter(function (i, ele) {
+      return elementUtilities.isEPNClass(ele.data("class"));
+    });
+  }
+
+  nodes = nodes.filter(function (i, ele) {
+    if (!newParent) {
+      return ele.data('parent') != null;
+    }
+    return ele.data('parent') !== newParent.id();
+  });
+
+  if (newParent) {
+    nodes = nodes.difference(newParent.ancestors());
+  }
+
+  if (nodes.length === 0) {
+    return;
+  }
+
+  nodes = elementUtilities.getTopMostNodes(nodes);
+  
+  var parentId = newParent ? newParent.id() : null;
+  
+  if (options.undoable) {
+    var param = {
+      firstTime: true,
+      parentData: parentId, // It keeps the newParentId (Just an id for each nodes for the first time)
+      nodes: nodes,
+      posDiffX: posDiffX,
+      posDiffY: posDiffY
+    };
+
+    cy.undoRedo().do("changeParent", param); // This action is registered by undoRedo extension
+  }
+  else {
+    elementUtilities.changeParent(nodes, parentId, posDiffX, posDiffY);
+  }
+};
+
+/*
  * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
  * in the complex. Considers undoable option. For more information see the same function in elementUtilities
  */

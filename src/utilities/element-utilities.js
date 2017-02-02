@@ -346,6 +346,15 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   return eles; // Return the just added elements
 };
 
+/*
+ * Move the nodes to a new parent and change their position if possDiff params are set.
+ */
+elementUtilities.changeParent = function(nodes, newParent, posDiffX, posDiffY) {
+  var newParentId = typeof newParent === 'string' ? newParent : newParent.id();
+  nodes.move({"parent": newParentId});
+  elementUtilities.moveNodes({x: posDiffX, y: posDiffY}, nodes);
+};
+
 // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
 elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
   for (var i = 0; i < nodes.length; i++) {
