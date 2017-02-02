@@ -93,6 +93,8 @@ module.exports = function (sbgnviz) {
   // Helpers End
   
   $(document).on('updateGraphEnd', function(event) {
+    cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
+    cy.startBatch();
     // Initilize font related data of the elements which can have label
     cy.nodes().each(function(i, ele) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
@@ -102,8 +104,7 @@ module.exports = function (sbgnviz) {
         ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
       }
     });
-
-    cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
+    cy.endBatch();
   });
   
   // Do these just one time
