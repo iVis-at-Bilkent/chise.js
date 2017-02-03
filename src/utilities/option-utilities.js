@@ -19,6 +19,12 @@ var defaults = {
   compoundPadding: function () {
     return 10;
   },
+  // Whether to adjust node label font size automatically.
+  // If this option return false do not adjust label sizes according to node height uses node.data('labelsize')
+  // instead of doing it.
+  adjustNodeLabelFontSizeAutomatically: function() {
+    return true;
+  },
   // The selector of the component containing the sbgn network
   networkContainerSelector: '#sbgn-network-container',
   // Whether the actions are undoable, requires cytoscape-undo-redo extension

@@ -1,6 +1,7 @@
 var elementUtilities = require('./element-utilities');
 var libs = require('./lib-utilities').getLibs();
 var $ = libs.jQuery;
+var options = require('./option-utilities').getOptions();
 
 module.exports = function (sbgnviz) {
   //Helpers
@@ -47,10 +48,16 @@ module.exports = function (sbgnviz) {
         return ele.data('fontstyle');
       }
     })
-    .selector("node[class='complex'][labelsize],node[class='compartment'][labelsize],node.cancel-dynamic-label-size[labelsize]")
+    .selector("node[class][labelsize]")
     .style({
       'font-size': function (ele) {
-        return ele.data('labelsize');
+        // If the node has labelsize data check adjustNodeLabelFontSizeAutomatically option.
+        // If it is not set use labelsize data as font size eles. Use getLabelTextSize method.
+        if (!options.adjustNodeLabelFontSizeAutomatically) {
+          return ele.data('labelsize');
+        }
+        
+        return elementUtilities.getLabelTextSize(ele);
       }
     })
     .selector("node.resized")
@@ -93,15 +100,14 @@ module.exports = function (sbgnviz) {
   // Helpers End
   
   $(document).on('updateGraphEnd', function(event) {
-    cy.nodes().addClass('cancel-dynamic-label-size'); // TODO think of a better way
     cy.startBatch();
     // Initilize font related data of the elements which can have label
     cy.nodes().each(function(i, ele) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
-        ele.data('labelsize', elementUtilities.getDefaultLabelSize(ele.data('class')));
-        ele.data('fontweight', elementUtilities.defaultFontProperties.fontweight);
-        ele.data('fontfamily', elementUtilities.defaultFontProperties.fontfamily);
-        ele.data('fontstyle', elementUtilities.defaultFontProperties.fontstyle);
+        ele.data('labelsize', elementUtilities.defaultProperties[ele.data('class')].labelsize);
+        ele.data('fontweight', elementUtilities.defaultProperties[ele.data('class')].fontweight);
+        ele.data('fontfamily', elementUtilities.defaultProperties[ele.data('class')].fontfamily);
+        ele.data('fontstyle', elementUtilities.defaultProperties[ele.data('class')].fontstyle);
       }
     });
     cy.endBatch();

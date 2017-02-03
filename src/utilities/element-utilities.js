@@ -5,7 +5,7 @@ var jQuery = $ = libs.jQuery;
 var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
-elementUtilities.defaultSizes = {
+elementUtilities.defaultProperties = {
   "process": {
     width: 30,
     height: 30
@@ -32,49 +32,52 @@ elementUtilities.defaultSizes = {
   },
   "macromolecule": {
     width: 100,
-    height: 50
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "nucleic acid feature": {
     width: 100,
-    height: 50
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "phenotype": {
     width: 100,
-    height: 50
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "unspecified entity": {
     width: 100,
-    height: 50
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "perturbing agent": {
     width: 100,
-    height: 50
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "complex": {
     width: 100,
-    height: 100
+    height: 100,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   },
   "compartment": {
     width: 100,
-    height: 100
-  }
-};
-
-elementUtilities.defaultFontProperties = {
-  fontfamily: 'Helvetica',
-  fontweight: 'normal',
-  fontstyle: 'normal'
-};
-
-elementUtilities.getDefaultLabelSize = function (sbgnclass) {
-  if (!elementUtilities.canHaveSBGNLabel(sbgnclass)) {
-    return undefined;
-  }
-  else if (sbgnclass === 'complex' || sbgnclass === 'compartment') {
-    return 16;
-  }
-  else {
-    return 20;
+    height: 100,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
   }
 };
 
@@ -82,13 +85,11 @@ elementUtilities.getDefaultLabelSize = function (sbgnclass) {
 // Add remove utilities
 
 elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
-  var defaultSizes = this.defaultSizes;
-  var defaults = defaultSizes[sbgnclass];
+  var defaultProperties = this.defaultProperties;
+  var defaults = defaultProperties[sbgnclass];
 
   var width = defaults ? defaults.width : 50;
   var height = defaults ? defaults.height : 50;
-
-
 
   var css = defaults ? {
     'border-width': defaults['border-width'],
@@ -115,10 +116,10 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     },
     statesandinfos: [],
     ports: [],
-    labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) || this.getDefaultLabelSize(sbgnclass) : undefined,
-    fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) || this.defaultFontProperties.fontfamily : undefined,
-    fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) || this.defaultFontProperties.fontweight : undefined,
-    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) || this.defaultFontProperties.fontstyle : undefined
+    labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) : undefined,
+    fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) : undefined,
+    fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) : undefined,
+    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined
   };
 
   if (parent) {
@@ -146,16 +147,13 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     newNode._private.data.clonemarker = defaults.clonemarker;
   }
 
-  newNode.addClass('changeBorderColor');
-  newNode.addClass('changeBackgroundOpacity');
-
   sbgnviz.refreshPaddings();
   return newNode;
 };
 
 elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
-  var defaultSizes = this.defaultSizes;
-  var defaults = defaultSizes[sbgnclass];
+  var defaultProperties = this.defaultProperties;
+  var defaults = defaultProperties[sbgnclass];
   var css = defaults ? {
     'width': defaults['width']
   } : {};
@@ -181,7 +179,7 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
   else {
     newEdge.data('lineColor', newEdge.css('line-color'));
   }
-  newEdge.addClass('changeLineColor');
+  
   return newEdge;
 };
 
@@ -230,9 +228,9 @@ elementUtilities.removeCompound = function (compoundToRemove) {
  * edgeLength: The distance between the process and the macromolecules at the both sides.
  */
 elementUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
-  var defaultMacromoleculProperties = elementUtilities.defaultSizes["macromolecule"];
+  var defaultMacromoleculProperties = elementUtilities.defaultProperties["macromolecule"];
   var templateType = templateType;
-  var processWidth = elementUtilities.defaultSizes[templateType] ? elementUtilities.defaultSizes[templateType].width : 50;
+  var processWidth = elementUtilities.defaultProperties[templateType] ? elementUtilities.defaultProperties[templateType].width : 50;
   var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
   var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
   var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
