@@ -35,70 +35,80 @@ elementUtilities.defaultProperties = {
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "nucleic acid feature": {
     width: 100,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "simple chemical": {
     width: 50,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "source and sink": {
     width: 50,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "tag": {
     width: 50,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "phenotype": {
     width: 100,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "unspecified entity": {
     width: 100,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "perturbing agent": {
     width: 100,
     height: 50,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 20
   },
   "complex": {
     width: 100,
     height: 100,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 16
   },
   "compartment": {
     width: 100,
     height: 100,
     fontfamily: 'Helvetica',
     fontweight: 'normal',
-    fontstyle: 'normal'
+    fontstyle: 'normal',
+    labelsize: 16
   }
 };
 

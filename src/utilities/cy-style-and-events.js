@@ -53,7 +53,9 @@ module.exports = function (sbgnviz) {
       'font-size': function (ele) {
         // If the node has labelsize data check adjustNodeLabelFontSizeAutomatically option.
         // If it is not set use labelsize data as font size eles. Use getLabelTextSize method.
-        if (!options.adjustNodeLabelFontSizeAutomatically) {
+        var opt = options.adjustNodeLabelFontSizeAutomatically;
+        var adjust = typeof opt === 'function' ? opt() : opt;
+        if (!adjust) {
           return ele.data('labelsize');
         }
         
