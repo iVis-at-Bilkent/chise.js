@@ -104,10 +104,11 @@ module.exports = function (sbgnviz) {
     // Initilize font related data of the elements which can have label
     cy.nodes().each(function(i, ele) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
-        ele.data('labelsize', elementUtilities.defaultProperties[ele.data('class')].labelsize);
-        ele.data('fontweight', elementUtilities.defaultProperties[ele.data('class')].fontweight);
-        ele.data('fontfamily', elementUtilities.defaultProperties[ele.data('class')].fontfamily);
-        ele.data('fontstyle', elementUtilities.defaultProperties[ele.data('class')].fontstyle);
+        var _class = ele.data('class').replace(" multimer", "");
+        ele.data('labelsize', elementUtilities.defaultProperties[_class].labelsize);
+        ele.data('fontweight', elementUtilities.defaultProperties[_class].fontweight);
+        ele.data('fontfamily', elementUtilities.defaultProperties[_class].fontfamily);
+        ele.data('fontstyle', elementUtilities.defaultProperties[_class].fontstyle);
       }
     });
     cy.endBatch();

@@ -44,6 +44,27 @@ elementUtilities.defaultProperties = {
     fontweight: 'normal',
     fontstyle: 'normal'
   },
+  "simple chemical": {
+    width: 50,
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
+  },
+  "source and sink": {
+    width: 50,
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
+  },
+  "tag": {
+    width: 50,
+    height: 50,
+    fontfamily: 'Helvetica',
+    fontweight: 'normal',
+    fontstyle: 'normal'
+  },
   "phenotype": {
     width: 100,
     height: 50,
