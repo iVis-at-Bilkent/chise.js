@@ -449,7 +449,7 @@ elementUtilities.getCommonProperty = function (elements, propertyName, dataOrCss
   var value = isFunction ? propertyName(elements[0]) : elements[0][dataOrCss](propertyName);
 
   for (var i = 1; i < elements.length; i++) {
-    if (isFunction ? propertyName(elements[i]) : elements[i][dataOrCss](propertyName) != value) {
+    if ( ( isFunction ? propertyName(elements[i]) : elements[i][dataOrCss](propertyName) ) != value) {
       return null;
     }
   }
