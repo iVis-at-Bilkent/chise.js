@@ -648,7 +648,7 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var stateAndInfos = node.data('statesandinfos');
-    var box = stateAndInfos[i];
+    var box = stateAndInfos[index];
 
     if (box.clazz == "state variable") {
       if (!result) {
