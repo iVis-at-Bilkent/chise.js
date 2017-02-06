@@ -657,7 +657,7 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
 
       box.state[type] = value;
     }
-    else if (state.clazz == "unit of information") {
+    else if (box.clazz == "unit of information") {
       if (!result) {
         result = box.label.text;
       }
