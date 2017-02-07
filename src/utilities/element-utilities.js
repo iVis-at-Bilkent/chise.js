@@ -121,14 +121,26 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
 
   var width = defaults ? defaults.width : 50;
   var height = defaults ? defaults.height : 50;
-
-  var css = defaults ? {
-    'border-width': defaults['border-width'],
-//      'border-color': defaults['border-color'],
-    'background-color': defaults['background-color'],
-//      'font-size': defaults['font-size'],
-    'background-opacity': defaults['background-opacity']
-  } : {};
+  
+  var css = {};
+  
+  if (defaults) {
+    if (defaults['border-width']) {
+      css['border-width'] = defaults['border-width'];
+    }
+    
+    if (defaults['background-color']) {
+      css['background-color'] = defaults['background-color'];
+    }
+    
+    if (defaults['background-opacity']) {
+      css['background-opacity'] = defaults['background-opacity'];
+    }
+    
+    if (defaults['border-color']) {
+      css['border-color'] = defaults['border-color'];
+    }
+  }
 
   if (visibility) {
     css.visibility = visibility;
@@ -150,7 +162,8 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) : undefined,
     fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) : undefined,
     fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) : undefined,
-    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined
+    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined,
+    clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
   };
 
   if (parent) {
@@ -168,15 +181,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
   });
 
   var newNode = eles[eles.length - 1];
-  if (defaults && defaults['border-color']) {
-    newNode.data('borderColor', defaults['border-color']);
-  }
-  else {
-    newNode.data('borderColor', newNode.css('border-color'));
-  }
-  if (defaults && defaults['clonemarker']) {
-    newNode._private.data.clonemarker = defaults.clonemarker;
-  }
 
   sbgnviz.refreshPaddings();
   return newNode;
@@ -188,6 +192,18 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
   var css = defaults ? {
     'width': defaults['width']
   } : {};
+  
+  var css = {};
+  
+  if (defaults) {
+    if (defaults.width) {
+      css.width = defaults.width;
+    } 
+    
+    if (defaults['line-color']) {
+      css['line-color'] = defaults['line-color'];
+    }
+  }
 
   if (visibility) {
     css.visibility = visibility;
@@ -204,12 +220,6 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
   });
 
   var newEdge = eles[eles.length - 1];
-  if (defaults && defaults['line-color']) {
-    newEdge.data('lineColor', defaults['line-color']);
-  }
-  else {
-    newEdge.data('lineColor', newEdge.css('line-color'));
-  }
   
   return newEdge;
 };
