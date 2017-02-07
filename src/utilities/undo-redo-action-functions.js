@@ -190,19 +190,12 @@ undoRedoActionFunctions.resizeNodes = function (param) {
       if (param.sizeMap) {
         node.data("bbox").w = param.sizeMap[node.id()].w;
         node.data("bbox").h = param.sizeMap[node.id()].h;
-
-        node.removeClass('noderesized');
-        node.addClass('noderesized');
       }
       else {
         elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio);
       }
     }
   }
-
-//  cy.style().update();
-  nodes.removeClass('noderesized');
-  nodes.addClass('noderesized');
 
   // TODO handle sbgn inspector after this call
 
@@ -230,8 +223,6 @@ undoRedoActionFunctions.changeNodeLabel = function (param) {
       node._private.data.label = param.label[node.id()];
     }
   }
-  
-   cy.style().update();
 
   // TODO handle sbgn inspector after this call
 
@@ -262,9 +253,6 @@ undoRedoActionFunctions.changeData = function (param) {
     }
   }
 
-  //  cy.forceRender();
-  cy.style().update(); // Update style
-
   // TODO handle sbgn inspector after this call
 
   return result;
@@ -292,8 +280,6 @@ undoRedoActionFunctions.changeCss = function (param) {
       ele.css(param.name, param.valueMap[ele.id()]);
     }
   }
-//  cy.forceRender();
-  cy.style().update(); // Update style
 
   // TODO move such calls to sample application maybe by triggering an event
 //  if (_.isEqual(eles, cy.nodes(':selected'))) {

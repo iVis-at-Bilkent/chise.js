@@ -414,9 +414,6 @@ elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
     else if (ratio && !width) {
       node.data("bbox").w = node.width() * ratio;
     }
-
-    node.removeClass('noderesized');
-    node.addClass('noderesized');
   }
 };
 
@@ -665,9 +662,6 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
       box.label.text = value;
     }
   }
-  
-  // Trigger rendering by updating the stylesheet
-  cy.style().update();
 
   return result;
 };
@@ -689,9 +683,6 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
 
-  // Trigger rendering by updating the stylesheet
-  cy.style().update();
-
   return index;
 };
 
@@ -708,9 +699,6 @@ elementUtilities.removeStateOrInfoBox = function (nodes, index) {
     stateAndInfos.splice(index, 1); // Remove the box
     this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
   }
-  
-  // Trigger rendering by updating the stylesheet
-  cy.style().update();
 
   return obj;
 };
@@ -732,8 +720,6 @@ elementUtilities.setMultimerStatus = function (nodes, status) {
         node.data('class', sbgnclass.replace(' multimer', ''));
       }
     }
-    
-    cy.style().update();
   }
 };
 
@@ -745,8 +731,6 @@ elementUtilities.setCloneMarkerStatus = function (nodes, status) {
   else {
     nodes.removeData('clonemarker');
   }
-  
-  cy.style().update();
 };
 
 //elementUtilities.setCloneMarkerStatus = function()

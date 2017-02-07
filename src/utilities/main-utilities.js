@@ -226,6 +226,8 @@ mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
   else {
     elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -234,7 +236,6 @@ mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
 mainUtilities.changeNodeLabel = function(nodes, label) {
   if (!options.undoable) {
     nodes.data('label', label);
-    cy.style().update();
   }
   else {
     var param = {
@@ -245,6 +246,8 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
     
     cy.undoRedo().do("changeNodeLabel", param);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -264,6 +267,8 @@ mainUtilities.changeFontProperties = function(eles, data) {
   else {
     elementUtilities.changeFontProperties(eles, data);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -285,6 +290,8 @@ mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
   else {
     return elementUtilities.changeStateOrInfoBox(nodes, index, value, type);
   }
+  
+  cy.style().update();
 };
 
 // Add a new state or info box to given nodes.
@@ -302,6 +309,8 @@ mainUtilities.addStateOrInfoBox = function(nodes, obj) {
     
     cy.undoRedo().do("addStateOrInfoBox", param);
   }
+  
+  cy.style().update();
 };
 
 // Remove the state or info boxes of the given nodes at given index.
@@ -318,6 +327,8 @@ mainUtilities.removeStateOrInfoBox = function(nodes, index) {
 
     cy.undoRedo().do("removeStateOrInfoBox", param);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -337,6 +348,8 @@ mainUtilities.setMultimerStatus = function(nodes, status) {
   else {
     elementUtilities.setMultimerStatus(nodes, status);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -356,6 +369,8 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
   else {
     elementUtilities.setCloneMarkerStatus(nodes, status);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -365,7 +380,6 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
 mainUtilities.changeCss = function(eles, name, value) {
   if (!options.undoable) {
     eles.css(name, value);
-    cy.style().update();
   }
   else {
     var param = {
@@ -377,6 +391,8 @@ mainUtilities.changeCss = function(eles, name, value) {
     
     cy.undoRedo().do("changeCss", param);
   }
+  
+  cy.style().update();
 };
 
 /*
@@ -386,7 +402,6 @@ mainUtilities.changeCss = function(eles, name, value) {
 mainUtilities.changeData = function(eles, name, value) {
   if (!options.undoable) {
     eles.data(name, value);
-    cy.style().update();
   }
   else {
     var param = {
@@ -398,6 +413,8 @@ mainUtilities.changeData = function(eles, name, value) {
     
     cy.undoRedo().do("changeData", param);
   }
+  
+  cy.style().update();
 };
 
 module.exports = mainUtilities;
