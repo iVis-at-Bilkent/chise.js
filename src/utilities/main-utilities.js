@@ -71,8 +71,28 @@ mainUtilities.cloneElements = function (eles) {
 
   if (options.undoable) {
     cy.undoRedo().do("paste", {id: _id});
-  } else {
+  } 
+  else {
     cb.paste(_id);
+  }
+};
+
+/*
+ * Copy given elements to clipboard. Requires cytoscape-clipboard extension.
+ */
+mainUtilities.copyElements = function (eles) {
+  cy.clipboard().copy(eles);
+};
+
+/*
+ * Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
+ */
+mainUtilities.pasteElements = function() {
+  if (options.undoable) {
+    cy.undoRedo().do("paste");
+  } 
+  else {
+    cy.clipboard().paste();
   }
 };
 
