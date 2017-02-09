@@ -197,8 +197,6 @@ undoRedoActionFunctions.resizeNodes = function (param) {
     }
   }
 
-  // TODO handle sbgn inspector after this call
-
   return result;
 };
 
@@ -223,8 +221,6 @@ undoRedoActionFunctions.changeNodeLabel = function (param) {
       node._private.data.label = param.label[node.id()];
     }
   }
-
-  // TODO handle sbgn inspector after this call
 
   return result;
 };
@@ -253,8 +249,6 @@ undoRedoActionFunctions.changeData = function (param) {
     }
   }
 
-  // TODO handle sbgn inspector after this call
-
   return result;
 };
 
@@ -280,11 +274,6 @@ undoRedoActionFunctions.changeCss = function (param) {
       ele.css(param.name, param.valueMap[ele.id()]);
     }
   }
-
-  // TODO move such calls to sample application maybe by triggering an event
-//  if (_.isEqual(eles, cy.nodes(':selected'))) {
-//    inspectorUtilities.handleSBGNInspector();
-//  }
 
   return result;
 };
@@ -372,9 +361,6 @@ undoRedoActionFunctions.changeStateOrInfoBox = function (param) {
 
   cy.forceRender();
 
-  // TODO move such calls to sample application maybe by triggering an event
-//  inspectorUtilities.fillInspectorStateAndInfos(param.nodes, param.nodes().data('stateandinfos'), param.width);
-
   return result;
 };
 
@@ -384,7 +370,6 @@ undoRedoActionFunctions.addStateOrInfoBox = function (param) {
 
   var index = elementUtilities.addStateOrInfoBox(nodes, obj);
 
-  
   cy.forceRender();
 
   var result = {
@@ -401,7 +386,6 @@ undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
 
   var obj = elementUtilities.removeStateOrInfoBox(nodes, index);
 
-  // TODO fill inspector state and infos after this call
   cy.forceRender();
 
   var result = {

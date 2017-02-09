@@ -18,7 +18,6 @@ var registerUndoRedoActions = function (undoableDrag) {
   // register general actions
   ur.action("resizeNodes", undoRedoActionFunctions.resizeNodes, undoRedoActionFunctions.resizeNodes);
   ur.action("changeNodeLabel", undoRedoActionFunctions.changeNodeLabel, undoRedoActionFunctions.changeNodeLabel);
-  // TODO remove this
   ur.action("changeData", undoRedoActionFunctions.changeData, undoRedoActionFunctions.changeData);
   ur.action("changeCss", undoRedoActionFunctions.changeCss, undoRedoActionFunctions.changeCss);
   ur.action("changeBendPoints", undoRedoActionFunctions.changeBendPoints, undoRedoActionFunctions.changeBendPoints);

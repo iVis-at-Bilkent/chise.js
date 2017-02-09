@@ -55,11 +55,6 @@ module.exports = function (sbgnviz) {
         
         return elementUtilities.getLabelTextSize(ele);
       }
-    })
-    .selector("node.resized")
-    .style({
-      'width': 'data(bbox.w)',
-      'height': 'data(bbox.h)'
     }).update();
   };
   
