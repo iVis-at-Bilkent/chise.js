@@ -8,6 +8,7 @@ module.exports = function (sbgnviz) {
   
   // This function is to be called after nodes are resized throuh the node resize extension or through undo/redo actions
   var nodeResizeEndFunction = function (nodes) {
+    cy.startBatch();
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       var w = node.width();
@@ -19,6 +20,8 @@ module.exports = function (sbgnviz) {
       node.data('bbox').w = w;
       node.data('bbox').h = h;
     }
+    cy.endBatch();
+    cy.style().update();
   };
   
   // Update cy stylesheet
