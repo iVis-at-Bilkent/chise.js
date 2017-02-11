@@ -820,7 +820,7 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
  * or a function to call.
  */
 elementUtilities.showAndPerformLayout = function(eles, layoutparam) {
-  var result = eles.showEles(); // Show given eles
+  var result = cy.viewUtilities().show(eles); // Show given eles
   if (typeof layoutparam === 'function') {
     layoutparam(); // If layoutparam is a function execute it
   }

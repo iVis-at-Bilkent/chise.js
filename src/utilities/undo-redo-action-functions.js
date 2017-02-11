@@ -139,7 +139,7 @@ undoRedoActionFunctions.returnToPositionsAndSizesConditionally = function (nodes
     delete nodesData.firstTime;
     return nodesData;
   }
-  return this.returnToPositionsAndSizes(nodesData);
+  return undoRedoActionFunctions.returnToPositionsAndSizes(nodesData);
 };
 
 undoRedoActionFunctions.returnToPositionsAndSizes = function (nodesData) {
@@ -314,19 +314,21 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
   return result;
 };
 
-// TODO reconsider this operation of undo of it.
+/*
+ * Show eles and perform layout.
+ */
 undoRedoActionFunctions.showAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
-  result.positionAndSizes = this.getNodePositionsAndSizes();
-
+  result.positionAndSizes = undoRedoActionFunctions.getNodePositionsAndSizes();
+  
   if (param.firstTime) {
     result.eles = elementUtilities.showAndPerformLayout(param.eles, param.layoutparam);
   }
   else {
-    result.eles = eles.showEles(); // Show given eles
-    this.returnToPositionsAndSizes(param.positionAndSizes);
+    result.eles = cy.viewUtilities().show(eles); // Show given eles
+    undoRedoActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
   }
 
   return result;
@@ -336,10 +338,10 @@ undoRedoActionFunctions.undoShowAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
-  result.positionAndSizes = this.getNodePositionsAndSizes();
-  result.eles = eles.hideEles();
+  result.positionAndSizes = undoRedoActionFunctions.getNodePositionsAndSizes();
+  result.eles = cy.viewUtilities().hide(eles); // Hide previously unhidden eles;
 
-  this.returnToPositionsAndSizes(param.positionAndSizes);
+  undoRedoActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
 
   return result;
 };
