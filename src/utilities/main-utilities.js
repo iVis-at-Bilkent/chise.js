@@ -437,4 +437,23 @@ mainUtilities.changeData = function(eles, name, value) {
   cy.style().update();
 };
 
+/*
+ * Unhide given eles and perform given layout afterward. Layout parameter may be layout options
+ * or a function to call. Requires viewUtilities extension and considers undoable option.
+ */
+mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
+  if (!options.undoable) {
+    elementUtilities.showAndPerformLayout(eles, layoutparam);
+  }
+  else {
+    var param = {
+      eles: eles,
+      layoutparam: layoutparam,
+      firstTime: true
+    };
+    
+    cy.undoRedo().do("showAndPerformLayout", param);
+  }
+};
+
 module.exports = mainUtilities;

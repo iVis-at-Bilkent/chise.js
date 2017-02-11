@@ -815,4 +815,20 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   return 'valid';
 };
 
+/*
+ * Unhide given eles and perform given layout afterward. Layout parameter may be layout options
+ * or a function to call.
+ */
+elementUtilities.showAndPerformLayout = function(eles, layoutparam) {
+  var result = eles.showEles(); // Show given eles
+  if (typeof layoutparam === 'function') {
+    layoutparam(); // If layoutparam is a function execute it
+  }
+  else {
+    cy.layout(layoutparam); // If layoutparam is layout options call layout with that options.
+  }
+  
+  return result;
+};
+
 module.exports = elementUtilities;

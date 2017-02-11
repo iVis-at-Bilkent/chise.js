@@ -315,24 +315,24 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
 };
 
 // TODO reconsider this operation of undo of it.
-undoRedoActionFunctions.showAndPerformIncrementalLayout = function (param) {
+undoRedoActionFunctions.showAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
   result.positionAndSizes = this.getNodePositionsAndSizes();
-  result.eles = eles.showEles();
 
-  if (param.positionAndSizes) {
-    this.returnToPositionsAndSizes(param.positionAndSizes);
+  if (param.firstTime) {
+    result.eles = elementUtilities.showAndPerformLayout(param.eles, param.layoutparam);
   }
   else {
-    triggerIncrementalLayout();
+    result.eles = eles.showEles(); // Show given eles
+    this.returnToPositionsAndSizes(param.positionAndSizes);
   }
 
   return result;
 };
 
-undoRedoActionFunctions.undoShowAndPerformIncrementalLayout = function (param) {
+undoRedoActionFunctions.undoShowAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
