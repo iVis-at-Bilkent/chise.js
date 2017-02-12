@@ -282,6 +282,8 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
   var edgeLength = edgeLength ? edgeLength : 60;
 
+  cy.startBatch();
+
   var xPositionOfFreeMacromolecules;
   if (templateType === 'association') {
     xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
@@ -346,6 +348,8 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
     newNode.data('label', macromoleculeList[i]);
     newNode.data('justAddedLayoutNode', true);
   }
+  
+  cy.endBatch();
 
   var layoutNodes = cy.nodes('[justAddedLayoutNode]');
   layoutNodes.removeData('justAddedLayoutNode');
