@@ -117,50 +117,36 @@ undoRedoActionFunctions.createTemplateReaction = function (param) {
 // Section Start
 // general action functions
 
-undoRedoActionFunctions.getNodePositionsAndSizes = function () {
-  var positionsAndSizes = {};
+undoRedoActionFunctions.getNodePositions = function () {
+  var positions = {};
   var nodes = cy.nodes();
-
-  for (var i = 0; i < nodes.length; i++) {
-    var ele = nodes[i];
-    positionsAndSizes[ele.id()] = {
-      width: ele.width(),
-      height: ele.height(),
+  
+  nodes.each(function(i, ele) {
+    positions[ele.id()] = {
       x: ele.position("x"),
       y: ele.position("y")
-    };
-  }
-
-  return positionsAndSizes;
-};
-
-undoRedoActionFunctions.returnToPositionsAndSizesConditionally = function (nodesData) {
-  if (nodesData.firstTime) {
-    delete nodesData.firstTime;
-    return nodesData;
-  }
-  return undoRedoActionFunctions.returnToPositionsAndSizes(nodesData);
-};
-
-undoRedoActionFunctions.returnToPositionsAndSizes = function (nodesData) {
-  var currentPositionsAndSizes = {};
-  cy.nodes().positions(function (i, ele) {
-    currentPositionsAndSizes[ele.id()] = {
-      width: ele.width(),
-      height: ele.height(),
-      x: ele.position("x"),
-      y: ele.position("y")
-    };
-    var data = nodesData[ele.id()];
-    ele._private.data.width = data.width;
-    ele._private.data.height = data.height;
-    return {
-      x: data.x,
-      y: data.y
     };
   });
 
-  return currentPositionsAndSizes;
+  return positions;
+};
+
+undoRedoActionFunctions.returnToPositions = function (positions) {
+  var currentPositions = {};
+  cy.nodes().positions(function (i, ele) {
+    currentPositions[ele.id()] = {
+      x: ele.position("x"),
+      y: ele.position("y")
+    };
+    
+    var pos = positions[ele.id()];
+    return {
+      x: pos.x,
+      y: pos.y
+    };
+  });
+
+  return currentPositions;
 };
 
 undoRedoActionFunctions.resizeNodes = function (param) {
@@ -243,10 +229,12 @@ undoRedoActionFunctions.changeData = function (param) {
     eles.data(param.name, param.value);
   }
   else {
+    cy.startBatch();
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
       ele.data(param.name, param.valueMap[ele.id()]);
     }
+    cy.endBatch();
   }
 
   return result;
@@ -269,10 +257,12 @@ undoRedoActionFunctions.changeCss = function (param) {
     eles.css(param.name, param.value);
   }
   else {
+    cy.startBatch();
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
       ele.css(param.name, param.valueMap[ele.id()]);
     }
+    cy.endBatch();
   }
 
   return result;
@@ -321,14 +311,14 @@ undoRedoActionFunctions.showAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
-  result.positionAndSizes = undoRedoActionFunctions.getNodePositionsAndSizes();
+  result.positions = undoRedoActionFunctions.getNodePositions();
   
   if (param.firstTime) {
     result.eles = elementUtilities.showAndPerformLayout(param.eles, param.layoutparam);
   }
   else {
     result.eles = cy.viewUtilities().show(eles); // Show given eles
-    undoRedoActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
+    undoRedoActionFunctions.returnToPositions(param.positions);
   }
 
   return result;
@@ -338,10 +328,10 @@ undoRedoActionFunctions.undoShowAndPerformLayout = function (param) {
   var eles = param.eles;
 
   var result = {};
-  result.positionAndSizes = undoRedoActionFunctions.getNodePositionsAndSizes();
+  result.positions = undoRedoActionFunctions.getNodePositions();
   result.eles = cy.viewUtilities().hide(eles); // Hide previously unhidden eles;
 
-  undoRedoActionFunctions.returnToPositionsAndSizes(param.positionAndSizes);
+  undoRedoActionFunctions.returnToPositions(param.positions);
 
   return result;
 };
