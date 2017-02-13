@@ -27,24 +27,6 @@ module.exports = function (sbgnviz) {
   // Update cy stylesheet
   var upateStyleSheet = function() {
     cy.style()
-    .selector("node[class][fontweight]")
-    .style({
-      'font-weight': function(ele) {
-        return ele.data('fontweight');
-      }
-    })
-    .selector("node[class][fontfamily]")
-    .style({
-      'font-family': function(ele) {
-        return ele.data('fontfamily');
-      }
-    })
-    .selector("node[class][fontstyle]")
-    .style({
-      'font-style': function(ele) {
-        return ele.data('fontstyle');
-      }
-    })
     .selector("node[class][labelsize]")
     .style({
       'font-size': function (ele) {
@@ -100,9 +82,6 @@ module.exports = function (sbgnviz) {
       if (elementUtilities.canHaveSBGNLabel(ele)) {
         var _class = ele.data('class').replace(" multimer", "");
         ele.data('labelsize', elementUtilities.defaultProperties[_class].labelsize);
-        ele.data('fontweight', elementUtilities.defaultProperties[_class].fontweight);
-        ele.data('fontfamily', elementUtilities.defaultProperties[_class].fontfamily);
-        ele.data('fontstyle', elementUtilities.defaultProperties[_class].fontstyle);
       }
     });
     cy.endBatch();

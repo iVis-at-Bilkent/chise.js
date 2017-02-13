@@ -33,81 +33,51 @@ elementUtilities.defaultProperties = {
   "macromolecule": {
     width: 100,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "nucleic acid feature": {
     width: 100,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "simple chemical": {
     width: 50,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "source and sink": {
     width: 50,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "tag": {
     width: 50,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "phenotype": {
     width: 100,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "unspecified entity": {
     width: 100,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "perturbing agent": {
     width: 100,
     height: 50,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 20
   },
   "complex": {
     width: 100,
     height: 100,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 16
   },
   "compartment": {
     width: 100,
     height: 100,
-    fontfamily: 'Helvetica',
-    fontweight: 'normal',
-    fontstyle: 'normal',
     labelsize: 16
   }
 };
@@ -140,6 +110,18 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     if (defaults['border-color']) {
       css['border-color'] = defaults['border-color'];
     }
+    
+    if (defaults['font-weight']) {
+      css['font-weight'] = defaults['font-weight'];
+    }
+    
+    if (defaults['font-style']) {
+      css['font-style'] = defaults['font-style'];
+    }
+    
+    if (defaults['font-family']) {
+      css['font-family'] = defaults['font-family'];
+    }
   }
 
   if (visibility) {
@@ -160,9 +142,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     statesandinfos: [],
     ports: [],
     labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) : undefined,
-    fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) : undefined,
-    fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) : undefined,
-    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined,
     clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
   };
 
@@ -752,7 +731,13 @@ elementUtilities.setCloneMarkerStatus = function (nodes, status) {
 // Change font properties of the given elements with given font data
 elementUtilities.changeFontProperties = function (eles, data) {
   for (var prop in data) {
-    eles.data(prop, data[prop]);
+    // If prop is labelsize it is part of element data else it is part of element css
+    if (prop === 'labelsize') {
+      eles.data(prop, data[prop]);
+    }
+    else {
+      eles.css(prop, data[prop]);
+    }
   }
 };
 

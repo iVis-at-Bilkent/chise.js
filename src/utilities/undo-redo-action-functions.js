@@ -284,20 +284,24 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
     var data = param.firstTime ? param.data : param.data[ele.id()];
 
     for (var prop in data) {
-      result.data[ele.id()][prop] = ele.data(prop);
+      // If prop is labelsize it is part of element data else it is part of element css
+      if (prop === 'labelsize') {
+        result.data[ele.id()][prop] = ele.data(prop);
+      }
+      else {
+        result.data[ele.id()][prop] = ele.css(prop);
+      }
     }
   }
 
   if (param.firstTime) {
-    elementUtilities.changeFontProperties(eles, param.data);
+    elementUtilities.changeFontProperties(eles, data);
   }
   else {
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
-
-      for (var prop in param.data[ele.id()]) {
-        ele.data(prop, param.data[ele.id()][prop]);
-      }
+      
+      elementUtilities.changeFontProperties(ele, data);
     }
   }
 
