@@ -8,7 +8,7 @@ function mainUtilities() {
 };
 
 /*
- * Adds a new node with the given class and at the given coordinates.
+ * Adds a new node with the given class and at the given coordinates. Considers undoable option.
  */
 mainUtilities.addNode = function(x, y , nodeclass) {
   if (!options.undoable) {
@@ -28,7 +28,7 @@ mainUtilities.addNode = function(x, y , nodeclass) {
 };
 
 /*
- * Adds a new edge with the given class and having the given source and target ids
+ * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
  */
 mainUtilities.addEdge = function(source, target , edgeclass) {
   // Get the validation result
@@ -271,7 +271,7 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
 };
 
 /*
- * Change font properties for given eles use the given font data.
+ * Change font properties for given nodes use the given font data.
  * Considers undoable option.
  */
 mainUtilities.changeFontProperties = function(eles, data) {

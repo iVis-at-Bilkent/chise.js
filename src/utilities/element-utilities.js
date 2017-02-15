@@ -632,7 +632,7 @@ elementUtilities.relocateStateAndInfos = function (ele) {
 // Change state value or unit of information box of given nodes with given index.
 // Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
 // Value parameter is the new value to set.
-// This method the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+// This method returns the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
 elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
   var result;
   for (var i = 0; i < nodes.length; i++) {
