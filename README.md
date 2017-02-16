@@ -268,7 +268,7 @@ General and sbgn specific utilities for cytoscape elements.
 Functions to be utilized in defining new actions for cytoscape.js-undo-redo extension. These are exposed for the users who builds
 an extension library of chise.
 
- * `deleteElesSimple(param)` Do/Redo function for 'deleteElesSimple' undo redo command.
+ * `deleteElesSimple(param)` Do/Redo function for 'deleteElesSimple' undo redo command also undo function for commands which simply adds new elements to the graph (e.g. 'createTemplateReaction', 'addNode', 'addEdge').
  * `deleteNodesSmart(param)` Do/Redo function for 'deleteNodesSmart' undo redo command.
  * `restoreEles(eles)` Undo function for 'deleteElesSimple' and 'deleteNodesSmart' undo redo commands.
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
@@ -281,6 +281,13 @@ an extension library of chise.
  * `changeData(param)` Do/Undo/Redo function for 'changeData' undo redo command.
  * `changeCss(param)` Do/Undo/Redo function for 'changeCss' undo redo command.
  * `changeFontProperties(param)` Do/Undo/Redo function for 'changeFontProperties' undo redo command.
+ * `showAndPerformLayout(param)` Do/Redo function for 'showAndPerformLayout' undo redo command.
+ * `undoShowAndPerformLayout(param)` Undo/ function for 'showAndPerformLayout' undo redo command.
+ * `changeStateOrInfoBox(param)` Do/Undo/Redo function for 'changeStateOrInfoBox' undo redo command.
+ * `addStateOrInfoBox(param)` Do/Redo function for 'addStateOrInfoBox' undo redo command (Also Undo function for 'removeStateOrInfoBox' undo redo command).
+ * `removeStateOrInfoBox(param)` Do/Redo function for 'removeStateOrInfoBox' undo redo command (Also Undo function for 'addStateOrInfoBox' undo redo command).
+ * `setMultimerStatus(param)` Do/Undo/Redo function for 'setMultimerStatus' undo redo command.
+ * `setCloneMarkerStatus(param)` Do/Undo/Redo function for 'setCloneMarkerStatus' undo redo command.
 
 ## Events
 `$(document).on('sbgnvizLoadSample', function(event, filename) { ... });` Triggered when a sample is being loaded
