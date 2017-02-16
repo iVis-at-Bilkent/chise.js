@@ -1,6 +1,6 @@
 # ChiSE version 1
 
-ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz-js), which in turn is based on [cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by [SBGN Process Description Notation](http://www.sbgn.org/Image:Refcard-PD.png). It accepts the pathway models represented in [SBGN-ML](http://sourceforge.net/apps/mediawiki/libsbgn/index.php?title=Exchange_Format) format, and can save edited pathways back to the same format as well as static image formats (PNG and JPEG).
+ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by [SBGN Process Description Notation](http://www.sbgn.org/Image:Refcard-PD.png). It accepts the pathway models represented in [SBGN-ML](http://sourceforge.net/apps/mediawiki/libsbgn/index.php?title=Exchange_Format) format, and can save edited pathways back to the same format as well as static image formats (PNG and JPEG).
 <br/>
 
 ## Software
@@ -303,6 +303,7 @@ an extension library of chise.
  * cytoscape (iVis-at-Bilkent/cytoscape.js#unstable)
  * jQuery ^2.2.4
  * filesaverjs ~0.2.2
+ * sbgnviz ~3.4.2
 
 ## Optional Dependencies
 The following extensions are used by this library if they are registered.
@@ -325,6 +326,7 @@ var sbgnviz = require('sbgnviz');
 var cytoscape = require('cytoscape-for-sbgnviz');
 var jQuery = require('jQuery');
 var filesaverjs = require('filesaverjs');
+var sbgnviz = require('sbgnviz');
 
 var options = {
 };
@@ -332,13 +334,14 @@ var options = {
 var libs = {
     cytoscape: cytoscape,
     jQuery: jQuery,
-    filesaverjs: filesaverjs
+    filesaverjs: filesaverjs,
+    sbgnviz: sbgnviz
 };
 
-sbgnviz( options, libs );
+chise( options, libs );
 ```
 
-In plain JS you do not need to require the libraries you just need to register sbgnviz with the options.
+In plain JS you do not need to require the libraries you just need to register chise with the options.
 
 ## Publishing instructions
 
