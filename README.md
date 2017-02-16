@@ -166,14 +166,14 @@ Move the nodes to a new parent and change their position if possDiff params are 
 
 `chise.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
 Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included in the complex.
-Considers undoable option. Parameters are explained below.
-templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
-macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
-complexName: The name of the complex in the reaction.
-processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
-tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
-tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
-edgeLength: The distance between the process and the macromolecules at the both sides.
+Considers undoable option. Parameters are explained below.<br>
+templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
+macromoleculeList: The list of the names of macromolecules which will involve in the reaction.<br>
+complexName: The name of the complex in the reaction.<br>
+processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
+tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+edgeLength: The distance between the process and the macromolecules at the both sides.<br>
 
 `chise.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
 Resize given nodes if useAspectRatio is truthy one of width or height should not be set. Considers undoable option.
