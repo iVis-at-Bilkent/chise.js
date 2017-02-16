@@ -66,6 +66,10 @@ mainUtilities.addEdge = function(source, target , edgeclass) {
  * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
  */
 mainUtilities.cloneElements = function (eles) {
+  if (eles.length === 0) {
+    return;
+  }
+  
   var cb = cy.clipboard();
   var _id = cb.copy(eles, "cloneOperation");
 
@@ -103,6 +107,10 @@ mainUtilities.pasteElements = function() {
  * Requrires cytoscape-grid-guide extension and considers undoable option.
  */
 mainUtilities.align = function (nodes, horizontal, vertical, alignTo) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (options.undoable) {
     cy.undoRedo().do("align", {
       nodes: nodes,
@@ -232,6 +240,10 @@ mainUtilities.createTemplateReaction = function (templateType, macromoleculeList
  * Considers undoable option.
  */
 mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (options.undoable) {
     var param = {
       nodes: nodes,
@@ -254,6 +266,10 @@ mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
  * Changes the label of the given nodes to the given label. Considers undoable option.
  */
 mainUtilities.changeNodeLabel = function(nodes, label) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
     nodes.data('label', label);
   }
@@ -275,6 +291,10 @@ mainUtilities.changeNodeLabel = function(nodes, label) {
  * Considers undoable option.
  */
 mainUtilities.changeFontProperties = function(eles, data) {
+  if (eles.length === 0) {
+    return;
+  }
+  
   if (options.undoable) {
     var param = {
       eles: eles,
@@ -297,6 +317,9 @@ mainUtilities.changeFontProperties = function(eles, data) {
  * For more information about the parameters see elementUtilities.changeStateOrInfoBox
  */
 mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
+  if (nodes.length === 0) {
+    return;
+  }
   if (options.undoable) {
     var param = {
       index: index,
@@ -318,6 +341,10 @@ mainUtilities.changeStateOrInfoBox = function(nodes, index, value, type) {
 // The box is represented by the parameter obj.
 // Considers undoable option.
 mainUtilities.addStateOrInfoBox = function(nodes, obj) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
     elementUtilities.addStateOrInfoBox(nodes, obj);
   }
@@ -336,6 +363,10 @@ mainUtilities.addStateOrInfoBox = function(nodes, obj) {
 // Remove the state or info boxes of the given nodes at given index.
 // Considers undoable option.
 mainUtilities.removeStateOrInfoBox = function(nodes, index) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
     elementUtilities.removeStateOrInfoBox(nodes, index);
   }
@@ -356,6 +387,10 @@ mainUtilities.removeStateOrInfoBox = function(nodes, index) {
  * Considers undoable option.
  */
 mainUtilities.setMultimerStatus = function(nodes, status) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (options.undoable) {
     var param = {
       status: status,
@@ -377,6 +412,10 @@ mainUtilities.setMultimerStatus = function(nodes, status) {
  * Considers undoable option.
  */ 
 mainUtilities.setCloneMarkerStatus = function(nodes, status) {
+  if (nodes.length === 0) {
+    return;
+  }
+  
   if (options.undoable) {
     var param = {
       status: status,
@@ -398,6 +437,10 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
  * Considers undoable option.
  */
 mainUtilities.changeCss = function(eles, name, value) {
+  if (eles.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
     eles.css(name, value);
   }
@@ -420,6 +463,10 @@ mainUtilities.changeCss = function(eles, name, value) {
  * Considers undoable option.
  */
 mainUtilities.changeData = function(eles, name, value) {
+  if (eles.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
     eles.data(name, value);
   }
@@ -438,16 +485,21 @@ mainUtilities.changeData = function(eles, name, value) {
 };
 
 /*
- * Unhide given eles and perform given layout afterward. Layout parameter may be layout options
+ * Unhide given eles (the ones which are hidden if any) and perform given layout afterward. Layout parameter may be layout options
  * or a function to call. Requires viewUtilities extension and considers undoable option.
  */
 mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
+  var hiddenEles = eles.filter(':hidden');
+  if (hiddenEles.length === 0) {
+    return;
+  }
+  
   if (!options.undoable) {
-    elementUtilities.showAndPerformLayout(eles, layoutparam);
+    elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
   }
   else {
     var param = {
-      eles: eles,
+      eles: hiddenEles,
       layoutparam: layoutparam,
       firstTime: true
     };
