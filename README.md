@@ -186,7 +186,7 @@ Past the elements copied to clipboard. Considers undoable option. Requires cytos
 
 `chise.align(nodes, horizontal, vertical, alignTo)`
 Aligns given nodes in given horizontal and vertical order. Horizontal and vertical parameters may be 'none' or undefined. 
-alignTo parameter indicates the leading node. Requrires cytoscape-grid-guide extension and considers undoable option.
+alignTo parameter indicates the leading node. Requires cytoscape-grid-guide extension and considers undoable option.
 
 `chise.createCompoundForGivenNodes(nodes, compoundType)`
 Create compound for given nodes. compoundType may be 'complex' or 'compartment'. This method considers undoable option.
@@ -289,7 +289,7 @@ General and sbgn specific utilities for cytoscape elements.
  * `setMultimerStatus(nodes, status)` Similar to `chise.setMultimerStatus()` but do not considers undoable option.
  * `setCloneMarkerStatus(nodes, status)` Similar to `chise.setCloneMarkerStatus()` but do not considers undoable option.
  * `changeFontProperties(nodes, data)` Similar to `chise.changeFontProperties()` but do not considers undoable option.
- * `validateArrowEnds(nodes, data)`  This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
+ * `validateArrowEnds(edge, source, target)`  This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
     It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
     if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
  * `showAndPerformLayout(eles, layoutparam)` Similar to `chise.showAndPerformLayout()` but do not considers undoable option.
