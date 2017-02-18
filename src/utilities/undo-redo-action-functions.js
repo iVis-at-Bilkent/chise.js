@@ -11,7 +11,7 @@ undoRedoActionFunctions.addNode = function (param) {
   var result;
   if (param.firstTime) {
     var newNode = param.newNode;
-    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.class);
+    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.class, newNode.id, newNode.parent, newNode.visibility);
   }
   else {
     result = elementUtilities.restoreEles(param);
@@ -26,7 +26,7 @@ undoRedoActionFunctions.addEdge = function (param) {
   var result;
   if (param.firstTime) {
     var newEdge = param.newEdge;
-    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.class);
+    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.class, newEdge.id, newEdge.visibility);
   }
   else {
     result = elementUtilities.restoreEles(param);

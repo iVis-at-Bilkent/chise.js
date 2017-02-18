@@ -169,11 +169,11 @@ spinner will have. The default classname is 'default-class'. Requires 'fontaweso
 `chise.endSpinner(classname)`
 Ends any spinner having a css class with the given name. Requires 'fontawesome.css'.
 
-`chise.addNode(x, y , nodeclass)`
-Adds a new node with the given class and at the given coordinates. Considers undoable option.
+`chise.addNode(x, y , nodeclass, id, parent, visibility)`
+Adds a new node with the given class and at the given coordinates. Optionally you can set the id, parent and visibility of the node. Considers undoable option.
 
-`chise.addEdge(source, target , edgeclass)`
-Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
+`chise.addEdge(source, target , edgeclass, id, visibility)`
+Adds a new edge with the given class and having the given source and target ids. Optionally you can set the id and visibility of the node. Considers undoable option.
 
 `chise.cloneElements(eles)`
 Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
@@ -260,8 +260,8 @@ General and sbgn specific utilities for cytoscape elements.
  * `deleteNodesSmart(nodes)` Similar to `chise.deleteNodesSmart()` but do not considers undoable option.
  * `deleteElesSimple(eles)` Similar to `chise.deleteElesSimple()` but do not considers undoable option.
  * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
- * `addNode(x, y, sbgnclass, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
- * `addEdge(source, target, sbgnclass, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
+ * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
+ * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
  * `createCompoundForGivenNodes(nodesToMakeCompound, compoundType)` Similar to `chise.createCompoundForGivenNodes()` but do not considers undoable option.
  * `removeCompound(compoundToRemove)` Similar to `chise.removeCompound()` but do not considers undoable option.
  * `changeParent(nodes, newParent, posDiffX, posDiffY)` Similar to `chise.changeParent()` but do not considers undoable option.

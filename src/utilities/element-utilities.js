@@ -85,7 +85,7 @@ elementUtilities.defaultProperties = {
 // Section Start
 // Add remove utilities
 
-elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility, id) {
+elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
 
@@ -136,7 +136,10 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility, id) {
     clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
   };
 
-  if(id) data.id = id;
+  if(id) {
+    data.id = id;
+  }
+  
   if (parent) {
     data.parent = parent;
   }
@@ -157,7 +160,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility, id) {
   return newNode;
 };
 
-elementUtilities.addEdge = function (source, target, sbgnclass, visibility, id) {
+elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) {
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
   var css = defaults ? {
@@ -185,7 +188,10 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility, id) 
       target: target,
       class: sbgnclass
   };
-  if(id) data.id = id;
+  
+  if(id) {
+    data.id = id;
+  }
 
   var eles = cy.add({
     group: "edges",
@@ -204,8 +210,8 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility, id) 
  */
 elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compoundType) {
   var oldParentId = nodesToMakeCompound[0].data("parent");
-  // The parent of new compound will be the old parent of the nodes to make compound
-  var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, oldParentId);
+  // The parent of new compound will be the old parent of the nodes to make compound. x, y and id parameters are not set.
+  var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
   var newCompoundId = newCompound.id();
   nodesToMakeCompound.move({parent: newCompoundId});
   sbgnviz.refreshPaddings();
@@ -317,7 +323,8 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
 
   //Create the macromolecules inside the complex
   for (var i = 0; i < numOfMacromolecules; i++) {
-    var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", complex.id());
+    // Add a macromolecule not having a previously defined id and having the complex created in this reaction as parent
+    var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
     newNode.data('justAdded', true);
     newNode.data('label', macromoleculeList[i]);
     newNode.data('justAddedLayoutNode', true);

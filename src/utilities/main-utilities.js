@@ -10,16 +10,19 @@ function mainUtilities() {
 /*
  * Adds a new node with the given class and at the given coordinates. Considers undoable option.
  */
-mainUtilities.addNode = function(x, y , nodeclass) {
+mainUtilities.addNode = function(x, y , nodeclass, id, parent, visibility) {
   if (!options.undoable) {
-    return elementUtilities.addNode(x, y, nodeclass);
+    return elementUtilities.addNode(x, y, nodeclass, id, parent, visibility);
   }
   else {
     var param = {
       newNode : {
         x: x,
         y: y,
-        class: nodeclass
+        class: nodeclass,
+        id: id,
+        parent: parent,
+        visibility: visibility
       }
     };
     
@@ -30,7 +33,7 @@ mainUtilities.addNode = function(x, y , nodeclass) {
 /*
  * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
  */
-mainUtilities.addEdge = function(source, target , edgeclass) {
+mainUtilities.addEdge = function(source, target , edgeclass, id, visibility) {
   // Get the validation result
   var validation = elementUtilities.validateArrowEnds(edgeclass, cy.getElementById(source), cy.getElementById(target));
 
@@ -47,14 +50,16 @@ mainUtilities.addEdge = function(source, target , edgeclass) {
   }
       
   if (!options.undoable) {
-    return elementUtilities.addEdge(source, target, edgeclass);
+    return elementUtilities.addEdge(source, target, edgeclass, id, visibility);
   }
   else {
     var param = {
       newEdge : {
         source: source,
         target: target,
-        class: edgeclass
+        class: edgeclass,
+        id: id,
+        visibility: visibility
       }
     };
     
