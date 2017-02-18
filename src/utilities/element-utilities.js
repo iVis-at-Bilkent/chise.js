@@ -85,7 +85,7 @@ elementUtilities.defaultProperties = {
 // Section Start
 // Add remove utilities
 
-elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
+elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility, id) {
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
 
@@ -110,18 +110,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     if (defaults['border-color']) {
       css['border-color'] = defaults['border-color'];
     }
-    
-    if (defaults['font-weight']) {
-      css['font-weight'] = defaults['font-weight'];
-    }
-    
-    if (defaults['font-style']) {
-      css['font-style'] = defaults['font-style'];
-    }
-    
-    if (defaults['font-family']) {
-      css['font-family'] = defaults['font-family'];
-    }
   }
 
   if (visibility) {
@@ -142,9 +130,13 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
     statesandinfos: [],
     ports: [],
     labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) : undefined,
+    fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) : undefined,
+    fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) : undefined,
+    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined,
     clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
   };
 
+  if(id) data.id = id;
   if (parent) {
     data.parent = parent;
   }
@@ -165,7 +157,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, parent, visibility) {
   return newNode;
 };
 
-elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
+elementUtilities.addEdge = function (source, target, sbgnclass, visibility, id) {
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
   var css = defaults ? {
@@ -188,13 +180,16 @@ elementUtilities.addEdge = function (source, target, sbgnclass, visibility) {
     css.visibility = visibility;
   }
 
-  var eles = cy.add({
-    group: "edges",
-    data: {
+  var data = {
       source: source,
       target: target,
       class: sbgnclass
-    },
+  };
+  if(id) data.id = id;
+
+  var eles = cy.add({
+    group: "edges",
+    data: data,
     css: css
   });
 
