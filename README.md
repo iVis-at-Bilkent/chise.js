@@ -9,6 +9,10 @@ ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.or
 
 **A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here](https://github.com/iVis-at-Bilkent/chise.js-sample-app)
 
+Please cite the following when you use ChiSE.js:
+
+M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[SBGNViz: a tool for visualization and complexity management of SBGN process description maps](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0128985)", PLoS ONE, 10(6), e0128985, 2015.
+
 ## Default Options
 ```javascript
     var options = {
