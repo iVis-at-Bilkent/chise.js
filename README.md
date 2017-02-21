@@ -7,7 +7,7 @@ ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilk
 
 ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). 
 
-**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here](https://github.com/iVis-at-Bilkent/chise.js-sample-app)
+**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here].(https://github.com/iVis-at-Bilkent/chise.js-sample-app)
 
 Please cite the following when you use ChiSE.js:
 
@@ -77,94 +77,8 @@ edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x 
 ```
 
 ## API
-`chise.expandNodes(nodes)`
-Expand given nodes. Requires expandCollapse extension and considers undoable option.
-
-`chise.collapseNodes(nodes)`
-Collapse given nodes. Requires expandCollapse extension and considers undoable option.
-
-`chise.expandComplexes()`
-Expands the complex nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.collapseComplexes()`
-Collapses the complex nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.collapseAll()`
-Collapses all nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.expandAll()`
-Expands all nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.hideNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact and hides the resulting list. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.showNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact. Then unhides the resulting list and hides others. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.showAll()`
-Unhides all elements. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.deleteElesSimple(eles)`
-Removes the given elements in a simple way. Considers 'undoable' option.
-
-`chise.deleteNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact and removes the resulting list. Considers 'undoable' option.
-
-`chise.highlightNeighbours(nodes)`
-Highlights neighbours of the given nodes. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.highlightProcesses(nodes)`
-Highlights processes of the given nodes. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.searchByLabel(label)`
-Finds the elements whose label includes the given label and highlights processes of those elements.
-Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.removeHighlights()`
-Unhighlights any highlighted element. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.performLayout(layoutOptions, notUndoable)`
-Performs layout by given layoutOptions. Considers 'undoable' option. However, by setting notUndoable parameter
-to a truthy value you can force an undable layout operation independant of 'undoable' option.
-
-`chise.createSbgnml()`
-Creates an sbgnml file content from the exising graph and returns it.
-
-`chise.convertSbgnmlToJson(data)`
-Converts given sbgnml data to a json object in a special format (http://js.cytoscape.org/#notation/elements-json) and returns it.
-
-`chise.getQtipContent(node)`
-Create the qtip contents of the given node and returns it.
-
-`chise.updateGraph(cyGraph)`
-Update the graph by given cyGraph parameter which is a json object including data of cytoscape elements 
-in a special format (http://js.cytoscape.org/#notation/elements-json).
-
-`chise.calculatePaddings(paddingPercent)`
-Calculates the paddings for compounds based on dimensions of simple nodes and a specific percentadge.
-As this percentadge takes the given paddingPercent or compoundPadding option.
-
-`chise.refreshPaddings(recalculatePaddings, nodes)`
-If nodes parameter is set refreshes the paddings of given nodes, else refreshes the paddings of whole graph.
-If recalculatePaddings parameter is set to a truthy value recalculates the paddings before refreshing, else uses
-the last calculated value for the paddings. 
-
-`chise.saveAsPng(filename)`
-Exports the current graph to a png file. The name of the file is determined by the filename parameter which is 
-'network.png' by default.
-
-`chise.saveAsJpg(filename)`
-Exports the current graph to a jpg file. The name of the file is determined by the filename parameter which is 
-'network.jpg' by default.
-
-`chise.loadSample(filename, folderpath)`
-Loads a sample file whose name and path of containing folder is given.
-
-`chise.loadSBGNMLFile(file)`
-Loads the given sbgnml file.
-
-`chise.saveAsSbgnml(filename)`
-Exports the current graph to an sbgnml file with the given filename.
+ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js. Please see [SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api).<br>
+You can find the methods where ChiSE.js extends SBGNViz.js API below.
 
 `chise.startSpinner(classname)`
 Starts a spinner at the middle of network container element. You can specify a css class that the 
@@ -250,19 +164,8 @@ Unhide given eles and perform given layout afterward. Layout parameter may be la
 Requires viewUtilities extension and considers undoable option.
 
 `chise.elementUtilities`
-General and sbgn specific utilities for cytoscape elements.
+General and sbgn specific utilities for cytoscape elements. Extends sbgnviz.elementUtilities, you can find the ChiSE extensions for sbgnviz.elementUtilities below.
 
- * `getTopMostNodes(nodes)` This method returns the nodes non of whose ancestors is not in given nodes.
- * `allHaveTheSameParent(nodes)` This method checks if all of the given nodes have the same parent assuming that the size of  nodes is not 0.
- * `moveNodes(positionDiff, nodes)` This method moves given nodes by the given position difference.
- * `convertToModelPosition(renderedPosition)` This method calculates the modal position of the given rendered position by considering current the pan and zoom level of the graph.
- * `getProcessesOfSelected()` Returns the processes of the selected nodes.
- * `getNeighboursOfSelected()` Returns the neighbours of the selected nodes.
- * `getNeighboursOfNodes(nodes)` Returns the neighbours of the given nodes.
- * `getProcessesOfNodes(nodes)` Extends the given nodes list in a smart way to leave the map intact and returns the resulting list. Aliases `extendNodeList`.
- * `noneIsNotHighlighted()` Returns true if there is no element having 'unhighlighted' class.
- * `deleteNodesSmart(nodes)` Similar to `chise.deleteNodesSmart()` but do not considers undoable option.
- * `deleteElesSimple(eles)` Similar to `chise.deleteElesSimple()` but do not considers undoable option.
  * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
@@ -300,11 +203,8 @@ General and sbgn specific utilities for cytoscape elements.
 
 `chise.undoRedoActionFunctions`
 Functions to be utilized in defining new actions for cytoscape.js-undo-redo extension. These are exposed for the users who builds
-an extension library of chise.
+an extension library of chise. Extends sbgnviz.undoRedoActionFunctions, you can find the ChiSE extensions for sbgnviz.undoRedoActionFunctions below.
 
- * `deleteElesSimple(param)` Do/Redo function for 'deleteElesSimple' undo redo command also undo function for commands which simply adds new elements to the graph (e.g. 'createTemplateReaction', 'addNode', 'addEdge').
- * `deleteNodesSmart(param)` Do/Redo function for 'deleteNodesSmart' undo redo command.
- * `restoreEles(eles)` Undo function for 'deleteElesSimple' and 'deleteNodesSmart' undo redo commands.
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
  * `addEdge(param)` Do/Redo function for 'addEdge' undo redo command.
  * `createCompoundForGivenNodes(param)` Do/Redo function for 'createCompoundForGivenNodes' undo redo command.
