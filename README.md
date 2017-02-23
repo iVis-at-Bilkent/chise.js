@@ -7,7 +7,7 @@ ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilk
 
 ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). 
 
-**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here].(https://github.com/iVis-at-Bilkent/chise.js-sample-app)
+**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here](https://github.com/iVis-at-Bilkent/chise.js-sample-app).
 
 Please cite the following when you use ChiSE.js:
 
@@ -32,8 +32,8 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
           return 10;
         },
         // Whether to adjust node label font size automatically.
-        // If this option return false do not adjust label sizes according to node height uses node.data('labelsize')
-        // instead of doing it.
+        // If this option returns false, do not adjust label sizes according to node heights; use node.data('labelsize')
+        // instead.
         adjustNodeLabelFontSizeAutomatically: function() {
           return true;
         },
@@ -41,7 +41,7 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
         networkContainerSelector: '#sbgn-network-container',
         // Whether the actions are undoable, requires cytoscape-undo-redo extension
         undoable: true,
-        // Whether to have undoable drag feature in undo/redo extension. This options will be passed to undo/redo extension
+        // Whether to have undoable drag feature in undo/redo extension. This option will be passed to undo/redo extension.
         undoableDrag: true
       };
 ```
@@ -77,8 +77,7 @@ edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x 
 ```
 
 ## API
-ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js. Please see [SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api).<br>
-You can find the methods where ChiSE.js extends SBGNViz.js API below.
+ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js as well ([SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api)). Other ChiSE.js API is presented below.
 
 `chise.startSpinner(classname)`
 Starts a spinner at the middle of network container element. You can specify a css class that the 
@@ -100,11 +99,11 @@ Clone given elements. Considers undoable option. Requires cytoscape-clipboard ex
 Copy given elements to clipboard. Requires cytoscape-clipboard extension.
 
 `chise.pasteElements(eles)`
-Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
+Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
 
 `chise.align(nodes, horizontal, vertical, alignTo)`
-Aligns given nodes in given horizontal and vertical order. Horizontal and vertical parameters may be 'none' or undefined. 
-alignTo parameter indicates the leading node. Requires cytoscape-grid-guide extension and considers undoable option.
+Aligns given nodes in given horizontal and vertical order. Horizontal and vertical parameters may be 'none' or undefined.<br>
+`alignTo`: indicates the leading node. Requires cytoscape-grid-guide extension and considers undoable option.
 
 `chise.createCompoundForGivenNodes(nodes, compoundType)`
 Create compound for given nodes. compoundType may be 'complex' or 'compartment'. This method considers undoable option.
@@ -115,56 +114,56 @@ Move the nodes to a new parent and change their position if possDiff params are 
 `chise.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
 Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included in the complex.
 Considers undoable option. Parameters are explained below.<br>
-templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
-macromoleculeList: The list of the names of macromolecules which will involve in the reaction.<br>
-complexName: The name of the complex in the reaction.<br>
-processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
-tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
-tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
-edgeLength: The distance between the process and the macromolecules at the both sides.<br>
+`templateType`: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
+`macromoleculeList`: The list of the names of macromolecules which will involve in the reaction.<br>
+`complexName`: The name of the complex in the reaction.<br>
+`processPosition`: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
+`tilingPaddingVertical`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`tilingPaddingHorizontal`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
 
 `chise.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
-Resize given nodes if useAspectRatio is truthy one of width or height should not be set. Considers undoable option.
+Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
 
 `chise.changeNodeLabel(nodes, label)`
 Changes the label of the given nodes to the given label. Considers undoable option.
 
 `chise.changeFontProperties(nodes, data)`
 Change font properties for given nodes use the given font data. Considers undoable option.
-Note that if data.labelsize is set it is associated with data field of nodes and all the other properties inside data parameter 
-are associated with css field of nodes. If 'options.adjustNodeLabelFontSizeAutomatically' is false or returns false the font-size of 
-nodes are set by data.labelsize.
+Note that if `data.labelsize` is set it is associated with data field of nodes and all the other properties inside data parameter 
+are associated with css field of nodes. If `options.adjustNodeLabelFontSizeAutomatically` is false or returns false the font-size of 
+nodes are set by `data.labelsize`.
 
 `chise.changeStateOrInfoBox(nodes, index, value, type)`
-Change state value or unit of information box of given nodes with given index. Considers undoable option.
-Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
-Value parameter is the new value to set.
-This method returns the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+Change state value or unit of information box of given nodes with given index. Considers undoable option.<br>
+`type` indicates whether to change value or variable, it is valid if the box at the given index is a state variable.<br>
+`value` parameter is the new value to set.<br>
+It returns the old value of the changed data (we assume that the old value of the changed data was the same for all nodes).
 
 `chise.addStateOrInfoBox(nodes, obj)`
-Add a new state or info box to given nodes. The box is represented by the parameter obj. Considers undoable option.
+Add a new state or info box to given `nodes`. The box is represented by the parameter `obj`. Considers undoable option.
 
 `chise.removeStateOrInfoBox(nodes, index)`
-Remove the state or info boxes of the given nodes at given index. Considers undoable option.
+Remove the state or info boxes of the given `nodes` at given `index`. Considers undoable option.
 
 `chise.setMultimerStatus(nodes, status)`
-Set multimer status of the given nodes to the given status. Considers undoable option.
+Set multimer status of the given `nodes` to the given `status`. Considers undoable option.
 
 `chise.setCloneMarkerStatus(nodes, status)`
-Set clone marker status of given nodes to the given status. Considers undoable option.
+Set clone marker status of given `nodes` to the given `status`. Considers undoable option.
 
 `chise.changeCss(eles, name, value)`
-Change style/css of given eles by setting getting property name to the given value. Considers undoable option.
+Change style/css of given `eles` by setting getting property `name` to the given `value`. Considers undoable option.
 
 `chise.changeData(eles, name, value)`
-Change data of given eles by setting getting property name to the given value. Considers undoable option.
+Change data of given `eles` by setting getting property `name` to the given `value`. Considers undoable option.
 
 `chise.showAndPerformLayout(eles, layoutparam)`
-Unhide given eles and perform given layout afterward. Layout parameter may be layout options or a function to call. 
-Requires viewUtilities extension and considers undoable option.
+Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call. 
+Requires `viewUtilities` extension and considers undoable option.
 
 `chise.elementUtilities`
-General and sbgn specific utilities for cytoscape elements. Extends sbgnviz.elementUtilities, you can find the ChiSE extensions for sbgnviz.elementUtilities below.
+General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
  * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
@@ -202,8 +201,8 @@ General and sbgn specific utilities for cytoscape elements. Extends sbgnviz.elem
  * `showAndPerformLayout(eles, layoutparam)` Similar to `chise.showAndPerformLayout()` but do not considers undoable option.
 
 `chise.undoRedoActionFunctions`
-Functions to be utilized in defining new actions for cytoscape.js-undo-redo extension. These are exposed for the users who builds
-an extension library of chise. Extends sbgnviz.undoRedoActionFunctions, you can find the ChiSE extensions for sbgnviz.undoRedoActionFunctions below.
+Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` extension. These are exposed for the users who builds
+an extension library of chise. Extends `sbgnviz.undoRedoActionFunctions`, you can find the ChiSE extensions for `sbgnviz.undoRedoActionFunctions` below.
 
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
  * `addEdge(param)` Do/Redo function for 'addEdge' undo redo command.
