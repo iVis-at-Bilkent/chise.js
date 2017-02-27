@@ -225,7 +225,7 @@ undoRedoActionFunctions.changeData = function (param) {
     result.valueMap[ele.id()] = ele.data(param.name);
   }
 
-  if (param.firstTime) {
+  if (param.value) {
     eles.data(param.name, param.value);
   }
   else {
@@ -253,7 +253,7 @@ undoRedoActionFunctions.changeCss = function (param) {
     result.valueMap[ele.id()] = ele.css(param.name);
   }
 
-  if (param.firstTime) {
+  if (param.value) {
     eles.css(param.name, param.value);
   }
   else {
@@ -416,10 +416,6 @@ undoRedoActionFunctions.setMultimerStatus = function (param) {
     }
   }
 
-//  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
-//    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
-//  }
-
   var result = {
     status: resultStatus,
     nodes: nodes
@@ -440,10 +436,6 @@ undoRedoActionFunctions.setCloneMarkerStatus = function (param) {
     var currentStatus = firstTime ? status : status[node.id()];
     elementUtilities.setCloneMarkerStatus(node, currentStatus);
   }
-
-//  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
-//    $('#inspector-is-clone-marker').attr("checked", !$('#inspector-is-clone-marker').attr("checked"));
-//  }
 
   var result = {
     status: resultStatus,
