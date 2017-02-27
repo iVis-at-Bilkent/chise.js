@@ -822,4 +822,40 @@ elementUtilities.showAndPerformLayout = function(eles, layoutparam) {
   return result;
 };
 
+/*
+ * Change style/css of given eles by setting getting property name to the given value/values (Note that valueMap parameter may be
+ * a single string or an id to value map).
+ */
+elementUtilities.changeCss = function(eles, name, valueMap) {
+  if ( typeof valueMap === 'object' ) {
+    cy.startBatch();
+    for (var i = 0; i < eles.length; i++) {
+      var ele = eles[i];
+      ele.css(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
+    }
+    cy.endBatch();
+  }
+  else {
+    eles.css(name, valueMap); // valueMap is just a string set css('name') for all eles to this value
+  }
+};
+
+/*
+ * Change data of given eles by setting getting property name to the given value/values (Note that valueMap parameter may be
+ * a single string or an id to value map).
+ */
+elementUtilities.changeData = function(eles, name, valueMap) {
+  if ( typeof valueMap === 'object' ) {
+    cy.startBatch();
+    for (var i = 0; i < eles.length; i++) {
+      var ele = eles[i];
+      ele.data(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
+    }
+    cy.endBatch();
+  }
+  else {
+    eles.data(name, valueMap); // valueMap is just a string set css('name') for all eles to this value
+  }
+};
+
 module.exports = elementUtilities;

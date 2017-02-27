@@ -215,7 +215,6 @@ undoRedoActionFunctions.changeData = function (param) {
   var result = {
   };
   var eles = param.eles;
-
   result.name = param.name;
   result.valueMap = {};
   result.eles = eles;
@@ -225,17 +224,7 @@ undoRedoActionFunctions.changeData = function (param) {
     result.valueMap[ele.id()] = ele.data(param.name);
   }
 
-  if (param.firstTime) {
-    eles.data(param.name, param.value);
-  }
-  else {
-    cy.startBatch();
-    for (var i = 0; i < eles.length; i++) {
-      var ele = eles[i];
-      ele.data(param.name, param.valueMap[ele.id()]);
-    }
-    cy.endBatch();
-  }
+  elementUtilities.changeData(param.eles, param.name, param.valueMap);
 
   return result;
 };
@@ -253,17 +242,7 @@ undoRedoActionFunctions.changeCss = function (param) {
     result.valueMap[ele.id()] = ele.css(param.name);
   }
 
-  if (param.firstTime) {
-    eles.css(param.name, param.value);
-  }
-  else {
-    cy.startBatch();
-    for (var i = 0; i < eles.length; i++) {
-      var ele = eles[i];
-      ele.css(param.name, param.valueMap[ele.id()]);
-    }
-    cy.endBatch();
-  }
+  elementUtilities.changeCss(param.eles, param.name, param.valueMap);
 
   return result;
 };

@@ -153,10 +153,10 @@ Set multimer status of the given `nodes` to the given `status`. Considers undoab
 Set clone marker status of given `nodes` to the given `status`. Considers undoable option.
 
 `chise.changeCss(eles, name, value)`
-Change style/css of given `eles` by setting getting property `name` to the given `value`. Considers undoable option.
+Change style/css of given `eles` by setting getting property `name` to the given `value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
 
 `chise.changeData(eles, name, value)`
-Change data of given `eles` by setting getting property `name` to the given `value`. Considers undoable option.
+Change data of given `eles` by setting getting property `name` to the given value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
 
 `chise.showAndPerformLayout(eles, layoutparam)`
 Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call. 

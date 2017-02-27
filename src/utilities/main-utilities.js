@@ -438,23 +438,22 @@ mainUtilities.setCloneMarkerStatus = function(nodes, status) {
 };
 
 /*
- * Change style/css of given eles by setting getting property name to the given value.
- * Considers undoable option.
+ * Change style/css of given eles by setting getting property name to the given given value/values (Note that valueMap parameter may be
+ * a single string or an id to value map). Considers undoable option.
  */
-mainUtilities.changeCss = function(eles, name, value) {
+mainUtilities.changeCss = function(eles, name, valueMap) {
   if (eles.length === 0) {
     return;
   }
   
   if (!options.undoable) {
-    eles.css(name, value);
+    elementUtilities.changeCss(eles, name, valueMap);
   }
   else {
     var param = {
       eles: eles,
-      value: value,
-      name: name,
-      firstTime: true
+      valueMap: valueMap,
+      name: name
     };
     
     cy.undoRedo().do("changeCss", param);
@@ -464,23 +463,22 @@ mainUtilities.changeCss = function(eles, name, value) {
 };
 
 /*
- * Change data of given eles by setting getting property name to the given value.
- * Considers undoable option.
+ * Change data of given eles by setting getting property name to the given given value/values (Note that valueMap parameter may be
+ * a single string or an id to value map). Considers undoable option.
  */
-mainUtilities.changeData = function(eles, name, value) {
+mainUtilities.changeData = function(eles, name, valueMap) {
   if (eles.length === 0) {
     return;
   }
   
   if (!options.undoable) {
-    eles.data(name, value);
+    elementUtilities.changeData(eles, name, valueMap);
   }
   else {
     var param = {
       eles: eles,
-      value: value,
-      name: name,
-      firstTime: true
+      valueMap: valueMap,
+      name: name
     };
     
     cy.undoRedo().do("changeData", param);
