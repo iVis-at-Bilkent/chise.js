@@ -7,78 +7,93 @@ var options = require('./option-utilities').getOptions();
 
 elementUtilities.defaultProperties = {
   "process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "omitted process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "uncertain process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
-  "associationprocess": {
-    width: 30,
-    height: 30
+  "associationprocess": { // TODO not sure if legit, "association" just below
+    width: 15,
+    height: 15
   },
   "association": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "dissociation": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "macromolecule": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "nucleic acid feature": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "simple chemical": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 35,
+    height: 35,
+    labelsize: 11
   },
   "source and sink": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 25,
+    height: 25,
+    labelsize: 11
   },
   "tag": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 35,
+    height: 35,
+    labelsize: 11
   },
   "phenotype": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "unspecified entity": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "perturbing agent": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "complex": {
     width: 100,
     height: 100,
-    labelsize: 16
+    labelsize: 11
   },
   "compartment": {
     width: 100,
     height: 100,
-    labelsize: 16
+    labelsize: 11
+  },
+  "and": {
+    width: 25,
+    height: 25,
+    labelsize: 11
+  },
+  "or": {
+    width: 25,
+    height: 25,
+    labelsize: 11
+  },
+  "not": {
+    width: 25,
+    height: 25,
+    labelsize: 11
   }
 };
 
