@@ -33,6 +33,8 @@ var registerUndoRedoActions = function (undoableDrag) {
   
   // register easy creation actions
   ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.deleteElesSimple);
+
+  ur.action("setDefaultProperty", undoRedoActionFunctions.setDefaultProperty, undoRedoActionFunctions.setDefaultProperty);
 };
 
 module.exports = function(undoableDrag) {
