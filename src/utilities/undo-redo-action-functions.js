@@ -446,6 +446,23 @@ undoRedoActionFunctions.setCloneMarkerStatus = function (param) {
   return result;
 };
 
+// param: {class: sbgnclass, name: propertyName, value: value}
+undoRedoActionFunctions.setDefaultProperty = function (param) {
+  var sbgnclass = param.class;
+  var name = param.name;
+  var value = param.value;
+  var classDefaults = elementUtilities.defaultProperties[sbgnclass];
+  var result = {
+    class: sbgnclass,
+    name: name,
+    value: classDefaults.hasOwnProperty(name) ? classDefaults[name] : undefined
+  };
+
+  classDefaults[name] = value;
+
+  return result;
+};
+
 // Section End
 // sbgn action functions
 

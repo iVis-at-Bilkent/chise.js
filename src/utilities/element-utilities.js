@@ -7,78 +7,93 @@ var options = require('./option-utilities').getOptions();
 
 elementUtilities.defaultProperties = {
   "process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "omitted process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "uncertain process": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
-  "associationprocess": {
-    width: 30,
-    height: 30
+  "associationprocess": { // TODO not sure if legit, "association" just below
+    width: 15,
+    height: 15
   },
   "association": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "dissociation": {
-    width: 30,
-    height: 30
+    width: 15,
+    height: 15
   },
   "macromolecule": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "nucleic acid feature": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "simple chemical": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 35,
+    height: 35,
+    labelsize: 11
   },
   "source and sink": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 25,
+    height: 25,
+    labelsize: 11
   },
   "tag": {
-    width: 50,
-    height: 50,
-    labelsize: 20
+    width: 35,
+    height: 35,
+    labelsize: 11
   },
   "phenotype": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "unspecified entity": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "perturbing agent": {
-    width: 100,
-    height: 50,
-    labelsize: 20
+    width: 70,
+    height: 35,
+    labelsize: 11
   },
   "complex": {
     width: 100,
     height: 100,
-    labelsize: 16
+    labelsize: 11
   },
   "compartment": {
     width: 100,
     height: 100,
-    labelsize: 16
+    labelsize: 11
+  },
+  "and": {
+    width: 25,
+    height: 25,
+    labelsize: 11
+  },
+  "or": {
+    width: 25,
+    height: 25,
+    labelsize: 11
+  },
+  "not": {
+    width: 25,
+    height: 25,
+    labelsize: 11
   }
 };
 
@@ -602,6 +617,12 @@ elementUtilities.isPNClass = function (ele) {
           || sbgnclass == 'phenotype');
 };
 
+// Returns wether the given element or string is of the special empty set/source and sink class
+elementUtilities.isEmptySetClass = function (ele) {
+  var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
+  return sbgnclass == 'source and sink';
+};
+
 // Returns whether the given element is a logical operator
 elementUtilities.isLogicalOperator = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
@@ -613,6 +634,14 @@ elementUtilities.convenientToEquivalence = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
   return (sbgnclass == 'tag' || sbgnclass == 'terminal');
 };
+
+// Returns wether the class of given elemnt is a modulation arc as defined in PD specs
+elementUtilities.isModulationArcClass = function (ele) {
+  var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
+  return (sbgnclass == 'modulation'
+          || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
+          || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation');
+}
 
 // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
 elementUtilities.relocateStateAndInfos = function (ele) {
@@ -774,13 +803,58 @@ elementUtilities.changeFontProperties = function (eles, data) {
 // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
 elementUtilities.validateArrowEnds = function (edge, source, target) {
   var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
+  // TODO is it necessary to accept strings ? better to always have the elements for source and target.
+  // The day we need to check other rules we will need to access some properties of each element.
   var sourceclass = typeof source === 'string' ? source : source.data('class');
   var targetclass = typeof target === 'string' ? target : target.data('class');
 
-  if (edgeclass == 'consumption' || edgeclass == 'modulation'
-          || edgeclass == 'stimulation' || edgeclass == 'catalysis'
-          || edgeclass == 'inhibition' || edgeclass == 'necessary stimulation') {
-    if (!this.isEPNClass(sourceclass) || !this.isPNClass(targetclass)) {
+  if (this.isModulationArcClass(edgeclass)){
+    /*
+     * Case of the output arc of a logic operator, which can be any modulation arc type.
+     * Has to go from logic operator to PN class.
+     * PD37 says there should be only 1, not enforced for now, rules are left commented.
+     */
+    valid = true;
+    reverse = false;
+    if (this.isLogicalOperator(sourceclass) || this.isLogicalOperator(targetclass)){ // a logic operator is involved
+      if (!this.isLogicalOperator(sourceclass) || !this.isPNClass(targetclass)){ // different from the ideal case of logic -> process
+        if (this.isPNClass(sourceclass) && this.isLogicalOperator(targetclass)){
+          reverse = true;
+          /*if (target.outgoers('edge').size() != 0){ // only 1 outgoing edge allowed (PD37)
+            valid = false;
+          }*/
+        }
+        else {
+          valid = false;
+        }
+      }
+      /*else if (source.outgoers('edge').size() != 0){ // only 1 outgoing edge allowed (PD37)
+        valid = false;
+      }*/
+
+      if (valid){
+        return reverse ? 'reverse' : 'valid';
+      }
+      else{
+        return 'invalid';
+      }
+    }
+  }
+
+  if (edgeclass == 'consumption' || this.isModulationArcClass(edgeclass)) {
+    if (this.isEmptySetClass(sourceclass) || this.isEmptySetClass(targetclass)){ // case of EmptySet in one of the 2
+      // following block is the same as the 'else if' below, with isEPNClass replaced by isEmptySetClass
+      if (!this.isEmptySetClass(sourceclass) || !this.isPNClass(targetclass)){
+        if (this.isPNClass(sourceclass) && this.isEmptySetClass(targetclass)) {
+          //If just the direction is not valid reverse the direction
+          return 'reverse';
+        }
+        else {
+          return 'invalid';
+        }
+      }
+    }
+    else if (!this.isEPNClass(sourceclass) || !this.isPNClass(targetclass)) {
       if (this.isPNClass(sourceclass) && this.isEPNClass(targetclass)) {
         //If just the direction is not valid reverse the direction
         return 'reverse';
@@ -791,7 +865,19 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
     }
   }
   else if (edgeclass == 'production') {
-    if (!this.isPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
+    if (this.isEmptySetClass(sourceclass) || this.isEmptySetClass(targetclass)){ // case of EmptySet in one of the 2
+      // following block is the same as the 'else if' below, with isEPNClass replaced by isEmptySetClass
+      if (!this.isPNClass(sourceclass) || !this.isEmptySetClass(targetclass)){
+        if (this.isEmptySetClass(sourceclass) && this.isPNClass(targetclass)) {
+          //If just the direction is not valid reverse the direction
+          return 'reverse';
+        }
+        else {
+          return 'invalid';
+        }
+      }
+    }
+    else if (!this.isPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
       if (this.isEPNClass(sourceclass) && this.isPNClass(targetclass)) {
         //If just the direction is not valid reverse the direction
         return 'reverse';
