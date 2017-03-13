@@ -37,6 +37,20 @@ undoRedoActionFunctions.addEdge = function (param) {
   };
 };
 
+undoRedoActionFunctions.addProcessWithConvenientEdges = function(param) {
+  var result;
+  if (param.firstTime) {
+    result = elementUtilities.addProcessWithConvenientEdges(param.source, param.target, param.processType);
+  }
+  else {
+    result = elementUtilities.restoreEles(param);
+  }
+
+  return {
+    eles: result
+  };
+};
+
 undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
   var nodesToMakeCompound = param.nodesToMakeCompound;
   var newCompound;

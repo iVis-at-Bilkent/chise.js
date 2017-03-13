@@ -79,18 +79,14 @@ edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x 
 ## API
 ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js as well ([SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api)). Other ChiSE.js API is presented below.
 
-`chise.startSpinner(classname)`
-Starts a spinner at the middle of network container element. You can specify a css class that the 
-spinner will have. The default classname is 'default-class'. Requires 'fontawesome.css'.
-
-`chise.endSpinner(classname)`
-Ends any spinner having a css class with the given name. Requires 'fontawesome.css'.
-
 `chise.addNode(x, y , nodeclass, id, parent, visibility)`
 Adds a new node with the given class and at the given coordinates. Optionally you can set the id, parent and visibility of the node. Considers undoable option.
 
 `chise.addEdge(source, target , edgeclass, id, visibility)`
 Adds a new edge with the given class and having the given source and target ids. Optionally you can set the id and visibility of the node. Considers undoable option.
+
+`chise.addProcessWithConvenientEdges(source, target , processType)`
+Adds a process with convenient edges. For more information please see 'https://github.com/iVis-at-Bilkent/newt/issues/9'. Considers undoable option.
 
 `chise.cloneElements(eles)`
 Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
@@ -168,6 +164,7 @@ General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.ele
  * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
+ * `addProcessWithConvenientEdges(source, target, processType)` Similar to `chise.addProcessWithConvenientEdges()` but do not considers undoable option.
  * `createCompoundForGivenNodes(nodesToMakeCompound, compoundType)` Similar to `chise.createCompoundForGivenNodes()` but do not considers undoable option.
  * `removeCompound(compoundToRemove)` Similar to `chise.removeCompound()` but do not considers undoable option.
  * `changeParent(nodes, newParent, posDiffX, posDiffY)` Similar to `chise.changeParent()` but do not considers undoable option.
@@ -205,7 +202,7 @@ Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` ex
 an extension library of chise. Extends `sbgnviz.undoRedoActionFunctions`, you can find the ChiSE extensions for `sbgnviz.undoRedoActionFunctions` below.
 
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
- * `addEdge(param)` Do/Redo function for 'addEdge' undo redo command.
+ * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
  * `createCompoundForGivenNodes(param)` Do/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `removeCompound(param)` Undo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.

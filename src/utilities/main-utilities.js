@@ -68,6 +68,34 @@ mainUtilities.addEdge = function(source, target , edgeclass, id, visibility) {
 };
 
 /*
+ * Adds a process with convenient edges. For more information please see 'https://github.com/iVis-at-Bilkent/newt/issues/9'.
+ * Considers undoable option.
+ */
+mainUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+  // If source and target IDs are given get the elements by IDs
+  var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
+  var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
+  
+  // If source or target does not have an EPN class the operation is not valid
+  if (!elementUtilities.isEPNClass(source) || !elementUtilities.isEPNClass(target)) {
+    return;
+  }
+  
+  if (!options.undoable) {
+    return elementUtilities.addProcessWithConvenientEdges(_source, _target, processType);
+  }
+  else {
+    var param = {
+      source: _source,
+      target: _target,
+      processType: processType
+    };
+    
+    cy.undoRedo().do("addProcessWithConvenientEdges", param);
+  }
+};
+
+/*
  * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
  */
 mainUtilities.cloneElements = function (eles) {

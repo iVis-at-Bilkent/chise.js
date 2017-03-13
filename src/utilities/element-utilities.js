@@ -204,6 +204,32 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
   return newEdge;
 };
 
+elementUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+  // If source and target IDs are given get the elements by IDs
+  var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
+  var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
+  
+  // Process parent should be the closest common ancestor of the source and target nodes
+  var processParent = cy.collection([source[0], target[0]]).commonAncestors().first();
+  
+  // Process should be at the middle of the source and target nodes
+  var x = ( source.position('x') + target.position('x') ) / 2;
+  var y = ( source.position('y') + target.position('y') ) / 2;
+  
+  // Create the process with given/calculated variables
+  var process = elementUtilities.addNode(x, y, processType, undefined, processParent.id());
+  
+  // Create the edges one is between the process and the source node (which should be a consumption), 
+  // the other one is between the process and the target node (which should be a production).
+  // For more information please refer to SBGN-PD reference card.
+  var edgeBtwSrc = elementUtilities.addEdge(source.id(), process.id(), 'consumption');
+  var edgeBtwTgt = elementUtilities.addEdge(process.id(), target.id(), 'production');
+  
+  // Create a collection including the elements and to be returned
+  var collection = cy.collection([process[0], edgeBtwSrc[0], edgeBtwTgt[0]]);
+  return collection;
+};
+
 /*
  * This method assumes that param.nodesToMakeCompound contains at least one node
  * and all of the nodes including in it have the same parent. It creates a compound fot the given nodes an having the given type.
