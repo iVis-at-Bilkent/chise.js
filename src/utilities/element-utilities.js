@@ -1076,4 +1076,31 @@ elementUtilities.changeData = function(eles, name, valueMap) {
   }
 };
 
+/*
+ * Return the set of all nodes present under the given position
+ * renderedPos must be a point defined relatively to cytoscape container
+ * (like renderedPosition field of a node)
+ */
+elementUtilities.getNodesAt = function(renderedPos) {
+  var nodes = cy.nodes();
+  var x = renderedPos.x;
+  var y = renderedPos.y;
+  var resultNodes = [];
+  for(var i = 0; i < nodes.length; i++) {
+    var node = nodes[i];
+    var renderedBbox = node.renderedBoundingBox({
+      includeNodes: true,
+      includeEdges: false,
+      includeLabels: false,
+      includeShadows: false
+    });
+    if (x >= renderedBbox.x1 && x <= renderedBbox.x2) {
+      if (y >= renderedBbox.y1 && y <= renderedBbox.y2) {
+        resultNodes.push(node);
+      }
+    }
+  }
+  return resultNodes;
+};
+
 module.exports = elementUtilities;
