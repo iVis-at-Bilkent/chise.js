@@ -32,7 +32,7 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
           return 10;
         },
         // Whether to adjust node label font size automatically.
-        // If this option returns false, do not adjust label sizes according to node heights; use node.data('labelsize')
+        // If this option returns false, do not adjust label sizes according to node heights; use node.data('font-size')
         // instead.
         adjustNodeLabelFontSizeAutomatically: function() {
           return true;
@@ -50,14 +50,21 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
 ```javascript
 // Nodes specific data.
 node.data('id'); // Id of a node. (Specific to cytoscape.js)
-node.data('label'); // Label of a node.
+node.data('label'); // Label of a node. 'content' of elements are controlled by this data.
 node.data('parent'); // Parent id of a node. (Specific to cytoscape.js)
 node.data('class'); // SBGN specific class of a node. If it ends with 'multimer' it means that this node is a multimer.
 node.data('clonemarker'); // Whether the node is cloned.
-node.data('bbox'); // Bounding box of a node includes bbox.x, bbox.y, bbox.w, bbox.h
+node.data('bbox'); // Bounding box of a node includes bbox.x, bbox.y, bbox.w, bbox.h. 'width' and 'height' style of elements are mapped by bbox.w and bbox.h
 node.data('ports'); // Ports list of a node. A node port includes port.id, port.x, port.y where port.x and port.y are percentages relative to node position and size.
 node.data('statesandinfos'); // Includes state and information boxes list of a node.
-node.data('labelsize'); // If the font sizes of the nodes are not automatically adjusted (controlled by adjustNodeLabelFontSizeAutomatically option) their font size is adjusted by this data.
+node.data('font-size'); // If the font sizes of the nodes are not automatically adjusted (controlled by adjustNodeLabelFontSizeAutomatically option) their 'font-size' style is adjusted by this data.
+node.data('font-family');// 'font-family' style of nodes are controlled by this data.
+node.data('font-style');// 'font-style' style of nodes are controlled by this data.
+node.data('font-weight');// 'font-weight' style of nodes are controlled by this data.
+node.data('background-color');// 'background-color' style of nodes are controlled by this data.
+node.data('background-opacity');// 'background-opacity' style of nodes are controlled by this data.
+node.data('border-color');// 'border-color' style of nodes are controlled by this data.
+node.data('border-width');// 'border-width' style of nodes are controlled by this data.
 // A stateorinfobox includes the followings.
 var stateorinfobox = node.data('statesandinfos')[i];
 stateorinfobox.id; // Id of that box.
@@ -74,6 +81,8 @@ edge.data('cardinality'); // SBGN cardinality of an edge.
 edge.data('portsource'); // This is set if the edge is connected to its source node by a specific port of that node.
 edge.data('porttarget'); // This is set if the edge is connected to its target node by a specific port of that node.
 edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeBendEditing extension.
+edge.data('width');// 'width' style of edges are controlled by this data.
+edge.data('line-color');// 'line-color' style of edges are controlled by this data.
 ```
 
 ## API
@@ -126,9 +135,6 @@ Changes the label of the given nodes to the given label. Considers undoable opti
 
 `chise.changeFontProperties(nodes, data)`
 Change font properties for given nodes use the given font data. Considers undoable option.
-Note that if `data.labelsize` is set it is associated with data field of nodes and all the other properties inside data parameter 
-are associated with css field of nodes. If `options.adjustNodeLabelFontSizeAutomatically` is false or returns false the font-size of 
-nodes are set by `data.labelsize`.
 
 `chise.changeStateOrInfoBox(nodes, index, value, type)`
 Change state value or unit of information box of given nodes with given index. Considers undoable option.<br>
@@ -149,10 +155,10 @@ Set multimer status of the given `nodes` to the given `status`. Considers undoab
 Set clone marker status of given `nodes` to the given `status`. Considers undoable option.
 
 `chise.changeCss(eles, name, value)`
-Change style/css of given `eles` by setting getting property `name` to the given `value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
+Change style/css of given `eles` by setting given property `name` to the given `value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option. (From cytoscape.js documentation: 'You should use this function very sparingly, because it overrides the style of an element, despite the state and classes that it has.')
 
 `chise.changeData(eles, name, value)`
-Change data of given `eles` by setting getting property `name` to the given value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
+Change data of given `eles` by setting given property `name` to the given value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
 
 `chise.showAndPerformLayout(eles, layoutparam)`
 Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call. 
@@ -161,7 +167,7 @@ Requires `viewUtilities` extension and considers undoable option.
 `chise.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
- * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
+ * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered upon new element creation.
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
  * `addProcessWithConvenientEdges(source, target, processType)` Similar to `chise.addProcessWithConvenientEdges()` but do not considers undoable option.

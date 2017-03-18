@@ -8,92 +8,226 @@ var options = require('./option-utilities').getOptions();
 elementUtilities.defaultProperties = {
   "process": {
     width: 15,
-    height: 15
+    height: 15,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "omitted process": {
     width: 15,
-    height: 15
+    height: 15,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "uncertain process": {
     width: 15,
-    height: 15
-  },
-  "associationprocess": { // TODO not sure if legit, "association" just below
-    width: 15,
-    height: 15
+    height: 15,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "association": {
     width: 15,
-    height: 15
+    height: 15,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "dissociation": {
     width: 15,
-    height: 15
+    height: 15,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "macromolecule": {
     width: 70,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
+    
   },
   "nucleic acid feature": {
     width: 70,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "simple chemical": {
     width: 35,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "source and sink": {
     width: 25,
     height: 25,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "tag": {
     width: 35,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "phenotype": {
     width: 70,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "unspecified entity": {
     width: 70,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "perturbing agent": {
     width: 70,
     height: 35,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "complex": {
     width: 100,
     height: 100,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "compartment": {
     width: 100,
     height: 100,
-    labelsize: 11
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 3.25,
+    'border-color': '#555'
   },
   "and": {
     width: 25,
     height: 25,
-    labelsize: 11
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "or": {
     width: 25,
     height: 25,
-    labelsize: 11
+    'font-size': 11,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
   },
   "not": {
     width: 25,
     height: 25,
-    labelsize: 11
+    'font-size': 11,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
+  },
+  "consumption": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "production": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "modulation": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "stimulation": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "catalysis": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "inhibition": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "necessary stimulation": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "logic arc": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "equivalence arc": {
+    'line-color': '#555',
+    'width': 1.25
   }
 };
 
@@ -109,24 +243,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   
   var css = {};
   
-  if (defaults) {
-    if (defaults['border-width']) {
-      css['border-width'] = defaults['border-width'];
-    }
-    
-    if (defaults['background-color']) {
-      css['background-color'] = defaults['background-color'];
-    }
-    
-    if (defaults['background-opacity']) {
-      css['background-opacity'] = defaults['background-opacity'];
-    }
-    
-    if (defaults['border-color']) {
-      css['border-color'] = defaults['border-color'];
-    }
-  }
-
   if (visibility) {
     css.visibility = visibility;
   }
@@ -144,10 +260,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
     },
     statesandinfos: [],
     ports: [],
-    labelsize: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.labelsize) : undefined,
-    fontfamily: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontfamily) : undefined,
-    fontweight: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontweight) : undefined,
-    fontstyle: elementUtilities.canHaveSBGNLabel(sbgnclass) ? (defaults && defaults.fontstyle) : undefined,
     clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
   };
 
@@ -788,13 +900,7 @@ elementUtilities.setCloneMarkerStatus = function (nodes, status) {
 // Change font properties of the given elements with given font data
 elementUtilities.changeFontProperties = function (eles, data) {
   for (var prop in data) {
-    // If prop is labelsize it is part of element data else it is part of element css
-    if (prop === 'labelsize') {
-      eles.data(prop, data[prop]);
-    }
-    else {
-      eles.css(prop, data[prop]);
-    }
+    eles.data(prop, data[prop]);
   }
 };
 

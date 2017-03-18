@@ -277,13 +277,7 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
     var data = param.firstTime ? param.data : param.data[ele.id()];
 
     for (var prop in data) {
-      // If prop is labelsize it is part of element data else it is part of element css
-      if (prop === 'labelsize') {
-        result.data[ele.id()][prop] = ele.data(prop);
-      }
-      else {
-        result.data[ele.id()][prop] = ele.css(prop);
-      }
+      result.data[ele.id()][prop] = ele.data(prop);
     }
   }
 

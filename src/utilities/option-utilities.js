@@ -20,7 +20,7 @@ var defaults = {
     return 10;
   },
   // Whether to adjust node label font size automatically.
-  // If this option return false do not adjust label sizes according to node height uses node.data('labelsize')
+  // If this option return false do not adjust label sizes according to node height uses node.data('font-size')
   // instead of doing it.
   adjustNodeLabelFontSizeAutomatically: function() {
     return true;
