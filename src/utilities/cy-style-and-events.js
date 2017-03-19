@@ -25,7 +25,7 @@ module.exports = function (sbgnviz) {
   };
   
   var initElementData = function (ele) {
-    var eleclass = ele.data('class');
+    var eleclass = elementUtilities.demultimerizeClass(ele.data('class'));
     if (!eleclass) {
       return;
     }

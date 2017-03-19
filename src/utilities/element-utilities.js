@@ -1103,4 +1103,8 @@ elementUtilities.getNodesAt = function(renderedPos) {
   return resultNodes;
 };
 
+elementUtilities.demultimerizeClass = function(sbgnclass) {
+  return sbgnclass.replace(" multimer", "");
+}
+
 module.exports = elementUtilities;
