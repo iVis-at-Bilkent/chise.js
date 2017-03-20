@@ -25,10 +25,11 @@ module.exports = function (sbgnviz) {
   };
   
   var initElementData = function (ele) {
-    var eleclass = elementUtilities.demultimerizeClass(ele.data('class'));
+    var eleclass = ele.data('class');
     if (!eleclass) {
       return;
     }
+    eleclass = elementUtilities.demultimerizeClass(eleclass);
     var classProperties = elementUtilities.defaultProperties[eleclass];
 
     cy.batch(function () {
