@@ -200,16 +200,19 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
  */
 mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
+  // New parent is supposed to be one of the root, a complex or a compartment
   if (newParent && newParent.data("class") != "complex" && newParent.data("class") != "compartment") {
     return;
   }
 
+  // If the new parent is complex it can only include EPNs
   if (newParent && newParent.data("class") == "complex") {
     nodes = nodes.filter(function (i, ele) {
       return elementUtilities.isEPNClass(ele.data("class"));
     });
   }
-
+  
+  // Discard the nodes whose parent is already newParent
   nodes = nodes.filter(function (i, ele) {
     if (!newParent) {
       return ele.data('parent') != null;
@@ -217,14 +220,17 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
     return ele.data('parent') !== newParent.id();
   });
 
+  // If some nodes are ancestor of new parent eleminate them
   if (newParent) {
     nodes = nodes.difference(newParent.ancestors());
   }
 
+  // If all nodes are eleminated return directly
   if (nodes.length === 0) {
     return;
   }
 
+  // Just move the top most nodes
   nodes = elementUtilities.getTopMostNodes(nodes);
   
   var parentId = newParent ? newParent.id() : null;
