@@ -162,13 +162,13 @@ mainUtilities.align = function (nodes, horizontal, vertical, alignTo) {
  */
 mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
   var nodes = _nodes;
-  // Just EPN's can be included in complexes so we need to filter EPN's if compound type is complex
-  if (compoundType === 'complex') {
-    nodes = _nodes.filter(function (i, element) {
-      var sbgnclass = element.data("class");
-      return elementUtilities.isEPNClass(sbgnclass);
-    });
-  }
+  /*
+   * Eleminate the nodes which cannot have a parent with given compound type
+   */
+  nodes = _nodes.filter(function (i, element) {
+    var sbgnclass = element.data("class");
+    return elementUtilities.isValidParent(sbgnclass, compoundType);
+  });
   
   nodes = elementUtilities.getTopMostNodes(nodes);
 
@@ -204,13 +204,14 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   if (newParent && newParent.data("class") != "complex" && newParent.data("class") != "compartment") {
     return;
   }
-
-  // If the new parent is complex it can only include EPNs
-  if (newParent && newParent.data("class") == "complex") {
-    nodes = nodes.filter(function (i, ele) {
-      return elementUtilities.isEPNClass(ele.data("class"));
-    });
-  }
+  
+  /*
+   * Eleminate the nodes which cannot have the newParent as their parent
+   */
+  nodes = nodes.filter(function (i, element) {
+    var sbgnclass = element.data("class");
+    return elementUtilities.isValidParent(sbgnclass, newParent);
+  });
   
   // Discard the nodes whose parent is already newParent
   nodes = nodes.filter(function (i, ele) {
