@@ -30,7 +30,6 @@ module.exports = function (sbgnviz) {
       return;
     }
     var classProperties = elementUtilities.defaultProperties[eleclass];
-    console.log(classProperties);
 
     cy.batch(function () {
       if (ele.isNode()) {
@@ -77,7 +76,7 @@ module.exports = function (sbgnviz) {
   };
   
   // Update cy stylesheet
-  var upateStyleSheet = function() {
+  var updateStyleSheet = function() {
     cy.style()
     .selector("node[class][font-size]")
     .style({
@@ -207,7 +206,7 @@ module.exports = function (sbgnviz) {
   // Do these just one time
   $(document).one('updateGraphEnd', function(event) {
     bindCyEvents();
-    upateStyleSheet();
+    updateStyleSheet();
     var eles = cy.elements();
     
     for (var i = 0; i < eles.length; i++) {
