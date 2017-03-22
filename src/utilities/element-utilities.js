@@ -545,7 +545,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
  * Move the nodes to a new parent and change their position if possDiff params are set.
  */
 elementUtilities.changeParent = function(nodes, newParent, posDiffX, posDiffY) {
-  var newParentId = typeof newParent === 'string' ? newParent : newParent.id();
+  var newParentId = newParent == undefined || typeof newParent === 'string' ? newParent : newParent.id();
   nodes.move({"parent": newParentId});
   elementUtilities.moveNodes({x: posDiffX, y: posDiffY}, nodes);
 };

@@ -1,8 +1,12 @@
 var undoRedoActionFunctions = require('./undo-redo-action-functions');
 var libs = require('./lib-utilities').getLibs();
+var options = require('./option-utilities').getOptions();
 var $ = libs.jQuery;
 
 var registerUndoRedoActions = function (undoableDrag) {
+  if (!options.undoable) {
+    return;
+  }
   // create undo-redo instance
   var ur = cy.undoRedo({
     undoableDrag: undoableDrag
