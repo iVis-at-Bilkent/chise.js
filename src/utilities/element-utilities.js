@@ -290,21 +290,8 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
 elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) {
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
-  var css = defaults ? {
-    'width': defaults['width']
-  } : {};
   
   var css = {};
-  
-  if (defaults) {
-    if (defaults.width) {
-      css.width = defaults.width;
-    } 
-    
-    if (defaults['line-color']) {
-      css['line-color'] = defaults['line-color'];
-    }
-  }
 
   if (visibility) {
     css.visibility = visibility;
