@@ -217,7 +217,7 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   // Discard the newParent itself if it is among the nodes
   nodes = nodes.filter(function (i, ele) {
     // Discard the newParent if it is among the nodes
-    if (ele.id() === newParent.id()) {
+    if (newParent && ele.id() === newParent.id()) {
       return false;
     }
     // Discard the nodes whose parent is already newParent
