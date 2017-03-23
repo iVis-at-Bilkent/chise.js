@@ -154,6 +154,12 @@ module.exports = function (sbgnviz) {
         return ele.data('width');
       }
     })
+    .selector("edge.cy-expand-collapse-meta-edge")
+    .css({
+      'line-color': '#C4C4C4',
+      'source-arrow-color': '#C4C4C4',
+      'target-arrow-color': '#C4C4C4'
+    })
     .selector("node:selected")
     .style({
       'border-color': '#d67614',
