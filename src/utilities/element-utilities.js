@@ -370,27 +370,9 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
   // The parent of new compound will be the old parent of the nodes to make compound. x, y and id parameters are not set.
   var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
   var newCompoundId = newCompound.id();
-  nodesToMakeCompound.move({parent: newCompoundId});
-  return newCompound;
-};
-
-/*
- * Removes a compound. Before the removal operation moves the children of that compound to the parent of the compound.
- * Returns old children of the compound which are moved to another parent and the removed compound to restore back later.
- */
-elementUtilities.removeCompound = function (compoundToRemove) {
-  var compoundId = compoundToRemove.id();
-  var newParentId = compoundToRemove.data("parent");
-  newParentId = newParentId === undefined ? null : newParentId;
-  var childrenOfCompound = compoundToRemove.children();
-
-  childrenOfCompound.move({parent: newParentId});
-  var removedCompound = compoundToRemove.remove();
-  
-  return {
-    childrenOfCompound: childrenOfCompound,
-    removedCompound: removedCompound
-  };
+  var newEles = nodesToMakeCompound.move({parent: newCompoundId});
+  newEles = newEles.union(newCompound);
+  return newEles;
 };
 
 /*

@@ -52,48 +52,25 @@ undoRedoActionFunctions.addProcessWithConvenientEdges = function(param) {
 };
 
 undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
-  var nodesToMakeCompound = param.nodesToMakeCompound;
-  var newCompound;
-
-  // If this is a redo action refresh the nodes to make compound (We need this because after ele.move() references to eles changes)
-  if (!param.firstTime) {
-    var nodesToMakeCompoundIds = {};
-
-    nodesToMakeCompound.each(function (i, ele) {
-      nodesToMakeCompoundIds[ele.id()] = true;
-    });
-
-    var allNodes = cy.nodes();
-
-    nodesToMakeCompound = allNodes.filter(function (i, ele) {
-      return nodesToMakeCompoundIds[ele.id()];
-    });
-  }
+  var result = {};
 
   if (param.firstTime) {
+    // Nodes to make compound and edges connected to them will be removed during createCompoundForGivenNodes operation
+    // (internally by eles.move() operation), so mark them as removed eles for undo operation.
+    var nodesToMakeCompound = param.nodesToMakeCompound;
+    result.removedEles = nodesToMakeCompound.union(nodesToMakeCompound.connectedEdges());
+    // Assume that all nodes to make compound have the same parent
     var oldParentId = nodesToMakeCompound[0].data("parent");
     // The parent of new compound will be the old parent of the nodes to make compound
-    newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compoundType);
+    // New eles includes new compound and the moved eles and will be used in undo operation.
+    result.newEles = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compoundType);
   }
   else {
-    newCompound = param.removedCompound.restore();
-    var newCompoundId = newCompound.id();
-
-    nodesToMakeCompound.move({parent: newCompoundId});
+    result.removedEles = param.newEles.remove();
+    result.newEles = param.removedEles.restore();
   }
 
-  return newCompound;
-};
-
-undoRedoActionFunctions.removeCompound = function (compoundToRemove) {
-  var result = elementUtilities.removeCompound(compoundToRemove);
-
-  var param = {
-    nodesToMakeCompound: result.childrenOfCompound,
-    removedCompound: result.removedCompound
-  };
-
-  return param;
+  return result;
 };
 
 // Section End

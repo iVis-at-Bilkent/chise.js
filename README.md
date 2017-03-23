@@ -172,7 +172,6 @@ General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.ele
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
  * `addProcessWithConvenientEdges(source, target, processType)` Similar to `chise.addProcessWithConvenientEdges()` but do not considers undoable option.
  * `createCompoundForGivenNodes(nodesToMakeCompound, compoundType)` Similar to `chise.createCompoundForGivenNodes()` but do not considers undoable option.
- * `removeCompound(compoundToRemove)` Similar to `chise.removeCompound()` but do not considers undoable option.
  * `changeParent(nodes, newParent, posDiffX, posDiffY)` Similar to `chise.changeParent()` but do not considers undoable option.
  * `resizeNodes(nodes, width, height, useAspectRatio)` Similar to `chise.resizeNodes()` but do not considers undoable option.
  * `isValidParent(nodeClass, parentClass)` Returns if the elements with the given parent class can be parent of the elements with the given node class.
@@ -210,8 +209,7 @@ an extension library of chise. Extends `sbgnviz.undoRedoActionFunctions`, you ca
 
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
  * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
- * `createCompoundForGivenNodes(param)` Do/Redo function for 'createCompoundForGivenNodes' undo redo command.
- * `removeCompound(param)` Undo function for 'createCompoundForGivenNodes' undo redo command.
+ * `createCompoundForGivenNodes(param)` Do/Undo/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.
  * `resizeNodes(param)` Do/Undo/Redo function for 'resizeNodes' undo redo command.
  * `changeNodeLabel(param)` Do/Undo/Redo function for 'changeNodeLabel' undo redo command.
