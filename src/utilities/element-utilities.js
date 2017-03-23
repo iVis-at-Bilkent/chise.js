@@ -283,7 +283,6 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
 
   var newNode = eles[eles.length - 1];
 
-  sbgnviz.refreshPaddings();
   return newNode;
 };
 
@@ -372,7 +371,6 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
   var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
   var newCompoundId = newCompound.id();
   nodesToMakeCompound.move({parent: newCompoundId});
-  sbgnviz.refreshPaddings();
   return newCompound;
 };
 
@@ -521,7 +519,6 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
   var eles = cy.elements('[justAdded]');
   eles.removeData('justAdded');
   
-  sbgnviz.refreshPaddings();
   cy.elements().unselect();
   eles.select();
   

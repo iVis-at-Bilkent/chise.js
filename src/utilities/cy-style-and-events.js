@@ -174,26 +174,18 @@ module.exports = function (sbgnviz) {
     });
 
     cy.on("afterDo", function (event, actionName, args) {
-      if (actionName === 'changeParent') {
-        sbgnviz.refreshPaddings();
-      }
+      
     });
 
     cy.on("afterUndo", function (event, actionName, args) {
       if (actionName === 'resize') {
         nodeResizeEndFunction(args.node);
       }
-      else if (actionName === 'changeParent') {
-        sbgnviz.refreshPaddings();
-      }
     });
 
     cy.on("afterRedo", function (event, actionName, args) {
       if (actionName === 'resize') {
         nodeResizeEndFunction(args.node);
-      }
-      else if (actionName === 'changeParent') {
-        sbgnviz.refreshPaddings();
       }
     });
     

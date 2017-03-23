@@ -80,8 +80,6 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
     var newCompoundId = newCompound.id();
 
     nodesToMakeCompound.move({parent: newCompoundId});
-
-    sbgnviz.refreshPaddings();
   }
 
   return newCompound;
@@ -115,7 +113,6 @@ undoRedoActionFunctions.createTemplateReaction = function (param) {
     eles = param;
     cy.add(eles);
     
-    sbgnviz.refreshPaddings();
     cy.elements().unselect();
     eles.select();
   }
