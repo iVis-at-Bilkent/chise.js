@@ -165,7 +165,11 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
   /*
    * Eleminate the nodes which cannot have a parent with given compound type
    */
-  nodes = _nodes.filter(function (i, element) {
+  nodes = _nodes.filter(function (element, i) {
+    if(typeof element === "number") {
+      element = i;
+    }
+    
     var sbgnclass = element.data("class");
     return elementUtilities.isValidParent(sbgnclass, compoundType);
   });
@@ -208,14 +212,22 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   /*
    * Eleminate the nodes which cannot have the newParent as their parent
    */
-  nodes = nodes.filter(function (i, element) {
+  nodes = nodes.filter(function (element, i) {
+    if(typeof element === "number") {
+      element = i;
+    }
+    
     var sbgnclass = element.data("class");
     return elementUtilities.isValidParent(sbgnclass, newParent);
   });
   
   // Discard the nodes whose parent is already newParent.
   // Discard the newParent itself if it is among the nodes
-  nodes = nodes.filter(function (i, ele) {
+  nodes = nodes.filter(function (ele, i) {
+    if(typeof ele === "number") {
+      ele = i;
+    }
+    
     // Discard the newParent if it is among the nodes
     if (newParent && ele.id() === newParent.id()) {
       return false;

@@ -109,7 +109,11 @@ undoRedoActionFunctions.getNodePositions = function () {
   var positions = {};
   var nodes = cy.nodes();
   
-  nodes.each(function(i, ele) {
+  nodes.each(function(ele, i) {
+    if(typeof ele === "number") {
+      ele = i;
+    }
+    
     positions[ele.id()] = {
       x: ele.position("x"),
       y: ele.position("y")
@@ -121,7 +125,11 @@ undoRedoActionFunctions.getNodePositions = function () {
 
 undoRedoActionFunctions.returnToPositions = function (positions) {
   var currentPositions = {};
-  cy.nodes().positions(function (i, ele) {
+  cy.nodes().positions(function (ele, i) {
+    if(typeof ele === "number") {
+      ele = i;
+    }
+    
     currentPositions[ele.id()] = {
       x: ele.position("x"),
       y: ele.position("y")
