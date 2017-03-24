@@ -202,14 +202,12 @@ module.exports = function (sbgnviz) {
   };
   // Helpers End
   
-  // Do these just one time
-  $(document).one('updateGraphEnd', function(event) {
-    bindCyEvents();
-    updateStyleSheet();
-    var eles = cy.elements();
-    
-    for (var i = 0; i < eles.length; i++) {
-      initElementData(eles[i]);
-    }
+  // This function will be executed after document.ready in sbgnviz because it is registered later
+  $(document).ready(function () {
+    // Once cy is ready bind events and update style sheet
+    cy.ready( function(event) {
+      bindCyEvents();
+      updateStyleSheet();
+    });
   });
 };
