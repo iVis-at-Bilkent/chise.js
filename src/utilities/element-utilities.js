@@ -5,6 +5,8 @@ var jQuery = $ = libs.jQuery;
 var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
+elementUtilities.PD = {}; // namespace for all PD specific stuff
+
 elementUtilities.defaultProperties = {
   "process": {
     width: 15,
@@ -230,6 +232,218 @@ elementUtilities.defaultProperties = {
     'width': 1.25
   }
 };
+
+
+/*
+  see http://journal.imbio.de/articles/pdf/jib-263.pdf p.41 <-- but beware, outdated
+  following tables have been updated with PD lvl1 v2.0 of November 7, 2016 working draft
+  only the following things have been changed from 2.0 (this version is not clear on connectivity):
+   - empty set has no limit on its edge count
+   - logic operators can be source and target
+   - limit of 1 catalysis and 1 necessary stimulation on a process
+
+  for each edge class and nodeclass define 2 cases:
+   - node can be a source of this edge -> asSource
+   - node can be a target of this edge -> asTarget
+  for both cases, tells if it is allowed and what is the limit of edges allowed.
+  Limits can concern only this type of edge (maxEdge) or the total number of edges for this node (maxTotal).
+  -1 edge means no limit
+
+  the nodes/edges class listed below are those used in the program.
+  For instance "compartment" isn't a node in SBGN specs.
+*/
+elementUtilities.PD.connectivityConstraints = {
+  "consumption": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+    "and":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "production": {
+    "macromolecule":        {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "modulation": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "stimulation": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "catalysis": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "inhibition": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  },
+  "necessary stimulation": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+  },
+  "logic arc": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},    asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+  },
+  "equivalence arc": {
+    "macromolecule":        {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "simple chemical":      {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "unspecified entity":   {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "complex":              {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "nucleic acid feature": {asSource: {isAllowed: true, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "compartment":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "tag":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "source and sink":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "perturbing agent":     {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "submap":               {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: true, maxEdge: -1, maxTotal: -1}},
+    "process":              {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "omitted process":      {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "uncertain process":    {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "phenotype":            {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "association":          {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "dissociation":         {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "and":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "or":                   {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}},
+    "not":                  {asSource: {isAllowed: false, maxEdge: -1, maxTotal: -1},   asTarget: {isAllowed: false, maxEdge: -1, maxTotal: -1}}
+  }
+};
+
 
 // Section Start
 // Add remove utilities
@@ -888,124 +1102,75 @@ elementUtilities.changeFontProperties = function (eles, data) {
   }
 };
 
-// This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
+// This function gets an edge, and ends of that edge (Optionally it may take just the classes of the edge as well) as parameters.
 // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
 // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
 elementUtilities.validateArrowEnds = function (edge, source, target) {
   var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
-  // TODO is it necessary to accept strings ? better to always have the elements for source and target.
-  // The day we need to check other rules we will need to access some properties of each element.
-  var sourceclass = typeof source === 'string' ? source : source.data('class');
-  var targetclass = typeof target === 'string' ? target : target.data('class');
+  var sourceclass = source.data('class');
+  var targetclass = target.data('class');
 
-  if (this.isModulationArcClass(edgeclass)){
-    /*
-     * Case of the output arc of a logic operator, which can be any modulation arc type.
-     * Has to go from logic operator to PN class.
-     * PD37 says there should be only 1, not enforced for now, rules are left commented.
-     */
-    valid = true;
-    reverse = false;
-    if (this.isLogicalOperator(sourceclass) || this.isLogicalOperator(targetclass)){ // a logic operator is involved
-      if (!this.isLogicalOperator(sourceclass) || !this.isPNClass(targetclass)){ // different from the ideal case of logic -> process
-        if (this.isPNClass(sourceclass) && this.isLogicalOperator(targetclass)){
-          reverse = true;
-          /*if (target.outgoers('edge').size() != 0){ // only 1 outgoing edge allowed (PD37)
-            valid = false;
-          }*/
-        }
-        else {
-          valid = false;
-        }
-      }
-      /*else if (source.outgoers('edge').size() != 0){ // only 1 outgoing edge allowed (PD37)
-        valid = false;
-      }*/
+  var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
 
-      if (valid){
-        return reverse ? 'reverse' : 'valid';
-      }
-      else{
-        return 'invalid';
-      }
+  // given a node, acting as source or target, returns boolean wether or not it has too many edges already
+  function hasTooManyEdges(node, sourceOrTarget) {
+    var nodeclass = node.data('class');
+    var totalTooMany = true;
+    var edgeTooMany = true;
+    if (sourceOrTarget == "source") {
+        var sameEdgeCountOut = node.outgoers('edge[class="'+edgeclass+'"]').size();
+        var totalEdgeCountOut = node.outgoers('edge').size();
+        // check that the total edge count is within the limits
+        if (edgeConstraints[nodeclass].asSource.maxTotal == -1
+            || totalEdgeCountOut < edgeConstraints[nodeclass].asSource.maxTotal ) {
+            totalTooMany = false;
+        }
+        // then check limits for this specific edge class
+        if (edgeConstraints[nodeclass].asSource.maxEdge == -1
+            || sameEdgeCountOut < edgeConstraints[nodeclass].asSource.maxEdge ) {
+            edgeTooMany = false;
+        }
+        // if only one of the limits is reached then edge is invalid
+        return totalTooMany || edgeTooMany;
     }
+    else { // node is used as target
+        var sameEdgeCountIn = node.incomers('edge[class="'+edgeclass+'"]').size();
+        var totalEdgeCountIn = node.incomers('edge').size();
+        if (edgeConstraints[nodeclass].asTarget.maxTotal == -1
+            || totalEdgeCountIn < edgeConstraints[nodeclass].asTarget.maxTotal ) {
+            totalTooMany = false;
+        }
+        if (edgeConstraints[nodeclass].asTarget.maxEdge == -1
+            || sameEdgeCountIn < edgeConstraints[nodeclass].asTarget.maxEdge ) {
+            edgeTooMany = false;
+        }
+        return totalTooMany || edgeTooMany;
+    }
+    return false;
   }
 
-  if (edgeclass == 'consumption' || this.isModulationArcClass(edgeclass)) {
-    if (this.isEmptySetClass(sourceclass) || this.isEmptySetClass(targetclass)){ // case of EmptySet in one of the 2
-      // following block is the same as the 'else if' below, with isEPNClass replaced by isEmptySetClass
-      if (!this.isEmptySetClass(sourceclass) || !this.isPNClass(targetclass)){
-        if (this.isPNClass(sourceclass) && this.isEmptySetClass(targetclass)) {
-          //If just the direction is not valid reverse the direction
-          return 'reverse';
-        }
-        else {
-          return 'invalid';
-        }
-      }
-    }
-    else if (!this.isEPNClass(sourceclass) || !this.isPNClass(targetclass)) {
-      if (this.isPNClass(sourceclass) && this.isEPNClass(targetclass)) {
-        //If just the direction is not valid reverse the direction
-        return 'reverse';
-      }
-      else {
-        return 'invalid';
-      }
-    }
-  }
-  else if (edgeclass == 'production') {
-    if (this.isEmptySetClass(sourceclass) || this.isEmptySetClass(targetclass)){ // case of EmptySet in one of the 2
-      // following block is the same as the 'else if' below, with isEPNClass replaced by isEmptySetClass
-      if (!this.isPNClass(sourceclass) || !this.isEmptySetClass(targetclass)){
-        if (this.isEmptySetClass(sourceclass) && this.isPNClass(targetclass)) {
-          //If just the direction is not valid reverse the direction
-          return 'reverse';
-        }
-        else {
-          return 'invalid';
-        }
-      }
-    }
-    else if (!this.isPNClass(sourceclass) || !this.isEPNClass(targetclass)) {
-      if (this.isEPNClass(sourceclass) && this.isPNClass(targetclass)) {
-        //If just the direction is not valid reverse the direction
-        return 'reverse';
-      }
-      else {
-        return 'invalid';
-      }
-    }
-  }
-  else if (edgeclass == 'logic arc') {
-    var invalid = false;
-    if (!this.isEPNClass(sourceclass) || !this.isLogicalOperator(targetclass)) {
-      if (this.isLogicalOperator(sourceclass) && this.isEPNClass(targetclass)) {
-        //If just the direction is not valid reverse the direction
-        return 'reverse';
-      }
-      else {
-        invalid = true;
-      }
-    }
-
-    // the case that both sides are logical operators are valid too
-    if (this.isLogicalOperator(sourceclass) && this.isLogicalOperator(targetclass)) {
-      invalid = false;
-    }
-
-    if (invalid) {
-      return 'invalid';
-    }
-  }
-  else if (edgeclass == 'equivalence arc') {
-    if (!(this.isEPNClass(sourceclass) && this.convenientToEquivalence(targetclass))
-            && !(this.isEPNClass(targetclass) && this.convenientToEquivalence(sourceclass))) {
-      return 'invalid';
-    }
+  function isInComplex(node) {
+    return node.parent().data('class') == 'complex';
   }
 
-  return 'valid';
+  if (isInComplex(source) || isInComplex(target)) { // subunits of a complex are no longer EPNs, no connection allowed
+    return 'invalid';
+  }
+
+  // check nature of connection
+  if (edgeConstraints[sourceclass].asSource.isAllowed && edgeConstraints[targetclass].asTarget.isAllowed) {
+    // check amount of connections
+    if (!hasTooManyEdges(source, "source") && !hasTooManyEdges(target, "target") ) {
+      return 'valid';
+    }
+  }
+  // try to reverse
+  if (edgeConstraints[targetclass].asSource.isAllowed && edgeConstraints[sourceclass].asTarget.isAllowed) {
+    if (!hasTooManyEdges(target, "source") && !hasTooManyEdges(source, "target") ) {
+      return 'reverse';
+    }
+  }
+  return 'invalid';
 };
 
 /*
