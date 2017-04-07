@@ -196,7 +196,7 @@ module.exports = function (sbgnviz) {
     });
     
     cy.on("add", function (event) {
-      var ele = event.cyTarget;
+      var ele = event.cyTarget || event.target;
       initElementData(ele);
     });
   };
