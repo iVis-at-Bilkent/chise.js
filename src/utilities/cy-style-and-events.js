@@ -14,8 +14,8 @@ module.exports = function (sbgnviz) {
       var w = node.width();
       var h = node.height();
 
-      node.removeStyle('width');
-      node.removeStyle('height');
+//      node.removeStyle('width');
+//      node.removeStyle('height');
 
       node.data('bbox').w = w;
       node.data('bbox').h = h;
