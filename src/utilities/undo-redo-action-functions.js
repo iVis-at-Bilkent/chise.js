@@ -55,10 +55,12 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
   var result = {};
 
   if (param.firstTime) {
-    // Nodes to make compound and edges connected to them will be removed during createCompoundForGivenNodes operation
+    // Nodes to make compound, their descendants and edges connected to them will be removed during createCompoundForGivenNodes operation
     // (internally by eles.move() operation), so mark them as removed eles for undo operation.
     var nodesToMakeCompound = param.nodesToMakeCompound;
-    result.removedEles = nodesToMakeCompound.union(nodesToMakeCompound.connectedEdges());
+    var removedEles = nodesToMakeCompound.union(nodesToMakeCompound.descendants());
+    removedEles = removedEles.union(removedEles.connectedEdges());
+    result.removedEles = removedEles;
     // Assume that all nodes to make compound have the same parent
     var oldParentId = nodesToMakeCompound[0].data("parent");
     // The parent of new compound will be the old parent of the nodes to make compound
