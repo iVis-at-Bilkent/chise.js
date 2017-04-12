@@ -707,7 +707,7 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
 
   var layoutNodes = cy.nodes('[justAddedLayoutNode]');
   layoutNodes.removeData('justAddedLayoutNode');
-  layoutNodes.layout({
+  var layout = layoutNodes.layout({
     name: 'cose-bilkent',
     randomize: false,
     fit: false,
@@ -731,6 +731,11 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
       elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
     }
   });
+  
+  // Do this check for cytoscape.js backward compatibility
+  if (layout && layout.run) {
+    layout.run();
+  }
 
   //filter the just added elememts to return them and remove just added mark
   var eles = cy.elements('[justAdded]');
@@ -1204,7 +1209,12 @@ elementUtilities.showAndPerformLayout = function(eles, layoutparam) {
     layoutparam(); // If layoutparam is a function execute it
   }
   else {
-    cy.layout(layoutparam); // If layoutparam is layout options call layout with that options.
+    var layout = cy.layout(layoutparam); // If layoutparam is layout options call layout with that options.
+    
+    // Do this check for cytoscape.js backward compatibility
+    if (layout && layout.run) {
+      layout.run();
+    }
   }
   
   return result;
