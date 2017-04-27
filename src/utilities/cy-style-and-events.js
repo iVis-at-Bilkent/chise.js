@@ -5,25 +5,6 @@ var options = require('./option-utilities').getOptions();
 
 module.exports = function (sbgnviz) {
   //Helpers
-  
-  // This function is to be called after nodes are resized throuh the node resize extension or through undo/redo actions
-  var nodeResizeEndFunction = function (nodes) {
-    cy.startBatch();
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var w = node.width();
-      var h = node.height();
-
-//      node.removeStyle('width');
-//      node.removeStyle('height');
-
-      node.data('bbox').w = w;
-      node.data('bbox').h = h;
-    }
-    cy.endBatch();
-    cy.style().update();
-  };
-  
   var initElementData = function (ele) {
     var eleclass = ele.data('class');
     if (!eleclass) {
@@ -175,26 +156,6 @@ module.exports = function (sbgnviz) {
   
   // Bind events
   var bindCyEvents = function() {
-    cy.on("noderesize.resizeend", function (event, type, node) {
-      nodeResizeEndFunction(node);
-    });
-
-    cy.on("afterDo", function (event, actionName, args) {
-      
-    });
-
-    cy.on("afterUndo", function (event, actionName, args) {
-      if (actionName === 'resize') {
-        nodeResizeEndFunction(args.node);
-      }
-    });
-
-    cy.on("afterRedo", function (event, actionName, args) {
-      if (actionName === 'resize') {
-        nodeResizeEndFunction(args.node);
-      }
-    });
-    
     cy.on("add", function (event) {
       var ele = event.cyTarget || event.target;
       initElementData(ele);
