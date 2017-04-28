@@ -45,6 +45,10 @@ module.exports = function (sbgnviz) {
         if (!ele.data('border-width') && classProperties['border-width']) {
           ele.data('border-width', classProperties['border-width']);
         }
+        if (!ele.data('text-wrap') && classProperties['text-wrap']) {
+          ele.data('text-wrap', classProperties['text-wrap']);
+        }
+
       }
       else if (ele.isEdge()) {
         if (!ele.data('width') && classProperties['width']) {
@@ -115,6 +119,12 @@ module.exports = function (sbgnviz) {
     .style({
       'border-color': function (ele) {
         return ele.data('border-color');
+      }
+    })
+    .selector("node[class][text-wrap]")
+    .style({
+      'text-wrap': function (ele) {
+        return ele.data('text-wrap');
       }
     })
     .selector("edge[class][line-color]")

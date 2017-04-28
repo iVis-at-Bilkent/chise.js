@@ -58,8 +58,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
-    
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "nucleic acid feature": {
     width: 70,
@@ -71,7 +71,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "simple chemical": {
     width: 35,
@@ -83,7 +84,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "source and sink": {
     width: 25,
@@ -95,7 +97,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "tag": {
     width: 35,
@@ -107,7 +110,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "phenotype": {
     width: 70,
@@ -119,7 +123,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "unspecified entity": {
     width: 70,
@@ -131,7 +136,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "perturbing agent": {
     width: 70,
@@ -143,7 +149,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "complex": {
     width: 100,
@@ -155,7 +162,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "compartment": {
     width: 100,
@@ -167,7 +175,8 @@ elementUtilities.defaultProperties = {
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 3.25,
-    'border-color': '#555'
+    'border-color': '#555',
+    'text-wrap': 'wrap'
   },
   "and": {
     width: 25,
