@@ -441,6 +441,63 @@ undoRedoActionFunctions.setDefaultProperty = function (param) {
   return result;
 };
 
+undoRedoActionFunctions.setPortsOrdering = function(param) {
+  var nodes = param.nodes;
+  var ordering = param.ordering;
+  var portDistance = param.portDistance;
+  var connectedEdges = nodes.connectedEdges();
+  var nodePropMap = {}; // Node prop map for current status of the nodes it is to be attached to the result map. It includes node ports.
+  var edgePropMap = {}; // Edge prop map for current status of the nodes it is to be attached to the result map. It includes edge portsource and porttarget.
+  
+  // Fill node/edge prop maps for undo/redo actions
+  
+  // Node prop map includes a copy of node ports
+  for ( var i = 0; i < nodes.length; i++ ) {
+    var node = nodes[i];
+    var ports = node.data('ports');
+    nodePropMap[node.id()] = ports.length === 2 ? [ { id: ports[0].id, x: ports[0].x, y: ports[0].y }, { id: ports[1].id, x: ports[1].x, y: ports[1].y } ] : [];
+  }
+  
+  // Node prop map includes a edge portsource and porttarget
+  for ( var i = 0; i < connectedEdges.length; i++ ) {
+    var edge = connectedEdges[i];
+    edgePropMap[edge.id()] = { portsource: edge.data('portsource'), porttarget: edge.data('porttarget') };
+  }
+  
+  var result = {
+    nodes: nodes,
+    nodePropMap: nodePropMap,
+    edgePropMap: edgePropMap
+  };
+  
+  // If this is the first time call related method from element utilities else go back to the stored props of nodes/edges
+  if ( param.firstTime ) {
+    elementUtilities.setPortsOrdering(nodes, ordering, portDistance);
+  }
+  else {
+    cy.startBatch();
+    
+    // Go back to stored node ports state
+    for ( var i = 0; i < nodes.length; i++ ) {
+      var node = nodes[i];
+      var ports = param.nodePropMap[node.id()];
+      node.data('ports', ports);
+    }
+    
+    // Go back to stored edge portsource/porttargets state
+    for ( var i = 0; i < connectedEdges.length; i++ ) {
+      var edge = connectedEdges[i];
+      var props = param.edgePropMap[edge.id()];
+      edge.data('portsource', props.portsource);
+      edge.data('porttarget', props.porttarget);
+    }
+    
+    cy.endBatch();
+  }
+  
+  return result;
+};
+
 // Section End
 // sbgn action functions
 
