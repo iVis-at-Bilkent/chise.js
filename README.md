@@ -202,6 +202,7 @@ General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.ele
     It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
     if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
  * `showAndPerformLayout(eles, layoutparam)` Similar to `chise.showAndPerformLayout()` but do not considers undoable option.
+ * `setPortsOrdering(nodes, ordering, portDistance)` Sets the ordering of the given nodes. Ordering options are 'L-to-R', 'R-to-L', 'T-to-B', 'B-to-T', 'none'. If a node does not have any port before the operation and it is supposed to have some after operation the portDistance parameter is used to set the distance between the node center and the ports. The default port distance is 60.
 
 `chise.undoRedoActionFunctions`
 Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` extension. These are exposed for the users who builds
