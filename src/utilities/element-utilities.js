@@ -189,7 +189,6 @@ elementUtilities.defaultProperties = {
   "or": {
     width: 25,
     height: 25,
-    'font-size': 11,
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
@@ -198,7 +197,6 @@ elementUtilities.defaultProperties = {
   "not": {
     width: 25,
     height: 25,
-    'font-size': 11,
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
