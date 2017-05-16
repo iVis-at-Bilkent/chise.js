@@ -446,7 +446,7 @@ undoRedoActionFunctions.setPortsOrdering = function(param) {
   var ordering = param.ordering;
   var portDistance = param.portDistance;
   var connectedEdges = nodes.connectedEdges();
-  var nodePropMap = {}; // Node prop map for current status of the nodes it is to be attached to the result map. It includes node ports.
+  var nodePropMap = {}; // Node prop map for current status of the nodes it is to be attached to the result map. It includes node current port ordering and current ports.
   var edgePropMap = {}; // Edge prop map for current status of the nodes it is to be attached to the result map. It includes edge portsource and porttarget.
   
   // Fill node/edge prop maps for undo/redo actions
@@ -455,10 +455,12 @@ undoRedoActionFunctions.setPortsOrdering = function(param) {
   for ( var i = 0; i < nodes.length; i++ ) {
     var node = nodes[i];
     var ports = node.data('ports');
-    nodePropMap[node.id()] = ports.length === 2 ? [ { id: ports[0].id, x: ports[0].x, y: ports[0].y }, { id: ports[1].id, x: ports[1].x, y: ports[1].y } ] : [];
+    var currentOrdering = sbgnviz.elementUtilities.getPortsOrdering(node); // Get the current node ports ordering
+    var portsCopy = ports.length === 2 ? [ { id: ports[0].id, x: ports[0].x, y: ports[0].y }, { id: ports[1].id, x: ports[1].x, y: ports[1].y } ] : [];
+    nodePropMap[node.id()] = { ordering: currentOrdering, ports: portsCopy };
   }
   
-  // Node prop map includes a edge portsource and porttarget
+  // Node prop map includes edge portsource and porttarget
   for ( var i = 0; i < connectedEdges.length; i++ ) {
     var edge = connectedEdges[i];
     edgePropMap[edge.id()] = { portsource: edge.data('portsource'), porttarget: edge.data('porttarget') };
@@ -480,8 +482,10 @@ undoRedoActionFunctions.setPortsOrdering = function(param) {
     // Go back to stored node ports state
     for ( var i = 0; i < nodes.length; i++ ) {
       var node = nodes[i];
-      var ports = param.nodePropMap[node.id()];
-      node.data('ports', ports);
+      var portsToReturn = param.nodePropMap[node.id()].ports;
+      var orderingsToReturn = param.nodePropMap[node.id()].ordering;
+      node.data('ports', portsToReturn);
+      node.data('portsordering', orderingsToReturn); // Update the cached ports ordering
     }
     
     // Go back to stored edge portsource/porttargets state

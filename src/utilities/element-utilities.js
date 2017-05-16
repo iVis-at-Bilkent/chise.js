@@ -1472,6 +1472,7 @@ elementUtilities.setPortsOrdering = function( nodes, ordering, portDistance ) {
     node.data('ports', ports); // Reset the node ports
   }
   
+  nodes.data('portsordering', ordering); // Update the cached orderings of the nodes
   cy.endBatch();
 };
 
