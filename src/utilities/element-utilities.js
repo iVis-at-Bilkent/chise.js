@@ -619,7 +619,7 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
       // The below assignment satisfy all of these condition
       portsource = sourceNodeOutputPortId;
     }
-    else if (sbgnclass === 'modulation') {
+    else if (sbgnclass === 'modulation' || sbgnclass === 'stimulation') {
       // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
       portsource = sourceNodeOutputPortId;
     }
