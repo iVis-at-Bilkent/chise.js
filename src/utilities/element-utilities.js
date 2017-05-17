@@ -547,6 +547,106 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
   else {
     data.id = "nwtE_" + generateUUID();
   }
+  
+  var sourceNode = cy.getElementById(source); // The original source node
+  var targetNode = cy.getElementById(target); // The original target node
+  var sourceHasPorts = sourceNode.data('ports').length === 2;
+  var targetHasPorts = targetNode.data('ports').length === 2;
+  // The portsource and porttarget variables
+  var portsource;
+  var porttarget;
+  
+  /*
+   * Get input/output port id's of a node with the assumption that the node has valid ports.
+   */
+  var getIOPortIds = function (node) {
+    var nodeInputPortId, nodeOutputPortId;
+    var nodePortsOrdering = sbgnviz.elementUtilities.getPortsOrdering(node);
+    var nodePorts = node.data('ports');
+    if ( nodePortsOrdering === 'L-to-R' || nodePortsOrdering === 'R-to-L' ) {
+      var leftPortId = nodePorts[0].x < 0 ? nodePorts[0].id : nodePorts[1].id; // The x value of left port is supposed to be negative
+      var rightPortId = nodePorts[0].x > 0 ? nodePorts[0].id : nodePorts[1].id; // The x value of right port is supposed to be positive
+      /*
+       * If the port ordering is left to right then the input port is the left port and the output port is the right port.
+       * Else if it is right to left it is vice versa
+       */
+      nodeInputPortId = nodePortsOrdering === 'L-to-R' ? leftPortId : rightPortId;
+      nodeOutputPortId = nodePortsOrdering === 'R-to-L' ? leftPortId : rightPortId;
+    }
+    else if ( nodePortsOrdering === 'T-to-B' || nodePortsOrdering === 'B-to-T' ){
+      var topPortId = nodePorts[0].y < 0 ? nodePorts[0].id : nodePorts[1].id; // The y value of top port is supposed to be negative
+      var bottomPortId = nodePorts[0].y > 0 ? nodePorts[0].id : nodePorts[1].id; // The y value of bottom port is supposed to be positive
+      /*
+       * If the port ordering is top to bottom then the input port is the top port and the output port is the bottom port.
+       * Else if it is right to left it is vice versa
+       */
+      nodeInputPortId = nodePortsOrdering === 'T-to-B' ? topPortId : bottomPortId;
+      nodeOutputPortId = nodePortsOrdering === 'B-to-T' ? topPortId : bottomPortId;
+    }
+    
+    // Return an object containing the IO ports of the node
+    return {
+      inputPortId: nodeInputPortId,
+      outputPortId: nodeOutputPortId
+    };
+  };
+  
+  // If at least one end of the edge has ports then we should determine the ports where the edge should be connected.
+  if (sourceHasPorts || targetHasPorts) {
+    var sourceNodeInputPortId, sourceNodeOutputPortId, targetNodeInputPortId, targetNodeOutputPortId;
+    
+    // If source node has ports set the variables dedicated for its IO ports
+    if ( sourceHasPorts ) {
+      var ioPorts = getIOPortIds(sourceNode);
+      sourceNodeInputPortId = ioPorts.inputPortId;
+      sourceNodeOutputPortId = ioPorts.outputPortId;
+    }
+    
+    // If target node has ports set the variables dedicated for its IO ports
+    if ( targetHasPorts ) {
+      var ioPorts = getIOPortIds(targetNode);
+      targetNodeInputPortId = ioPorts.inputPortId;
+      targetNodeOutputPortId = ioPorts.outputPortId;
+    }
+
+    if (sbgnclass === 'consumption') {
+      // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
+      porttarget = targetNodeInputPortId;
+    }
+    else if (sbgnclass === 'production' || sbgnclass === 'modulation') {
+      // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
+      // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
+      // The below assignment satisfy all of these condition
+      portsource = sourceNodeOutputPortId;
+    }
+    else if (sbgnclass === 'modulation') {
+      // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
+      portsource = sourceNodeOutputPortId;
+    }
+    else if (sbgnclass === 'logic arc') {
+      var srcClass = sourceNode.data('class');
+      var tgtClass = targetNode.data('class');
+      var isSourceLogicalOp = srcClass === 'and' || srcClass === 'or' || srcClass === 'not';
+      var isTargetLogicalOp = tgtClass === 'and' || tgtClass === 'or' || tgtClass === 'not';
+      
+      if (isSourceLogicalOp && isTargetLogicalOp) {
+        // If both end are logical operators then the edge should be connected to the input port of the target and the output port of the input
+        porttarget = targetNodeInputPortId;
+        portsource = sourceNodeOutputPortId;
+      }// If just one end of logical operator then the edge should be connected to the input port of the logical operator
+      else if (isSourceLogicalOp) {
+        portsource = sourceNodeInputPortId; 
+      }
+      else if (isTargetLogicalOp) {
+        porttarget = targetNodeInputPortId;
+      }
+    }
+  }
+  
+  // The default portsource/porttarget are the source/target themselves. If they are not set use these defaults.
+  // The portsource and porttarget are determined set them in data object. 
+  data.portsource = portsource || source;
+  data.porttarget = porttarget || target;
 
   var eles = cy.add({
     group: "edges",
