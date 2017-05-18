@@ -521,6 +521,12 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   });
 
   var newNode = eles[eles.length - 1];
+  var ordering = this.defaultProperties[sbgnclass]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
+  
+  // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
+  if (ordering && ordering !== 'none') {
+    this.setPortsOrdering(newNode, ordering);
+  }
 
   return newNode;
 };

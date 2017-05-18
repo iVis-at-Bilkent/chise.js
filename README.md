@@ -172,7 +172,17 @@ Considers undoable option.
 `chise.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
- * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered upon new element creation.
+ * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered upon new element creation. The speciel fields are the followings.<br>
+    'width': The default width<br>
+    'height': The default height<br>
+    'font-size': The default font size<br>
+    'font-family': The default font family<br>
+    'font-style': The default font style<br>
+    'font-weight': The default font weight<br>
+    'background-color': The default background color<br>
+    'background-opacity': The default background opacity<br>
+    'border-width': The default border width<br>
+    'border-color': The default border color
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
  * `addProcessWithConvenientEdges(source, target, processType)` Similar to `chise.addProcessWithConvenientEdges()` but do not considers undoable option.
