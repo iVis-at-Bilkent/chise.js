@@ -619,14 +619,10 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
       // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
       porttarget = targetNodeInputPortId;
     }
-    else if (sbgnclass === 'production' || sbgnclass === 'modulation') {
+    else if (sbgnclass === 'production' || this.isModulationArcClass(sbgnclass)) {
       // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
       // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
       // The below assignment satisfy all of these condition
-      portsource = sourceNodeOutputPortId;
-    }
-    else if (sbgnclass === 'modulation' || sbgnclass === 'stimulation') {
-      // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
       portsource = sourceNodeOutputPortId;
     }
     else if (sbgnclass === 'logic arc') {
@@ -1438,11 +1434,18 @@ elementUtilities.addPorts = function(node, ordering, portDistance) {
   // Reset the portsource and porttarget for each edge connected to the node
   for ( var i = 0; i < connectedEdges.length; i++ ) {
     var edge = connectedEdges[i];
+    var edgeClass = edge.data('class');
     /*
-     * If the node is the edge target we should set the porttarget of the edge to one of id of first port or second port ( according to the ordering )
-     * if it is the edge target we should set the portsource similarly.
+     * If the node is the edge target we may need to set the porttarget of the edge to the input port of the node (First or second port accoring to the orientation)
+     * if it is the edge soruce we may need to set the portsource of the edge to the output port similarly.
+     * Note that if fron left or top (fromLorT) is true then the first port is the source port and second port is the target port,
+     * else it is vice versa.
+     * 
      */
     if ( edge.data('target') === node.id() ) {
+      if (edgeClass === 'production' || this.isModulationArcClass(edgeClass)) {
+        continue; // production or modulation type of edges cannot be connected to any port of target node (A production can have a process as target node but it is supposed to be connected to that node from its body, not from a port)
+      }
       if ( fromLorT ) {
         edge.data('porttarget', firstPortId);
       }
@@ -1451,6 +1454,9 @@ elementUtilities.addPorts = function(node, ordering, portDistance) {
       }
     }
     else {
+      if (edgeClass === 'consumption') {
+        continue; // consumpiton edge cannot be connected to any port of source node
+      }
       if ( fromLorT ) {
         edge.data('portsource', secondPortId);
       }
