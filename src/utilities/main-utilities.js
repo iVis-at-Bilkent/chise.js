@@ -588,6 +588,8 @@ mainUtilities.setPortsOrdering = function (nodes, ordering, portDistance) {
     
     cy.undoRedo().do("setPortsOrdering", param);
   }
+  
+  cy.style().update();
 };
 
 module.exports = mainUtilities;
