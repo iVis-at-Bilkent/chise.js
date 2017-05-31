@@ -861,8 +861,9 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
  */
 elementUtilities.changeParent = function(nodes, newParent, posDiffX, posDiffY) {
   var newParentId = newParent == undefined || typeof newParent === 'string' ? newParent : newParent.id();
-  nodes.move({"parent": newParentId});
+  var movedEles = nodes.move({"parent": newParentId});
   elementUtilities.moveNodes({x: posDiffX, y: posDiffY}, nodes);
+  return movedEles;
 };
 
 // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.

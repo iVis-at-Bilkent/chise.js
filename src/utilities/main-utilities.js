@@ -254,19 +254,37 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   
   var parentId = newParent ? newParent.id() : null;
   
+  function maintainPointer(eles) { // keep consistency of links to self inside the data() structure
+    console.log("callback", eles);
+    eles.nodes().forEach(function(ele){
+      // skip nodes without any auxiliary units
+      if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
+        return;
+      }
+      for(var side in ele.data('auxunitlayouts')) {
+        ele.data('auxunitlayouts')[side].parentNode = ele;
+      }
+      for(var i=0; i < ele.data('statesandinfos').length; i++) {
+        ele.data('statesandinfos')[i].parent = ele;
+      }
+    });
+  }
+
   if (options.undoable) {
     var param = {
       firstTime: true,
       parentData: parentId, // It keeps the newParentId (Just an id for each nodes for the first time)
       nodes: nodes,
       posDiffX: posDiffX,
-      posDiffY: posDiffY
+      posDiffY: posDiffY,
+      callback: maintainPointer
     };
 
     cy.undoRedo().do("changeParent", param); // This action is registered by undoRedo extension
   }
   else {
-    elementUtilities.changeParent(nodes, parentId, posDiffX, posDiffY);
+    var movedEles = elementUtilities.changeParent(nodes, parentId, posDiffX, posDiffY);
+    maintainPointer(movedEles);
   }
 };
 
