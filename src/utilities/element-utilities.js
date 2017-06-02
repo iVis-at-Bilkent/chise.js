@@ -1166,16 +1166,15 @@ elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
 // The box is represented by the parameter obj.
 // This method returns the index of the just added box.
 elementUtilities.addStateOrInfoBox = function (nodes, obj) {
-  var index;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
 
     var locationObj;
     if(obj.clazz == "unit of information") {
-      locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position);
+      locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
     }
     else if (obj.clazz == "state variable") {
-      locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position);
+      locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
     }
   }
   return locationObj;
