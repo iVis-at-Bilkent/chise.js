@@ -1169,31 +1169,28 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
   var index;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
-    var stateAndInfos = node.data('statesandinfos');
-    
-    // Clone the object to avoid referencing issues
-    var clone = jQuery.extend(true, {}, obj);
-    
-    stateAndInfos.push(clone);
-    index = stateAndInfos.length - 1;
-    this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
-  }
 
-  return index;
+    var locationObj;
+    if(obj.clazz == "unit of information") {
+      locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position);
+    }
+    else if (obj.clazz == "state variable") {
+      locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position);
+    }
+  }
+  return locationObj;
 };
 
 // Remove the state or info boxes of the given nodes at given index.
 // Returns the removed box.
-elementUtilities.removeStateOrInfoBox = function (nodes, index) {
+elementUtilities.removeStateOrInfoBox = function (nodes, locationObj) {
   var obj;
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i];
     var stateAndInfos = node.data('statesandinfos');
-    if (!obj) {
-      obj = stateAndInfos[index];
-    }
-    stateAndInfos.splice(index, 1); // Remove the box
-    this.relocateStateAndInfos(stateAndInfos); // Relocate state and infos
+    var unit = stateAndInfos[locationObj.index];
+
+    obj = unit.remove();
   }
 
   return obj;

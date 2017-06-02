@@ -335,23 +335,23 @@ undoRedoActionFunctions.addStateOrInfoBox = function (param) {
   var obj = param.obj;
   var nodes = param.nodes;
 
-  var index = elementUtilities.addStateOrInfoBox(nodes, obj);
+  var locationObj = elementUtilities.addStateOrInfoBox(nodes, obj);
 
   cy.forceRender();
 
   var result = {
     nodes: nodes,
-    index: index,
+    locationObj: locationObj,
     obj: obj
   };
   return result;
 };
 
 undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
-  var index = param.index;
+  var locationObj = param.locationObj;
   var nodes = param.nodes;
 
-  var obj = elementUtilities.removeStateOrInfoBox(nodes, index);
+  var obj = elementUtilities.removeStateOrInfoBox(nodes, locationObj);
 
   cy.forceRender();
 

@@ -255,7 +255,6 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   var parentId = newParent ? newParent.id() : null;
   
   function maintainPointer(eles) { // keep consistency of links to self inside the data() structure
-    console.log("callback", eles);
     eles.nodes().forEach(function(ele){
       // skip nodes without any auxiliary units
       if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
@@ -444,11 +443,11 @@ mainUtilities.removeStateOrInfoBox = function(nodes, index) {
   }
   
   if (!options.undoable) {
-    elementUtilities.removeStateOrInfoBox(nodes, index);
+    elementUtilities.removeStateOrInfoBox(nodes, {index: index});
   }
   else {
     var param = {
-      index: index,
+      locationObj: {index: index},
       nodes: nodes
     };
 
