@@ -168,7 +168,7 @@ elementUtilities.defaultProperties = {
   "compartment": {
     width: 100,
     height: 100,
-    'font-size': 11,
+    'font-size': 14,
     'font-family': 'Helvetica',
     'font-style': 'normal',
     'font-weight': 'normal',
