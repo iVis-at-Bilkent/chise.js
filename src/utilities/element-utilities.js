@@ -1184,7 +1184,13 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
 
     var locationObj;
     if(obj.clazz == "unit of information") {
-      locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
+      if (node.data("language") == "PD"){
+        locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
+      }
+      else if (node.data("language") == "AF"){
+        locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
+            libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
+      }
     }
     else if (obj.clazz == "state variable") {
       locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
