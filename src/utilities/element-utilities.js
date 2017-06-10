@@ -237,7 +237,20 @@ elementUtilities.defaultProperties = {
   "equivalence arc": {
     'line-color': '#555',
     'width': 1.25
-  }
+  },
+  "biological activity": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
 };
 
 
