@@ -1512,7 +1512,7 @@ elementUtilities.setPortsOrdering = function( nodes, ordering, portDistance ) {
     return false;
   };
   
-  portDistance = portDistance ? portDistance : 60; // The default port distance is 60
+  portDistance = portDistance ? portDistance : 70; // The default port distance is 60
   
   cy.startBatch();
   
