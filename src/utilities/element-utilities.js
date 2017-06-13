@@ -483,7 +483,14 @@ function generateUUID () { // Public Domain/MIT
     });
 }
 
-elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
+elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
+  if (typeof nodeParams != 'object'){
+    var sbgnclass = nodeParams;
+  } else {
+	  var sbgnclass = nodeParams.class;
+	  var language = nodeParams.language;
+	  var UoIName = nodeParams.UoIName;
+  }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
 
@@ -491,7 +498,8 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   var height = defaults ? defaults.height : 50;
   
   var css = {};
-  
+
+
   if (visibility) {
     css.visibility = visibility;
   }
@@ -501,6 +509,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   }
   var data = {
     class: sbgnclass,
+	language: language,
     bbox: {
       h: height,
       w: width,
@@ -539,6 +548,21 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
   if (ordering && ordering !== 'none') {
     this.setPortsOrdering(newNode, ordering);
+  }
+
+  if (UoIName && language == "AF"){
+	var obj = {};
+	obj.clazz = "unit of information";
+    obj.label = {
+      text: ""
+    };
+    
+	obj.bbox = {
+       w: 30,
+       h: 12
+	};
+	newNode.data("name", UoIName);
+	elementUtilities.addStateOrInfoBox(newNode, obj);
   }
 
   return newNode;
@@ -983,7 +1007,7 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer') {
+          || sbgnclass == 'complex multimer' || sbgnclass == 'biological activity') {
     return true;
   }
   return false;
@@ -1184,7 +1208,7 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
 
     var locationObj;
     if(obj.clazz == "unit of information") {
-      if (node.data("language") == "PD"){
+      if (!node.data("language") || node.data("language") == "PD"){
         locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
       }
       else if (node.data("language") == "AF"){
