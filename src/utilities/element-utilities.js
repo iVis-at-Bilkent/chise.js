@@ -251,6 +251,14 @@ elementUtilities.defaultProperties = {
     'border-color': '#555',
     'text-wrap': 'wrap'
   },
+  "delay": {
+    width: 25,
+    height: 25,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
+  },
 };
 
 
@@ -489,7 +497,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   } else {
 	  var sbgnclass = nodeParams.class;
 	  var language = nodeParams.language;
-	  var UoIName = nodeParams.UoIName;
+	  var infoBoxName = nodeParams.infoBoxName;
   }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
@@ -550,7 +558,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
     this.setPortsOrdering(newNode, ordering);
   }
 
-  if (UoIName && language == "AF"){
+  if (infoBoxName && language == "AF"){
 	var obj = {};
 	obj.clazz = "unit of information";
     obj.label = {
@@ -561,7 +569,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
        w: 30,
        h: 12
 	};
-	newNode.data("name", UoIName);
+	newNode.data("name", infoBoxName);
 	elementUtilities.addStateOrInfoBox(newNode, obj);
   }
 
