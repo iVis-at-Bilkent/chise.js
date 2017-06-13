@@ -35,7 +35,7 @@ mainUtilities.addNode = function(x, y , nodeclass, id, parent, visibility) {
  */
 mainUtilities.addEdge = function(source, target , edgeclass, id, visibility) {
   // Get the validation result
-  var validation = elementUtilities.validateArrowEnds(edgeclass, cy.getElementById(source), cy.getElementById(target));
+  var validation = undefined;//elementUtilities.validateArrowEnds(edgeclass, cy.getElementById(source), cy.getElementById(target));
 
   // If validation result is 'invalid' cancel the operation
   if (validation === 'invalid') {
