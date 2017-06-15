@@ -1015,7 +1015,8 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer' || sbgnclass == 'biological activity') {
+          || sbgnclass == 'complex multimer' || sbgnclass == 'biological activity'
+          || sbgnclass == 'compartment') {
     return true;
   }
   return false;
