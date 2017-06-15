@@ -35,7 +35,7 @@ elementUtilities.defaultProperties = {
   "association": {
     width: 15,
     height: 15,
-    'background-color': '#ffffff',
+    'background-color': '#707070',
     'background-opacity': 0.5,
     'border-width': 1.25,
     'border-color': '#555'
