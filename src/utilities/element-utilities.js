@@ -153,8 +153,8 @@ elementUtilities.defaultProperties = {
     'text-wrap': 'wrap'
   },
   "complex": {
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
     'font-size': 11,
     'font-family': 'Helvetica',
     'font-style': 'normal',
@@ -166,8 +166,8 @@ elementUtilities.defaultProperties = {
     'text-wrap': 'wrap'
   },
   "compartment": {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     'font-size': 14,
     'font-family': 'Helvetica',
     'font-style': 'normal',
