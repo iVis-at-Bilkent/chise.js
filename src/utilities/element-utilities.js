@@ -1015,12 +1015,20 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer' || sbgnclass == 'biological activity'
+          || sbgnclass == 'complex multimer' || (sbgnclass == 'biological activity' && ele.data("name"))
           || sbgnclass == 'compartment') {
     return true;
   }
   return false;
 };
+
+// Returns whether the give element can have more than one units of information
+elementUtilities.canHaveMultipleUnitOfInformation = function (ele) {
+  var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
+
+  return sbgnclass != 'biological activity';
+};
+
 
 // Returns whether the give element have state variable
 elementUtilities.canHaveStateVariable = function (ele) {
