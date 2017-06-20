@@ -472,6 +472,17 @@ elementUtilities.PD.connectivityConstraints = {
   }
 };
 
+// initialize a global unit of information object
+var uoi_obj = {};
+uoi_obj.clazz = "unit of information";
+uoi_obj.label = {
+  text: ""
+};
+
+uoi_obj.bbox = {
+   w: 30,
+   h: 12
+};
 
 // Section Start
 // Add remove utilities
@@ -558,19 +569,9 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
     this.setPortsOrdering(newNode, ordering);
   }
 
-  if (infoBoxName && language == "AF"){
-	var obj = {};
-	obj.clazz = "unit of information";
-    obj.label = {
-      text: ""
-    };
-    
-	obj.bbox = {
-       w: 30,
-       h: 12
-	};
-	newNode.data("name", infoBoxName);
-	elementUtilities.addStateOrInfoBox(newNode, obj);
+  if (infoBoxName && language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
+    newNode.data("name", infoBoxName);
+    elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
   }
 
   return newNode;
