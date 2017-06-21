@@ -262,6 +262,18 @@ elementUtilities.defaultProperties = {
     'border-width': 1.25,
     'border-color': '#555'
   },
+  "unknown influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "positive influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "negative influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
 };
 
 
@@ -475,7 +487,7 @@ elementUtilities.PD.connectivityConstraints = {
   }
 };
 
-/* AF node connectivity rukes
+/* AF node connectivity rules
  * See: Systems Biology Graphical Notation: Activity Flow language Level 1, Version 1.2, Date: July 27, 2015
  *   Section 3.3.1: Activity Nodes connectivity definition
  *   URL: https://doi.org/10.2390/biecoll-jib-2015-265
@@ -639,7 +651,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
 
   var newNode = eles[eles.length - 1];
   var ordering = this.defaultProperties[sbgnclass]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
-  
+
   // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
   if (ordering && ordering !== 'none') {
     this.setPortsOrdering(newNode, ordering);
@@ -1390,7 +1402,10 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   var sourceclass = source.data('class');
   var targetclass = target.data('class');
 
-  var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
+  if (elementUtilities.getMapType() == "AF")
+    var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
+  else
+    var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
 
   // given a node, acting as source or target, returns boolean wether or not it has too many edges already
   function hasTooManyEdges(node, sourceOrTarget) {
