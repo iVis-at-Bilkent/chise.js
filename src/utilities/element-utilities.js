@@ -8,6 +8,7 @@ var options = require('./option-utilities').getOptions();
 elementUtilities.mapType = undefined; // initialize map type
 
 elementUtilities.PD = {}; // namespace for all PD specific stuff
+elementUtilities.AF = {}; // namespace for all AF specific stuff
 
 elementUtilities.defaultProperties = {
   "process": {
@@ -474,6 +475,79 @@ elementUtilities.PD.connectivityConstraints = {
   }
 };
 
+/* AF node connectivity rukes
+ * See: Systems Biology Graphical Notation: Activity Flow language Level 1, Version 1.2, Date: July 27, 2015
+ *   Section 3.3.1: Activity Nodes connectivity definition
+ *   URL: https://doi.org/10.2390/biecoll-jib-2015-265
+ */
+elementUtilities.AF.connectivityConstraints = {
+  "positive influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "negative influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "unknown influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "necessary stimulation": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "logic arc": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
+    "phenotype":            {asSource: {},   asTarget: {}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {},   asTarget: {isAllowed: true}},
+    "or":                   {asSource: {},   asTarget: {isAllowed: true}},
+    "not":                  {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+    "delay":                {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "equivalence arc": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
+    "phenotype":            {asSource: {isAllowed: true},   asTarget: {}},
+    "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
+    "submap":               {asSource: {},   asTarget: {isAllowed: true}},
+    "and":                  {asSource: {},   asTarget: {}},
+    "or":                   {asSource: {},   asTarget: {}},
+    "not":                  {asSource: {},   asTarget: {}},
+    "delay":                {asSource: {},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+}
 // initialize a global unit of information object
 var uoi_obj = {};
 uoi_obj.clazz = "unit of information";
