@@ -634,4 +634,11 @@ mainUtilities.resetMapType = function(){
   elementUtilities.resetMapType();
 };
 
+/**
+ * return : map type
+ */
+mainUtilities.getMapType = function(){
+  return elementUtilities.getMapType();
+};
+
 module.exports = mainUtilities;
