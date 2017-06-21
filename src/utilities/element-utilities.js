@@ -5,6 +5,8 @@ var jQuery = $ = libs.jQuery;
 var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
+elementUtilities.mapType = undefined; // initialize map type
+
 elementUtilities.PD = {}; // namespace for all PD specific stuff
 
 elementUtilities.defaultProperties = {
@@ -506,9 +508,9 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   if (typeof nodeParams != 'object'){
     var sbgnclass = nodeParams;
   } else {
-	  var sbgnclass = nodeParams.class;
-	  var language = nodeParams.language;
-	  var infoBoxName = nodeParams.infoBoxName;
+      var sbgnclass = nodeParams.class;
+      var language = nodeParams.language;
+      var infoBoxName = nodeParams.infoBoxName;
   }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
@@ -577,7 +579,13 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   return newNode;
 };
 
-elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) {
+elementUtilities.addEdge = function (source, target, edgeParams, id, visibility) {
+  if (typeof edgeParams != 'object'){
+    var sbgnclass = edgeParams;
+  } else {
+      var sbgnclass = edgeParams.class;
+      var language = edgeParams.language;
+  }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
   
@@ -590,7 +598,8 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
   var data = {
       source: source,
       target: target,
-      class: sbgnclass
+      class: sbgnclass,
+      language: language,
   };
   
   if(id) {
@@ -1299,6 +1308,10 @@ elementUtilities.changeFontProperties = function (eles, data) {
 // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
 // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
 elementUtilities.validateArrowEnds = function (edge, source, target) {
+  // if map type is Unknown -- no rules applied
+  if (elementUtilities.getMapType() == "Unknown")
+    return "valid";
+
   var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
   var sourceclass = source.data('class');
   var targetclass = target.data('class');
@@ -1645,5 +1658,26 @@ elementUtilities.setPortsOrdering = function( nodes, ordering, portDistance ) {
   nodes.data('portsordering', ordering); // Update the cached orderings of the nodes
   cy.endBatch();
 };
+
+/**
+ * @param mapType - type of the current map (PD, AF or Unknown)
+ */
+elementUtilities.setMapType = function(mapType){
+  elementUtilities.mapType = mapType;
+  return mapType;
+}
+
+/**
+ * return - map type
+ */
+elementUtilities.getMapType = function(){
+    return elementUtilities.mapType;
+}
+/**
+ * Resets map type
+ */
+elementUtilities.resetMapType = function(){
+    elementUtilities.mapType = undefined;
+}
 
 module.exports = elementUtilities;
