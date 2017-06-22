@@ -5,7 +5,10 @@ var jQuery = $ = libs.jQuery;
 var elementUtilities = sbgnviz.elementUtilities;
 var options = require('./option-utilities').getOptions();
 
+elementUtilities.mapType = undefined; // initialize map type
+
 elementUtilities.PD = {}; // namespace for all PD specific stuff
+elementUtilities.AF = {}; // namespace for all AF specific stuff
 
 elementUtilities.defaultProperties = {
   "process": {
@@ -237,7 +240,40 @@ elementUtilities.defaultProperties = {
   "equivalence arc": {
     'line-color': '#555',
     'width': 1.25
-  }
+  },
+  "biological activity": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "delay": {
+    width: 25,
+    height: 25,
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555'
+  },
+  "unknown influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "positive influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
+  "negative influence": {
+    'line-color': '#555',
+    'width': 1.25
+  },
 };
 
 
@@ -451,6 +487,90 @@ elementUtilities.PD.connectivityConstraints = {
   }
 };
 
+/* AF node connectivity rules
+ * See: Systems Biology Graphical Notation: Activity Flow language Level 1, Version 1.2, Date: July 27, 2015
+ *   Section 3.3.1: Activity Nodes connectivity definition
+ *   URL: https://doi.org/10.2390/biecoll-jib-2015-265
+ */
+elementUtilities.AF.connectivityConstraints = {
+  "positive influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "negative influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "unknown influence": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "necessary stimulation": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
+    "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "logic arc": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
+    "phenotype":            {asSource: {},   asTarget: {}},
+    "tag":                  {asSource: {},   asTarget: {}},
+    "submap":               {asSource: {},   asTarget: {}},
+    "and":                  {asSource: {},   asTarget: {isAllowed: true}},
+    "or":                   {asSource: {},   asTarget: {isAllowed: true}},
+    "not":                  {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+    "delay":                {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+  "equivalence arc": {
+    "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
+    "phenotype":            {asSource: {isAllowed: true},   asTarget: {}},
+    "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
+    "submap":               {asSource: {},   asTarget: {isAllowed: true}},
+    "and":                  {asSource: {},   asTarget: {}},
+    "or":                   {asSource: {},   asTarget: {}},
+    "not":                  {asSource: {},   asTarget: {}},
+    "delay":                {asSource: {},   asTarget: {}},
+    "compartment":          {asSource: {},   asTarget: {}},
+  },
+}
+// initialize a global unit of information object
+var uoi_obj = {};
+uoi_obj.clazz = "unit of information";
+uoi_obj.label = {
+  text: ""
+};
+
+uoi_obj.bbox = {
+   w: 30,
+   h: 12
+};
 
 // Section Start
 // Add remove utilities
@@ -470,7 +590,14 @@ function generateUUID () { // Public Domain/MIT
     });
 }
 
-elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
+elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
+  if (typeof nodeParams != 'object'){
+    var sbgnclass = nodeParams;
+  } else {
+      var sbgnclass = nodeParams.class;
+      var language = nodeParams.language;
+      var infoBoxName = nodeParams.infoBoxName;
+  }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
 
@@ -478,7 +605,8 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   var height = defaults ? defaults.height : 50;
   
   var css = {};
-  
+
+
   if (visibility) {
     css.visibility = visibility;
   }
@@ -488,6 +616,7 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
   }
   var data = {
     class: sbgnclass,
+	language: language,
     bbox: {
       h: height,
       w: width,
@@ -522,16 +651,27 @@ elementUtilities.addNode = function (x, y, sbgnclass, id, parent, visibility) {
 
   var newNode = eles[eles.length - 1];
   var ordering = this.defaultProperties[sbgnclass]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
-  
+
   // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
   if (ordering && ordering !== 'none') {
     this.setPortsOrdering(newNode, ordering);
   }
 
+  if (infoBoxName && language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
+    newNode.data("name", infoBoxName);
+    elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
+  }
+
   return newNode;
 };
 
-elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) {
+elementUtilities.addEdge = function (source, target, edgeParams, id, visibility) {
+  if (typeof edgeParams != 'object'){
+    var sbgnclass = edgeParams;
+  } else {
+      var sbgnclass = edgeParams.class;
+      var language = edgeParams.language;
+  }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
   
@@ -544,7 +684,8 @@ elementUtilities.addEdge = function (source, target, sbgnclass, id, visibility) 
   var data = {
       source: source,
       target: target,
-      class: sbgnclass
+      class: sbgnclass,
+      language: language,
   };
   
   if(id) {
@@ -970,11 +1111,20 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer') {
+          || sbgnclass == 'complex multimer' || (sbgnclass == 'biological activity' && ele.data("name"))
+          || sbgnclass == 'compartment') {
     return true;
   }
   return false;
 };
+
+// Returns whether the give element can have more than one units of information
+elementUtilities.canHaveMultipleUnitOfInformation = function (ele) {
+  var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
+
+  return sbgnclass != 'biological activity';
+};
+
 
 // Returns whether the give element have state variable
 elementUtilities.canHaveStateVariable = function (ele) {
@@ -1171,7 +1321,13 @@ elementUtilities.addStateOrInfoBox = function (nodes, obj) {
 
     var locationObj;
     if(obj.clazz == "unit of information") {
-      locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
+      if (!node.data("language") || node.data("language") == "PD"){
+        locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
+      }
+      else if (node.data("language") == "AF"){
+        locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
+            libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
+      }
     }
     else if (obj.clazz == "state variable") {
       locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
@@ -1238,11 +1394,18 @@ elementUtilities.changeFontProperties = function (eles, data) {
 // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
 // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
 elementUtilities.validateArrowEnds = function (edge, source, target) {
+  // if map type is Unknown -- no rules applied
+  if (elementUtilities.getMapType() == "Unknown")
+    return "valid";
+
   var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
   var sourceclass = source.data('class');
   var targetclass = target.data('class');
 
-  var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
+  if (elementUtilities.getMapType() == "AF")
+    var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
+  else
+    var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
 
   // given a node, acting as source or target, returns boolean wether or not it has too many edges already
   function hasTooManyEdges(node, sourceOrTarget) {
@@ -1392,5 +1555,26 @@ elementUtilities.getNodesAt = function(renderedPos) {
 elementUtilities.demultimerizeClass = function(sbgnclass) {
   return sbgnclass.replace(" multimer", "");
 };
+
+/**
+ * @param mapType - type of the current map (PD, AF or Unknown)
+ */
+elementUtilities.setMapType = function(mapType){
+  elementUtilities.mapType = mapType;
+  return mapType;
+}
+
+/**
+ * return - map type
+ */
+elementUtilities.getMapType = function(){
+    return elementUtilities.mapType;
+}
+/**
+ * Resets map type
+ */
+elementUtilities.resetMapType = function(){
+    elementUtilities.mapType = undefined;
+}
 
 module.exports = elementUtilities;

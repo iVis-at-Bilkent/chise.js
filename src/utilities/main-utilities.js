@@ -10,16 +10,25 @@ function mainUtilities() {
 /*
  * Adds a new node with the given class and at the given coordinates. Considers undoable option.
  */
-mainUtilities.addNode = function(x, y , nodeclass, id, parent, visibility) {
+mainUtilities.addNode = function(x, y , nodeParams, id, parent, visibility) {
+  // update map type
+  if (typeof nodeParams == 'object'){
+
+    if (!elementUtilities.getMapType())
+      elementUtilities.setMapType(nodeParams.language);
+    else if (elementUtilities.getMapType() != nodeParams.language)
+      elementUtilities.setMapType("Unknown");
+  }
+
   if (!options.undoable) {
-    return elementUtilities.addNode(x, y, nodeclass, id, parent, visibility);
+    return elementUtilities.addNode(x, y, nodeParams, id, parent, visibility);
   }
   else {
     var param = {
       newNode : {
         x: x,
         y: y,
-        class: nodeclass,
+        class: nodeParams,
         id: id,
         parent: parent,
         visibility: visibility
@@ -33,8 +42,17 @@ mainUtilities.addNode = function(x, y , nodeclass, id, parent, visibility) {
 /*
  * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
  */
-mainUtilities.addEdge = function(source, target , edgeclass, id, visibility) {
+mainUtilities.addEdge = function(source, target, edgeParams, id, visibility) {
+  // update map type
+  if (typeof edgeParams == 'object'){
+
+    if (!elementUtilities.getMapType())
+      elementUtilities.setMapType(edgeParams.language);
+    else if (elementUtilities.getMapType() != edgeParams.language)
+      elementUtilities.setMapType("Unknown");
+  }
   // Get the validation result
+  var edgeclass = edgeParams.class ? edgeParams.class : edgeParams;
   var validation = elementUtilities.validateArrowEnds(edgeclass, cy.getElementById(source), cy.getElementById(target));
 
   // If validation result is 'invalid' cancel the operation
@@ -50,14 +68,14 @@ mainUtilities.addEdge = function(source, target , edgeclass, id, visibility) {
   }
       
   if (!options.undoable) {
-    return elementUtilities.addEdge(source, target, edgeclass, id, visibility);
+    return elementUtilities.addEdge(source, target, edgeParams, id, visibility);
   }
   else {
     var param = {
       newEdge : {
         source: source,
         target: target,
-        class: edgeclass,
+        class: edgeParams,
         id: id,
         visibility: visibility
       }
@@ -579,6 +597,20 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
     
     cy.undoRedo().do("showAndPerformLayout", param);
   }
+};
+
+/**
+ * Resets map type to undefined
+ */
+mainUtilities.resetMapType = function(){
+  elementUtilities.resetMapType();
+};
+
+/**
+ * return : map type
+ */
+mainUtilities.getMapType = function(){
+  return elementUtilities.getMapType();
 };
 
 module.exports = mainUtilities;
