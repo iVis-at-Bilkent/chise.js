@@ -164,11 +164,6 @@ Change data of given `eles` by setting given property `name` to the given value/
 Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call. 
 Requires `viewUtilities` extension and considers undoable option.
 
-`chise.setPortsOrdering(nodes, ordering, portDistance)`
-Sets the ordering of the given nodes. Ordering options are 'L-to-R', 'R-to-L', 'T-to-B', 'B-to-T', 'none'.
-If a node does not have any port before the operation and it is supposed to have some after operation the portDistance parameter is used to set the distance between the node center and the ports. The default port distance is 60.
-Considers undoable option.
-
 `chise.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
@@ -217,7 +212,6 @@ General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.ele
     It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
     if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
  * `showAndPerformLayout(eles, layoutparam)` Similar to `chise.showAndPerformLayout()` but do not considers undoable option.
- * `setPortsOrdering(nodes, ordering, portDistance)` Similar to `chise.setPortsOrdering()` but do not considers undoable option.
 
 `chise.undoRedoActionFunctions`
 Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` extension. These are exposed for the users who builds
@@ -239,7 +233,6 @@ an extension library of chise. Extends `sbgnviz.undoRedoActionFunctions`, you ca
  * `removeStateOrInfoBox(param)` Do/Redo function for 'removeStateOrInfoBox' undo redo command (Also Undo function for 'addStateOrInfoBox' undo redo command).
  * `setMultimerStatus(param)` Do/Undo/Redo function for 'setMultimerStatus' undo redo command.
  * `setCloneMarkerStatus(param)` Do/Undo/Redo function for 'setCloneMarkerStatus' undo redo command.
- * `setPortsOrdering(param)` Do/Undo/Redo function for 'setPortsOrdering' undo redo command.
 
 ## Events
 `$(document).on('sbgnvizLoadSample', function(event, filename) { ... });` Triggered when a sample is being loaded
