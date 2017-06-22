@@ -1395,7 +1395,7 @@ elementUtilities.changeFontProperties = function (eles, data) {
 // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
 elementUtilities.validateArrowEnds = function (edge, source, target) {
   // if map type is Unknown -- no rules applied
-  if (elementUtilities.getMapType() == "Unknown")
+  if (elementUtilities.getMapType() == "Unknown" || !elementUtilities.getMapType())
     return "valid";
 
   var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
