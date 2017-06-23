@@ -1099,7 +1099,7 @@ elementUtilities.canHaveSBGNCardinality = function (ele) {
 elementUtilities.canHaveSBGNLabel = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
 
-  return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not'
+  return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not' && sngnclass != 'delay'
           && sbgnclass != 'association' && sbgnclass != 'dissociation' && !sbgnclass.endsWith('process');
 };
 
