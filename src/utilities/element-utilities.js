@@ -1146,7 +1146,7 @@ elementUtilities.mustBeSquare = function (ele) {
 
   return (sbgnclass.indexOf('process') != -1 || sbgnclass == 'source and sink'
           || sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not'
-          || sbgnclass == 'association' || sbgnclass == 'dissociation');
+          || sbgnclass == 'association' || sbgnclass == 'dissociation' || sbgnclass == 'delay');
 };
 
 // Returns whether any of the given nodes must not be in square shape
@@ -1223,7 +1223,7 @@ elementUtilities.isEmptySetClass = function (ele) {
 // Returns whether the given element is a logical operator
 elementUtilities.isLogicalOperator = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-  return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not');
+  return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not' || sbgnclass == 'delay');
 };
 
 // Returns whether the class of given element is a equivalance class
