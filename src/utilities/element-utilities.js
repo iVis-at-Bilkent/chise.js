@@ -1492,14 +1492,24 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   var sourceclass = source.data('class');
   var targetclass = target.data('class');
 
-  if (elementUtilities.getMapType() == "AF")
+  if (elementUtilities.getMapType() == "AF"){
+    if (sourceclass.startsWith("BA")) // we have separate classes for each biological activity
+      sourceclass = "biological activity"; // but same rule applies to all of them
+
+    if (targetclass.startsWith("BA")) // we have separate classes for each biological activity
+      targetclass = "biological activity"; // but same rule applies to all of them
+
     var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
+  }
   else
     var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
 
   // given a node, acting as source or target, returns boolean wether or not it has too many edges already
   function hasTooManyEdges(node, sourceOrTarget) {
     var nodeclass = node.data('class');
+    if (nodeclass.startsWith("BA"))
+      nodeclass = "biological activity";
+
     var totalTooMany = true;
     var edgeTooMany = true;
     if (sourceOrTarget == "source") {
