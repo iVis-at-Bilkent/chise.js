@@ -749,7 +749,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   }
 
   if (language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
-    if (sbgnclass != "plain")  // if AF node can have label i.e: not plain biological activity 
+    if (sbgnclass != "BA plain")  // if AF node can have label i.e: not plain biological activity 
       elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
   }
 
