@@ -257,6 +257,7 @@ elementUtilities.defaultProperties = {
   "delay": {
     width: 25,
     height: 25,
+    'font-family': 'Cambria',
     'background-color': '#ffffff',
     'background-opacity': 0.5,
     'border-width': 1.25,
