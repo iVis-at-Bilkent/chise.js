@@ -659,6 +659,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
 
   if (infoBoxName && language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
     newNode.data("name", infoBoxName);
+    if (infoBoxName != "plain")  // if AF node can have label i.e: not plain biological activity 
     elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
   }
 
@@ -1111,7 +1112,7 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer' || (sbgnclass == 'biological activity' && ele.data("name"))
+          || sbgnclass == 'complex multimer' || (sbgnclass == 'biological activity' && ele.data("name") != "plain")
           || sbgnclass == 'compartment') {
     return true;
   }
