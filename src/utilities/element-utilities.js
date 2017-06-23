@@ -254,6 +254,97 @@ elementUtilities.defaultProperties = {
     'border-color': '#555',
     'text-wrap': 'wrap'
   },
+  "BA plain": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA unspecified entity": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA simple chemical": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA macromolecule": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA nucleic acid feature": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA perturbing agent": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
+  "BA complex": {
+    width: 70,
+    height: 35,
+    'font-size': 11,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 1.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap'
+  },
   "delay": {
     width: 25,
     height: 25,
@@ -597,7 +688,6 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   } else {
       var sbgnclass = nodeParams.class;
       var language = nodeParams.language;
-      var infoBoxName = nodeParams.infoBoxName;
   }
   var defaultProperties = this.defaultProperties;
   var defaults = defaultProperties[sbgnclass];
@@ -658,10 +748,9 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
     this.setPortsOrdering(newNode, ordering);
   }
 
-  if (infoBoxName && language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
-    newNode.data("name", infoBoxName);
-    if (infoBoxName != "plain")  // if AF node can have label i.e: not plain biological activity 
-    elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
+  if (language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
+    if (sbgnclass != "plain")  // if AF node can have label i.e: not plain biological activity 
+      elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
   }
 
   return newNode;
@@ -1113,18 +1202,17 @@ elementUtilities.canHaveUnitOfInformation = function (ele) {
           || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
           || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
           || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-          || sbgnclass == 'complex multimer' || (sbgnclass == 'biological activity' && ele.data("name") != "plain")
+          || sbgnclass == 'complex multimer' || (sbgnclass.startsWith('BA') && sbgnclass != "BA plain")
           || sbgnclass == 'compartment') {
     return true;
   }
   return false;
 };
 
-// Returns whether the give element can have more than one units of information
+// Returns whether the given element can have more than one units of information
 elementUtilities.canHaveMultipleUnitOfInformation = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-  return sbgnclass != 'biological activity';
+  return !sbgnclass.startsWith('BA');
 };
 
 
