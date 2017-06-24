@@ -946,7 +946,7 @@ elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, co
   // The parent of new compound will be the old parent of the nodes to make compound. x, y and id parameters are not set.
   var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
   var newCompoundId = newCompound.id();
-  var newEles = nodesToMakeCompound.move({parent: newCompoundId});
+  var newEles = elementUtilities.changeParent(nodesToMakeCompound, newCompoundId);
   newEles = newEles.union(newCompound);
   return newEles;
 };
@@ -1094,7 +1094,10 @@ elementUtilities.createTemplateReaction = function (templateType, macromoleculeL
 elementUtilities.changeParent = function(nodes, newParent, posDiffX, posDiffY) {
   var newParentId = newParent == undefined || typeof newParent === 'string' ? newParent : newParent.id();
   var movedEles = nodes.move({"parent": newParentId});
-  elementUtilities.moveNodes({x: posDiffX, y: posDiffY}, nodes);
+  if(typeof posDiffX != 'undefined' || typeof posDiffY != 'undefined') {
+    elementUtilities.moveNodes({x: posDiffX, y: posDiffY}, nodes);
+  }
+  elementUtilities.maintainPointer(movedEles);
   return movedEles;
 };
 
@@ -1675,6 +1678,28 @@ elementUtilities.getMapType = function(){
  */
 elementUtilities.resetMapType = function(){
     elementUtilities.mapType = undefined;
+}
+
+/**
+ * Keep consistency of links to self inside the data() structure.
+ * This is needed whenever a node changes parents, for example,
+ * as it is destroyed and recreated. But the data() stays identical.
+ * This creates inconsistencies for the pointers stored in data(),
+ * as they now point to a deleted node.
+ */
+elementUtilities.maintainPointer = function (eles) {
+  eles.nodes().forEach(function(ele){
+    // skip nodes without any auxiliary units
+    if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
+      return;
+    }
+    for(var side in ele.data('auxunitlayouts')) {
+      ele.data('auxunitlayouts')[side].parentNode = ele;
+    }
+    for(var i=0; i < ele.data('statesandinfos').length; i++) {
+      ele.data('statesandinfos')[i].parent = ele;
+    }
+  });
 }
 
 module.exports = elementUtilities;

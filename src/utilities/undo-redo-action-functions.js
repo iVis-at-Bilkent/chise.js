@@ -70,6 +70,7 @@ undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
   else {
     result.removedEles = param.newEles.remove();
     result.newEles = param.removedEles.restore();
+    elementUtilities.maintainPointer(result.newEles);
   }
 
   return result;

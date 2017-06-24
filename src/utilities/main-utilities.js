@@ -271,21 +271,6 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   nodes = elementUtilities.getTopMostNodes(nodes);
   
   var parentId = newParent ? newParent.id() : null;
-  
-  function maintainPointer(eles) { // keep consistency of links to self inside the data() structure
-    eles.nodes().forEach(function(ele){
-      // skip nodes without any auxiliary units
-      if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
-        return;
-      }
-      for(var side in ele.data('auxunitlayouts')) {
-        ele.data('auxunitlayouts')[side].parentNode = ele;
-      }
-      for(var i=0; i < ele.data('statesandinfos').length; i++) {
-        ele.data('statesandinfos')[i].parent = ele;
-      }
-    });
-  }
 
   if (options.undoable) {
     var param = {
@@ -294,14 +279,15 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
       nodes: nodes,
       posDiffX: posDiffX,
       posDiffY: posDiffY,
-      callback: maintainPointer
+      // This is needed because the changeParent function called is not from elementUtilities
+      // but from the undoRedo extension directly, so maintaining pointer is not automatically done.
+      callback: elementUtilities.maintainPointer
     };
 
     cy.undoRedo().do("changeParent", param); // This action is registered by undoRedo extension
   }
   else {
-    var movedEles = elementUtilities.changeParent(nodes, parentId, posDiffX, posDiffY);
-    maintainPointer(movedEles);
+    elementUtilities.changeParent(nodes, parentId, posDiffX, posDiffY);
   }
 };
 
