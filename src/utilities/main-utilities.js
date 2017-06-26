@@ -585,6 +585,13 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
   }
 };
 
+// Overrides highlightProcesses from SBGNVIZ - do not highlight any nodes when the map type is AF
+mainUtilities.highlightProcesses = function(_nodes) {
+  if (elementUtilities.getMapType() == "AF")
+    return;
+  libs.sbgnviz.highlightProcesses(_nodes);
+};
+
 /**
  * Resets map type to undefined
  */
