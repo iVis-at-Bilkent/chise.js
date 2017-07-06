@@ -582,7 +582,34 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
       firstTime: true
     };
     
-    cy.undoRedo().do("showAndPerformLayout", param);
+    function thickenBorder(eles) {
+      eles.forEach(function( ele ){
+        var defaultBorderWidth = Number(ele.data("border-width"));
+        ele.data("border-width", defaultBorderWidth + 2);
+      });
+      eles.data("thickBorder", true);
+      return eles;
+    }
+
+    function thinBorder(eles) {
+      eles.forEach(function( ele ){
+        var defaultBorderWidth = Number(ele.data("border-width"));
+        ele.data("border-width", defaultBorderWidth - 2);
+      });
+      eles.removeData("thickBorder");
+      return eles;
+    }
+    var ur = cy.undoRedo();
+    ur.action("thickenBorder", thickenBorder, thinBorder);
+    ur.action("thinBorder", thinBorder, thickenBorder);
+    
+    var actions = [];
+    var nodesWithHiddenNeighbor = hiddenEles.neighborhood(":visible").nodes();
+    actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});  
+    actions.push({name: "showAndPerformLayout", param: param});
+    nodesWithHiddenNeighbor = cy.edges(":hidden").difference(hiddenEles.edges()).connectedNodes().intersection(hiddenEles.nodes());
+    actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor}); 
+    cy.undoRedo().do("batch", actions);
   }
 };
 
