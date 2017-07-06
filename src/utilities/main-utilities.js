@@ -571,9 +571,29 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
   if (hiddenEles.length === 0) {
     return;
   }
-  
+  function thickenBorder(eles) {
+    eles.forEach(function( ele ){
+      var defaultBorderWidth = Number(ele.data("border-width"));
+      ele.data("border-width", defaultBorderWidth + 2);
+    });
+    eles.data("thickBorder", true);
+    return eles;
+  }
+
+  function thinBorder(eles) {
+    eles.forEach(function( ele ){
+      var defaultBorderWidth = Number(ele.data("border-width"));
+      ele.data("border-width", defaultBorderWidth - 2);
+    });
+    eles.removeData("thickBorder");
+    return eles;
+  }
   if (!options.undoable) {
+    var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+    thinBorder(nodesWithHiddenNeighbor);
     elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
+    var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+    thickenBorder(nodesWithHiddenNeighbor);
   }
   else {
     var param = {
@@ -582,23 +602,6 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
       firstTime: true
     };
     
-    function thickenBorder(eles) {
-      eles.forEach(function( ele ){
-        var defaultBorderWidth = Number(ele.data("border-width"));
-        ele.data("border-width", defaultBorderWidth + 2);
-      });
-      eles.data("thickBorder", true);
-      return eles;
-    }
-
-    function thinBorder(eles) {
-      eles.forEach(function( ele ){
-        var defaultBorderWidth = Number(ele.data("border-width"));
-        ele.data("border-width", defaultBorderWidth - 2);
-      });
-      eles.removeData("thickBorder");
-      return eles;
-    }
     var ur = cy.undoRedo();
     ur.action("thickenBorder", thickenBorder, thinBorder);
     ur.action("thinBorder", thinBorder, thickenBorder);
