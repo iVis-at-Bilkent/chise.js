@@ -610,7 +610,8 @@ mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
     var nodesWithHiddenNeighbor = hiddenEles.neighborhood(":visible").nodes();
     actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});  
     actions.push({name: "showAndPerformLayout", param: param});
-    nodesWithHiddenNeighbor = cy.edges(":hidden").difference(hiddenEles.edges()).connectedNodes().intersection(hiddenEles.nodes());
+    nodesWithHiddenNeighbor = hiddenEles.nodes().edgesWith(cy.nodes(":hidden").difference(hiddenEles.nodes()))
+            .connectedNodes().intersection(hiddenEles.nodes());
     actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor}); 
     cy.undoRedo().do("batch", actions);
   }
