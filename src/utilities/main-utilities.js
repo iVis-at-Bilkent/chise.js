@@ -190,7 +190,7 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
     }
     
     var sbgnclass = element.data("class");
-    return elementUtilities.isValidParent(sbgnclass, compoundType);
+    return elementUtilities.isValidParent(sbgnclass, compoundType, element);
   });
   
   nodes = elementUtilities.getTopMostNodes(nodes);
@@ -237,7 +237,7 @@ mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
     }
     
     var sbgnclass = element.data("class");
-    return elementUtilities.isValidParent(sbgnclass, newParent);
+    return elementUtilities.isValidParent(sbgnclass, newParent, element);
   });
   
   // Discard the nodes whose parent is already newParent.

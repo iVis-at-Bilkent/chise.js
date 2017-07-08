@@ -942,7 +942,7 @@ elementUtilities.addProcessWithConvenientEdges = function(_source, _target, proc
 /*
  * Returns if the elements with the given parent class can be parent of the elements with the given node class
  */
-elementUtilities.isValidParent = function(_nodeClass, _parentClass) {
+elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
   // If nodeClass and parentClass params are elements itselves instead of their class names handle it
   var nodeClass = typeof _nodeClass !== 'string' ? _nodeClass.data('class') : _nodeClass;
   var parentClass = _parentClass != undefined && typeof _parentClass !== 'string' ? _parentClass.data('class') : _parentClass;
@@ -950,7 +950,7 @@ elementUtilities.isValidParent = function(_nodeClass, _parentClass) {
   if (parentClass == undefined || parentClass === 'compartment') { // Compartments and the root can include any type of nodes
     return true;
   }
-  else if (parentClass === 'complex') { // Complexes can only include EPNs
+  else if (parentClass === 'complex' && node.connectedEdges().length == 0) { // Complexes can only include EPNs which do not have edges
     return elementUtilities.isEPNClass(nodeClass);
   }
   
