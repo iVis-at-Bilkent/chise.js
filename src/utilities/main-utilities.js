@@ -200,7 +200,8 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
   // because the old common parent will be the parent of the new compartment after this operation and
   // 'complexes' cannot include 'compartments'
   if (nodes.length == 0 || !elementUtilities.allHaveTheSameParent(nodes)
-          || ( compoundType === 'compartment' && nodes.parent().data('class') === 'complex' ) ) {
+          || ( compoundType === 'compartment' && nodes.parent().data('class')
+          && nodes.parent().data('class').startsWith('complex') )) {
     return;
   }
   
@@ -224,10 +225,9 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
 mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
   // New parent is supposed to be one of the root, a complex or a compartment
-  if (newParent && newParent.data("class") != "complex" && newParent.data("class") != "compartment") {
+  if (newParent && !newParent.data("class").startsWith("complex") && newParent.data("class") != "compartment") {
     return;
   }
-  
   /*
    * Eleminate the nodes which cannot have the newParent as their parent
    */

@@ -741,7 +741,7 @@ elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
   });
 
   var newNode = eles[eles.length - 1];
-  var ordering = this.defaultProperties[sbgnclass]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
+  var ordering = this.defaultProperties[sbgnclass.replace(/\s*multimer$/, '')]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
 
   // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
   if (ordering && ordering !== 'none') {
@@ -950,7 +950,7 @@ elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
   if (parentClass == undefined || parentClass === 'compartment') { // Compartments and the root can include any type of nodes
     return true;
   }
-  else if (parentClass === 'complex' && node.connectedEdges().length == 0) { // Complexes can only include EPNs which do not have edges
+  else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0)) { // Complexes can only include EPNs which do not have edges
     return elementUtilities.isEPNClass(nodeClass);
   }
   
@@ -1524,12 +1524,15 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
 
     var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
   }
-  else
+  else{
+    sourceclass = sourceclass.replace(/\s*multimer$/, '')
+    targetclass = targetclass.replace(/\s*multimer$/, '')
     var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
-
+  }
   // given a node, acting as source or target, returns boolean wether or not it has too many edges already
   function hasTooManyEdges(node, sourceOrTarget) {
     var nodeclass = node.data('class');
+    nodeclass = nodeclass.replace(/\s*multimer$/, '');
     if (nodeclass.startsWith("BA"))
       nodeclass = "biological activity";
 
@@ -1568,7 +1571,8 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
   }
 
   function isInComplex(node) {
-    return node.parent().data('class') == 'complex';
+    var parentClass = node.parent().data('class');
+    return parentClass && parentClass.startsWith('complex');
   }
 
   if (isInComplex(source) || isInComplex(target)) { // subunits of a complex are no longer EPNs, no connection allowed
