@@ -114,6 +114,54 @@ mainUtilities.addProcessWithConvenientEdges = function(_source, _target, process
   }
 };
 
+// update port values of pasted nodes and edges
+clonePorts = function (elesBefore){
+  cy.elements().unselect();
+  var elesAfter = cy.elements();
+  var elesDiff = elesAfter.diff(elesBefore).left;
+  
+  elesDiff.nodes().forEach(function(_node){
+    if(_node.data("ports").length == 2){
+        var oldPortName0 = _node.data("ports")[0].id;
+        var oldPortName1 = _node.data("ports")[1].id;
+        _node.data("ports")[0].id = _node.id() + ".1";
+        _node.data("ports")[1].id = _node.id() + ".2";
+        
+        _node.outgoers().edges().forEach(function(_edge){
+          if(_edge.data("portsource") == oldPortName0){
+            _edge.data("portsource", _node.data("ports")[0].id);
+          }
+          else if(_edge.data("portsource") == oldPortName1){
+            _edge.data("portsource", _node.data("ports")[1].id); 
+          }
+          else{
+            _edge.data("portsource", _node.id()); 
+          }
+        });
+        _node.incomers().edges().forEach(function(_edge){
+          if(_edge.data("porttarget") == oldPortName0){
+            _edge.data("porttarget", _node.data("ports")[0].id);
+          }
+          else if(_edge.data("porttarget") == oldPortName1){
+            _edge.data("porttarget", _node.data("ports")[1].id); 
+          }
+          else{
+            _edge.data("porttarget", _node.id()); 
+          }
+        });
+    }
+    else{
+      _node.outgoers().edges().forEach(function(_edge){
+        _edge.data("portsource", _node.id());
+      });
+      _node.incomers().edges().forEach(function(_edge){
+        _edge.data("porttarget", _node.id());
+      });
+    }
+  });
+  elesDiff.select();
+}
+
 /*
  * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
  */
@@ -121,6 +169,7 @@ mainUtilities.cloneElements = function (eles) {
   if (eles.length === 0) {
     return;
   }
+  var elesBefore = cy.elements();
   
   var cb = cy.clipboard();
   var _id = cb.copy(eles, "cloneOperation");
@@ -131,6 +180,7 @@ mainUtilities.cloneElements = function (eles) {
   else {
     cb.paste(_id);
   }
+  clonePorts(elesBefore);
 };
 
 /*
@@ -144,12 +194,15 @@ mainUtilities.copyElements = function (eles) {
  * Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
  */
 mainUtilities.pasteElements = function() {
+  var elesBefore = cy.elements();
+  
   if (options.undoable) {
     cy.undoRedo().do("paste");
   } 
   else {
     cy.clipboard().paste();
   }
+  clonePorts(elesBefore);
 };
 
 /*
