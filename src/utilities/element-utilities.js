@@ -366,6 +366,19 @@ elementUtilities.defaultProperties = {
     'line-color': '#555',
     'width': 1.25
   },
+  "submap": {
+    width: 80,
+    height: 80,
+    'font-size': 14,
+    'font-family': 'Helvetica',
+    'font-style': 'normal',
+    'font-weight': 'normal',
+    'background-color': '#ffffff',
+    'background-opacity': 0.5,
+    'border-width': 2.25,
+    'border-color': '#555',
+    'text-wrap': 'wrap',
+  },
 };
 
 
@@ -947,7 +960,8 @@ elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
   var nodeClass = typeof _nodeClass !== 'string' ? _nodeClass.data('class') : _nodeClass;
   var parentClass = _parentClass != undefined && typeof _parentClass !== 'string' ? _parentClass.data('class') : _parentClass;
   
-  if (parentClass == undefined || parentClass === 'compartment') { // Compartments and the root can include any type of nodes
+  if (parentClass == undefined || parentClass === 'compartment'
+          || parentClass === 'submap') { // Compartments, submaps and the root can include any type of nodes
     return true;
   }
   else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0)) { // Complexes can only include EPNs which do not have edges
