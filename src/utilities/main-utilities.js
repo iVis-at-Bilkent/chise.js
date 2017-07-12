@@ -225,7 +225,8 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
 mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
   var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
   // New parent is supposed to be one of the root, a complex or a compartment
-  if (newParent && !newParent.data("class").startsWith("complex") && newParent.data("class") != "compartment") {
+  if (newParent && !newParent.data("class").startsWith("complex") && newParent.data("class") != "compartment"
+          && newParent.data("class") != "submap") {
     return;
   }
   /*
