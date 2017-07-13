@@ -253,7 +253,7 @@ mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
   // because the old common parent will be the parent of the new compartment after this operation and
   // 'complexes' cannot include 'compartments'
   if (nodes.length == 0 || !elementUtilities.allHaveTheSameParent(nodes)
-          || ( compoundType === 'compartment' && nodes.parent().data('class')
+          || ( (compoundType === 'compartment' || compoundType == 'submap') && nodes.parent().data('class')
           && nodes.parent().data('class').startsWith('complex') )) {
     return;
   }
