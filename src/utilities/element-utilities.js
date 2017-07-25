@@ -1228,7 +1228,7 @@ elementUtilities.canHaveSBGNLabel = function (ele) {
   var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
 
   return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not' && sbgnclass != 'delay'
-          && sbgnclass != 'association' && sbgnclass != 'dissociation' && !sbgnclass.endsWith('process');
+          && sbgnclass != 'association' && sbgnclass != 'dissociation' && sbgnclass != 'source and sink' && !sbgnclass.endsWith('process');
 };
 
 // Returns whether the give element have unit of information
