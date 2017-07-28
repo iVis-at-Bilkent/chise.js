@@ -1610,6 +1610,27 @@ elementUtilities.validateArrowEnds = function (edge, source, target) {
 };
 
 /*
+ * Hide given eles and perform given layout afterward. Layout parameter may be layout options
+ * or a function to call.
+ */
+elementUtilities.hideAndPerformLayout = function(eles, layoutparam) {
+    var result = cy.viewUtilities().hide(eles); // Hide given eles
+    if (typeof layoutparam === 'function') {
+        layoutparam(); // If layoutparam is a function execute it
+    }
+    else {
+        var layout = cy.layout(layoutparam); // If layoutparam is layout options call layout with that options.
+
+        // Do this check for cytoscape.js backward compatibility
+        if (layout && layout.run) {
+            layout.run();
+        }
+    }
+
+    return result;
+};
+
+/*
  * Unhide given eles and perform given layout afterward. Layout parameter may be layout options
  * or a function to call.
  */

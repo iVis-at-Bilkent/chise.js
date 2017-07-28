@@ -312,6 +312,38 @@ undoRedoActionFunctions.undoShowAndPerformLayout = function (param) {
   return result;
 };
 
+/*
+ * Hide eles and perform layout.
+ */
+undoRedoActionFunctions.hideAndPerformLayout = function (param) {
+    var eles = param.eles;
+
+    var result = {};
+    result.positions = undoRedoActionFunctions.getNodePositions();
+
+    if (param.firstTime) {
+        result.eles = elementUtilities.hideAndPerformLayout(param.eles, param.layoutparam);
+    }
+    else {
+        result.eles = cy.viewUtilities().hide(eles); // Hide given eles
+        undoRedoActionFunctions.returnToPositions(param.positions);
+    }
+
+    return result;
+};
+
+undoRedoActionFunctions.undoHideAndPerformLayout = function (param) {
+    var eles = param.eles;
+
+    var result = {};
+    result.positions = undoRedoActionFunctions.getNodePositions();
+    result.eles = cy.viewUtilities().show(eles); // Show previously hidden eles
+
+    undoRedoActionFunctions.returnToPositions(param.positions);
+
+    return result;
+};
+
 // Section End
 // general action functions
 

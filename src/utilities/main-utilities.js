@@ -616,59 +616,214 @@ mainUtilities.changeData = function(eles, name, valueMap) {
   cy.style().update();
 };
 
+
+/*
+ * Hides given eles (the ones which are selected) and perform given layout afterward. Layout parameter may be layout options
+ * or a function to call. Requires viewUtilities extension and considers undoable option.
+ */
+mainUtilities.hideAndPerformLayout = function(eles, layoutparam) {
+    var nodes = eles.nodes(); // Ensure that nodes list just include nodes
+
+    var allNodes = cy.nodes(":visible");
+    var nodesToShow = chise.elementUtilities.extendRemainingNodes(nodes, allNodes);
+    var nodesToHide = allNodes.not(nodesToShow);
+
+    if (nodesToHide.length === 0) {
+        return;
+    }
+
+    if (!options.undoable) {
+
+        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+        chise.thinBorder(nodesWithHiddenNeighbor);
+        elementUtilities.hideAndPerformLayout(nodesToHide, layoutparam);
+        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+        chise.thickenBorder(nodesWithHiddenNeighbor);
+    }
+    else {
+        var param = {
+            eles: nodesToHide,
+            layoutparam: layoutparam,
+            firstTime: true
+        };
+
+        var ur = cy.undoRedo();
+        ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
+        ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+
+        var actions = [];
+        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes().intersection(nodesToHide);
+        actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});
+        actions.push({name: "hideAndPerformLayout", param: param});
+        nodesWithHiddenNeighbor = nodesToHide.neighborhood(":visible").nodes().difference(nodesToHide).difference(cy.nodes("[thickBorder]"));
+        actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor});
+        cy.undoRedo().do("batch", actions);
+    }
+};
+
 /*
  * Unhide given eles (the ones which are hidden if any) and perform given layout afterward. Layout parameter may be layout options
  * or a function to call. Requires viewUtilities extension and considers undoable option.
  */
-mainUtilities.showAndPerformLayout = function(eles, layoutparam) {
-  var hiddenEles = eles.filter(':hidden');
-  if (hiddenEles.length === 0) {
-    return;
-  }
-  function thickenBorder(eles) {
-    eles.forEach(function( ele ){
-      var defaultBorderWidth = Number(ele.data("border-width"));
-      ele.data("border-width", defaultBorderWidth + 2);
-    });
-    eles.data("thickBorder", true);
-    return eles;
-  }
+mainUtilities.showAndPerformLayout = function(mainEle, eles, layoutparam) {
+    var hiddenEles = eles.filter(':hidden');
+    if (hiddenEles.length === 0) {
+        return;
+    }
+    mainUtilities.closeUpElements(mainEle, hiddenEles.nodes());
+    if (!options.undoable) {
+        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+        chise.thinBorder(nodesWithHiddenNeighbor);
+        elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
+        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+        chise.thickenBorder(nodesWithHiddenNeighbor);
+    }
+    else {
+        var param = {
+            eles: hiddenEles,
+            layoutparam: layoutparam,
+            firstTime: true
+        };
 
-  function thinBorder(eles) {
-    eles.forEach(function( ele ){
-      var defaultBorderWidth = Number(ele.data("border-width"));
-      ele.data("border-width", defaultBorderWidth - 2);
+        var ur = cy.undoRedo();
+        ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
+        ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+
+        var actions = [];
+        var nodesWithHiddenNeighbor = hiddenEles.neighborhood(":visible").nodes();
+        actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});
+        actions.push({name: "showAndPerformLayout", param: param});
+        nodesWithHiddenNeighbor = cy.edges(":hidden").difference(hiddenEles.edges()).connectedNodes().intersection(hiddenEles.nodes());
+        actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor});
+        cy.undoRedo().do("batch", actions);
+    }
+};
+
+/*
+* Takes the hidden elements close to the nodes whose neighbors will be shown
+* */
+mainUtilities.closeUpElements = function(mainEle, hiddenEles) {
+    var leftX = Number.MAX_VALUE;
+    var rightX = 0;
+    var topY = Number.MAX_VALUE;
+    var bottomY = 0;
+    // Check the x and y limits of all hidden elements and store them in the variables above
+    hiddenEles.forEach(function( ele ){
+        if (ele.data('class') != 'compartment' &&  ele.data('class') != 'complex')
+        {
+            var halfWidth = ele.outerWidth()/2;
+            var halfHeight = ele.outerHeight()/2;
+            if (ele.position("x") - halfWidth < leftX)
+                leftX = ele.position("x") - halfWidth;
+            else if (ele.position("x") + halfWidth > rightX)
+                rightX = ele.position("x") + halfWidth;
+            if (ele.position("y") - halfHeight < topY)
+                topY = ele.position("y") - halfHeight;
+            else if (ele.position("y") + halfHeight > topY)
+                bottomY = ele.position("y") + halfHeight;
+        }
     });
-    eles.removeData("thickBorder");
-    return eles;
-  }
-  if (!options.undoable) {
-    var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-    thinBorder(nodesWithHiddenNeighbor);
-    elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
-    var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-    thickenBorder(nodesWithHiddenNeighbor);
-  }
-  else {
-    var param = {
-      eles: hiddenEles,
-      layoutparam: layoutparam,
-      firstTime: true
-    };
-    
-    var ur = cy.undoRedo();
-    ur.action("thickenBorder", thickenBorder, thinBorder);
-    ur.action("thinBorder", thinBorder, thickenBorder);
-    
-    var actions = [];
-    var nodesWithHiddenNeighbor = hiddenEles.neighborhood(":visible").nodes();
-    actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});  
-    actions.push({name: "showAndPerformLayout", param: param});
-    nodesWithHiddenNeighbor = hiddenEles.nodes().edgesWith(cy.nodes(":hidden").difference(hiddenEles.nodes()))
-            .connectedNodes().intersection(hiddenEles.nodes());
-    actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor}); 
-    cy.undoRedo().do("batch", actions);
-  }
+
+    //The coordinates of the old center containing the hidden nodes
+    var oldCenterX = (leftX + rightX)/2;
+    var oldCenterY = (topY + bottomY)/2;
+
+    //Here we calculate two parameters which define the area in which the hidden elements are placed initially
+    var minHorizontalParam = mainEle.outerWidth()/2 + (rightX - leftX)/2;
+    var maxHorizontalParam = mainEle.outerWidth() + (rightX - leftX)/2;
+    var minVerticalParam = mainEle.outerHeight()/2 + (bottomY - topY)/2;
+    var maxVerticalParam = mainEle.outerHeight() + (bottomY - topY)/2;
+
+    //Quadrants is an object of the form {first:"obtained", second:"free", third:"free", fourth:"obtained"}
+    // which holds which quadrant are free (that's where hidden nodes will be brought)
+    var quadrants = mainUtilities.checkOccupiedQuadrants(mainEle, hiddenEles);
+    var freeQuadrants = [];
+    for (var property in quadrants) {
+        if (quadrants[property] === "free")
+            freeQuadrants.push(property);
+    }
+
+    //Can take values 1 and -1 and are used to place the hidden nodes in the random quadrant
+    var horizontalMult;
+    var verticalMult;
+    if (freeQuadrants.length > 0)
+    {
+        //Randomly picks one quadrant from the free quadrants
+        var randomQuadrant = freeQuadrants[Math.floor(Math.random()*freeQuadrants.length)];
+
+        if (randomQuadrant === "first"){
+            horizontalMult = 1;
+            verticalMult = -1;
+        }
+        else if (randomQuadrant === "second"){
+            horizontalMult = -1;
+            verticalMult = -1;
+        }
+        else if (randomQuadrant === "third"){
+            horizontalMult = -1;
+            verticalMult = 1;
+        }
+        else if (randomQuadrant === "fourth"){
+            horizontalMult = 1;
+            verticalMult = 1;
+        }
+    }
+    else
+    {
+        horizontalMult = 0;
+        verticalMult = 0;
+    }
+    // If the horizontalMult is 0 it means that no quadrant is free, so we randomly choose a quadrant
+    var horizontalParam = mainUtilities.generateRandom(minHorizontalParam,maxHorizontalParam,horizontalMult);
+    var verticalParam = mainUtilities.generateRandom(minVerticalParam,maxVerticalParam,verticalMult);
+
+    //The coordinates of the center where the hidden nodes will be transfered
+    var newCenterX = mainEle.position("x") + horizontalParam;
+    var newCenterY = mainEle.position("y") + verticalParam;
+
+    var xdiff = newCenterX - oldCenterX;
+    var ydiff = newCenterY - oldCenterY;
+
+    //Change the position of hidden elements
+    hiddenEles.forEach(function( ele ){
+        var newx = ele.position("x") + xdiff;
+        var newy = ele.position("y") + ydiff;
+        ele.position("x", newx);
+        ele.position("y",newy);
+    });
+};
+
+/*
+ * Generates a number between 2 nr and multimplies it with 1 or -1
+ * */
+mainUtilities.generateRandom = function(min, max, mult) {
+    var val = [-1,1];
+    if (mult === 0)
+        mult = val[Math.floor(Math.random()*val.length)];
+    return (Math.floor(Math.random() * (max - min + 1)) + min) * mult;
+};
+
+/*
+ * This function makes sure that the random number lies in free quadrant
+ * */
+mainUtilities.checkOccupiedQuadrants = function(mainEle, hiddenEles) {
+    var visibleEles = mainEle.neighborhood().difference(hiddenEles).nodes();
+    var occupiedQuadrants = {first:"free", second:"free", third:"free", fourth:"free"};
+
+    visibleEles.forEach(function( ele ){
+        if (ele.data('class') != 'compartment' &&  ele.data('class') != 'complex')
+        {
+            if (ele.position("x") < mainEle.position("x") && ele.position("y") < mainEle.position("y"))
+                occupiedQuadrants.second = "occupied";
+            else if (ele.position("x") > mainEle.position("x") && ele.position("y") < mainEle.position("y"))
+                occupiedQuadrants.first = "occupied";
+            else if (ele.position("x") < mainEle.position("x") && ele.position("y") > mainEle.position("y"))
+                occupiedQuadrants.third = "occupied";
+            else if (ele.position("x") > mainEle.position("x") && ele.position("y") > mainEle.position("y"))
+                occupiedQuadrants.fourth = "occupied";
+        }
+    });
+    return occupiedQuadrants;
 };
 
 // Overrides highlightProcesses from SBGNVIZ - do not highlight any nodes when the map type is AF
