@@ -920,8 +920,6 @@ elementUtilities.addProcessWithConvenientEdges = function(_source, _target, proc
   
   // Create the process with given/calculated variables
   var process = elementUtilities.addNode(x, y, processType, undefined, processParent.id());
-  if (process.data("class") === 'process')
-  {
     var xdiff = source.position('x') - target.position('x');
     var ydiff = source.position('y') - target.position('y')
     if (Math.abs(xdiff) >= Math.abs(ydiff))
@@ -938,7 +936,6 @@ elementUtilities.addProcessWithConvenientEdges = function(_source, _target, proc
         else
             chise.elementUtilities.setPortsOrdering(process, 'B-to-T');
     }
-  }
 
 
   // Create the edges one is between the process and the source node (which should be a consumption), 
