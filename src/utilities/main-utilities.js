@@ -114,12 +114,25 @@ mainUtilities.addProcessWithConvenientEdges = function(_source, _target, process
   }
 };
 
-// update port values of pasted nodes and edges
-clonePorts = function (elesBefore){
+// convert collapsed compound nodes to simple nodes
+// and update port values of pasted nodes and edges
+var cloneCollapsedNodesAndPorts = function (elesBefore){
   cy.elements().unselect();
   var elesAfter = cy.elements();
   var elesDiff = elesAfter.diff(elesBefore).left;
+
+  // shallow copy collapsed nodes - collapsed compounds become simple nodes
+  // data related to collapsed nodes are removed from generated clones
+  // related issue: https://github.com/iVis-at-Bilkent/newt/issues/145
+  var collapsedNodes = elesDiff.filter('node.cy-expand-collapse-collapsed-node');
   
+  collapsedNodes.connectedEdges().remove();
+  collapsedNodes.removeClass('cy-expand-collapse-collapsed-node');
+  collapsedNodes.removeData('collapsedChildren');
+  collapsedNodes.removeData('position-before-collapse size-before-collapse');
+  collapsedNodes.removeData('expandcollapseRenderedCueSize expandcollapseRenderedStartX expandcollapseRenderedStartY');
+
+  // cloning ports
   elesDiff.nodes().forEach(function(_node){
     if(_node.data("ports").length == 2){
         var oldPortName0 = _node.data("ports")[0].id;
@@ -180,7 +193,7 @@ mainUtilities.cloneElements = function (eles) {
   else {
     cb.paste(_id);
   }
-  clonePorts(elesBefore);
+  cloneCollapsedNodesAndPorts(elesBefore);
 };
 
 /*
@@ -202,7 +215,7 @@ mainUtilities.pasteElements = function() {
   else {
     cy.clipboard().paste();
   }
-  clonePorts(elesBefore);
+  cloneCollapsedNodesAndPorts(elesBefore);
 };
 
 /*
