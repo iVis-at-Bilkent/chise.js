@@ -761,25 +761,51 @@ mainUtilities.closeUpElements = function(mainEle, hiddenEles) {
     var verticalMult;
     if (freeQuadrants.length > 0)
     {
+      if (freeQuadrants.length === 3)
+      {
+        if (freeQuadrants.includes('first') && freeQuadrants.includes('second') && freeQuadrants.includes('third'))
+        {
+          horizontalMult = -1;
+          verticalMult = -1;
+        }
+        else if (freeQuadrants.includes('first') && freeQuadrants.includes('second') && freeQuadrants.includes('fourth'))
+        {
+          horizontalMult = 1;
+          verticalMult = -1;
+        }
+        else if (freeQuadrants.includes('first') && freeQuadrants.includes('third') && freeQuadrants.includes('fourth'))
+        {
+          horizontalMult = 1;
+          verticalMult = 1;
+        }
+        else if (freeQuadrants.includes('second') && freeQuadrants.includes('third') && freeQuadrants.includes('fourth'))
+        {
+          horizontalMult = -1;
+          verticalMult = 1;
+        }
+      }
+      else
+      {
         //Randomly picks one quadrant from the free quadrants
         var randomQuadrant = freeQuadrants[Math.floor(Math.random()*freeQuadrants.length)];
 
-        if (randomQuadrant === "first"){
+        if (randomQuadrant === "first") {
             horizontalMult = 1;
             verticalMult = -1;
         }
-        else if (randomQuadrant === "second"){
+        else if (randomQuadrant === "second") {
             horizontalMult = -1;
             verticalMult = -1;
         }
-        else if (randomQuadrant === "third"){
+        else if (randomQuadrant === "third") {
             horizontalMult = -1;
             verticalMult = 1;
         }
-        else if (randomQuadrant === "fourth"){
+        else if (randomQuadrant === "fourth") {
             horizontalMult = 1;
             verticalMult = 1;
         }
+      }
     }
     else
     {
@@ -820,7 +846,12 @@ mainUtilities.generateRandom = function(min, max, mult) {
  * This function makes sure that the random number lies in free quadrant
  * */
 mainUtilities.checkOccupiedQuadrants = function(mainEle, hiddenEles) {
-    var visibleEles = mainEle.neighborhood().difference(hiddenEles).nodes();
+    if (chise.getMapType() == 'PD')
+    {
+      var visibleEles = mainEle.neighborhood().neighborhood().difference(hiddenEles).nodes();
+    }
+    else
+      var visibleEles = mainEle.neighborhood().difference(hiddenEles).nodes();
     var occupiedQuadrants = {first:"free", second:"free", third:"free", fourth:"free"};
 
     visibleEles.forEach(function( ele ){
