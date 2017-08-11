@@ -701,13 +701,14 @@ mainUtilities.showAndPerformLayout = function(mainEle, eles, layoutparam) {
         var ur = cy.undoRedo();
         ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
         ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+        
+        var nodesToThinBorder = eles.neighborhood(":visible").nodes("[thickBorder]");
+        var nodesToThickenBorder = cy.edges(":hidden").difference(eles.edges()).connectedNodes().intersection(eles.nodes());
 
         var actions = [];
-        var nodesWithHiddenNeighbor = hiddenEles.neighborhood(":visible").nodes();
-        actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});
+        actions.push({name: "thinBorder", param: nodesToThinBorder});
         actions.push({name: "showAndPerformLayout", param: param});
-        nodesWithHiddenNeighbor = cy.edges(":hidden").difference(hiddenEles.edges()).connectedNodes().intersection(hiddenEles.nodes());
-        actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor});
+        actions.push({name: "thickenBorder", param: nodesToThickenBorder});
         cy.undoRedo().do("batch", actions);
     }
 };
