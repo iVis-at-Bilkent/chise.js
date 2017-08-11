@@ -718,9 +718,9 @@ mainUtilities.showAndPerformLayout = function(mainEle, eles, layoutparam) {
 * */
 mainUtilities.closeUpElements = function(mainEle, hiddenEles) {
     var leftX = Number.MAX_VALUE;
-    var rightX = 0;
+    var rightX = Number.MIN_VALUE;
     var topY = Number.MAX_VALUE;
-    var bottomY = 0;
+    var bottomY = Number.MIN_VALUE;
     // Check the x and y limits of all hidden elements and store them in the variables above
     hiddenEles.forEach(function( ele ){
         if (ele.data('class') != 'compartment' &&  ele.data('class') != 'complex')
@@ -729,11 +729,11 @@ mainUtilities.closeUpElements = function(mainEle, hiddenEles) {
             var halfHeight = ele.outerHeight()/2;
             if (ele.position("x") - halfWidth < leftX)
                 leftX = ele.position("x") - halfWidth;
-            else if (ele.position("x") + halfWidth > rightX)
+            if (ele.position("x") + halfWidth > rightX)
                 rightX = ele.position("x") + halfWidth;
             if (ele.position("y") - halfHeight < topY)
                 topY = ele.position("y") - halfHeight;
-            else if (ele.position("y") + halfHeight > topY)
+            if (ele.position("y") + halfHeight > topY)
                 bottomY = ele.position("y") + halfHeight;
         }
     });
@@ -849,7 +849,9 @@ mainUtilities.generateRandom = function(min, max, mult) {
 mainUtilities.checkOccupiedQuadrants = function(mainEle, hiddenEles) {
     if (chise.getMapType() == 'PD')
     {
-      var visibleEles = mainEle.neighborhood().neighborhood().difference(hiddenEles).nodes();
+      var visibleNeighborEles = mainEle.neighborhood().difference(hiddenEles).nodes();
+      var visibleNeighborsOfNeighbors = visibleNeighborEles.neighborhood().difference(hiddenEles).difference(mainEle).nodes();
+      var visibleEles = visibleNeighborEles.union(visibleNeighborsOfNeighbors);
     }
     else
       var visibleEles = mainEle.neighborhood().difference(hiddenEles).nodes();
