@@ -7,7 +7,11 @@ ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilk
 
 ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.org/licenses/lgpl.html). 
 
-**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here](https://github.com/iVis-at-Bilkent/chise.js-sample-app)
+**A sample application using ChiSE** can be found [here](http://cs.bilkent.edu.tr/~ivis/ChiSE_sample_app/). The sample application source codes are available [here](https://github.com/iVis-at-Bilkent/chise.js-sample-app).
+
+Please cite the following when you use ChiSE.js:
+
+M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[SBGNViz: a tool for visualization and complexity management of SBGN process description maps](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0128985)", PLoS ONE, 10(6), e0128985, 2015.
 
 ## Default Options
 ```javascript
@@ -28,8 +32,8 @@ ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.or
           return 10;
         },
         // Whether to adjust node label font size automatically.
-        // If this option return false do not adjust label sizes according to node height uses node.data('labelsize')
-        // instead of doing it.
+        // If this option returns false, do not adjust label sizes according to node heights; use node.data('font-size')
+        // instead.
         adjustNodeLabelFontSizeAutomatically: function() {
           return true;
         },
@@ -37,113 +41,61 @@ ChiSE is distributed under [GNU Lesser General Public License](http://www.gnu.or
         networkContainerSelector: '#sbgn-network-container',
         // Whether the actions are undoable, requires cytoscape-undo-redo extension
         undoable: true,
-        // Whether to have undoable drag feature in undo/redo extension. This options will be passed to undo/redo extension
+        // Whether to have undoable drag feature in undo/redo extension. This option will be passed to undo/redo extension.
         undoableDrag: true
       };
 ```
 
+## ChiSE Specific Data
+```javascript
+// Nodes specific data.
+node.data('id'); // Id of a node. (Specific to cytoscape.js)
+node.data('label'); // Label of a node. 'content' of elements are controlled by this data.
+node.data('parent'); // Parent id of a node. (Specific to cytoscape.js)
+node.data('class'); // SBGN specific class of a node. If it ends with 'multimer' it means that this node is a multimer.
+node.data('clonemarker'); // Whether the node is cloned.
+node.data('bbox'); // Bounding box of a node includes bbox.x, bbox.y, bbox.w, bbox.h. 'width' and 'height' style of elements are mapped by bbox.w and bbox.h
+node.data('ports'); // Ports list of a node. A node port includes port.id, port.x, port.y where port.x and port.y are percentages relative to node position and size.
+node.data('statesandinfos'); // Includes state and information boxes list of a node.
+node.data('font-size'); // If the font sizes of the nodes are not automatically adjusted (controlled by adjustNodeLabelFontSizeAutomatically option) their 'font-size' style is adjusted by this data.
+node.data('font-family');// 'font-family' style of nodes are controlled by this data.
+node.data('font-style');// 'font-style' style of nodes are controlled by this data.
+node.data('font-weight');// 'font-weight' style of nodes are controlled by this data.
+node.data('background-color');// 'background-color' style of nodes are controlled by this data.
+node.data('background-opacity');// 'background-opacity' style of nodes are controlled by this data.
+node.data('border-color');// 'border-color' style of nodes are controlled by this data.
+node.data('border-width');// 'border-width' style of nodes are controlled by this data.
+// A stateorinfobox includes the followings.
+var stateorinfobox = node.data('statesandinfos')[i];
+stateorinfobox.id; // Id of that box.
+stateorinfobox.clazz; // See whether that box is related to a 'unit of information' or a 'state variable'.
+stateorinfobox.bbox; // Bbox of that box. Includes bbox.x, bbox.y, bbox.w, bbox.h where bbox.x and bbox.y are percentages relative to node position and size.
+stateorinfobox.state; // Just included in state variables. Includes state.value and state.variable.
+stateorinfobox.label; // Just included in units of information includes label.text.
+// Edges specific data.
+edge.data('id'); // Id of an edge. (Specific to cytoscape.js)
+edge.data('source'); // Id of source node. (Specific to cytoscape.js)
+edge.data('target'); // Id of target node. (Specific to cytoscape.js)
+edge.data('class'); // SBGN specific class of an edge.
+edge.data('cardinality'); // SBGN cardinality of an edge.
+edge.data('portsource'); // This is set if the edge is connected to its source node by a specific port of that node.
+edge.data('porttarget'); // This is set if the edge is connected to its target node by a specific port of that node.
+edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeBendEditing extension.
+edge.data('width');// 'width' style of edges are controlled by this data.
+edge.data('line-color');// 'line-color' style of edges are controlled by this data.
+```
+
 ## API
-`chise.expandNodes(nodes)`
-Expand given nodes. Requires expandCollapse extension and considers undoable option.
+ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js as well ([SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api)). Other ChiSE.js API is presented below.
 
-`chise.collapseNodes(nodes)`
-Collapse given nodes. Requires expandCollapse extension and considers undoable option.
+`chise.addNode(x, y , nodeclass, id, parent, visibility)`
+Adds a new node with the given class and at the given coordinates. Optionally you can set the id, parent and visibility of the node. Considers undoable option.
 
-`chise.expandComplexes()`
-Expands the complex nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
+`chise.addEdge(source, target , edgeclass, id, visibility)`
+Adds a new edge with the given class and having the given source and target ids. Optionally you can set the id and visibility of the node. Considers undoable option.
 
-`chise.collapseComplexes()`
-Collapses the complex nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.collapseAll()`
-Collapses all nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.expandAll()`
-Expands all nodes in the graph recursively. Requires expandCollapse extension and considers undoable option.
-
-`chise.hideNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact and hides the resulting list. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.showNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact. Then unhides the resulting list and hides others. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.showAll()`
-Unhides all elements. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.deleteElesSimple(eles)`
-Removes the given elements in a simple way. Considers 'undoable' option.
-
-`chise.deleteNodesSmart(nodes)`
-Extends the given nodes list in a smart way to leave the map intact and removes the resulting list. Considers 'undoable' option.
-
-`chise.highlightNeighbours(nodes)`
-Highlights neighbours of the given nodes. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.highlightProcesses(nodes)`
-Highlights processes of the given nodes. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.searchByLabel(label)`
-Finds the elements whose label includes the given label and highlights processes of those elements.
-Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.removeHighlights()`
-Unhighlights any highlighted element. Requires viewUtilities extension and considers 'undoable' option.
-
-`chise.performLayout(layoutOptions, notUndoable)`
-Performs layout by given layoutOptions. Considers 'undoable' option. However, by setting notUndoable parameter
-to a truthy value you can force an undable layout operation independant of 'undoable' option.
-
-`chise.createSbgnml()`
-Creates an sbgnml file content from the exising graph and returns it.
-
-`chise.convertSbgnmlToJson(data)`
-Converts given sbgnml data to a json object in a special format (http://js.cytoscape.org/#notation/elements-json) and returns it.
-
-`chise.getQtipContent(node)`
-Create the qtip contents of the given node and returns it.
-
-`chise.updateGraph(cyGraph)`
-Update the graph by given cyGraph parameter which is a json object including data of cytoscape elements 
-in a special format (http://js.cytoscape.org/#notation/elements-json).
-
-`chise.calculatePaddings(paddingPercent)`
-Calculates the paddings for compounds based on dimensions of simple nodes and a specific percentadge.
-As this percentadge takes the given paddingPercent or compoundPadding option.
-
-`chise.refreshPaddings(recalculatePaddings, nodes)`
-If nodes parameter is set refreshes the paddings of given nodes, else refreshes the paddings of whole graph.
-If recalculatePaddings parameter is set to a truthy value recalculates the paddings before refreshing, else uses
-the last calculated value for the paddings. 
-
-`chise.saveAsPng(filename)`
-Exports the current graph to a png file. The name of the file is determined by the filename parameter which is 
-'network.png' by default.
-
-`chise.saveAsJpg(filename)`
-Exports the current graph to a jpg file. The name of the file is determined by the filename parameter which is 
-'network.jpg' by default.
-
-`chise.loadSample(filename, folderpath)`
-Loads a sample file whose name and path of containing folder is given.
-
-`chise.loadSBGNMLFile(file)`
-Loads the given sbgnml file.
-
-`chise.saveAsSbgnml(filename)`
-Exports the current graph to an sbgnml file with the given filename.
-
-`chise.startSpinner(classname)`
-Starts a spinner at the middle of network container element. You can specify a css class that the 
-spinner will have. The default classname is 'default-class'. Requires 'fontawesome.css'.
-
-`chise.endSpinner(classname)`
-Ends any spinner having a css class with the given name. Requires 'fontawesome.css'.
-
-`chise.addNode(x, y , nodeclass)`
-Adds a new node with the given class and at the given coordinates. Considers undoable option.
-
-`chise.addEdge(source, target , edgeclass)`
-Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
+`chise.addProcessWithConvenientEdges(source, target , processType)`
+Adds a process with convenient edges. For more information please see 'https://github.com/iVis-at-Bilkent/newt/issues/9'. Considers undoable option.
 
 `chise.cloneElements(eles)`
 Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
@@ -152,11 +104,11 @@ Clone given elements. Considers undoable option. Requires cytoscape-clipboard ex
 Copy given elements to clipboard. Requires cytoscape-clipboard extension.
 
 `chise.pasteElements(eles)`
-Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
+Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
 
 `chise.align(nodes, horizontal, vertical, alignTo)`
-Aligns given nodes in given horizontal and vertical order. Horizontal and vertical parameters may be 'none' or undefined. 
-alignTo parameter indicates the leading node. Requrires cytoscape-grid-guide extension and considers undoable option.
+Aligns given nodes in given horizontal and vertical order. Horizontal and vertical parameters may be 'none' or undefined.<br>
+`alignTo`: indicates the leading node. Requires cytoscape-grid-guide extension and considers undoable option.
 
 `chise.createCompoundForGivenNodes(nodes, compoundType)`
 Create compound for given nodes. compoundType may be 'complex' or 'compartment'. This method considers undoable option.
@@ -166,76 +118,73 @@ Move the nodes to a new parent and change their position if possDiff params are 
 
 `chise.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
 Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included in the complex.
-Considers undoable option. Parameters are explained below.
-templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
-macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
-complexName: The name of the complex in the reaction.
-processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
-tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
-tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
-edgeLength: The distance between the process and the macromolecules at the both sides.
+Considers undoable option. Parameters are explained below.<br>
+`templateType`: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
+`macromoleculeList`: The list of the names of macromolecules which will involve in the reaction.<br>
+`complexName`: The name of the complex in the reaction.<br>
+`processPosition`: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
+`tilingPaddingVertical`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`tilingPaddingHorizontal`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
 
 `chise.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
-Resize given nodes if useAspectRatio is truthy one of width or height should not be set. Considers undoable option.
+Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
 
 `chise.changeNodeLabel(nodes, label)`
 Changes the label of the given nodes to the given label. Considers undoable option.
 
 `chise.changeFontProperties(nodes, data)`
 Change font properties for given nodes use the given font data. Considers undoable option.
-Note that if data.labelsize is set it is associated with data field of nodes and all the other properties inside data parameter 
-are associated with css field of nodes. If 'options.adjustNodeLabelFontSizeAutomatically' is false or returns false the font-size of 
-nodes are set by data.labelsize.
 
 `chise.changeStateOrInfoBox(nodes, index, value, type)`
-Change state value or unit of information box of given nodes with given index. Considers undoable option.
-Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
-Value parameter is the new value to set.
-This method returns the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+Change state value or unit of information box of given nodes with given index. Considers undoable option.<br>
+`type` indicates whether to change value or variable, it is valid if the box at the given index is a state variable.<br>
+`value` parameter is the new value to set.<br>
+It returns the old value of the changed data (we assume that the old value of the changed data was the same for all nodes).
 
 `chise.addStateOrInfoBox(nodes, obj)`
-Add a new state or info box to given nodes. The box is represented by the parameter obj. Considers undoable option.
+Add a new state or info box to given `nodes`. The box is represented by the parameter `obj`. Considers undoable option.
 
 `chise.removeStateOrInfoBox(nodes, index)`
-Remove the state or info boxes of the given nodes at given index. Considers undoable option.
+Remove the state or info boxes of the given `nodes` at given `index`. Considers undoable option.
 
 `chise.setMultimerStatus(nodes, status)`
-Set multimer status of the given nodes to the given status. Considers undoable option.
+Set multimer status of the given `nodes` to the given `status`. Considers undoable option.
 
 `chise.setCloneMarkerStatus(nodes, status)`
-Set clone marker status of given nodes to the given status. Considers undoable option.
+Set clone marker status of given `nodes` to the given `status`. Considers undoable option.
 
 `chise.changeCss(eles, name, value)`
-Change style/css of given eles by setting getting property name to the given value. Considers undoable option.
+Change style/css of given `eles` by setting given property `name` to the given `value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option. (From cytoscape.js documentation: 'You should use this function very sparingly, because it overrides the style of an element, despite the state and classes that it has.')
 
 `chise.changeData(eles, name, value)`
-Change data of given eles by setting getting property name to the given value. Considers undoable option.
+Change data of given `eles` by setting given property `name` to the given value/values (Note that `value` parameter may be a single string or an id to value map). Considers undoable option.
 
 `chise.showAndPerformLayout(eles, layoutparam)`
-Unhide given eles and perform given layout afterward. Layout parameter may be layout options or a function to call. 
-Requires viewUtilities extension and considers undoable option.
+Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call. 
+Requires `viewUtilities` extension and considers undoable option.
 
 `chise.elementUtilities`
-General and sbgn specific utilities for cytoscape elements.
+General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
- * `getTopMostNodes(nodes)` This method returns the nodes non of whose ancestors is not in given nodes.
- * `allHaveTheSameParent(nodes)` This method checks if all of the given nodes have the same parent assuming that the size of  nodes is not 0.
- * `moveNodes(positionDiff, nodes)` This method moves given nodes by the given position difference.
- * `convertToModelPosition(renderedPosition)` This method calculates the modal position of the given rendered position by considering current the pan and zoom level of the graph.
- * `getProcessesOfSelected()` Returns the processes of the selected nodes.
- * `getNeighboursOfSelected()` Returns the neighbours of the selected nodes.
- * `getNeighboursOfNodes(nodes)` Returns the neighbours of the given nodes.
- * `getProcessesOfNodes(nodes)` Extends the given nodes list in a smart way to leave the map intact and returns the resulting list. Aliases `extendNodeList`.
- * `noneIsNotHighlighted()` Returns true if there is no element having 'unhighlighted' class.
- * `deleteNodesSmart(nodes)` Similar to `chise.deleteNodesSmart()` but do not considers undoable option.
- * `deleteElesSimple(eles)` Similar to `chise.deleteElesSimple()` but do not considers undoable option.
- * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered in addNode() and addEdge().
- * `addNode(x, y, sbgnclass, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
- * `addEdge(source, target, sbgnclass, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
+ * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered upon new element creation. The speciel fields are the followings.<br>
+    'width': The default width<br>
+    'height': The default height<br>
+    'font-size': The default font size<br>
+    'font-family': The default font family<br>
+    'font-style': The default font style<br>
+    'font-weight': The default font weight<br>
+    'background-color': The default background color<br>
+    'background-opacity': The default background opacity<br>
+    'border-width': The default border width<br>
+    'border-color': The default border color
+ * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `chise.addNode()` but do not considers undoable option.
+ * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `chise.addEdge()` but do not considers undoable option.
+ * `addProcessWithConvenientEdges(source, target, processType)` Similar to `chise.addProcessWithConvenientEdges()` but do not considers undoable option.
  * `createCompoundForGivenNodes(nodesToMakeCompound, compoundType)` Similar to `chise.createCompoundForGivenNodes()` but do not considers undoable option.
- * `removeCompound(compoundToRemove)` Similar to `chise.removeCompound()` but do not considers undoable option.
  * `changeParent(nodes, newParent, posDiffX, posDiffY)` Similar to `chise.changeParent()` but do not considers undoable option.
  * `resizeNodes(nodes, width, height, useAspectRatio)` Similar to `chise.resizeNodes()` but do not considers undoable option.
+ * `isValidParent(nodeClass, parentClass)` Returns if the elements with the given parent class can be parent of the elements with the given node class.
  * `getCommonProperty(nodes, width, height, useAspectRatio)` Get common properties of given elements. Returns null if the given element list is empty or the property is not common for all elements. 
     dataOrCss parameter specify whether to check the property on data or css. The default value for it is data. If propertyName parameter is given as a function instead of a string representing the 
     property name then use what that function returns.
@@ -259,22 +208,18 @@ General and sbgn specific utilities for cytoscape elements.
  * `setMultimerStatus(nodes, status)` Similar to `chise.setMultimerStatus()` but do not considers undoable option.
  * `setCloneMarkerStatus(nodes, status)` Similar to `chise.setCloneMarkerStatus()` but do not considers undoable option.
  * `changeFontProperties(nodes, data)` Similar to `chise.changeFontProperties()` but do not considers undoable option.
- * `validateArrowEnds(nodes, data)`  This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
+ * `validateArrowEnds(edge, source, target)`  This function gets an edge, and ends of that edge (Optionally it may take just the classes of these elements as well) as parameters.
     It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
     if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
  * `showAndPerformLayout(eles, layoutparam)` Similar to `chise.showAndPerformLayout()` but do not considers undoable option.
 
 `chise.undoRedoActionFunctions`
-Functions to be utilized in defining new actions for cytoscape.js-undo-redo extension. These are exposed for the users who builds
-an extension library of chise.
+Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` extension. These are exposed for the users who builds
+an extension library of chise. Extends `sbgnviz.undoRedoActionFunctions`, you can find the ChiSE extensions for `sbgnviz.undoRedoActionFunctions` below.
 
- * `deleteElesSimple(param)` Do/Redo function for 'deleteElesSimple' undo redo command also undo function for commands which simply adds new elements to the graph (e.g. 'createTemplateReaction', 'addNode', 'addEdge').
- * `deleteNodesSmart(param)` Do/Redo function for 'deleteNodesSmart' undo redo command.
- * `restoreEles(eles)` Undo function for 'deleteElesSimple' and 'deleteNodesSmart' undo redo commands.
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
- * `addEdge(param)` Do/Redo function for 'addEdge' undo redo command.
- * `createCompoundForGivenNodes(param)` Do/Redo function for 'createCompoundForGivenNodes' undo redo command.
- * `removeCompound(param)` Undo function for 'createCompoundForGivenNodes' undo redo command.
+ * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
+ * `createCompoundForGivenNodes(param)` Do/Undo/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.
  * `resizeNodes(param)` Do/Undo/Redo function for 'resizeNodes' undo redo command.
  * `changeNodeLabel(param)` Do/Undo/Redo function for 'changeNodeLabel' undo redo command.

@@ -11,7 +11,7 @@ undoRedoActionFunctions.addNode = function (param) {
   var result;
   if (param.firstTime) {
     var newNode = param.newNode;
-    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.class);
+    result = elementUtilities.addNode(newNode.x, newNode.y, newNode.class, newNode.id, newNode.parent, newNode.visibility);
   }
   else {
     result = elementUtilities.restoreEles(param);
@@ -26,7 +26,21 @@ undoRedoActionFunctions.addEdge = function (param) {
   var result;
   if (param.firstTime) {
     var newEdge = param.newEdge;
-    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.class);
+    result = elementUtilities.addEdge(newEdge.source, newEdge.target, newEdge.class, newEdge.id, newEdge.visibility);
+  }
+  else {
+    result = elementUtilities.restoreEles(param);
+  }
+
+  return {
+    eles: result
+  };
+};
+
+undoRedoActionFunctions.addProcessWithConvenientEdges = function(param) {
+  var result;
+  if (param.firstTime) {
+    result = elementUtilities.addProcessWithConvenientEdges(param.source, param.target, param.processType);
   }
   else {
     result = elementUtilities.restoreEles(param);
@@ -38,50 +52,28 @@ undoRedoActionFunctions.addEdge = function (param) {
 };
 
 undoRedoActionFunctions.createCompoundForGivenNodes = function (param) {
-  var nodesToMakeCompound = param.nodesToMakeCompound;
-  var newCompound;
-
-  // If this is a redo action refresh the nodes to make compound (We need this because after ele.move() references to eles changes)
-  if (!param.firstTime) {
-    var nodesToMakeCompoundIds = {};
-
-    nodesToMakeCompound.each(function (i, ele) {
-      nodesToMakeCompoundIds[ele.id()] = true;
-    });
-
-    var allNodes = cy.nodes();
-
-    nodesToMakeCompound = allNodes.filter(function (i, ele) {
-      return nodesToMakeCompoundIds[ele.id()];
-    });
-  }
+  var result = {};
 
   if (param.firstTime) {
+    // Nodes to make compound, their descendants and edges connected to them will be removed during createCompoundForGivenNodes operation
+    // (internally by eles.move() operation), so mark them as removed eles for undo operation.
+    var nodesToMakeCompound = param.nodesToMakeCompound;
+    var removedEles = nodesToMakeCompound.union(nodesToMakeCompound.descendants());
+    removedEles = removedEles.union(removedEles.connectedEdges());
+    result.removedEles = removedEles;
+    // Assume that all nodes to make compound have the same parent
     var oldParentId = nodesToMakeCompound[0].data("parent");
     // The parent of new compound will be the old parent of the nodes to make compound
-    newCompound = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compoundType);
+    // New eles includes new compound and the moved eles and will be used in undo operation.
+    result.newEles = elementUtilities.createCompoundForGivenNodes(nodesToMakeCompound, param.compoundType);
   }
   else {
-    newCompound = param.removedCompound.restore();
-    var newCompoundId = newCompound.id();
-
-    nodesToMakeCompound.move({parent: newCompoundId});
-
-    sbgnviz.refreshPaddings();
+    result.removedEles = param.newEles.remove();
+    result.newEles = param.removedEles.restore();
+    elementUtilities.maintainPointer(result.newEles);
   }
 
-  return newCompound;
-};
-
-undoRedoActionFunctions.removeCompound = function (compoundToRemove) {
-  var result = elementUtilities.removeCompound(compoundToRemove);
-
-  var param = {
-    nodesToMakeCompound: result.childrenOfCompound,
-    removedCompound: result.removedCompound
-  };
-
-  return param;
+  return result;
 };
 
 // Section End
@@ -101,7 +93,6 @@ undoRedoActionFunctions.createTemplateReaction = function (param) {
     eles = param;
     cy.add(eles);
     
-    sbgnviz.refreshPaddings();
     cy.elements().unselect();
     eles.select();
   }
@@ -121,7 +112,11 @@ undoRedoActionFunctions.getNodePositions = function () {
   var positions = {};
   var nodes = cy.nodes();
   
-  nodes.each(function(i, ele) {
+  nodes.each(function(ele, i) {
+    if(typeof ele === "number") {
+      ele = i;
+    }
+    
     positions[ele.id()] = {
       x: ele.position("x"),
       y: ele.position("y")
@@ -133,7 +128,11 @@ undoRedoActionFunctions.getNodePositions = function () {
 
 undoRedoActionFunctions.returnToPositions = function (positions) {
   var currentPositions = {};
-  cy.nodes().positions(function (i, ele) {
+  cy.nodes().positions(function (ele, i) {
+    if(typeof ele === "number") {
+      ele = i;
+    }
+    
     currentPositions[ele.id()] = {
       x: ele.position("x"),
       y: ele.position("y")
@@ -215,7 +214,6 @@ undoRedoActionFunctions.changeData = function (param) {
   var result = {
   };
   var eles = param.eles;
-
   result.name = param.name;
   result.valueMap = {};
   result.eles = eles;
@@ -225,17 +223,7 @@ undoRedoActionFunctions.changeData = function (param) {
     result.valueMap[ele.id()] = ele.data(param.name);
   }
 
-  if (param.firstTime) {
-    eles.data(param.name, param.value);
-  }
-  else {
-    cy.startBatch();
-    for (var i = 0; i < eles.length; i++) {
-      var ele = eles[i];
-      ele.data(param.name, param.valueMap[ele.id()]);
-    }
-    cy.endBatch();
-  }
+  elementUtilities.changeData(param.eles, param.name, param.valueMap);
 
   return result;
 };
@@ -253,17 +241,7 @@ undoRedoActionFunctions.changeCss = function (param) {
     result.valueMap[ele.id()] = ele.css(param.name);
   }
 
-  if (param.firstTime) {
-    eles.css(param.name, param.value);
-  }
-  else {
-    cy.startBatch();
-    for (var i = 0; i < eles.length; i++) {
-      var ele = eles[i];
-      ele.css(param.name, param.valueMap[ele.id()]);
-    }
-    cy.endBatch();
-  }
+  elementUtilities.changeCss(param.eles, param.name, param.valueMap);
 
   return result;
 };
@@ -284,13 +262,7 @@ undoRedoActionFunctions.changeFontProperties = function (param) {
     var data = param.firstTime ? param.data : param.data[ele.id()];
 
     for (var prop in data) {
-      // If prop is labelsize it is part of element data else it is part of element css
-      if (prop === 'labelsize') {
-        result.data[ele.id()][prop] = ele.data(prop);
-      }
-      else {
-        result.data[ele.id()][prop] = ele.css(prop);
-      }
+      result.data[ele.id()][prop] = ele.data(prop);
     }
   }
 
@@ -340,6 +312,38 @@ undoRedoActionFunctions.undoShowAndPerformLayout = function (param) {
   return result;
 };
 
+/*
+ * Hide eles and perform layout.
+ */
+undoRedoActionFunctions.hideAndPerformLayout = function (param) {
+    var eles = param.eles;
+
+    var result = {};
+    result.positions = undoRedoActionFunctions.getNodePositions();
+
+    if (param.firstTime) {
+        result.eles = elementUtilities.hideAndPerformLayout(param.eles, param.layoutparam);
+    }
+    else {
+        result.eles = cy.viewUtilities().hide(eles); // Hide given eles
+        undoRedoActionFunctions.returnToPositions(param.positions);
+    }
+
+    return result;
+};
+
+undoRedoActionFunctions.undoHideAndPerformLayout = function (param) {
+    var eles = param.eles;
+
+    var result = {};
+    result.positions = undoRedoActionFunctions.getNodePositions();
+    result.eles = cy.viewUtilities().show(eles); // Show previously hidden eles
+
+    undoRedoActionFunctions.returnToPositions(param.positions);
+
+    return result;
+};
+
 // Section End
 // general action functions
 
@@ -364,23 +368,23 @@ undoRedoActionFunctions.addStateOrInfoBox = function (param) {
   var obj = param.obj;
   var nodes = param.nodes;
 
-  var index = elementUtilities.addStateOrInfoBox(nodes, obj);
+  var locationObj = elementUtilities.addStateOrInfoBox(nodes, obj);
 
   cy.forceRender();
 
   var result = {
     nodes: nodes,
-    index: index,
+    locationObj: locationObj,
     obj: obj
   };
   return result;
 };
 
 undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
-  var index = param.index;
+  var locationObj = param.locationObj;
   var nodes = param.nodes;
 
-  var obj = elementUtilities.removeStateOrInfoBox(nodes, index);
+  var obj = elementUtilities.removeStateOrInfoBox(nodes, locationObj);
 
   cy.forceRender();
 
@@ -449,6 +453,23 @@ undoRedoActionFunctions.setCloneMarkerStatus = function (param) {
     status: resultStatus,
     nodes: nodes
   };
+
+  return result;
+};
+
+// param: {class: sbgnclass, name: propertyName, value: value}
+undoRedoActionFunctions.setDefaultProperty = function (param) {
+  var sbgnclass = param.class;
+  var name = param.name;
+  var value = param.value;
+  var classDefaults = elementUtilities.defaultProperties[sbgnclass];
+  var result = {
+    class: sbgnclass,
+    name: name,
+    value: classDefaults.hasOwnProperty(name) ? classDefaults[name] : undefined
+  };
+
+  classDefaults[name] = value;
 
   return result;
 };

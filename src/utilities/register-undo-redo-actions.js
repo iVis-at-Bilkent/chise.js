@@ -1,8 +1,12 @@
 var undoRedoActionFunctions = require('./undo-redo-action-functions');
 var libs = require('./lib-utilities').getLibs();
+var options = require('./option-utilities').getOptions();
 var $ = libs.jQuery;
 
 var registerUndoRedoActions = function (undoableDrag) {
+  if (!options.undoable) {
+    return;
+  }
   // create undo-redo instance
   var ur = cy.undoRedo({
     undoableDrag: undoableDrag
@@ -12,8 +16,9 @@ var registerUndoRedoActions = function (undoableDrag) {
   ur.action("addNode", undoRedoActionFunctions.addNode, undoRedoActionFunctions.deleteElesSimple);
   ur.action("deleteElesSimple", undoRedoActionFunctions.deleteElesSimple, undoRedoActionFunctions.restoreEles);
   ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.deleteElesSimple);
+  ur.action("addProcessWithConvenientEdges", undoRedoActionFunctions.addProcessWithConvenientEdges, undoRedoActionFunctions.deleteElesSimple);
   ur.action("deleteElesSmart", undoRedoActionFunctions.deleteElesSmart, undoRedoActionFunctions.restoreEles);
-  ur.action("createCompoundForGivenNodes", undoRedoActionFunctions.createCompoundForGivenNodes, undoRedoActionFunctions.removeCompound);
+  ur.action("createCompoundForGivenNodes", undoRedoActionFunctions.createCompoundForGivenNodes, undoRedoActionFunctions.createCompoundForGivenNodes);
 
   // register general actions
   ur.action("resizeNodes", undoRedoActionFunctions.resizeNodes, undoRedoActionFunctions.resizeNodes);
@@ -23,6 +28,7 @@ var registerUndoRedoActions = function (undoableDrag) {
   ur.action("changeBendPoints", undoRedoActionFunctions.changeBendPoints, undoRedoActionFunctions.changeBendPoints);
   ur.action("changeFontProperties", undoRedoActionFunctions.changeFontProperties, undoRedoActionFunctions.changeFontProperties);
   ur.action("showAndPerformLayout", undoRedoActionFunctions.showAndPerformLayout, undoRedoActionFunctions.undoShowAndPerformLayout);
+  ur.action("hideAndPerformLayout", undoRedoActionFunctions.hideAndPerformLayout, undoRedoActionFunctions.undoHideAndPerformLayout);
 
   // register SBGN actions
   ur.action("addStateOrInfoBox", undoRedoActionFunctions.addStateOrInfoBox, undoRedoActionFunctions.removeStateOrInfoBox);
@@ -33,6 +39,8 @@ var registerUndoRedoActions = function (undoableDrag) {
   
   // register easy creation actions
   ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.deleteElesSimple);
+
+  ur.action("setDefaultProperty", undoRedoActionFunctions.setDefaultProperty, undoRedoActionFunctions.setDefaultProperty);
 };
 
 module.exports = function(undoableDrag) {
