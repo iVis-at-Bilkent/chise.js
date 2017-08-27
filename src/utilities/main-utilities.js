@@ -675,6 +675,39 @@ mainUtilities.hideAndPerformLayout = function(eles, layoutparam) {
 };
 
 /*
+ * Shows all elements (the ones which are hidden if any) and perform given layout afterward. Layout parameter may be layout options
+ * or a function to call. Requires viewUtilities extension and considers undoable option.
+ */
+mainUtilities.showAllAndPerformLayout = function(layoutparam) {
+  var hiddenEles = cy.elements(':hidden');
+  if (hiddenEles.length === 0) {
+    return;
+  }
+  if (!options.undoable) {
+    var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
+    chise.thinBorder(nodesWithHiddenNeighbor);
+    elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
+  }
+  else {
+    var param = {
+      eles: hiddenEles,
+      layoutparam: layoutparam,
+      firstTime: true
+    };
+
+    var ur = cy.undoRedo();
+    ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
+    ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+
+    var actions = [];
+    var nodesWithHiddenNeighbor = cy.nodes("[thickBorder]");
+    actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});
+    actions.push({name: "showAndPerformLayout", param: param});
+    cy.undoRedo().do("batch", actions);
+  }
+};
+
+/*
  * Unhide given eles (the ones which are hidden if any) and perform given layout afterward. Layout parameter may be layout options
  * or a function to call. Requires viewUtilities extension and considers undoable option.
  */
