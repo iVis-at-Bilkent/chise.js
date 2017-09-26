@@ -961,7 +961,8 @@ elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
           || parentClass === 'submap') { // Compartments, submaps and the root can include any type of nodes
     return true;
   }
-  else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0)) { // Complexes can only include EPNs which do not have edges
+  else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0  // Complexes can only include EPNs which do not have edges
+          || elementUtilities.mapType == "Unknown")) { // When map type is unknown, allow complexes to include EPNs with edges
     return elementUtilities.isEPNClass(nodeClass);
   }
   
