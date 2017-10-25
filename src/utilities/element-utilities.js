@@ -1470,7 +1470,9 @@ elementUtilities.removeStateOrInfoBox = function (nodes, locationObj) {
     var stateAndInfos = node.data('statesandinfos');
     var unit = stateAndInfos[locationObj.index];
 
-    obj = unit.remove();
+    var unitClass = sbgnviz.classes.getAuxUnitClass(unit);
+
+    obj = unitClass.remove(unit);
   }
 
   return obj;
@@ -1751,10 +1753,10 @@ elementUtilities.maintainPointer = function (eles) {
       return;
     }
     for(var side in ele.data('auxunitlayouts')) {
-      ele.data('auxunitlayouts')[side].parentNode = ele;
+      ele.data('auxunitlayouts')[side].parentNode = ele.id();
     }
     for(var i=0; i < ele.data('statesandinfos').length; i++) {
-      ele.data('statesandinfos')[i].parent = ele;
+      ele.data('statesandinfos')[i].parent = ele.id();
     }
   });
 }
