@@ -5,12 +5,13 @@ var libs = require('./lib-utilities').getLibs();
  */
 module.exports = function () {
 
-  var elementUtilities, options, cy;
+  var elementUtilities, options, cy, sbgnvizInstance;
 
   function mainUtilities (param) {
     elementUtilities = param.elementUtilities;
     options = param.optionUtilities.getOptions();
     cy = param.sbgnvizInstanceUtilities.getCy();
+    sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
   };
 
   /*
@@ -643,7 +644,7 @@ module.exports = function () {
       var nodes = eles.nodes(); // Ensure that nodes list just include nodes
 
       var allNodes = cy.nodes(":visible");
-      var nodesToShow = chise.elementUtilities.extendRemainingNodes(nodes, allNodes);
+      var nodesToShow = elementUtilities.extendRemainingNodes(nodes, allNodes);
       var nodesToHide = allNodes.not(nodesToShow);
 
       if (nodesToHide.length === 0) {
@@ -653,10 +654,10 @@ module.exports = function () {
       if (!options.undoable) {
 
           var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-          chise.thinBorder(nodesWithHiddenNeighbor);
+          sbgnvizInstance.thinBorder(nodesWithHiddenNeighbor);
           elementUtilities.hideAndPerformLayout(nodesToHide, layoutparam);
           var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-          chise.thickenBorder(nodesWithHiddenNeighbor);
+          sbgnvizInstance.thickenBorder(nodesWithHiddenNeighbor);
       }
       else {
           var param = {
@@ -666,8 +667,8 @@ module.exports = function () {
           };
 
           var ur = cy.undoRedo();
-          ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
-          ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+          ur.action("thickenBorder", sbgnvizInstance.thickenBorder, sbgnvizInstance.thinBorder);
+          ur.action("thinBorder", sbgnvizInstance.thinBorder, sbgnvizInstance.thickenBorder);
 
           var actions = [];
           var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes().intersection(nodesToHide);
@@ -690,7 +691,7 @@ module.exports = function () {
     }
     if (!options.undoable) {
       var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-      chise.thinBorder(nodesWithHiddenNeighbor);
+      sbgnvizInstance.thinBorder(nodesWithHiddenNeighbor);
       elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
     }
     else {
@@ -701,8 +702,8 @@ module.exports = function () {
       };
 
       var ur = cy.undoRedo();
-      ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
-      ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+      ur.action("thickenBorder", sbgnvizInstance.thickenBorder, sbgnvizInstance.thinBorder);
+      ur.action("thinBorder", sbgnvizInstance.thinBorder, sbgnvizInstance.thickenBorder);
 
       var actions = [];
       var nodesWithHiddenNeighbor = cy.nodes("[thickBorder]");
@@ -724,10 +725,10 @@ module.exports = function () {
       mainUtilities.closeUpElements(mainEle, hiddenEles.nodes());
       if (!options.undoable) {
           var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-          chise.thinBorder(nodesWithHiddenNeighbor);
+          sbgnvizInstance.thinBorder(nodesWithHiddenNeighbor);
           elementUtilities.showAndPerformLayout(hiddenEles, layoutparam);
           var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-          chise.thickenBorder(nodesWithHiddenNeighbor);
+          sbgnvizInstance.thickenBorder(nodesWithHiddenNeighbor);
       }
       else {
           var param = {
@@ -737,8 +738,8 @@ module.exports = function () {
           };
 
           var ur = cy.undoRedo();
-          ur.action("thickenBorder", chise.thickenBorder, chise.thinBorder);
-          ur.action("thinBorder", chise.thinBorder, chise.thickenBorder);
+          ur.action("thickenBorder", sbgnvizInstance.thickenBorder, sbgnvizInstance.thinBorder);
+          ur.action("thinBorder", sbgnvizInstance.thinBorder, sbgnvizInstance.thickenBorder);
 
           var actions = [];
           var nodesToThinBorder = (hiddenEles.neighborhood(":visible").nodes("[thickBorder]"))
@@ -886,7 +887,7 @@ module.exports = function () {
    * This function makes sure that the random number lies in free quadrant
    * */
   mainUtilities.checkOccupiedQuadrants = function(mainEle, hiddenEles) {
-      if (chise.getMapType() == 'PD')
+      if (elementUtilities.getMapType() == 'PD')
       {
         var visibleNeighborEles = mainEle.neighborhood().difference(hiddenEles).nodes();
         var visibleNeighborsOfNeighbors = visibleNeighborEles.neighborhood().difference(hiddenEles).difference(mainEle).nodes();

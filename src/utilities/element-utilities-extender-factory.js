@@ -939,16 +939,16 @@ module.exports = function () {
         if (Math.abs(xdiff) >= Math.abs(ydiff))
         {
             if (xdiff < 0)
-                chise.elementUtilities.setPortsOrdering(process, 'L-to-R');
+                elementUtilities.setPortsOrdering(process, 'L-to-R');
             else
-                chise.elementUtilities.setPortsOrdering(process, 'R-to-L');
+                elementUtilities.setPortsOrdering(process, 'R-to-L');
         }
         else
         {
             if (ydiff < 0)
-                chise.elementUtilities.setPortsOrdering(process, 'T-to-B');
+                elementUtilities.setPortsOrdering(process, 'T-to-B');
             else
-                chise.elementUtilities.setPortsOrdering(process, 'B-to-T');
+                elementUtilities.setPortsOrdering(process, 'B-to-T');
         }
 
 

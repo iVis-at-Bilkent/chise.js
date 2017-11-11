@@ -3,11 +3,12 @@ var libs = require('./lib-utilities').getLibs();
 
 module.exports = function () {
 
-  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities;
+  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities, cy;
 
   function undoRedoActionFunctionsExtender (param) {
 
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
+    cy = param.sbgnvizInstanceUtilities.getCy();
     undoRedoActionFunctions = sbgnvizInstance.undoRedoActionFunctions;
     elementUtilities = param.elementUtilities;
 
