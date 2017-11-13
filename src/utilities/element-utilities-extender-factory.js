@@ -826,7 +826,7 @@ module.exports = function () {
        */
       var getIOPortIds = function (node) {
         var nodeInputPortId, nodeOutputPortId;
-        var nodePortsOrdering = sbgnviz.elementUtilities.getPortsOrdering(node);
+        var nodePortsOrdering = sbgnvizInstance.elementUtilities.getPortsOrdering(node);
         var nodePorts = node.data('ports');
         if ( nodePortsOrdering === 'L-to-R' || nodePortsOrdering === 'R-to-L' ) {
           var leftPortId = nodePorts[0].x < 0 ? nodePorts[0].id : nodePorts[1].id; // The x value of left port is supposed to be negative
@@ -1461,15 +1461,15 @@ module.exports = function () {
         var locationObj;
         if(obj.clazz == "unit of information") {
           if (!node.data("language") || node.data("language") == "PD"){
-            locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
+            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
           }
           else if (node.data("language") == "AF"){
-            locationObj = sbgnviz.classes.UnitOfInformation.create(node, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
+            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
                 libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
           }
         }
         else if (obj.clazz == "state variable") {
-          locationObj = sbgnviz.classes.StateVariable.create(node, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
+          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
         }
       }
       return locationObj;
@@ -1484,9 +1484,9 @@ module.exports = function () {
         var stateAndInfos = node.data('statesandinfos');
         var unit = stateAndInfos[locationObj.index];
 
-        var unitClass = sbgnviz.classes.getAuxUnitClass(unit);
+        var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
-        obj = unitClass.remove(unit);
+        obj = unitClass.remove(unit, cy);
       }
 
       return obj;

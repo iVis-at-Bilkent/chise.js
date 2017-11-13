@@ -917,7 +917,7 @@ module.exports = function () {
   mainUtilities.highlightProcesses = function(_nodes) {
     if (elementUtilities.getMapType() == "AF")
       return;
-    libs.sbgnviz.highlightProcesses(_nodes);
+    sbgnvizInstance.highlightProcesses(_nodes);
   };
 
   /**
