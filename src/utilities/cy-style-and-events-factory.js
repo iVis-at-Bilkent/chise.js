@@ -179,14 +179,10 @@ module.exports = function () {
     };
     // Helpers End
 
-    // This function will be executed after document.ready in sbgnviz because it is registered later
-    // TODO most probably this is not needed to be called inside $(document).ready()
-    $(document).ready(function () {
-      // Once cy is ready bind events and update style sheet
-      cy.ready( function(event) {
-        bindCyEvents();
-        updateStyleSheet();
-      });
+    // Once cy is ready bind events and update style sheet
+    cy.ready( function(event) {
+      bindCyEvents();
+      updateStyleSheet();
     });
   }
 
