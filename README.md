@@ -98,6 +98,12 @@ Register with libraries before creating instances
 `var instance = chise(options)`
 Creates an extension instance with the given options
 
+`instance.getSbgnvizInstance()`
+Get the Sbgnviz.js instance created for this Chise.js instance.
+
+`instance.getCy()`
+Get the Cytoscape.js instance created for this Chise.js instance.
+
 `instance.addNode(x, y , nodeclass, id, parent, visibility)`
 Adds a new node with the given class and at the given coordinates. Optionally you can set the id, parent and visibility of the node. Considers undoable option.
 
@@ -245,13 +251,13 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `setCloneMarkerStatus(param)` Do/Undo/Redo function for 'setCloneMarkerStatus' undo redo command.
 
 ## Events
-`$(document).on('sbgnvizLoadSample', function(event, filename) { ... });` Triggered when a sample is being loaded
+`$(document).on('sbgnvizLoadSample', function(event, filename, cy) { ... });` Triggered when a sample is being loaded
 
-`$(document).on('sbgnvizLoadFile', function(event, filename) { ... });` Triggered when an external sbgnml file is being loaded
+`$(document).on('sbgnvizLoadFile', function(event, filename, cy) { ... });` Triggered when an external sbgnml file is being loaded
 
-`$(document).on('updateGraphStart', function(event) { ... });` Triggered when the graph update is just started
+`$(document).on('updateGraphStart', function(event, cy) { ... });` Triggered when the graph update is just started
 
-`$(document).on('updateGraphEnd', function(event) { ... });` Triggered when the graph update is ended
+`$(document).on('updateGraphEnd', function(event, cy) { ... });` Triggered when the graph update is ended
 
 ## Dependencies
 
