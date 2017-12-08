@@ -20,8 +20,8 @@ module.exports = function () {
     dynamicLabelSize: function () {
       return 'regular';
     },
-    // Whether to infer parent node on load 
-    inferParentNodeOnLoad: function () {
+    // Whether to infer nesting on load 
+    inferNestingOnLoad: function () {
       return false;
     },
     // percentage used to calculate compound paddings
