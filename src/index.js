@@ -52,7 +52,7 @@
     }
 
     // Expose getSbgnvizInstance()
-    api.getSbgnvizInstance = sbgnvizInstanceUtilities.getSbgnvizInstance;
+    api.getSbgnvizInstance = sbgnvizInstanceUtilities.getInstance;
 
     // Expose elementUtilities and undoRedoActionFunctions as is
     api.elementUtilities = elementUtilities;
