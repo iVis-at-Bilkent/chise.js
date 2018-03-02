@@ -72,6 +72,13 @@
 
     libs.sbgnviz.register(_libs); // Register sbgnviz with the given libs
 
+    // inherit exposed static properties of sbgnviz other than register
+    for (var prop in libs.sbgnviz) {
+      if (prop !== 'register') {
+        chise[prop] = libs.sbgnviz[prop];
+      }
+    }
+
     // Set the libraries to access them from any file
     var libUtilities = require('./utilities/lib-utilities');
     libUtilities.setLibs(libs);
