@@ -783,7 +783,7 @@ module.exports = function () {
       return newNode;
     };
 
-    elementUtilities.addEdge = function (source, target, edgeParams, id, visibility) {
+    elementUtilities.addEdge = function (source, target, edgeParams, id, visibility, groupID ) {
       if (typeof edgeParams != 'object'){
         var sbgnclass = edgeParams;
       } else {
@@ -882,7 +882,11 @@ module.exports = function () {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
-          portsource = sourceNodeOutputPortId;
+          if(groupID == 0 || groupID == undefined)
+            portsource = sourceNodeOutputPortId;
+          else {
+            portsource = sourceNodeInputPortId;
+          }
         }
         else if (sbgnclass === 'logic arc') {
           var srcClass = sourceNode.data('class');
@@ -908,6 +912,7 @@ module.exports = function () {
       // The portsource and porttarget are determined set them in data object.
       data.portsource = portsource || source;
       data.porttarget = porttarget || target;
+
 
       var eles = cy.add({
         group: "edges",
@@ -1025,17 +1030,26 @@ module.exports = function () {
       cy.startBatch();
 
       var xPositionOfFreeMacromolecules;
+      var xPositionOfInputMacromolecules;
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
       }
-      else {
+      else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+      }else{
+        xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+        xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
 
       //Create the process in template type
-      var process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+      var process;
+      if (templateType === 'reversible') {
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, "process");
+        elementUtilities.setPortsOrdering(process, 'L-to-R')
+      }else{
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+      }
       process.data('justAdded', true);
-
       //Define the starting y position
       var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
 
@@ -1050,8 +1064,11 @@ module.exports = function () {
         if (templateType === 'association') {
           newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
         }
-        else {
+        else if(templateType === 'dissociation'){
           newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
+        }else{
+          //Group right or top elements in group id 1
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 1);
         }
 
         newEdge.data('justAdded', true);
@@ -1059,36 +1076,56 @@ module.exports = function () {
         //update the y position
         yPosition += macromoleculeHeight + tilingPaddingVertical;
       }
+      if(templateType === 'association' || templateType == 'dissociation'){
+        //Create the complex including macromolecules inside of it
+        //Temprorarily add it to the process position we will move it according to the last size of it
+        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+        complex.data('justAdded', true);
+        complex.data('justAddedLayoutNode', true);
 
-      //Create the complex including macromolecules inside of it
-      //Temprorarily add it to the process position we will move it according to the last size of it
-      var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
-      complex.data('justAdded', true);
-      complex.data('justAddedLayoutNode', true);
+        //If a name is specified for the complex set its label accordingly
+        if (complexName) {
+          complex.data('label', complexName);
+        }
 
-      //If a name is specified for the complex set its label accordingly
-      if (complexName) {
-        complex.data('label', complexName);
+        //create the edge connnected to the complex
+        var edgeOfComplex;
+        if (templateType === 'association') {
+          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
+        }
+        else {
+          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+        }
+        edgeOfComplex.data('justAdded', true);
+
+        //Create the macromolecules inside the complex
+        for (var i = 0; i < numOfMacromolecules; i++) {
+          // Add a macromolecule not having a previously defined id and having the complex created in this reaction as parent
+          var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+          newNode.data('justAdded', true);
+          newNode.data('label', macromoleculeList[i]);
+          newNode.data('justAddedLayoutNode', true);
+        }
+      }else{
+        //Create the input macromolecules
+        var numOfInputInputMacromolecules = complexName.length;
+        yPosition = processPosition.y - ((numOfInputInputMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+        for (var i = 0; i < numOfInputInputMacromolecules; i++) {
+          var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+          newNode.data('justAdded', true);
+          newNode.data('label', complexName[i]);
+
+          //create the edge connected to the new macromolecule
+          var newEdge;
+          //Group the left or botton elements in group id 0
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 0);
+          newEdge.data('justAdded', true);
+
+          //update the y position
+          yPosition += macromoleculeHeight + tilingPaddingVertical;
+        }
       }
 
-      //create the edge connnected to the complex
-      var edgeOfComplex;
-      if (templateType === 'association') {
-        edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
-      }
-      else {
-        edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
-      }
-      edgeOfComplex.data('justAdded', true);
-
-      //Create the macromolecules inside the complex
-      for (var i = 0; i < numOfMacromolecules; i++) {
-        // Add a macromolecule not having a previously defined id and having the complex created in this reaction as parent
-        var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
-        newNode.data('justAdded', true);
-        newNode.data('label', macromoleculeList[i]);
-        newNode.data('justAddedLayoutNode', true);
-      }
 
       cy.endBatch();
 
@@ -1103,6 +1140,9 @@ module.exports = function () {
         tilingPaddingHorizontal: tilingPaddingHorizontal,
         stop: function () {
           //re-position the nodes inside the complex
+          if(templateType === 'reversible')
+            return;
+
           var supposedXPosition;
           var supposedYPosition = processPosition.y;
 
