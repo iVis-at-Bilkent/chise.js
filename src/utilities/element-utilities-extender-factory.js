@@ -1037,6 +1037,7 @@ module.exports = function () {
       else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }else{
+        elementUtilities.setMapType("Unknown");
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
         xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
@@ -1139,10 +1140,10 @@ module.exports = function () {
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
         stop: function () {
-          //re-position the nodes inside the complex
+          //If it is a reversible reaction no need to re-position complexes
           if(templateType === 'reversible')
             return;
-
+          //re-position the nodes inside the complex
           var supposedXPosition;
           var supposedYPosition = processPosition.y;
 
