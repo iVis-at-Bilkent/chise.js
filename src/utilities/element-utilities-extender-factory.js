@@ -783,6 +783,8 @@ module.exports = function () {
       return newNode;
     };
 
+    //For reversible reactions both side of the process can be input/output
+    //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
     elementUtilities.addEdge = function (source, target, edgeParams, id, visibility, groupID ) {
       if (typeof edgeParams != 'object'){
         var sbgnclass = edgeParams;
@@ -882,9 +884,9 @@ module.exports = function () {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
-          if(groupID == 0 || groupID == undefined)
+          if(groupID == 0 || groupID == undefined) // groupID 0 for reversible reactions group 0
             portsource = sourceNodeOutputPortId;
-          else {
+          else { //if reaction is reversible and edge belongs to group 1
             portsource = sourceNodeInputPortId;
           }
         }
@@ -912,7 +914,6 @@ module.exports = function () {
       // The portsource and porttarget are determined set them in data object.
       data.portsource = portsource || source;
       data.porttarget = porttarget || target;
-
 
       var eles = cy.add({
         group: "edges",
@@ -1008,6 +1009,8 @@ module.exports = function () {
      * templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
      * macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
      * complexName: The name of the complex in the reaction.
+     * However, in template 'reversible', this parameter represents the macromolecules in the right hand-side of the reaction.
+     * These macromolecules are also referred as inputMacromolecules inside the function.
      * processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
      * tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
@@ -1036,7 +1039,8 @@ module.exports = function () {
       }
       else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
-      }else{
+      }
+      else{
         elementUtilities.setMapType("Unknown");
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
         xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
@@ -1047,7 +1051,8 @@ module.exports = function () {
       if (templateType === 'reversible') {
         process = elementUtilities.addNode(processPosition.x, processPosition.y, "process");
         elementUtilities.setPortsOrdering(process, 'L-to-R')
-      }else{
+      }
+      else{
         process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
       }
       process.data('justAdded', true);
@@ -1067,7 +1072,8 @@ module.exports = function () {
         }
         else if(templateType === 'dissociation'){
           newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
-        }else{
+        }
+        else{
           //Group right or top elements in group id 1
           newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 1);
         }
@@ -1107,11 +1113,12 @@ module.exports = function () {
           newNode.data('label', macromoleculeList[i]);
           newNode.data('justAddedLayoutNode', true);
         }
-      }else{
+      }
+      else{
         //Create the input macromolecules
-        var numOfInputInputMacromolecules = complexName.length;
-        yPosition = processPosition.y - ((numOfInputInputMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
-        for (var i = 0; i < numOfInputInputMacromolecules; i++) {
+        var numOfInputMacromolecules = complexName.length;
+        yPosition = processPosition.y - ((numOfInputMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+        for (var i = 0; i < numOfInputMacromolecules; i++) {
           var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
           newNode.data('justAdded', true);
           newNode.data('label', complexName[i]);
