@@ -815,6 +815,10 @@ module.exports = function () {
         data.id = "nwtE_" + generateUUID();
       }
 
+      if(elementUtilities.canHaveSBGNCardinality(sbgnclass)){
+        data.cardinality = 0;
+      }
+
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
       var sourceHasPorts = sourceNode.data('ports').length === 2;
@@ -1280,7 +1284,7 @@ module.exports = function () {
     elementUtilities.canHaveSBGNCardinality = function (ele) {
       var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
 
-      return ele.data('class') == 'consumption' || ele.data('class') == 'production';
+      return sbgnclass == 'consumption' || sbgnclass == 'production';
     };
 
     // Returns whether the give element can have sbgnlabel
