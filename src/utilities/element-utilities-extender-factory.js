@@ -1172,7 +1172,7 @@ module.exports = function () {
       });
 
       // Do this check for cytoscape.js backward compatibility
-      if (layout && layout.run) {
+      if (layout && layout.run && templateType !== 'reversible') {
         layout.run();
       }
 
