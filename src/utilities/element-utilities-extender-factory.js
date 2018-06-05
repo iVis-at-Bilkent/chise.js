@@ -1826,6 +1826,25 @@ module.exports = function () {
         }
       });
     }
+
+    elementUtilities.hasBackgroundImage = function (ele) {
+      if(ele.isNode()){
+        return ele._private.style['background-image'] ? true:false;
+      }
+    }
+
+    elementUtilities.getBackgroundImageURL = function (ele) {
+      if(ele.isNode()){
+        var bg = ele._private.style['backgroud-image'];
+        if(bg){
+          var imgList = bg.strValue.split(' ');
+          for(var img in imgList){
+            if(img.indexOf('http') === 0)
+              return img;
+          }
+        }
+      }
+    }
   }
 
   return elementUtilitiesExtender;
