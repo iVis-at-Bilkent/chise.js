@@ -1477,13 +1477,15 @@ module.exports = function () {
     // Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
     // Value parameter is the new value to set.
     // This method returns the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+    // Each character assumed to occupy 8 unit
+    // Each infobox can have at most 32 units of width
     elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
       var result;
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
-
+        var oldLength = box.bbox.w;
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
@@ -1498,8 +1500,21 @@ module.exports = function () {
 
           box.label.text = value;
         }
+        if (value.length == 0) {
+          box.bbox.w = 8;
+        }else if(value.length < 4){
+          box.bbox.w = 8 * value.length;
+        }else{
+          box.bbox.w = 32; // 8 * 32
+        }
+        box.bbox.x += (box.bbox.w - oldLength) / 2;
+        for (var j = index+1; j < stateAndInfos.length; j++) {
+          if (box.anchorSide == stateAndInfos[j].anchorSide) {
+            stateAndInfos[j].bbox.x += (box.bbox.w - oldLength);
+          }
+        }
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
-
       return result;
     };
 
@@ -1523,6 +1538,7 @@ module.exports = function () {
         else if (obj.clazz == "state variable") {
           locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
         }
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
       return locationObj;
     };
@@ -1539,6 +1555,7 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
 
       return obj;
