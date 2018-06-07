@@ -494,13 +494,10 @@ module.exports = function () {
         var sourceNode = edge._private.data.source;
         var targetNode = edge._private.data.target;
 
-        var temp = edge.source;
-        edge.source = edge.target;
-        edge.target = temp;
-
-        temp = edge._private.data.source;
-        edge._private.data.source = edge._private.data.target;
-        edge._private.data.target = temp;
+        edge.move({
+            source: targetNode,
+            target: sourceNode
+        });
 
         if (edge._private.data.class === "consumption") {
           edge._private.data.class = "production";
