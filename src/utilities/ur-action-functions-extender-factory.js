@@ -489,8 +489,34 @@ module.exports = function () {
 
     // Section End
     // sbgn action functions
-  }
+    undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
+      param.forEach(function(edge) {
+        var sourceNode = edge._private.data.source;
+        var targetNode = edge._private.data.target;
 
+        var temp = edge.source;
+        edge.source = edge.target;
+        edge.target = temp;
+
+        temp = edge._private.data.source;
+        edge._private.data.source = edge._private.data.target;
+        edge._private.data.target = temp;
+
+        if (edge._private.data.class === "consumption") {
+          edge._private.data.class = "production";
+          edge._private.data.portsource = targetNode + ".1";
+          edge._private.data.porttarget = sourceNode;
+        }
+        else if (edge._private.data.class === "production") {
+          edge._private.data.class = "consumption";
+          edge._private.data.portsource = targetNode;
+          edge._private.data.porttarget = sourceNode + ".1";
+        }
+
+        cy.style().update();
+      });
+    }
+  }
 
   return undoRedoActionFunctionsExtender;
 };
