@@ -515,6 +515,7 @@ module.exports = function () {
 
         cy.style().update();
       });
+      return param;
     }
   }
 
