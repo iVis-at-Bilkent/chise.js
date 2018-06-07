@@ -1011,25 +1011,27 @@ module.exports = function () {
      * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
      * in the complex. Parameters are explained below.
      * templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
-     * macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
+     * nodeList: The list of the names and types of molecules which will involve in the reaction.
      * complexName: The name of the complex in the reaction.
-     * However, in template 'reversible', this parameter represents the macromolecules in the right hand-side of the reaction.
-     * These macromolecules are also referred as inputMacromolecules inside the function.
      * processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
      * tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * edgeLength: The distance between the process and the macromolecules at the both sides.
      */
-    elementUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+
       var defaultMacromoleculProperties = elementUtilities.defaultProperties["macromolecule"];
+      var defaultSimpleChemicalProperties = elementUtilities.defaultProperties["simple chemical"];
       var templateType = templateType;
       var processWidth = elementUtilities.defaultProperties[templateType] ? elementUtilities.defaultProperties[templateType].width : 50;
       var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
       var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
+      var simpleChemicalWidth = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.width : 35;
+      var simpleChemicalHeight = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.height : 35;
       var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
-      var macromoleculeList = macromoleculeList;
+      var nodeList = nodeList;
       var complexName = complexName;
-      var numOfMacromolecules = macromoleculeList.length;
+      var numOfMolecules = nodeList.length;
       var tilingPaddingVertical = tilingPaddingVertical ? tilingPaddingVertical : 15;
       var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
       var edgeLength = edgeLength ? edgeLength : 60;
@@ -1038,6 +1040,7 @@ module.exports = function () {
 
       var xPositionOfFreeMacromolecules;
       var xPositionOfInputMacromolecules;
+
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
       }
@@ -1060,16 +1063,27 @@ module.exports = function () {
         process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
       }
       process.data('justAdded', true);
+
       //Define the starting y position
-      var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+      var yPosition = processPosition.y - ((numOfMolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
 
-      //Create the free macromolecules
-      for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+      //Create the free molecules
+      for (var i = 0; i < numOfMolecules; i++) {
+        // node addition operation is determined by molecule type
+        if(nodeList[i].type == "Simple Chemical"){
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "simple chemical");
+          //update the y position
+          yPosition += simpleChemicalHeight + tilingPaddingVertical;
+        }
+        else{
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+          //update the y position
+          yPosition += macromoleculeHeight + tilingPaddingVertical;
+        }
         newNode.data('justAdded', true);
-        newNode.data('label', macromoleculeList[i]);
+        newNode.data('label', nodeList[i].name);
 
-        //create the edge connected to the new macromolecule
+        //create the edge connected to the new molecule
         var newEdge;
         if (templateType === 'association') {
           newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
@@ -1083,10 +1097,8 @@ module.exports = function () {
         }
 
         newEdge.data('justAdded', true);
-
-        //update the y position
-        yPosition += macromoleculeHeight + tilingPaddingVertical;
       }
+
       if(templateType === 'association' || templateType == 'dissociation'){
         //Create the complex including macromolecules inside of it
         //Temprorarily add it to the process position we will move it according to the last size of it
@@ -1096,48 +1108,65 @@ module.exports = function () {
 
         //If a name is specified for the complex set its label accordingly
         if (complexName) {
-          complex.data('label', complexName);
+          complex.data('label', complexName[0].name);
         }
 
         //create the edge connnected to the complex
         var edgeOfComplex;
+
         if (templateType === 'association') {
           edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
         }
         else {
           edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
         }
+
         edgeOfComplex.data('justAdded', true);
 
-        //Create the macromolecules inside the complex
-        for (var i = 0; i < numOfMacromolecules; i++) {
-          // Add a macromolecule not having a previously defined id and having the complex created in this reaction as parent
-          var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+        for (var i = 0; i < numOfMolecules; i++) {
+
+          // Add a molecule(dependent on it's type) not having a previously defined id and having the complex created in this reaction as parent
+          if(nodeList[i].type == 'Simple Chemical'){
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "simple chemical", undefined, complex.id());
+          }
+          else{
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+          }
+
           newNode.data('justAdded', true);
-          newNode.data('label', macromoleculeList[i]);
+          newNode.data('label', nodeList[i].name);
           newNode.data('justAddedLayoutNode', true);
         }
       }
       else{
+
         //Create the input macromolecules
         var numOfInputMacromolecules = complexName.length;
         yPosition = processPosition.y - ((numOfInputMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+
         for (var i = 0; i < numOfInputMacromolecules; i++) {
-          var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+
+          if(complexName[i].type == 'Simple Chemical'){
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "simple chemical");
+            yPosition += simpleChemicalHeight + tilingPaddingVertical;
+          }
+          else{
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+            yPosition += macromoleculeHeight + tilingPaddingVertical;
+          }
+
           newNode.data('justAdded', true);
-          newNode.data('label', complexName[i]);
+          newNode.data('label', complexName[i].name);
 
           //create the edge connected to the new macromolecule
           var newEdge;
-          //Group the left or botton elements in group id 0
+
+          //Group the left or bottom elements in group id 0
           newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 0);
           newEdge.data('justAdded', true);
 
-          //update the y position
-          yPosition += macromoleculeHeight + tilingPaddingVertical;
         }
       }
-
 
       cy.endBatch();
 
