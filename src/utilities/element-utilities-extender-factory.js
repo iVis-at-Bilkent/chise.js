@@ -1486,24 +1486,29 @@ module.exports = function () {
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
+        var newLength;
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
           }
 
           box.state[type] = value;
+          newLength = box.state["value"].length + box.state["variable"].length;
+          if (box.state["variable"].length !== 0) {
+            newLength++;
+          }
         }
         else if (box.clazz == "unit of information") {
           if (!result) {
             result = box.label.text;
           }
-
+          newLength = value.length;
           box.label.text = value;
         }
-        if (value.length == 0) {
+        if (newLength == 0) {
           box.bbox.w = 8;
-        }else if(value.length < 4){
-          box.bbox.w = 8 * value.length;
+        }else if(newLength < 4){
+          box.bbox.w = 8 * newLength;
         }else{
           box.bbox.w = 32; // 8 * 32
         }
@@ -1555,7 +1560,7 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, obj.location);
       }
 
       return obj;
