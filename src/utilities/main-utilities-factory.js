@@ -934,5 +934,45 @@ module.exports = function () {
     return elementUtilities.getMapType();
   };
 
+  mainUtilities.addBackgroundImage = function(nodes, bgObj){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes
+      };
+
+      cy.undoRedo().do("addBackgroundImage", param);
+    }
+    else {
+      elementUtilities.addBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
+  mainUtilities.removeBackgroundImage = function(nodes, bgObj){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes
+      };
+
+      cy.undoRedo().do("removeBackgroundImage", param);
+    }
+    else {
+      elementUtilities.removeBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
   return mainUtilities;
 };

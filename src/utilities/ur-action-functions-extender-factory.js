@@ -487,6 +487,38 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.addBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+      var cb = param.cb;
+
+      elementUtilities.addBackgroundImage(nodes, bgObj, cb);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: bgObj,
+        cb: cb
+      };
+      return result;
+    };
+
+    undoRedoActionFunctions.removeBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+
+      elementUtilities.removeBackgroundImage(nodes, bgObj);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: bgObj
+      };
+      return result;
+    };
+
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
