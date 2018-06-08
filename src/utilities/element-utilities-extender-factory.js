@@ -1615,18 +1615,6 @@ module.exports = function () {
       }
     };
 
-    // Set clone marker status of given nodes to the given status.
-    elementUtilities.setCloneMarkerStatus = function (nodes, status) {
-      if (status) {
-        nodes.data('clonemarker', true);
-      }
-      else {
-        nodes.removeData('clonemarker');
-      }
-    };
-
-    //elementUtilities.setCloneMarkerStatus = function()
-
     // Change font properties of the given elements with given font data
     elementUtilities.changeFontProperties = function (eles, data) {
       for (var prop in data) {
