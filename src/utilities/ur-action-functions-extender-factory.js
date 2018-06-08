@@ -524,9 +524,11 @@ module.exports = function () {
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
-      let result = cy.collection();
+      let collection = cy.collection();
+      let mapType = elementUtilities.getMapType();
+      elementUtilities.setMapType(param.mapType);
 
-      param.forEach(function(edge) {
+      param.collection.forEach(function(edge) {
         var sourceNode = edge._private.data.source;
         var targetNode = edge._private.data.target;
 
@@ -544,9 +546,14 @@ module.exports = function () {
           convertedEdge._private.data.porttarget = sourceNode + ".1";
         }
 
-        result = result.add(convertedEdge);
+        collection = collection.add(convertedEdge);
         cy.style().update();
       });
+
+      var result = {
+        collection: collection,
+        mapType: mapType
+      };
       return result;
     }
   }
