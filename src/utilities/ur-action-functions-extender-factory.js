@@ -522,32 +522,30 @@ module.exports = function () {
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
+      let result = cy.collection();
+
       param.forEach(function(edge) {
         var sourceNode = edge._private.data.source;
         var targetNode = edge._private.data.target;
 
-        var temp = edge.source;
-        edge.source = edge.target;
-        edge.target = temp;
+        edge.move({source: targetNode, target: sourceNode});
+        let convertedEdge = cy.getElementById(edge.id());
 
-        temp = edge._private.data.source;
-        edge._private.data.source = edge._private.data.target;
-        edge._private.data.target = temp;
-
-        if (edge._private.data.class === "consumption") {
-          edge._private.data.class = "production";
-          edge._private.data.portsource = targetNode + ".1";
-          edge._private.data.porttarget = sourceNode;
+        if (convertedEdge._private.data.class === "consumption") {
+          convertedEdge._private.data.class = "production";
+          convertedEdge._private.data.portsource = targetNode + ".1";
+          convertedEdge._private.data.porttarget = sourceNode;
         }
-        else if (edge._private.data.class === "production") {
-          edge._private.data.class = "consumption";
-          edge._private.data.portsource = targetNode;
-          edge._private.data.porttarget = sourceNode + ".1";
+        else if (convertedEdge._private.data.class === "production") {
+          convertedEdge._private.data.class = "consumption";
+          convertedEdge._private.data.portsource = targetNode;
+          convertedEdge._private.data.porttarget = sourceNode + ".1";
         }
 
+        result = result.add(convertedEdge);
         cy.style().update();
       });
-      return param;
+      return result;
     }
   }
 
