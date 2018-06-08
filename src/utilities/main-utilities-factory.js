@@ -934,7 +934,7 @@ module.exports = function () {
     return elementUtilities.getMapType();
   };
 
-  mainUtilities.addBackgroundImage = function(nodes, bgObj){
+  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage){
     if (nodes.length === 0 || !bgObj) {
       return;
     }
@@ -942,13 +942,15 @@ module.exports = function () {
     if (options.undoable) {
       var param = {
         bgObj: bgObj,
-        nodes: nodes
+        nodes: nodes,
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage
       };
 
       cy.undoRedo().do("addBackgroundImage", param);
     }
     else {
-      elementUtilities.addBackgroundImage(nodes, bgObj);
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
     }
 
     cy.style().update();

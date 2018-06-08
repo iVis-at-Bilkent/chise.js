@@ -490,16 +490,18 @@ module.exports = function () {
     undoRedoActionFunctions.addBackgroundImage = function (param) {
       var bgObj = param.bgObj;
       var nodes = param.nodes;
-      var cb = param.cb;
+      var updateInfo = param.updateInfo;
+      var promptInvalidImage = param.promptInvalidImage;
 
-      elementUtilities.addBackgroundImage(nodes, bgObj, cb);
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
 
       cy.forceRender();
 
       var result = {
         nodes: nodes,
         bgObj: bgObj,
-        cb: cb
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage
       };
       return result;
     };

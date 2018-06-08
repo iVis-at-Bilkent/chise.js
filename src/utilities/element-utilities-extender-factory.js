@@ -1873,6 +1873,7 @@ module.exports = function () {
       if(ele.isNode()){
         var style = ele._private.style;
         var bg = style['background-image'] ? style['background-image'].value : [];
+        var bg = style['background-image'] ? style['background-image'].value : []; 
         var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
         if(bg.length > 0 && !(bg.indexOf(cloneImg) > -1 && bg.length === 1))
           return true;
@@ -1918,34 +1919,70 @@ module.exports = function () {
     }
 
     // Add a background image to given nodes.
-    elementUtilities.addBackgroundImage = function (nodes, bgObj) {
+    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
       if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
         return;
 
       // Load the image from local, else just put the URL
       if(bgObj['fromFile'])
         loadBackgroundThenApply(nodes, bgObj);
+      
+      // Validity of given URL should be checked before applying it 
       else
-        applyBackground(nodes, bgObj);
-
+        checkGivenURL(nodes, bgObj);
+      
       function loadBackgroundThenApply(nodes, bgObj) {
         var reader = new FileReader();
-        reader.readAsDataURL(bgObj['background-image']);
-
+        var imgFile = bgObj['background-image'];
+        
+        // Check whether given file is an image file
+        if(imgFile.type.indexOf("image") !== 0){
+          if(promptInvalidImage)
+            promptInvalidImage("Invalid image file is given!");
+          return;
+        }
+        
+        reader.readAsDataURL(imgFile);
+        
         reader.onload = function (e) {
           var img = reader.result;
           if(img){
-            bgObj['background-image'] = reader.result;
+            bgObj['background-image'] = img;
             applyBackground(nodes, bgObj);
           }
           else{
-            alert('Error: Image cannot be applied as background!');
+            if(promptInvalidImage)
+              promptInvalidImage("Given file could not be read!");
           }
         };
       }
 
-      function applyBackground(nodes, bgObj) {
+      function checkGivenURL(nodes, bgObj){
+        var url = bgObj['background-image'];
+        var extension = url.split(".").pop();
+        var validExtensions = ["png", "svg", "jpg", "jpeg"];
 
+        if(!validExtensions.includes(extension)){
+          if(promptInvalidImage)
+            promptInvalidImage("Invalid URL is given!");
+          return;
+        }
+        
+        $.ajax({
+          url: url,
+          type: 'GET',
+          success: function(result, status, xhr){
+            applyBackground(nodes, bgObj);
+          },
+          error: function(xhr, status, error){
+            if(promptInvalidImage)
+              promptInvalidImage("Invalid URL is given!");
+          },
+        });
+      }
+
+      function applyBackground(nodes, bgObj) {
+        
         for(var i = 0; i < nodes.length; i++){
           var node = nodes[0];
           var style = node._private.style;
@@ -1988,6 +2025,9 @@ module.exports = function () {
             'background-image-opacity': opacities
           }
           node.style(opt);
+          
+          if(updateInfo)
+            updateInfo();
         }
       }
 
