@@ -1515,17 +1515,20 @@ module.exports = function () {
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
-        var newLength;
+        var newLength = 0;
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
           }
 
           box.state[type] = value;
-          newLength = box.state["value"].length + box.state["variable"].length;
-          if (box.state["variable"].length !== 0) {
-            newLength++;
+          if (box.state["value"] !== undefined) {
+            newLength = box.state["value"].length;
           }
+          if (box.state["variable"] !== undefined) {
+            newLength += box.state["variable"].length + 1;
+          }
+
         }
         else if (box.clazz == "unit of information") {
           if (!result) {
@@ -1868,12 +1871,12 @@ module.exports = function () {
 
     elementUtilities.hasBackgroundImage = function (ele) {
       if(ele.isNode()){
-        var style = ele._private.style; 
-        var bg = style['background-image'] ? style['background-image'].value : []; 
+        var style = ele._private.style;
+        var bg = style['background-image'] ? style['background-image'].value : [];
         var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
         if(bg.length > 0 && !(bg.indexOf(cloneImg) > -1 && bg.length === 1))
           return true;
-          
+
         return false;
       }
     }
@@ -1893,7 +1896,7 @@ module.exports = function () {
 
     elementUtilities.getBackgroundImageObj = function (ele) {
       if(ele.isNode()){
-        var style = ele._private.style; 
+        var style = ele._private.style;
         var img = style['background-image'] ? style['background-image'].value : "" ;
         var fit = style['background-fit'] ? style['background-fit'].value : [] ;
         var opa = style['background-image-opacity'] ? style['background-image-opacity'].value : [] ;
@@ -1924,11 +1927,11 @@ module.exports = function () {
         loadBackgroundThenApply(nodes, bgObj);
       else
         applyBackground(nodes, bgObj);
-            
+
       function loadBackgroundThenApply(nodes, bgObj) {
         var reader = new FileReader();
         reader.readAsDataURL(bgObj['background-image']);
-    
+
         reader.onload = function (e) {
           var img = reader.result;
           if(img){
@@ -1942,7 +1945,7 @@ module.exports = function () {
       }
 
       function applyBackground(nodes, bgObj) {
-        
+
         for(var i = 0; i < nodes.length; i++){
           var node = nodes[0];
           var style = node._private.style;
@@ -1950,10 +1953,10 @@ module.exports = function () {
           var imgs = style['background-image'] ? style['background-image'].value : [];
           var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
           var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
-          var widths = style['background-width'] ? style['background-width'].value : []; 
+          var widths = style['background-width'] ? style['background-width'].value : [];
           var heights = style['background-height'] ? style['background-height'].value : [];
-          var fits = style['background-fit'] ? style['background-fit'].value : []; 
-          var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : []; 
+          var fits = style['background-fit'] ? style['background-fit'].value : [];
+          var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
 
           concatUnitToValues(xPos, "%");
           concatUnitToValues(yPos, "%");
@@ -1970,11 +1973,11 @@ module.exports = function () {
           imgs.splice(indexToInsert, 0, bgObj['background-image']);
           fits.splice(indexToInsert, 0, bgObj['background-fit']);
           opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
-          xPos.splice(indexToInsert, 0, bgObj['background-position-x']); 
+          xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
           yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
           widths.splice(indexToInsert, 0, bgObj['background-width']);
           heights.splice(indexToInsert, 0, bgObj['background-height']);
-          
+
           var opt = {
             'background-image': imgs,
             'background-position-x': xPos,
@@ -1996,7 +1999,7 @@ module.exports = function () {
       function concatUnitToValues(values, unit){
         if(!values || values.length == 0)
           return;
-        
+
         for(var i = 0; i < values.length; i++){
           if(values[i] && values[i] !== "" && values[i] !== "auto"){
             values[i] = "" + values[i] + unit;
@@ -2018,13 +2021,13 @@ module.exports = function () {
         var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
         var xUnits = style['background-position-x'] ? style['background-position-x'].units : [];
         var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
-        var yUnits = style['background-position-y'] ? style['background-position-y'].units : []; 
-        var widths = style['background-width'] ? style['background-width'].value : []; 
-        var widthUnits = style['background-width'] ? style['background-width'].units : []; 
+        var yUnits = style['background-position-y'] ? style['background-position-y'].units : [];
+        var widths = style['background-width'] ? style['background-width'].value : [];
+        var widthUnits = style['background-width'] ? style['background-width'].units : [];
         var heights = style['background-height'] ? style['background-height'].value : [];
-        var heightUnits = style['background-height'] ? style['background-height'].units : [];  
-        var fits = style['background-fit'] ? style['background-fit'].value : []; 
-        var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : []; 
+        var heightUnits = style['background-height'] ? style['background-height'].units : [];
+        var fits = style['background-fit'] ? style['background-fit'].value : [];
+        var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
 
         concatUnitToValues(xPos, "%");
         concatUnitToValues(yPos, "%");
@@ -2032,7 +2035,7 @@ module.exports = function () {
         concatUnitToValues(widths, "%");
 
         var index = imgs.indexOf(bgObj['background-image'][0]);
-        
+
         if(index > -1){
           imgs.splice(index, 1);
           fits.splice(index, 1);
@@ -2059,7 +2062,7 @@ module.exports = function () {
       function concatUnitToValues(values, unit){
         if(!values || values.length == 0)
           return;
-        
+
         for(var i = 0; i < values.length; i++){
           if(values[i] && values[i] !== "" && values[i] !== "auto"){
             values[i] = "" + values[i] + unit;
