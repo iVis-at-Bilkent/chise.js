@@ -1856,6 +1856,12 @@ module.exports = function () {
      */
     elementUtilities.maintainPointer = function (eles) {
       eles.nodes().forEach(function(ele){
+        // restore background images
+        var bgData = ele.data('background-image');
+        if(bgData){
+          ele.style(bgData); 
+        }
+
         // skip nodes without any auxiliary units
         if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
           return;
@@ -1885,8 +1891,12 @@ module.exports = function () {
     elementUtilities.getBackgroundImageURL = function (ele) {
       if(ele.isNode()){
         var bg = ele._private.style['background-image'];
+        // priority is in data segment of the node
+        if(ele.data('background-image'))
+          bg = ele.data('background-image')['background-image'];
+
         if(bg){
-          var imgList = bg.value;
+          var imgList = ele.data('background-image') ? bg : bg.value;
           for(var i = 0; i < imgList.length; i++){
             if(imgList[i].indexOf('http') === 0)
               return imgList[i];
@@ -1898,13 +1908,27 @@ module.exports = function () {
     elementUtilities.getBackgroundImageObj = function (ele) {
       if(ele.isNode()){
         var style = ele._private.style;
-        var img = style['background-image'] ? style['background-image'].value : "" ;
-        var fit = style['background-fit'] ? style['background-fit'].value : [] ;
-        var opa = style['background-image-opacity'] ? style['background-image-opacity'].value : [] ;
-        var x = style['background-position-x'] ? style['background-position-x'].value : [] ;
-        var y = style['background-position-y'] ? style['background-position-y'].value : [] ;
-        var w = style['background-width'] ? style['background-width'].value : [] ;
-        var h = style['background-height'] ? style['background-height'].value : [] ;
+        // priority is in data segment of the node
+        if(ele.data('background-image')){
+          style = ele.data('background-image');
+
+          var img = style['background-image'] ? style['background-image'] : "" ;
+          var fit = style['background-fit'] ? style['background-fit'] : [] ;
+          var opa = style['background-image-opacity'] ? style['background-image-opacity'] : [] ;
+          var x = style['background-position-x'] ? style['background-position-x'] : [] ;
+          var y = style['background-position-y'] ? style['background-position-y'] : [] ;
+          var w = style['background-width'] ? style['background-width'] : [] ;
+          var h = style['background-height'] ? style['background-height'] : [] ;
+        }
+        else{
+          var img = style['background-image'] ? style['background-image'].value : "" ;
+          var fit = style['background-fit'] ? style['background-fit'].value : [] ;
+          var opa = style['background-image-opacity'] ? style['background-image-opacity'].value : [] ;
+          var x = style['background-position-x'] ? style['background-position-x'].value : [] ;
+          var y = style['background-position-y'] ? style['background-position-y'].value : [] ;
+          var w = style['background-width'] ? style['background-width'].value : [] ;
+          var h = style['background-height'] ? style['background-height'].value : [] ;
+        }
 
         return {
           'background-image': img,
@@ -2025,6 +2049,7 @@ module.exports = function () {
             'background-image-opacity': opacities
           }
           node.style(opt);
+          node.data('background-image', opt);
           
           if(updateInfo)
             updateInfo();
@@ -2097,6 +2122,7 @@ module.exports = function () {
         }
 
         node.style(opt);
+        node.data('background-image', opt);
       }
 
       function concatUnitToValues(values, unit){
