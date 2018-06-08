@@ -1767,7 +1767,7 @@ module.exports = function () {
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
-          var ele = eles[i];
+          var ele = cy.getElementById(eles[i].id());
           ele.css(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
         }
         cy.endBatch();
@@ -1785,7 +1785,7 @@ module.exports = function () {
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
-          var ele = eles[i];
+          var ele = cy.getElementById(eles[i].id());
           ele.data(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
         }
         cy.endBatch();
