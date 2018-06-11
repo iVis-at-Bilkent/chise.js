@@ -200,6 +200,7 @@ module.exports = function () {
       cb.paste(_id);
     }
     cloneCollapsedNodesAndPorts(elesBefore);
+    applyBackgroundStyle(cy.nodes(":selected"));
   };
 
   /*
@@ -210,7 +211,7 @@ module.exports = function () {
   };
 
   /*
-   * Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
+   * Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
    */
   mainUtilities.pasteElements = function() {
     var elesBefore = cy.elements();
@@ -222,15 +223,17 @@ module.exports = function () {
       cy.clipboard().paste();
     }
     cloneCollapsedNodesAndPorts(elesBefore);
+    applyBackgroundStyle(cy.nodes(":selected"));
+  };
 
-    // Apply background image styles
-    var selectedEles = cy.nodes(":selected");
-    selectedEles.forEach(node => {
+  // Apply background image styles
+  function applyBackgroundStyle(nodes) {
+    nodes.forEach(node => {
       if(node.data('background-image') && node.data('background-image') !== {}){
         node.style(node.data('background-image'));
       }
     });
-  };
+  }
 
   /*
    * Aligns given nodes in given horizontal and vertical order.
