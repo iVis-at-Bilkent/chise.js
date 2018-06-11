@@ -188,19 +188,10 @@ module.exports = function () {
     if (eles.length === 0) {
       return;
     }
-    var elesBefore = cy.elements();
-
-    var cb = cy.clipboard();
-    var _id = cb.copy(eles, "cloneOperation");
-
-    if (options.undoable) {
-      cy.undoRedo().do("paste", {id: _id});
-    }
-    else {
-      cb.paste(_id);
-    }
-    cloneCollapsedNodesAndPorts(elesBefore);
-    applyBackgroundStyle(cy.nodes(":selected"));
+    
+    this.copyElements(eles);
+    
+    this.pasteElements();
   };
 
   /*
