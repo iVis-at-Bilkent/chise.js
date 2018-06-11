@@ -533,7 +533,10 @@ module.exports = function () {
         var sourceNode = edge._private.data.source;
         var targetNode = edge._private.data.target;
 
-        edge.move({source: targetNode, target: sourceNode});
+        if (targetNode === param.processId) {
+          edge.move({source: targetNode, target: sourceNode});
+        }
+
         let convertedEdge = cy.getElementById(edge.id());
 
         if (convertedEdge._private.data.class === "consumption") {
