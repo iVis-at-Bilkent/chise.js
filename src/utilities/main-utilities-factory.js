@@ -222,6 +222,14 @@ module.exports = function () {
       cy.clipboard().paste();
     }
     cloneCollapsedNodesAndPorts(elesBefore);
+
+    // Apply background image styles
+    var selectedEles = cy.nodes(":selected");
+    selectedEles.forEach(node => {
+      if(node.data('background-image') && node.data('background-image') !== {}){
+        node.style(node.data('background-image'));
+      }
+    });
   };
 
   /*

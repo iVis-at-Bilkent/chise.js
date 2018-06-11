@@ -2130,6 +2130,7 @@ module.exports = function () {
 
         node.style(opt);
         node.data('background-image', opt);
+        bgObj['firstTime'] = false;
       }
 
       function concatUnitToValues(values, unit){
