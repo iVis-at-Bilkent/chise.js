@@ -939,6 +939,7 @@ module.exports = function () {
       return;
     }
 
+    bgObj['firstTime'] = true;
     if (options.undoable) {
       var param = {
         bgObj: bgObj,
@@ -961,6 +962,7 @@ module.exports = function () {
       return;
     }
 
+    bgObj['firstTime'] = true;
     if (options.undoable) {
       var param = {
         bgObj: bgObj,

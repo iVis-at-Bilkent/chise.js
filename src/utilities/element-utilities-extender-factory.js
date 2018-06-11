@@ -1950,10 +1950,11 @@ module.exports = function () {
       // Load the image from local, else just put the URL
       if(bgObj['fromFile'])
         loadBackgroundThenApply(nodes, bgObj);
-      
       // Validity of given URL should be checked before applying it 
-      else
+      else if(bgObj['firstTime'])
         checkGivenURL(nodes, bgObj);
+      else
+        applyBackground(nodes, bgObj);
       
       function loadBackgroundThenApply(nodes, bgObj) {
         var reader = new FileReader();
@@ -1972,6 +1973,7 @@ module.exports = function () {
           var img = reader.result;
           if(img){
             bgObj['background-image'] = img;
+            bgObj['fromFile'] = false;
             applyBackground(nodes, bgObj);
           }
           else{
@@ -2050,6 +2052,7 @@ module.exports = function () {
           }
           node.style(opt);
           node.data('background-image', opt);
+          bgObj['firstTime'] = false;
           
           if(updateInfo)
             updateInfo();
@@ -2099,7 +2102,11 @@ module.exports = function () {
         concatUnitToValues(heights, "%");
         concatUnitToValues(widths, "%");
 
-        var index = imgs.indexOf(bgObj['background-image'][0]);
+        var index = -1;
+        if(typeof bgObj['background-image'] === "string")
+          index = imgs.indexOf(bgObj['background-image']);
+        else if(Array.isArray(bgObj['background-image']))
+          index = imgs.indexOf(bgObj['background-image'][0]);
 
         if(index > -1){
           imgs.splice(index, 1);
