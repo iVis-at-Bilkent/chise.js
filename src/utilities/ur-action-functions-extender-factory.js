@@ -527,6 +527,7 @@ module.exports = function () {
       let collection = cy.collection();
       let mapType = elementUtilities.getMapType();
       elementUtilities.setMapType(param.mapType);
+      $('#map-type').val(param.mapType);
 
       param.collection.forEach(function(edge) {
         var sourceNode = edge._private.data.source;
