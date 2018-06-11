@@ -882,14 +882,17 @@ module.exports = function () {
 
         if (sbgnclass === 'consumption') {
           // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
+          portsource = sourceNodeOutputPortId;
           porttarget = targetNodeInputPortId;
         }
         else if (sbgnclass === 'production' || this.isModulationArcClass(sbgnclass)) {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
-          if(groupID == 0 || groupID == undefined) // groupID 0 for reversible reactions group 0
+          if(groupID == 0 || groupID == undefined) { // groupID 0 for reversible reactions group 0
             portsource = sourceNodeOutputPortId;
+            porttarget = targetNodeInputPortId;
+          }
           else { //if reaction is reversible and edge belongs to group 1
             portsource = sourceNodeInputPortId;
           }
@@ -907,8 +910,10 @@ module.exports = function () {
           }// If just one end of logical operator then the edge should be connected to the input port of the logical operator
           else if (isSourceLogicalOp) {
             portsource = sourceNodeInputPortId;
+            porttarget = targetNodeOutputPortId;
           }
           else if (isTargetLogicalOp) {
+            portsource = sourceNodeOutputPortId;
             porttarget = targetNodeInputPortId;
           }
         }
