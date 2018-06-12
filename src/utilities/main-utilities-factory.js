@@ -184,14 +184,14 @@ module.exports = function () {
   /*
    * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
    */
-  mainUtilities.cloneElements = function (eles) {
+  mainUtilities.cloneElements = function (eles, pasteAtMouseLoc) {
     if (eles.length === 0) {
       return;
     }
     
     this.copyElements(eles);
     
-    this.pasteElements();
+    this.pasteElements(pasteAtMouseLoc);
   };
 
   /*
@@ -204,11 +204,11 @@ module.exports = function () {
   /*
    * Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
    */
-  mainUtilities.pasteElements = function() {
+  mainUtilities.pasteElements = function(pasteAtMouseLoc) {
     var elesBefore = cy.elements();
 
     if (options.undoable) {
-      cy.undoRedo().do("paste");
+      cy.undoRedo().do("paste",{pasteAtMouseLoc: pasteAtMouseLoc});
     }
     else {
       cy.clipboard().paste();
