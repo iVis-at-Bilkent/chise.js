@@ -536,6 +536,18 @@ module.exports = function () {
         edge.move({source: targetNode, target: sourceNode});
 
         let convertedEdge = cy.getElementById(edge.id());
+        
+        let distance = convertedEdge.data("cyedgebendeditingDistances");      
+        distance = distance.map(function(element) {
+          return -1*element;
+        });
+        convertedEdge.data("cyedgebendeditingDistances", distance.reverse());
+        
+        let weight = convertedEdge.data("cyedgebendeditingWeights");       
+        weight = weight.map(function(element) {
+          return 1-element;
+        });
+        convertedEdge.data("cyedgebendeditingWeights", weight.reverse());
 
         if (convertedEdge._private.data.class === "consumption") {
           convertedEdge._private.data.class = "production";
