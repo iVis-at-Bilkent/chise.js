@@ -556,7 +556,8 @@ module.exports = function () {
 
       var result = {
         collection: collection,
-        mapType: mapType
+        mapType: mapType,
+        processId: param.processId
       };
       return result;
     }
