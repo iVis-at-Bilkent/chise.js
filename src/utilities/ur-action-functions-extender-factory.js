@@ -533,9 +533,7 @@ module.exports = function () {
         var sourceNode = edge._private.data.source;
         var targetNode = edge._private.data.target;
 
-        if (targetNode === param.processId) {
-          edge.move({source: targetNode, target: sourceNode});
-        }
+        edge.move({source: targetNode, target: sourceNode});
 
         let convertedEdge = cy.getElementById(edge.id());
 
