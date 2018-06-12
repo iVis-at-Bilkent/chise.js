@@ -1066,6 +1066,7 @@ module.exports = function () {
       }
       else{
         process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+        elementUtilities.setPortsOrdering(process, 'L-to-R')
       }
       process.data('justAdded', true);
 
