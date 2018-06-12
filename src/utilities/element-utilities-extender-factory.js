@@ -1114,7 +1114,7 @@ module.exports = function () {
 
         //If a name is specified for the complex set its label accordingly
         if (complexName) {
-          complex.data('label', complexName[0].name);
+          complex.data('label', complexName);
         }
 
         //create the edge connnected to the complex
