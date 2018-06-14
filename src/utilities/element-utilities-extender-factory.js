@@ -1051,9 +1051,15 @@ module.exports = function () {
 
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+        if (!elementUtilities.getMapType()) {
+          elementUtilities.setMapType("PD");
+        }
       }
       else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+        if (!elementUtilities.getMapType()) {
+          elementUtilities.setMapType("PD");
+        }
       }
       else{
         elementUtilities.setMapType("Unknown");
@@ -1965,13 +1971,13 @@ module.exports = function () {
     elementUtilities.getBackgroundFitOptions = function (ele) {
       if(!ele || !ele.isNode())
         return;
-      
+
       var style = ele._private.style;
       if(style['background-fit'] && style['background-fit'].value && style['background-fit'].value.length > 0){
         var fit = style['background-fit'].value[0];
         if(!fit || fit === "")
           return;
-          
+
         var selected = "";
         if(fit === "none"){
           var height = style['background-height'].value[0];
@@ -1981,8 +1987,8 @@ module.exports = function () {
           selected = fit;
         else
           return;
-        
-        var options = '<option value="none">None</option>'  
+
+        var options = '<option value="none">None</option>'
                     + '<option value="fit">Fit</option>'
                     + '<option value="cover">Cover</option>'
                     + '<option value="contain">Contain</option>';
@@ -2018,14 +2024,14 @@ module.exports = function () {
           index = imgs.indexOf(bgObj['background-image']);
         else if(Array.isArray(bgObj['background-image']))
           index = imgs.indexOf(bgObj['background-image'][0]);
-        
+
         if(index < 0)
           continue;
 
         if(bgObj['background-fit'] && fits.length > index){
           var tmp = fits[index];
           fits[index] = bgObj['background-fit'];
-          bgObj['background-fit'] = tmp; 
+          bgObj['background-fit'] = tmp;
         }
         if(bgObj['background-width'] && widths.length > index){
           var tmp = widths[index];
@@ -2037,7 +2043,7 @@ module.exports = function () {
           heights[index] = bgObj['background-height'];
           bgObj['background-height'] = tmp;
         }
-        
+
         var opt = {
           'background-image': imgs,
           'background-position-x': xPos,
@@ -2049,10 +2055,10 @@ module.exports = function () {
         }
         node.style(opt);
         node.data('background-image', opt);
-        
+
       }
       return bgObj;
-      
+
     }
 
     // Add a background image to given nodes.
