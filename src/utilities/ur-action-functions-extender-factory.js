@@ -521,6 +521,21 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+
+      var oldBgObj = elementUtilities.updateBackgroundImage(nodes, bgObj);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: oldBgObj
+      };
+      return result;
+    };
+
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {

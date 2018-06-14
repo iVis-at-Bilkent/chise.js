@@ -980,5 +980,25 @@ module.exports = function () {
     cy.style().update();
   }
 
+  mainUtilities.updateBackgroundImage = function(nodes, bgObj){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes
+      };
+
+      cy.undoRedo().do("updateBackgroundImage", param);
+    }
+    else {
+      elementUtilities.updateBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
   return mainUtilities;
 };

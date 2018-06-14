@@ -1962,6 +1962,99 @@ module.exports = function () {
       }
     }
 
+    elementUtilities.getBackgroundFitOptions = function (ele) {
+      if(!ele || !ele.isNode())
+        return;
+      
+      var style = ele._private.style;
+      if(style['background-fit'] && style['background-fit'].value && style['background-fit'].value.length > 0){
+        var fit = style['background-fit'].value[0];
+        if(!fit || fit === "")
+          return;
+          
+        var selected = "";
+        if(fit === "none"){
+          var height = style['background-height'].value[0];
+          selected = height === "auto" ? "none":"fit";
+        }
+        else if(fit)
+          selected = fit;
+        else
+          return;
+        
+        var options = '<option value="none">None</option>'  
+                    + '<option value="fit">Fit</option>'
+                    + '<option value="cover">Cover</option>'
+                    + '<option value="contain">Contain</option>';
+        var searchKey = 'value="' + selected + '"';
+        var index = options.indexOf(searchKey) + searchKey.length;
+        return options.substr(0, index) + ' selected' + options.substr(index);
+      }
+    }
+
+    elementUtilities.updateBackgroundImage = function (nodes, bgObj) {
+      if(!nodes || nodes.length == 0 || !bgObj)
+        return;
+
+      for(var i = 0; i < nodes.length; i++){
+        var node = nodes[0];
+        var style = node._private.style;
+
+        var imgs = style['background-image'] ? style['background-image'].value : [];
+        var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
+        var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
+        var widths = style['background-width'] ? style['background-width'].value : [];
+        var heights = style['background-height'] ? style['background-height'].value : [];
+        var fits = style['background-fit'] ? style['background-fit'].value : [];
+        var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
+
+        concatUnitToValues(xPos, "%");
+        concatUnitToValues(yPos, "%");
+        concatUnitToValues(heights, "%");
+        concatUnitToValues(widths, "%");
+
+        var index = -1;
+        if(typeof bgObj['background-image'] === "string")
+          index = imgs.indexOf(bgObj['background-image']);
+        else if(Array.isArray(bgObj['background-image']))
+          index = imgs.indexOf(bgObj['background-image'][0]);
+        
+        if(index < 0)
+          continue;
+
+        if(bgObj['background-fit'] && fits.length > index){
+          var tmp = fits[index];
+          fits[index] = bgObj['background-fit'];
+          bgObj['background-fit'] = tmp; 
+        }
+        if(bgObj['background-width'] && widths.length > index){
+          var tmp = widths[index];
+          widths[index] = bgObj['background-width'];
+          bgObj['background-width'] = tmp;
+        }
+        if(bgObj['background-height'] && heights.length > index){
+          var tmp = heights[index];
+          heights[index] = bgObj['background-height'];
+          bgObj['background-height'] = tmp;
+        }
+        
+        var opt = {
+          'background-image': imgs,
+          'background-position-x': xPos,
+          'background-position-y': yPos,
+          'background-width': widths,
+          'background-height': heights,
+          'background-fit': fits,
+          'background-image-opacity': opacities
+        }
+        node.style(opt);
+        node.data('background-image', opt);
+        
+      }
+      return bgObj;
+      
+    }
+
     // Add a background image to given nodes.
     elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
       if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
@@ -2083,17 +2176,6 @@ module.exports = function () {
         var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
         return (imgs.indexOf(cloneImg) > -1);
       }
-
-      function concatUnitToValues(values, unit){
-        if(!values || values.length == 0)
-          return;
-
-        for(var i = 0; i < values.length; i++){
-          if(values[i] && values[i] !== "" && values[i] !== "auto"){
-            values[i] = "" + values[i] + unit;
-          }
-        }
-      }
     };
 
     // Remove a background image from given nodes.
@@ -2152,18 +2234,18 @@ module.exports = function () {
         node.data('background-image', opt);
         bgObj['firstTime'] = false;
       }
+    };
 
-      function concatUnitToValues(values, unit){
-        if(!values || values.length == 0)
-          return;
+    function concatUnitToValues(values, unit){
+      if(!values || values.length == 0)
+        return;
 
-        for(var i = 0; i < values.length; i++){
-          if(values[i] && values[i] !== "" && values[i] !== "auto"){
-            values[i] = "" + values[i] + unit;
-          }
+      for(var i = 0; i < values.length; i++){
+        if(values[i] && values[i] !== "" && values[i] !== "auto"){
+          values[i] = "" + values[i] + unit;
         }
       }
-    };
+    }
   }
 
   return elementUtilitiesExtender;
