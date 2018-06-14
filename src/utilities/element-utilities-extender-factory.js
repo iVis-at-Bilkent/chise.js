@@ -1554,10 +1554,10 @@ module.exports = function () {
         }
         if (newLength == 0) {
           box.bbox.w = 8;
-        }else if(newLength < 4){
-          box.bbox.w = 8 * newLength;
+        }else if(newLength < 7){
+          box.bbox.w = 8 * newLength; // Arrange information box size dynamically
         }else{
-          box.bbox.w = 32; // 8 * 32
+          box.bbox.w = 48; // Maximum size of a state or information box
         }
 
 
@@ -2131,7 +2131,7 @@ module.exports = function () {
         for(var i = 0; i < nodes.length; i++){
           var node = nodes[0];
           var style = node._private.style;
-          
+
           // Change existing image
           if(elementUtilities.hasBackgroundImage(node)){
             var oldBgObj = elementUtilities.getBackgroundImageObj(node);
@@ -2139,7 +2139,7 @@ module.exports = function () {
             nodeList.push(node);
             elementUtilities.removeBackgroundImage(nodeList, oldBgObj);
           }
-          
+
           var imgs = style['background-image'] ? style['background-image'].value : [];
           var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
           var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
