@@ -885,7 +885,7 @@ module.exports = function () {
           portsource = sourceNodeOutputPortId;
           porttarget = targetNodeInputPortId;
         }
-        else if (sbgnclass === 'production' || this.isModulationArcClass(sbgnclass)) {
+        else if (sbgnclass === 'production') {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
@@ -896,6 +896,9 @@ module.exports = function () {
           else { //if reaction is reversible and edge belongs to group 1
             portsource = sourceNodeInputPortId;
           }
+        }
+        else if(this.isModulationArcClass(sbgnclass)){
+            portsource = sourceNodeOutputPortId;
         }
         else if (sbgnclass === 'logic arc') {
           var srcClass = sourceNode.data('class');
