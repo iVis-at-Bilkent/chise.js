@@ -2131,7 +2131,11 @@ module.exports = function () {
         for(var i = 0; i < nodes.length; i++){
           var node = nodes[0];
           var style = node._private.style;
-
+          
+          // Limit number of background images to 1
+          if(elementUtilities.hasBackgroundImage(node))
+            continue;
+          
           var imgs = style['background-image'] ? style['background-image'].value : [];
           var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
           var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
