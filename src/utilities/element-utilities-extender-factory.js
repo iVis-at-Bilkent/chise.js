@@ -2132,9 +2132,13 @@ module.exports = function () {
           var node = nodes[0];
           var style = node._private.style;
           
-          // Limit number of background images to 1
-          if(elementUtilities.hasBackgroundImage(node))
-            continue;
+          // Change existing image
+          if(elementUtilities.hasBackgroundImage(node)){
+            var oldBgObj = elementUtilities.getBackgroundImageObj(node);
+            var nodeList = [];
+            nodeList.push(node);
+            elementUtilities.removeBackgroundImage(nodeList, oldBgObj);
+          }
           
           var imgs = style['background-image'] ? style['background-image'].value : [];
           var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
