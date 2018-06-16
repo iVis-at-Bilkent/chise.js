@@ -417,6 +417,35 @@ module.exports = function () {
     cy.style().update();
   };
 
+    /*
+     * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
+     * Considers undoable option.
+     */
+    mainUtilities.resizeNodesToContent = function(node, bbox, actions) {
+        if (node.length === 0) {
+            return;
+        }
+
+        if (options.undoable) {
+            var param = {
+                nodes: node,
+                width: bbox.w,
+                height: bbox.h,
+                useAspectRatio: false,
+                performOperation: true
+            };
+
+            actions.push({name: "resizeNodes", param: param});
+            // cy.undoRedo().do("resizeNodes", param);
+            return actions;
+        }
+        else {
+            elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+        }
+
+        cy.style().update();
+    };
+
   /*
    * Changes the label of the given nodes to the given label. Considers undoable option.
    */
