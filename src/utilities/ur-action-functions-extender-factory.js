@@ -521,6 +521,21 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+
+      var oldBgObj = elementUtilities.updateBackgroundImage(nodes, bgObj);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: oldBgObj
+      };
+      return result;
+    };
+
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
@@ -536,6 +551,20 @@ module.exports = function () {
         edge.move({source: targetNode, target: sourceNode});
 
         let convertedEdge = cy.getElementById(edge.id());
+        
+        if(convertedEdge.data("cyedgebendeditingDistances")){
+          let distance = convertedEdge.data("cyedgebendeditingDistances");      
+          distance = distance.map(function(element) {
+            return -1*element;
+          });
+          convertedEdge.data("cyedgebendeditingDistances", distance.reverse());
+
+          let weight = convertedEdge.data("cyedgebendeditingWeights");       
+          weight = weight.map(function(element) {
+            return 1-element;
+          });
+          convertedEdge.data("cyedgebendeditingWeights", weight.reverse());
+        }
 
         if (convertedEdge._private.data.class === "consumption") {
           convertedEdge._private.data.class = "production";
