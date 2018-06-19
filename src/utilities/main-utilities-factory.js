@@ -184,22 +184,14 @@ module.exports = function () {
   /*
    * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
    */
-  mainUtilities.cloneElements = function (eles) {
+  mainUtilities.cloneElements = function (eles, pasteAtMouseLoc) {
     if (eles.length === 0) {
       return;
     }
-    var elesBefore = cy.elements();
-
-    var cb = cy.clipboard();
-    var _id = cb.copy(eles, "cloneOperation");
-
-    if (options.undoable) {
-      cy.undoRedo().do("paste", {id: _id});
-    }
-    else {
-      cb.paste(_id);
-    }
-    cloneCollapsedNodesAndPorts(elesBefore);
+    
+    this.copyElements(eles);
+    
+    this.pasteElements(pasteAtMouseLoc);
   };
 
   /*
@@ -210,18 +202,19 @@ module.exports = function () {
   };
 
   /*
-   * Past the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
+   * Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
    */
-  mainUtilities.pasteElements = function() {
+  mainUtilities.pasteElements = function(pasteAtMouseLoc) {
     var elesBefore = cy.elements();
 
     if (options.undoable) {
-      cy.undoRedo().do("paste");
+      cy.undoRedo().do("paste",{pasteAtMouseLoc: pasteAtMouseLoc});
     }
     else {
       cy.clipboard().paste();
     }
     cloneCollapsedNodesAndPorts(elesBefore);
+    cy.nodes(":selected").emit('data');
   };
 
   /*
@@ -414,6 +407,35 @@ module.exports = function () {
 
     cy.style().update();
   };
+
+    /*
+     * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
+     * Considers undoable option.
+     */
+    mainUtilities.resizeNodesToContent = function(node, bbox, actions) {
+        if (node.length === 0) {
+            return;
+        }
+
+        if (options.undoable) {
+            var param = {
+                nodes: node,
+                width: bbox.w,
+                height: bbox.h,
+                useAspectRatio: false,
+                performOperation: true
+            };
+
+            actions.push({name: "resizeNodes", param: param});
+            // cy.undoRedo().do("resizeNodes", param);
+            return actions;
+        }
+        else {
+            elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+        }
+
+        cy.style().update();
+    };
 
   /*
    * Changes the label of the given nodes to the given label. Considers undoable option.
@@ -933,6 +955,92 @@ module.exports = function () {
   mainUtilities.getMapType = function(){
     return elementUtilities.getMapType();
   };
+
+  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    bgObj['firstTime'] = true;
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes,
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage
+      };
+
+      cy.undoRedo().do("addBackgroundImage", param);
+    }
+    else {
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
+    }
+
+    cy.style().update();
+  }
+
+  mainUtilities.removeBackgroundImage = function(nodes, bgObj){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    bgObj['firstTime'] = true;
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes
+      };
+
+      cy.undoRedo().do("removeBackgroundImage", param);
+    }
+    else {
+      elementUtilities.removeBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
+  mainUtilities.updateBackgroundImage = function(nodes, bgObj){
+    if (nodes.length === 0 || !bgObj) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        bgObj: bgObj,
+        nodes: nodes
+      };
+
+      cy.undoRedo().do("updateBackgroundImage", param);
+    }
+    else {
+      elementUtilities.updateBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
+  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg){
+    if (nodes.length === 0 || !oldImg || !newImg) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        oldImg: oldImg,
+        newImg: newImg,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("changeBackgroundImage", param);
+    }
+    else {
+      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg);
+    }
+
+    cy.style().update();
+  }
 
   return mainUtilities;
 };

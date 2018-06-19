@@ -783,7 +783,9 @@ module.exports = function () {
       return newNode;
     };
 
-    elementUtilities.addEdge = function (source, target, edgeParams, id, visibility) {
+    //For reversible reactions both side of the process can be input/output
+    //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
+    elementUtilities.addEdge = function (source, target, edgeParams, id, visibility, groupID ) {
       if (typeof edgeParams != 'object'){
         var sbgnclass = edgeParams;
       } else {
@@ -811,6 +813,10 @@ module.exports = function () {
       }
       else {
         data.id = "nwtE_" + generateUUID();
+      }
+
+      if(elementUtilities.canHaveSBGNCardinality(sbgnclass)){
+        data.cardinality = 0;
       }
 
       var sourceNode = cy.getElementById(source); // The original source node
@@ -876,13 +882,23 @@ module.exports = function () {
 
         if (sbgnclass === 'consumption') {
           // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
+          portsource = sourceNodeOutputPortId;
           porttarget = targetNodeInputPortId;
         }
-        else if (sbgnclass === 'production' || this.isModulationArcClass(sbgnclass)) {
+        else if (sbgnclass === 'production') {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
-          portsource = sourceNodeOutputPortId;
+          if(groupID == 0 || groupID == undefined) { // groupID 0 for reversible reactions group 0
+            portsource = sourceNodeOutputPortId;
+            porttarget = targetNodeInputPortId;
+          }
+          else { //if reaction is reversible and edge belongs to group 1
+            portsource = sourceNodeInputPortId;
+          }
+        }
+        else if(this.isModulationArcClass(sbgnclass)){
+            portsource = sourceNodeOutputPortId;
         }
         else if (sbgnclass === 'logic arc') {
           var srcClass = sourceNode.data('class');
@@ -897,8 +913,10 @@ module.exports = function () {
           }// If just one end of logical operator then the edge should be connected to the input port of the logical operator
           else if (isSourceLogicalOp) {
             portsource = sourceNodeInputPortId;
+            porttarget = targetNodeOutputPortId;
           }
           else if (isTargetLogicalOp) {
+            portsource = sourceNodeOutputPortId;
             porttarget = targetNodeInputPortId;
           }
         }
@@ -1001,23 +1019,27 @@ module.exports = function () {
      * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
      * in the complex. Parameters are explained below.
      * templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
-     * macromoleculeList: The list of the names of macromolecules which will involve in the reaction.
+     * nodeList: The list of the names and types of molecules which will involve in the reaction.
      * complexName: The name of the complex in the reaction.
      * processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
      * tilingPaddingVertical: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * edgeLength: The distance between the process and the macromolecules at the both sides.
      */
-    elementUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+
       var defaultMacromoleculProperties = elementUtilities.defaultProperties["macromolecule"];
+      var defaultSimpleChemicalProperties = elementUtilities.defaultProperties["simple chemical"];
       var templateType = templateType;
       var processWidth = elementUtilities.defaultProperties[templateType] ? elementUtilities.defaultProperties[templateType].width : 50;
       var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
       var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
+      var simpleChemicalWidth = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.width : 35;
+      var simpleChemicalHeight = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.height : 35;
       var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
-      var macromoleculeList = macromoleculeList;
+      var nodeList = nodeList;
       var complexName = complexName;
-      var numOfMacromolecules = macromoleculeList.length;
+      var numOfMolecules = nodeList.length;
       var tilingPaddingVertical = tilingPaddingVertical ? tilingPaddingVertical : 15;
       var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
       var edgeLength = edgeLength ? edgeLength : 60;
@@ -1025,69 +1047,140 @@ module.exports = function () {
       cy.startBatch();
 
       var xPositionOfFreeMacromolecules;
+      var xPositionOfInputMacromolecules;
+
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+        if (!elementUtilities.getMapType()) {
+          elementUtilities.setMapType("PD");
+        }
       }
-      else {
+      else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+        if (!elementUtilities.getMapType()) {
+          elementUtilities.setMapType("PD");
+        }
+      }
+      else{
+        elementUtilities.setMapType("Unknown");
+        xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+        xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
 
       //Create the process in template type
-      var process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+      var process;
+      if (templateType === 'reversible') {
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, "process");
+        elementUtilities.setPortsOrdering(process, 'L-to-R')
+      }
+      else{
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
+        elementUtilities.setPortsOrdering(process, 'L-to-R')
+      }
       process.data('justAdded', true);
 
       //Define the starting y position
-      var yPosition = processPosition.y - ((numOfMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+      var yPosition = processPosition.y - ((numOfMolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
 
-      //Create the free macromolecules
-      for (var i = 0; i < numOfMacromolecules; i++) {
-        var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+      //Create the free molecules
+      for (var i = 0; i < numOfMolecules; i++) {
+        // node addition operation is determined by molecule type
+        if(nodeList[i].type == "Simple Chemical"){
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "simple chemical");
+          //update the y position
+          yPosition += simpleChemicalHeight + tilingPaddingVertical;
+        }
+        else{
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+          //update the y position
+          yPosition += macromoleculeHeight + tilingPaddingVertical;
+        }
         newNode.data('justAdded', true);
-        newNode.data('label', macromoleculeList[i]);
+        newNode.data('label', nodeList[i].name);
 
-        //create the edge connected to the new macromolecule
+        //create the edge connected to the new molecule
         var newEdge;
         if (templateType === 'association') {
           newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
         }
-        else {
+        else if(templateType === 'dissociation'){
           newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
+        }
+        else{
+          //Group right or top elements in group id 1
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 1);
         }
 
         newEdge.data('justAdded', true);
-
-        //update the y position
-        yPosition += macromoleculeHeight + tilingPaddingVertical;
       }
 
-      //Create the complex including macromolecules inside of it
-      //Temprorarily add it to the process position we will move it according to the last size of it
-      var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
-      complex.data('justAdded', true);
-      complex.data('justAddedLayoutNode', true);
+      if(templateType === 'association' || templateType == 'dissociation'){
+        //Create the complex including macromolecules inside of it
+        //Temprorarily add it to the process position we will move it according to the last size of it
+        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+        complex.data('justAdded', true);
+        complex.data('justAddedLayoutNode', true);
 
-      //If a name is specified for the complex set its label accordingly
-      if (complexName) {
-        complex.data('label', complexName);
-      }
+        //If a name is specified for the complex set its label accordingly
+        if (complexName) {
+          complex.data('label', complexName);
+        }
 
-      //create the edge connnected to the complex
-      var edgeOfComplex;
-      if (templateType === 'association') {
-        edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
-      }
-      else {
-        edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
-      }
-      edgeOfComplex.data('justAdded', true);
+        //create the edge connnected to the complex
+        var edgeOfComplex;
 
-      //Create the macromolecules inside the complex
-      for (var i = 0; i < numOfMacromolecules; i++) {
-        // Add a macromolecule not having a previously defined id and having the complex created in this reaction as parent
-        var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
-        newNode.data('justAdded', true);
-        newNode.data('label', macromoleculeList[i]);
-        newNode.data('justAddedLayoutNode', true);
+        if (templateType === 'association') {
+          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
+        }
+        else {
+          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+        }
+
+        edgeOfComplex.data('justAdded', true);
+
+        for (var i = 0; i < numOfMolecules; i++) {
+
+          // Add a molecule(dependent on it's type) not having a previously defined id and having the complex created in this reaction as parent
+          if(nodeList[i].type == 'Simple Chemical'){
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "simple chemical", undefined, complex.id());
+          }
+          else{
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+          }
+
+          newNode.data('justAdded', true);
+          newNode.data('label', nodeList[i].name);
+          newNode.data('justAddedLayoutNode', true);
+        }
+      }
+      else{
+
+        //Create the input macromolecules
+        var numOfInputMacromolecules = complexName.length;
+        yPosition = processPosition.y - ((numOfInputMacromolecules - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+
+        for (var i = 0; i < numOfInputMacromolecules; i++) {
+
+          if(complexName[i].type == 'Simple Chemical'){
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "simple chemical");
+            yPosition += simpleChemicalHeight + tilingPaddingVertical;
+          }
+          else{
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+            yPosition += macromoleculeHeight + tilingPaddingVertical;
+          }
+
+          newNode.data('justAdded', true);
+          newNode.data('label', complexName[i].name);
+
+          //create the edge connected to the new macromolecule
+          var newEdge;
+
+          //Group the left or bottom elements in group id 0
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 0);
+          newEdge.data('justAdded', true);
+
+        }
       }
 
       cy.endBatch();
@@ -1102,6 +1195,9 @@ module.exports = function () {
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
         stop: function () {
+          //If it is a reversible reaction no need to re-position complexes
+          if(templateType === 'reversible')
+            return;
           //re-position the nodes inside the complex
           var supposedXPosition;
           var supposedYPosition = processPosition.y;
@@ -1120,7 +1216,7 @@ module.exports = function () {
       });
 
       // Do this check for cytoscape.js backward compatibility
-      if (layout && layout.run) {
+      if (layout && layout.run && templateType !== 'reversible') {
         layout.run();
       }
 
@@ -1232,7 +1328,7 @@ module.exports = function () {
     elementUtilities.canHaveSBGNCardinality = function (ele) {
       var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
 
-      return ele.data('class') == 'consumption' || ele.data('class') == 'production';
+      return sbgnclass == 'consumption' || sbgnclass == 'production';
     };
 
     // Returns whether the give element can have sbgnlabel
@@ -1425,29 +1521,63 @@ module.exports = function () {
     // Type parameter indicates whether to change value or variable, it is valid if the box at the given index is a state variable.
     // Value parameter is the new value to set.
     // This method returns the old value of the changed data (We assume that the old value of the changed data was the same for all nodes).
+    // Each character assumed to occupy 8 unit
+    // Each infobox can have at most 32 units of width
     elementUtilities.changeStateOrInfoBox = function (nodes, index, value, type) {
       var result;
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
-
+        var oldLength = box.bbox.w;
+        var newLength = 0;
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
           }
 
           box.state[type] = value;
+          if (box.state["value"] !== undefined) {
+            newLength = box.state["value"].length;
+          }
+          if (box.state["variable"] !== undefined) {
+            newLength += box.state["variable"].length + 1;
+          }
+
         }
         else if (box.clazz == "unit of information") {
           if (!result) {
             result = box.label.text;
           }
-
+          newLength = value.length;
           box.label.text = value;
         }
-      }
+        if (newLength == 0) {
+          box.bbox.w = 8;
+        }else if(newLength < 7){
+          box.bbox.w = 8 * newLength; // Arrange information box size dynamically
+        }else{
+          box.bbox.w = 48; // Maximum size of a state or information box
+        }
 
+
+        if (box.anchorSide === "top" || box.anchorSide === "bottom") {
+          box.bbox.x += (box.bbox.w - oldLength) / 2;
+          var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
+          var shiftIndex = 0;
+          for (var i = 0; i < units.length; i++) {
+            if(units[i] === box){
+              shiftIndex = i;
+              break;
+            }
+          }
+          for (var j = shiftIndex+1; j < units.length; j++) {
+              units[j].bbox.x += (box.bbox.w - oldLength);
+          }
+        }
+
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
+      }
       return result;
     };
 
@@ -1471,6 +1601,7 @@ module.exports = function () {
         else if (obj.clazz == "state variable") {
           locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
         }
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
       return locationObj;
     };
@@ -1487,6 +1618,7 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, obj.location);
       }
 
       return obj;
@@ -1511,18 +1643,6 @@ module.exports = function () {
         }
       }
     };
-
-    // Set clone marker status of given nodes to the given status.
-    elementUtilities.setCloneMarkerStatus = function (nodes, status) {
-      if (status) {
-        nodes.data('clonemarker', true);
-      }
-      else {
-        nodes.removeData('clonemarker');
-      }
-    };
-
-    //elementUtilities.setCloneMarkerStatus = function()
 
     // Change font properties of the given elements with given font data
     elementUtilities.changeFontProperties = function (eles, data) {
@@ -1673,7 +1793,7 @@ module.exports = function () {
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
-          var ele = eles[i];
+          var ele = cy.getElementById(eles[i].id());
           ele.css(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
         }
         cy.endBatch();
@@ -1691,7 +1811,7 @@ module.exports = function () {
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
-          var ele = eles[i];
+          var ele = cy.getElementById(eles[i].id());
           ele.data(name, valueMap[ele.id()]); // valueMap is an id to value map use it in this way
         }
         cy.endBatch();
@@ -1762,6 +1882,9 @@ module.exports = function () {
      */
     elementUtilities.maintainPointer = function (eles) {
       eles.nodes().forEach(function(ele){
+        // restore background images
+        ele.emit('data');
+
         // skip nodes without any auxiliary units
         if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
           return;
@@ -1774,6 +1897,324 @@ module.exports = function () {
         }
       });
     }
+
+    elementUtilities.hasBackgroundImage = function (ele) {
+      if(ele.isNode()){
+        var bg = ele.data('background-image') ? ele.data('background-image') : "";
+        var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
+        if(bg !== "" && !(bg.indexOf(cloneImg) > -1 && bg === cloneImg))
+          return true;
+
+      }
+      return false;
+    }
+
+    elementUtilities.getBackgroundImageURL = function (ele) {
+      if(ele.isNode()){
+        var bg = ele.data('background-image');
+
+        if(bg){
+          bg = bg.split(" ");  
+          for(var i = 0; i < bg.length; i++){
+            if(bg[i].indexOf('http') === 0)
+              return bg[i];
+          }
+        }
+      }
+    }
+
+    elementUtilities.getBackgroundImageObj = function (ele) {
+      if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
+        var keys = ['background-image', 'background-fit', 'background-image-opacity',
+        'background-position-x', 'background-position-y', 'background-height', 'background-width'];
+
+        var obj = {};
+        keys.forEach(function(key){
+          var arr = ele.data(key);
+          obj[key] = arr ? arr : "";
+        });
+        
+        return obj;
+      }
+    }
+
+    elementUtilities.getBackgroundFitOptions = function (ele) {
+      if(!ele || !ele.isNode())
+        return;
+
+      var style = ele._private.style;
+      if(style['background-fit'] && style['background-fit'].value && style['background-fit'].value.length > 0){
+        var fit = style['background-fit'].value[0];
+        if(!fit || fit === "")
+          return;
+
+        var selected = "";
+        if(fit === "none"){
+          var height = style['background-height'].value[0];
+          selected = height === "auto" ? "none":"fit";
+        }
+        else if(fit)
+          selected = fit;
+        else
+          return;
+
+        var options = '<option value="none">None</option>'
+                    + '<option value="fit">Fit</option>'
+                    + '<option value="cover">Cover</option>'
+                    + '<option value="contain">Contain</option>';
+        var searchKey = 'value="' + selected + '"';
+        var index = options.indexOf(searchKey) + searchKey.length;
+        return options.substr(0, index) + ' selected' + options.substr(index);
+      }
+    }
+
+    elementUtilities.updateBackgroundImage = function (nodes, bgObj) {
+      if(!nodes || nodes.length == 0 || !bgObj)
+        return;
+
+      for(var i = 0; i < nodes.length; i++){
+        var node = nodes[0];
+
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+        
+        var index = -1;
+        if(typeof bgObj['background-image'] === "string")
+          index = imgs.indexOf(bgObj['background-image']);
+        else if(Array.isArray(bgObj['background-image']))
+          index = imgs.indexOf(bgObj['background-image'][0]);
+
+        if(index < 0)
+          continue;
+
+        if(bgObj['background-image'] && imgs.length > index){
+          var tmp = imgs[index];
+          imgs[index] = bgObj['background-image'];
+          bgObj['background-image'] = tmp;
+        }
+        if(bgObj['background-fit'] && fits.length > index){
+          var tmp = fits[index];
+          fits[index] = bgObj['background-fit'];
+          bgObj['background-fit'] = tmp;
+        }
+        if(bgObj['background-width'] && widths.length > index){
+          var tmp = widths[index];
+          widths[index] = bgObj['background-width'];
+          bgObj['background-width'] = tmp;
+        }
+        if(bgObj['background-height'] && heights.length > index){
+          var tmp = heights[index];
+          heights[index] = bgObj['background-height'];
+          bgObj['background-height'] = tmp;
+        }
+        if(bgObj['background-position-x'] && xPos.length > index){
+          var tmp = xPos[index];
+          xPos[index] = bgObj['background-position-x'];
+          bgObj['background-position-x'] = tmp;
+        }
+        if(bgObj['background-position-y'] && yPos.length > index){
+          var tmp = yPos[index];
+          yPos[index] = bgObj['background-position-y'];
+          bgObj['background-position-y'] = tmp;
+        }
+        if(bgObj['background-image-opacity'] && opacities.length > index){
+          var tmp = opacities[index];
+          opacities[index] = bgObj['background-image-opacity'];
+          bgObj['background-image-opacity'] = tmp;
+        }
+
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
+      }
+
+      return bgObj;
+    }
+
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime) {
+      if(!nodes || nodes.length == 0 || !oldImg || !newImg)
+        return;
+
+      
+      elementUtilities.removeBackgroundImage(nodes, oldImg);
+      newImg['firstTime'] = firstTime;
+      elementUtilities.addBackgroundImage(nodes, newImg);
+      
+      return {
+        nodes: nodes,
+        oldImg: newImg,
+        newImg: oldImg,
+        firstTime: false
+      };
+    }
+
+    // Add a background image to given nodes.
+    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
+      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+        return;
+
+      // Load the image from local, else just put the URL
+      if(bgObj['fromFile'])
+        loadBackgroundThenApply(nodes, bgObj);
+      // Validity of given URL should be checked before applying it
+      else if(bgObj['firstTime'])
+        checkGivenURL(nodes, bgObj);
+      else
+        applyBackground(nodes, bgObj);
+
+      function loadBackgroundThenApply(nodes, bgObj) {
+        var reader = new FileReader();
+        var imgFile = bgObj['background-image'];
+
+        // Check whether given file is an image file
+        if(imgFile.type.indexOf("image") !== 0){
+          if(promptInvalidImage)
+            promptInvalidImage("Invalid image file is given!");
+          return;
+        }
+
+        reader.readAsDataURL(imgFile);
+
+        reader.onload = function (e) {
+          var img = reader.result;
+          if(img){
+            bgObj['background-image'] = img;
+            bgObj['fromFile'] = false;
+            applyBackground(nodes, bgObj);
+          }
+          else{
+            if(promptInvalidImage)
+              promptInvalidImage("Given file could not be read!");
+          }
+        };
+      }
+
+      function checkGivenURL(nodes, bgObj){
+        var url = bgObj['background-image'];
+        var extension = (url.split(/[?#]/)[0]).split(".").pop();
+        var validExtensions = ["png", "svg", "jpg", "jpeg"];
+
+        if(!validExtensions.includes(extension)){
+          if(promptInvalidImage)
+            promptInvalidImage("Invalid URL is given!");
+          return;
+        }
+
+        $.ajax({
+          url: url,
+          type: 'GET',
+          success: function(result, status, xhr){
+            applyBackground(nodes, bgObj);
+          },
+          error: function(xhr, status, error){
+            if(promptInvalidImage)
+              promptInvalidImage("Invalid URL is given!");
+          },
+        });
+      }
+
+      function applyBackground(nodes, bgObj) {
+
+        for(var i = 0; i < nodes.length; i++){
+          var node = nodes[0];
+        
+          if(elementUtilities.hasBackgroundImage(node))
+            continue;
+        
+          var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+          var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+          var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+          var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+          var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+          var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+          var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+          
+          var indexToInsert = imgs.length;
+
+          // insert to length-1
+          if(hasCloneMarker(node, imgs)){
+            indexToInsert--;
+          }
+
+          imgs.splice(indexToInsert, 0, bgObj['background-image']);
+          fits.splice(indexToInsert, 0, bgObj['background-fit']);
+          opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
+          xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
+          yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
+          widths.splice(indexToInsert, 0, bgObj['background-width']);
+          heights.splice(indexToInsert, 0, bgObj['background-height']);
+
+          node.data('background-image', imgs.join(" "));
+          node.data('background-position-x', xPos.join(" "));
+          node.data('background-position-y', yPos.join(" "));
+          node.data('background-width', widths.join(" "));
+          node.data('background-height', heights.join(" "));
+          node.data('background-fit', fits.join(" "));
+          node.data('background-image-opacity', opacities.join(" "));
+          bgObj['firstTime'] = false;
+
+          if(updateInfo)
+            updateInfo();
+        }
+      }
+
+      function hasCloneMarker(node, imgs){
+        var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
+        return (imgs.indexOf(cloneImg) > -1);
+      }
+    };
+
+    // Remove a background image from given nodes.
+    elementUtilities.removeBackgroundImage = function (nodes, bgObj) {
+      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+        return;
+
+      for(var i = 0; i < nodes.length; i++){
+        var node = nodes[0];
+
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+        
+        var index = -1;
+        if(typeof bgObj['background-image'] === "string")
+          index = imgs.indexOf(bgObj['background-image']);
+        else if(Array.isArray(bgObj['background-image']))
+          index = imgs.indexOf(bgObj['background-image'][0]);
+
+        if(index > -1){
+          imgs.splice(index, 1);
+          fits.splice(index, 1);
+          opacities.splice(index, 1);
+          xPos.splice(index, 1);
+          yPos.splice(index, 1);
+          widths.splice(index, 1);
+          heights.splice(index, 1);
+        }
+
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
+        bgObj['firstTime'] = false;
+      }
+    };
   }
 
   return elementUtilitiesExtender;

@@ -487,10 +487,121 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.addBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+      var updateInfo = param.updateInfo;
+      var promptInvalidImage = param.promptInvalidImage;
+
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: bgObj,
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage
+      };
+      return result;
+    };
+
+    undoRedoActionFunctions.removeBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+
+      elementUtilities.removeBackgroundImage(nodes, bgObj);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: bgObj
+      };
+      return result;
+    };
+
+    undoRedoActionFunctions.updateBackgroundImage = function (param) {
+      var bgObj = param.bgObj;
+      var nodes = param.nodes;
+
+      var oldBgObj = elementUtilities.updateBackgroundImage(nodes, bgObj);
+
+      cy.forceRender();
+
+      var result = {
+        nodes: nodes,
+        bgObj: oldBgObj
+      };
+      return result;
+    };
+
+    undoRedoActionFunctions.changeBackgroundImage = function (param) {
+      var oldImg = param.oldImg;
+      var newImg = param.newImg;
+      var nodes = param.nodes;
+      var firstTime = param.firstTime;
+
+      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime);
+
+      cy.forceRender();
+
+      return result;
+    };
+
     // Section End
     // sbgn action functions
-  }
+    undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {
+      let collection = cy.collection();
+      let mapType = elementUtilities.getMapType();
+      elementUtilities.setMapType(param.mapType);
+      $('#map-type').val(param.mapType);
 
+      param.collection.forEach(function(edge) {
+        var sourceNode = edge._private.data.source;
+        var targetNode = edge._private.data.target;
+
+        edge.move({source: targetNode, target: sourceNode});
+
+        let convertedEdge = cy.getElementById(edge.id());
+        
+        if(convertedEdge.data("cyedgebendeditingDistances")){
+          let distance = convertedEdge.data("cyedgebendeditingDistances");      
+          distance = distance.map(function(element) {
+            return -1*element;
+          });
+          convertedEdge.data("cyedgebendeditingDistances", distance.reverse());
+
+          let weight = convertedEdge.data("cyedgebendeditingWeights");       
+          weight = weight.map(function(element) {
+            return 1-element;
+          });
+          convertedEdge.data("cyedgebendeditingWeights", weight.reverse());
+        }
+
+        if (convertedEdge._private.data.class === "consumption") {
+          convertedEdge._private.data.class = "production";
+          convertedEdge._private.data.portsource = targetNode + ".1";
+          convertedEdge._private.data.porttarget = sourceNode;
+        }
+        else if (convertedEdge._private.data.class === "production") {
+          convertedEdge._private.data.class = "consumption";
+          convertedEdge._private.data.portsource = targetNode;
+          convertedEdge._private.data.porttarget = sourceNode + ".1";
+        }
+
+        collection = collection.add(convertedEdge);
+        cy.style().update();
+      });
+
+      var result = {
+        collection: collection,
+        mapType: mapType,
+        processId: param.processId
+      };
+      return result;
+    }
+  }
 
   return undoRedoActionFunctionsExtender;
 };
