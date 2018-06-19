@@ -214,17 +214,8 @@ module.exports = function () {
       cy.clipboard().paste();
     }
     cloneCollapsedNodesAndPorts(elesBefore);
-    applyBackgroundStyle(cy.nodes(":selected"));
+    cy.nodes(":selected").emit('data');
   };
-
-  // Apply background image styles
-  function applyBackgroundStyle(nodes) {
-    nodes.forEach(node => {
-      if(node.data('background-image') && node.data('background-image') !== {}){
-        node.style(node.data('background-image'));
-      }
-    });
-  }
 
   /*
    * Aligns given nodes in given horizontal and vertical order.
@@ -1024,6 +1015,28 @@ module.exports = function () {
     }
     else {
       elementUtilities.updateBackgroundImage(nodes, bgObj);
+    }
+
+    cy.style().update();
+  }
+
+  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg){
+    if (nodes.length === 0 || !oldImg || !newImg) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        oldImg: oldImg,
+        newImg: newImg,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("changeBackgroundImage", param);
+    }
+    else {
+      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg);
     }
 
     cy.style().update();

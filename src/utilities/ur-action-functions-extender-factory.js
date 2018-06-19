@@ -536,6 +536,19 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.changeBackgroundImage = function (param) {
+      var oldImg = param.oldImg;
+      var newImg = param.newImg;
+      var nodes = param.nodes;
+      var firstTime = param.firstTime;
+
+      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime);
+
+      cy.forceRender();
+
+      return result;
+    };
+
     // Section End
     // sbgn action functions
     undoRedoActionFunctions.convertIntoReversibleReaction = function (param) {

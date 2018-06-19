@@ -1883,10 +1883,7 @@ module.exports = function () {
     elementUtilities.maintainPointer = function (eles) {
       eles.nodes().forEach(function(ele){
         // restore background images
-        var bgData = ele.data('background-image');
-        if(bgData){
-          ele.style(bgData);
-        }
+        ele.emit('data');
 
         // skip nodes without any auxiliary units
         if(!ele.data('statesandinfos') || ele.data('statesandinfos').length == 0) {
@@ -1903,68 +1900,41 @@ module.exports = function () {
 
     elementUtilities.hasBackgroundImage = function (ele) {
       if(ele.isNode()){
-        var style = ele._private.style;
-        var bg = style['background-image'] ? style['background-image'].value : [];
-        var bg = style['background-image'] ? style['background-image'].value : [];
+        var bg = ele.data('background-image') ? ele.data('background-image') : "";
         var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
-        if(bg.length > 0 && !(bg.indexOf(cloneImg) > -1 && bg.length === 1))
+        if(bg !== "" && !(bg.indexOf(cloneImg) > -1 && bg === cloneImg))
           return true;
 
-        return false;
       }
+      return false;
     }
 
     elementUtilities.getBackgroundImageURL = function (ele) {
       if(ele.isNode()){
-        var bg = ele._private.style['background-image'];
-        // priority is in data segment of the node
-        if(ele.data('background-image'))
-          bg = ele.data('background-image')['background-image'];
+        var bg = ele.data('background-image');
 
         if(bg){
-          var imgList = ele.data('background-image') ? bg : bg.value;
-          for(var i = 0; i < imgList.length; i++){
-            if(imgList[i].indexOf('http') === 0)
-              return imgList[i];
+          bg = bg.split(" ");  
+          for(var i = 0; i < bg.length; i++){
+            if(bg[i].indexOf('http') === 0)
+              return bg[i];
           }
         }
       }
     }
 
     elementUtilities.getBackgroundImageObj = function (ele) {
-      if(ele.isNode()){
-        var style = ele._private.style;
-        // priority is in data segment of the node
-        if(ele.data('background-image')){
-          style = ele.data('background-image');
+      if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
+        var keys = ['background-image', 'background-fit', 'background-image-opacity',
+        'background-position-x', 'background-position-y', 'background-height', 'background-width'];
 
-          var img = style['background-image'] ? style['background-image'] : "" ;
-          var fit = style['background-fit'] ? style['background-fit'] : [] ;
-          var opa = style['background-image-opacity'] ? style['background-image-opacity'] : [] ;
-          var x = style['background-position-x'] ? style['background-position-x'] : [] ;
-          var y = style['background-position-y'] ? style['background-position-y'] : [] ;
-          var w = style['background-width'] ? style['background-width'] : [] ;
-          var h = style['background-height'] ? style['background-height'] : [] ;
-        }
-        else{
-          var img = style['background-image'] ? style['background-image'].value : "" ;
-          var fit = style['background-fit'] ? style['background-fit'].value : [] ;
-          var opa = style['background-image-opacity'] ? style['background-image-opacity'].value : [] ;
-          var x = style['background-position-x'] ? style['background-position-x'].value : [] ;
-          var y = style['background-position-y'] ? style['background-position-y'].value : [] ;
-          var w = style['background-width'] ? style['background-width'].value : [] ;
-          var h = style['background-height'] ? style['background-height'].value : [] ;
-        }
-
-        return {
-          'background-image': img,
-          'background-fit': fit,
-          'background-image-opacity': opa,
-          'background-position-x': x,
-          'background-position-y': y,
-          'background-width': w,
-          'background-height': h
-        };
+        var obj = {};
+        keys.forEach(function(key){
+          var arr = ele.data(key);
+          obj[key] = arr ? arr : "";
+        });
+        
+        return obj;
       }
     }
 
@@ -2004,21 +1974,15 @@ module.exports = function () {
 
       for(var i = 0; i < nodes.length; i++){
         var node = nodes[0];
-        var style = node._private.style;
 
-        var imgs = style['background-image'] ? style['background-image'].value : [];
-        var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
-        var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
-        var widths = style['background-width'] ? style['background-width'].value : [];
-        var heights = style['background-height'] ? style['background-height'].value : [];
-        var fits = style['background-fit'] ? style['background-fit'].value : [];
-        var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
-
-        concatUnitToValues(xPos, "%");
-        concatUnitToValues(yPos, "%");
-        concatUnitToValues(heights, "%");
-        concatUnitToValues(widths, "%");
-
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+        
         var index = -1;
         if(typeof bgObj['background-image'] === "string")
           index = imgs.indexOf(bgObj['background-image']);
@@ -2028,6 +1992,11 @@ module.exports = function () {
         if(index < 0)
           continue;
 
+        if(bgObj['background-image'] && imgs.length > index){
+          var tmp = imgs[index];
+          imgs[index] = bgObj['background-image'];
+          bgObj['background-image'] = tmp;
+        }
         if(bgObj['background-fit'] && fits.length > index){
           var tmp = fits[index];
           fits[index] = bgObj['background-fit'];
@@ -2043,22 +2012,49 @@ module.exports = function () {
           heights[index] = bgObj['background-height'];
           bgObj['background-height'] = tmp;
         }
-
-        var opt = {
-          'background-image': imgs,
-          'background-position-x': xPos,
-          'background-position-y': yPos,
-          'background-width': widths,
-          'background-height': heights,
-          'background-fit': fits,
-          'background-image-opacity': opacities
+        if(bgObj['background-position-x'] && xPos.length > index){
+          var tmp = xPos[index];
+          xPos[index] = bgObj['background-position-x'];
+          bgObj['background-position-x'] = tmp;
         }
-        node.style(opt);
-        node.data('background-image', opt);
+        if(bgObj['background-position-y'] && yPos.length > index){
+          var tmp = yPos[index];
+          yPos[index] = bgObj['background-position-y'];
+          bgObj['background-position-y'] = tmp;
+        }
+        if(bgObj['background-image-opacity'] && opacities.length > index){
+          var tmp = opacities[index];
+          opacities[index] = bgObj['background-image-opacity'];
+          bgObj['background-image-opacity'] = tmp;
+        }
 
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
       }
-      return bgObj;
 
+      return bgObj;
+    }
+
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime) {
+      if(!nodes || nodes.length == 0 || !oldImg || !newImg)
+        return;
+
+      
+      elementUtilities.removeBackgroundImage(nodes, oldImg);
+      newImg['firstTime'] = firstTime;
+      elementUtilities.addBackgroundImage(nodes, newImg);
+      
+      return {
+        nodes: nodes,
+        oldImg: newImg,
+        newImg: oldImg,
+        firstTime: false
+      };
     }
 
     // Add a background image to given nodes.
@@ -2130,29 +2126,18 @@ module.exports = function () {
 
         for(var i = 0; i < nodes.length; i++){
           var node = nodes[0];
-          var style = node._private.style;
-
-          // Change existing image
-          if(elementUtilities.hasBackgroundImage(node)){
-            var oldBgObj = elementUtilities.getBackgroundImageObj(node);
-            var nodeList = [];
-            nodeList.push(node);
-            elementUtilities.removeBackgroundImage(nodeList, oldBgObj);
-          }
-
-          var imgs = style['background-image'] ? style['background-image'].value : [];
-          var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
-          var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
-          var widths = style['background-width'] ? style['background-width'].value : [];
-          var heights = style['background-height'] ? style['background-height'].value : [];
-          var fits = style['background-fit'] ? style['background-fit'].value : [];
-          var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
-
-          concatUnitToValues(xPos, "%");
-          concatUnitToValues(yPos, "%");
-          concatUnitToValues(heights, "%");
-          concatUnitToValues(widths, "%");
-
+        
+          if(elementUtilities.hasBackgroundImage(node))
+            continue;
+        
+          var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+          var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+          var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+          var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+          var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+          var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+          var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+          
           var indexToInsert = imgs.length;
 
           // insert to length-1
@@ -2168,17 +2153,13 @@ module.exports = function () {
           widths.splice(indexToInsert, 0, bgObj['background-width']);
           heights.splice(indexToInsert, 0, bgObj['background-height']);
 
-          var opt = {
-            'background-image': imgs,
-            'background-position-x': xPos,
-            'background-position-y': yPos,
-            'background-width': widths,
-            'background-height': heights,
-            'background-fit': fits,
-            'background-image-opacity': opacities
-          }
-          node.style(opt);
-          node.data('background-image', opt);
+          node.data('background-image', imgs.join(" "));
+          node.data('background-position-x', xPos.join(" "));
+          node.data('background-position-y', yPos.join(" "));
+          node.data('background-width', widths.join(" "));
+          node.data('background-height', heights.join(" "));
+          node.data('background-fit', fits.join(" "));
+          node.data('background-image-opacity', opacities.join(" "));
           bgObj['firstTime'] = false;
 
           if(updateInfo)
@@ -2199,25 +2180,15 @@ module.exports = function () {
 
       for(var i = 0; i < nodes.length; i++){
         var node = nodes[0];
-        var style = node._private.style;
 
-        var imgs = style['background-image'] ? style['background-image'].value : [];
-        var xPos = style['background-position-x'] ? style['background-position-x'].value : [];
-        var xUnits = style['background-position-x'] ? style['background-position-x'].units : [];
-        var yPos = style['background-position-y'] ? style['background-position-y'].value : [];
-        var yUnits = style['background-position-y'] ? style['background-position-y'].units : [];
-        var widths = style['background-width'] ? style['background-width'].value : [];
-        var widthUnits = style['background-width'] ? style['background-width'].units : [];
-        var heights = style['background-height'] ? style['background-height'].value : [];
-        var heightUnits = style['background-height'] ? style['background-height'].units : [];
-        var fits = style['background-fit'] ? style['background-fit'].value : [];
-        var opacities = style['background-image-opacity'] ? style['background-image-opacity'].value : [];
-
-        concatUnitToValues(xPos, "%");
-        concatUnitToValues(yPos, "%");
-        concatUnitToValues(heights, "%");
-        concatUnitToValues(widths, "%");
-
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
+        
         var index = -1;
         if(typeof bgObj['background-image'] === "string")
           index = imgs.indexOf(bgObj['background-image']);
@@ -2234,32 +2205,16 @@ module.exports = function () {
           heights.splice(index, 1);
         }
 
-        var opt = {
-          'background-image': imgs,
-          'background-position-x': xPos,
-          'background-position-y': yPos,
-          'background-width': widths,
-          'background-height': heights,
-          'background-fit': fits,
-          'background-image-opacity': opacities
-        }
-
-        node.style(opt);
-        node.data('background-image', opt);
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
         bgObj['firstTime'] = false;
       }
     };
-
-    function concatUnitToValues(values, unit){
-      if(!values || values.length == 0)
-        return;
-
-      for(var i = 0; i < values.length; i++){
-        if(values[i] && values[i] !== "" && values[i] !== "auto"){
-          values[i] = "" + values[i] + unit;
-        }
-      }
-    }
   }
 
   return elementUtilitiesExtender;
