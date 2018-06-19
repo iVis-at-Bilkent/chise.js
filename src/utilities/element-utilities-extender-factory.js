@@ -2100,7 +2100,7 @@ module.exports = function () {
 
       function checkGivenURL(nodes, bgObj){
         var url = bgObj['background-image'];
-        var extension = url.split(".").pop();
+        var extension = (url.split(/[?#]/)[0]).split(".").pop();
         var validExtensions = ["png", "svg", "jpg", "jpeg"];
 
         if(!validExtensions.includes(extension)){
