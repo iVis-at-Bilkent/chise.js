@@ -54,6 +54,27 @@ module.exports = function () {
           if (!ele.data('text-wrap') && classProperties['text-wrap']) {
             ele.data('text-wrap', classProperties['text-wrap']);
           }
+          if (!ele.data('background-image') && classProperties['background-image']) {
+            ele.data('background-image', classProperties['background-image']);
+          }
+          if (!ele.data('background-fit') && classProperties['background-fit']) {
+            ele.data('background-fit', classProperties['background-fit']);
+          }
+          if (!ele.data('background-position-x') && classProperties['background-position-x']) {
+            ele.data('background-position-x', classProperties['background-position-x']);
+          }
+          if (!ele.data('background-position-y') && classProperties['background-position-y']) {
+            ele.data('background-position-y', classProperties['background-position-y']);
+          }
+          if (!ele.data('background-width') && classProperties['background-width']) {
+            ele.data('background-width', classProperties['background-width']);
+          }
+          if (!ele.data('background-height') && classProperties['background-height']) {
+            ele.data('background-height', classProperties['background-height']);
+          }
+          if (!ele.data('background-image-opacity') && classProperties['background-image-opacity']) {
+            ele.data('background-image-opacity', classProperties['background-image-opacity']);
+          }
 
         }
         else if (ele.isEdge()) {
