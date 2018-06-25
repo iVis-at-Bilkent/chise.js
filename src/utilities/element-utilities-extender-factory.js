@@ -1898,6 +1898,20 @@ module.exports = function () {
       });
     }
 
+    elementUtilities.anyHasBackgroundImage = function (eles) {
+      var obj = elementUtilities.getBackgroundImageObjs(eles);
+      if(obj === undefined)
+        return false;
+      else{
+        for(var key in obj){
+          var value = obj[key];
+          if(value && !$.isEmptyObject(value))
+            return true;
+        }
+        return false;
+      }
+    }
+
     elementUtilities.hasBackgroundImage = function (ele) {
       if(ele.isNode()){
         var bg = ele.data('background-image') ? ele.data('background-image') : "";
@@ -1909,62 +1923,101 @@ module.exports = function () {
       return false;
     }
 
-    elementUtilities.getBackgroundImageURL = function (ele) {
-      if(ele.isNode()){
-        var bg = ele.data('background-image');
+    elementUtilities.getBackgroundImageURL = function (eles) {
+      if(!eles || eles.length < 1)
+        return;
+      
+      var commonURL = "";
+      for(var i = 0; i < eles.length; i++){
+        var ele = eles[i];
 
-        if(bg){
-          bg = bg.split(" ");  
-          for(var i = 0; i < bg.length; i++){
-            if(bg[i].indexOf('http') === 0)
-              return bg[i];
-          }
-        }
-      }
-    }
-
-    elementUtilities.getBackgroundImageObj = function (ele) {
-      if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
-        var keys = ['background-image', 'background-fit', 'background-image-opacity',
-        'background-position-x', 'background-position-y', 'background-height', 'background-width'];
-
-        var obj = {};
-        keys.forEach(function(key){
-          var arr = ele.data(key);
-          obj[key] = arr ? arr : "";
-        });
+        if(!ele.isNode() || !elementUtilities.hasBackgroundImage(ele))
+          return;
         
-        return obj;
+        var url = ele.data('background-image').split(" ").pop();
+        if(!url || url.indexOf('http') !== 0 || (commonURL !== "" && commonURL !== url))
+          return;
+        else if(commonURL === "")
+          commonURL = url;
       }
+      
+      return commonURL;
     }
 
-    elementUtilities.getBackgroundFitOptions = function (ele) {
-      if(!ele || !ele.isNode())
+    elementUtilities.getBackgroundImageObjs = function (eles) {
+      if(!eles || eles.length < 1)
         return;
 
-      var style = ele._private.style;
-      if(style['background-fit'] && style['background-fit'].value && style['background-fit'].value.length > 0){
-        var fit = style['background-fit'].value[0];
-        if(!fit || fit === "")
+      var list = {};
+      for(var i = 0; i < eles.length; i++){
+        var ele = eles[i];
+        var obj = getBgObj(ele);
+        if(obj === undefined)
           return;
+        
+        list[ele.data('id')] = obj;
+      }
+      return list;
 
-        var selected = "";
-        if(fit === "none"){
-          var height = style['background-height'].value[0];
-          selected = height === "auto" ? "none":"fit";
+      function getBgObj (ele) {
+        if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
+          var keys = ['background-image', 'background-fit', 'background-image-opacity',
+          'background-position-x', 'background-position-y', 'background-height', 'background-width'];
+          
+          var obj = {};
+          keys.forEach(function(key){
+            var arr = ele.data(key);
+            obj[key] = arr ? arr : "";
+          });
+          
+          return obj;
         }
-        else if(fit)
-          selected = fit;
-        else
+        else if(ele.isNode())
+          return {};
+      }
+    }
+      
+    elementUtilities.getBackgroundFitOptions = function (eles) {
+      if(!eles || eles.length < 1)
+        return;
+
+      var commonFit = "";
+      for(var i = 0; i < eles.length; i++){
+        var node = eles[i];
+        if(!node.isNode())
           return;
 
-        var options = '<option value="none">None</option>'
-                    + '<option value="fit">Fit</option>'
-                    + '<option value="cover">Cover</option>'
-                    + '<option value="contain">Contain</option>';
-        var searchKey = 'value="' + selected + '"';
-        var index = options.indexOf(searchKey) + searchKey.length;
-        return options.substr(0, index) + ' selected' + options.substr(index);
+        var fit = getFitOption(node);
+        if(!fit || (commonFit !== "" && fit !== commonFit))
+          return;
+        else if(commonFit === "")
+          commonFit = fit;
+      }
+
+      var options = '<option value="none">None</option>'
+                  + '<option value="fit">Fit</option>'
+                  + '<option value="cover">Cover</option>'
+                  + '<option value="contain">Contain</option>';
+      var searchKey = 'value="' + commonFit + '"';
+      var index = options.indexOf(searchKey) + searchKey.length;
+      return options.substr(0, index) + ' selected' + options.substr(index);
+
+      function getFitOption(node) {
+        if(!elementUtilities.hasBackgroundImage(node))
+          return;
+
+        var f = node.data('background-fit');
+        var h = node.data('background-height');
+
+        if(!f || !h)
+          return;
+        
+        f = f.split(" ");
+        h = h.split(" ");
+        if(f[f.length-1] === "none")
+          return (h[h.length-1] === "auto" ? "none" : "fit");
+        else
+          return f[f.length-1];
       }
     }
 
@@ -1973,8 +2026,11 @@ module.exports = function () {
         return;
 
       for(var i = 0; i < nodes.length; i++){
-        var node = nodes[0];
-
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj || $.isEmptyObject(obj))
+          continue;
+        
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
         var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
@@ -1984,48 +2040,48 @@ module.exports = function () {
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
         
         var index = -1;
-        if(typeof bgObj['background-image'] === "string")
-          index = imgs.indexOf(bgObj['background-image']);
-        else if(Array.isArray(bgObj['background-image']))
-          index = imgs.indexOf(bgObj['background-image'][0]);
+        if(typeof obj['background-image'] === "string")
+          index = imgs.indexOf(obj['background-image']);
+        else if(Array.isArray(obj['background-image']))
+          index = imgs.indexOf(obj['background-image'][0]);
 
         if(index < 0)
           continue;
 
-        if(bgObj['background-image'] && imgs.length > index){
+        if(obj['background-image'] && imgs.length > index){
           var tmp = imgs[index];
-          imgs[index] = bgObj['background-image'];
-          bgObj['background-image'] = tmp;
+          imgs[index] = obj['background-image'];
+          obj['background-image'] = tmp;
         }
-        if(bgObj['background-fit'] && fits.length > index){
+        if(obj['background-fit'] && fits.length > index){
           var tmp = fits[index];
-          fits[index] = bgObj['background-fit'];
-          bgObj['background-fit'] = tmp;
+          fits[index] = obj['background-fit'];
+          obj['background-fit'] = tmp;
         }
-        if(bgObj['background-width'] && widths.length > index){
+        if(obj['background-width'] && widths.length > index){
           var tmp = widths[index];
-          widths[index] = bgObj['background-width'];
-          bgObj['background-width'] = tmp;
+          widths[index] = obj['background-width'];
+          obj['background-width'] = tmp;
         }
-        if(bgObj['background-height'] && heights.length > index){
+        if(obj['background-height'] && heights.length > index){
           var tmp = heights[index];
-          heights[index] = bgObj['background-height'];
-          bgObj['background-height'] = tmp;
+          heights[index] = obj['background-height'];
+          obj['background-height'] = tmp;
         }
-        if(bgObj['background-position-x'] && xPos.length > index){
+        if(obj['background-position-x'] && xPos.length > index){
           var tmp = xPos[index];
-          xPos[index] = bgObj['background-position-x'];
-          bgObj['background-position-x'] = tmp;
+          xPos[index] = obj['background-position-x'];
+          obj['background-position-x'] = tmp;
         }
-        if(bgObj['background-position-y'] && yPos.length > index){
+        if(obj['background-position-y'] && yPos.length > index){
           var tmp = yPos[index];
-          yPos[index] = bgObj['background-position-y'];
-          bgObj['background-position-y'] = tmp;
+          yPos[index] = obj['background-position-y'];
+          obj['background-position-y'] = tmp;
         }
-        if(bgObj['background-image-opacity'] && opacities.length > index){
+        if(obj['background-image-opacity'] && opacities.length > index){
           var tmp = opacities[index];
-          opacities[index] = bgObj['background-image-opacity'];
-          bgObj['background-image-opacity'] = tmp;
+          opacities[index] = obj['background-image-opacity'];
+          obj['background-image-opacity'] = tmp;
         }
 
         node.data('background-image', imgs.join(" "));
@@ -2040,14 +2096,13 @@ module.exports = function () {
       return bgObj;
     }
 
-    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime) {
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage) {
       if(!nodes || nodes.length == 0 || !oldImg || !newImg)
         return;
 
-      
       elementUtilities.removeBackgroundImage(nodes, oldImg);
       newImg['firstTime'] = firstTime;
-      elementUtilities.addBackgroundImage(nodes, newImg);
+      elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage);
       
       return {
         nodes: nodes,
@@ -2059,19 +2114,26 @@ module.exports = function () {
 
     // Add a background image to given nodes.
     elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
-      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+      if(!nodes || nodes.length == 0 || !bgObj)
         return;
 
-      // Load the image from local, else just put the URL
-      if(bgObj['fromFile'])
-        loadBackgroundThenApply(nodes, bgObj);
-      // Validity of given URL should be checked before applying it
-      else if(bgObj['firstTime'])
-        checkGivenURL(nodes, bgObj);
-      else
-        applyBackground(nodes, bgObj);
+      for(var i = 0; i < nodes.length; i++){
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj || $.isEmptyObject(obj))
+          continue;
+        
+        // Load the image from local, else just put the URL
+        if(obj['fromFile'])
+        loadBackgroundThenApply(node, obj);
+        // Validity of given URL should be checked before applying it
+        else if(obj['firstTime'])
+          checkGivenURL(node, obj);
+        else
+          applyBackground(node, obj);
+      }
 
-      function loadBackgroundThenApply(nodes, bgObj) {
+      function loadBackgroundThenApply(node, bgObj) {
         var reader = new FileReader();
         var imgFile = bgObj['background-image'];
 
@@ -2089,7 +2151,7 @@ module.exports = function () {
           if(img){
             bgObj['background-image'] = img;
             bgObj['fromFile'] = false;
-            applyBackground(nodes, bgObj);
+            applyBackground(node, bgObj);
           }
           else{
             if(promptInvalidImage)
@@ -2098,7 +2160,7 @@ module.exports = function () {
         };
       }
 
-      function checkGivenURL(nodes, bgObj){
+      function checkGivenURL(node, bgObj){
         var url = bgObj['background-image'];
         var extension = (url.split(/[?#]/)[0]).split(".").pop();
         var validExtensions = ["png", "svg", "jpg", "jpeg"];
@@ -2113,7 +2175,7 @@ module.exports = function () {
           url: url,
           type: 'GET',
           success: function(result, status, xhr){
-            applyBackground(nodes, bgObj);
+            applyBackground(node, bgObj);
           },
           error: function(xhr, status, error){
             if(promptInvalidImage)
@@ -2122,49 +2184,46 @@ module.exports = function () {
         });
       }
 
-      function applyBackground(nodes, bgObj) {
+      function applyBackground(node, bgObj) {
 
-        for(var i = 0; i < nodes.length; i++){
-          var node = nodes[0];
+        if(elementUtilities.hasBackgroundImage(node))
+          return;
+      
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
         
-          if(elementUtilities.hasBackgroundImage(node))
-            continue;
-        
-          var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
-          var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
-          var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
-          var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
-          var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
-          var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
-          var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-          
-          var indexToInsert = imgs.length;
+        var indexToInsert = imgs.length;
 
-          // insert to length-1
-          if(hasCloneMarker(node, imgs)){
-            indexToInsert--;
-          }
-
-          imgs.splice(indexToInsert, 0, bgObj['background-image']);
-          fits.splice(indexToInsert, 0, bgObj['background-fit']);
-          opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
-          xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
-          yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
-          widths.splice(indexToInsert, 0, bgObj['background-width']);
-          heights.splice(indexToInsert, 0, bgObj['background-height']);
-
-          node.data('background-image', imgs.join(" "));
-          node.data('background-position-x', xPos.join(" "));
-          node.data('background-position-y', yPos.join(" "));
-          node.data('background-width', widths.join(" "));
-          node.data('background-height', heights.join(" "));
-          node.data('background-fit', fits.join(" "));
-          node.data('background-image-opacity', opacities.join(" "));
-          bgObj['firstTime'] = false;
-
-          if(updateInfo)
-            updateInfo();
+        // insert to length-1
+        if(hasCloneMarker(node, imgs)){
+          indexToInsert--;
         }
+
+        imgs.splice(indexToInsert, 0, bgObj['background-image']);
+        fits.splice(indexToInsert, 0, bgObj['background-fit']);
+        opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
+        xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
+        yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
+        widths.splice(indexToInsert, 0, bgObj['background-width']);
+        heights.splice(indexToInsert, 0, bgObj['background-height']);
+
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
+        bgObj['firstTime'] = false;
+
+        if(updateInfo)
+          updateInfo();
+        
       }
 
       function hasCloneMarker(node, imgs){
@@ -2175,12 +2234,15 @@ module.exports = function () {
 
     // Remove a background image from given nodes.
     elementUtilities.removeBackgroundImage = function (nodes, bgObj) {
-      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+      if(!nodes || nodes.length == 0 || !bgObj)
         return;
 
       for(var i = 0; i < nodes.length; i++){
-        var node = nodes[0];
-
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj)
+          continue;
+        
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
         var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
@@ -2190,10 +2252,10 @@ module.exports = function () {
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
         
         var index = -1;
-        if(typeof bgObj['background-image'] === "string")
-          index = imgs.indexOf(bgObj['background-image']);
-        else if(Array.isArray(bgObj['background-image']))
-          index = imgs.indexOf(bgObj['background-image'][0]);
+        if(typeof obj['background-image'] === "string")
+          index = imgs.indexOf(obj['background-image']);
+        else if(Array.isArray(obj['background-image']))
+          index = imgs.indexOf(obj['background-image'][0]);
 
         if(index > -1){
           imgs.splice(index, 1);
@@ -2215,6 +2277,7 @@ module.exports = function () {
         bgObj['firstTime'] = false;
       }
     };
+
   }
 
   return elementUtilitiesExtender;

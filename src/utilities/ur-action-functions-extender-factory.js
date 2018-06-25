@@ -541,8 +541,10 @@ module.exports = function () {
       var newImg = param.newImg;
       var nodes = param.nodes;
       var firstTime = param.firstTime;
+      var updateInfo = param.updateInfo;
+      var promptInvalidImage = param.promptInvalidImage;
 
-      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime);
+      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage);
 
       cy.forceRender();
 

@@ -1020,7 +1020,7 @@ module.exports = function () {
     cy.style().update();
   }
 
-  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg){
+  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg, updateInfo, promptInvalidImage){
     if (nodes.length === 0 || !oldImg || !newImg) {
       return;
     }
@@ -1030,13 +1030,15 @@ module.exports = function () {
         oldImg: oldImg,
         newImg: newImg,
         nodes: nodes,
-        firstTime: true
+        firstTime: true,
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage
       };
 
       cy.undoRedo().do("changeBackgroundImage", param);
     }
     else {
-      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg);
+      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, true, updateInfo, promptInvalidImage);
     }
 
     cy.style().update();
