@@ -2101,7 +2101,9 @@ module.exports = function () {
         return;
 
       elementUtilities.removeBackgroundImage(nodes, oldImg);
-      newImg['firstTime'] = firstTime;
+      for(var key in newImg){
+        newImg[key]['firstTime'] = firstTime;
+      }
       elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage);
       
       return {
