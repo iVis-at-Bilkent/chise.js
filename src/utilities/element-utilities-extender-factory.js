@@ -1532,6 +1532,8 @@ module.exports = function () {
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
         var newLength = 0;
+        var context = document.createElement('canvas').getContext("2d");
+        context.font = "10px sans-serif"; //font of information boxes
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
@@ -1539,10 +1541,10 @@ module.exports = function () {
 
           box.state[type] = value;
           if (box.state["value"] !== undefined) {
-            newLength = box.state["value"].length;
+            newLength = context.measureText(box.state["value"]).width;
           }
           if (box.state["variable"] !== undefined) {
-            newLength += box.state["variable"].length + 1;
+            newLength += context.measureText(box.state["variable"]).width + context.measureText("@").width;
           }
 
         }
@@ -1550,13 +1552,13 @@ module.exports = function () {
           if (!result) {
             result = box.label.text;
           }
-          newLength = value.length;
+          newLength = context.measureText(value).width;
           box.label.text = value;
         }
-        if (newLength == 0) {
+        if (newLength < 8) {
           box.bbox.w = 8;
-        }else if(newLength < 7){
-          box.bbox.w = 8 * newLength; // Arrange information box size dynamically
+        }else if(newLength < 48){
+          box.bbox.w = newLength; // Arrange information box size dynamically
         }else{
           box.bbox.w = 48; // Maximum size of a state or information box
         }
@@ -1579,6 +1581,9 @@ module.exports = function () {
 
         sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy);
       }
+      
+      cy.forceRender();
+
       return result;
     };
 
