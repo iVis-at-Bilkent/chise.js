@@ -1577,7 +1577,7 @@ module.exports = function () {
           }
         }
 
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy);
       }
       return result;
     };
@@ -1602,7 +1602,6 @@ module.exports = function () {
         else if (obj.clazz == "state variable") {
           locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
         }
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
       return locationObj;
     };
@@ -1619,7 +1618,7 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, obj.location);
+        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy, unit.location);
       }
 
       return obj;
