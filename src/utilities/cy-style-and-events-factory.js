@@ -54,28 +54,32 @@ module.exports = function () {
           if (!ele.data('text-wrap') && classProperties['text-wrap']) {
             ele.data('text-wrap', classProperties['text-wrap']);
           }
-          if (!ele.data('background-image') && classProperties['background-image']) {
+          
+          if (ele.data('init') && ele.data('background-image') === undefined && classProperties['background-image']) {
             ele.data('background-image', classProperties['background-image']);
           }
-          if (!ele.data('background-fit') && classProperties['background-fit']) {
+          if (ele.data('init') && ele.data('background-fit') === undefined && classProperties['background-fit']) {
             ele.data('background-fit', classProperties['background-fit']);
           }
-          if (!ele.data('background-position-x') && classProperties['background-position-x']) {
+          if (ele.data('init') && ele.data('background-position-x') === undefined && classProperties['background-position-x']) {
             ele.data('background-position-x', classProperties['background-position-x']);
           }
-          if (!ele.data('background-position-y') && classProperties['background-position-y']) {
+          if (ele.data('init') && ele.data('background-position-y') === undefined && classProperties['background-position-y']) {
             ele.data('background-position-y', classProperties['background-position-y']);
           }
-          if (!ele.data('background-width') && classProperties['background-width']) {
+          if (ele.data('init') && ele.data('background-width') === undefined && classProperties['background-width']) {
             ele.data('background-width', classProperties['background-width']);
           }
-          if (!ele.data('background-height') && classProperties['background-height']) {
+          if (ele.data('init') && ele.data('background-height') === undefined && classProperties['background-height']) {
             ele.data('background-height', classProperties['background-height']);
           }
-          if (!ele.data('background-image-opacity') && classProperties['background-image-opacity']) {
+          if (ele.data('init') && ele.data('background-image-opacity') === undefined && classProperties['background-image-opacity']) {
             ele.data('background-image-opacity', classProperties['background-image-opacity']);
           }
-
+          
+          if(!ele.data('init')){
+            ele.data('init', true);
+          }
         }
         else if (ele.isEdge()) {
           if (!ele.data('width') && classProperties['width']) {

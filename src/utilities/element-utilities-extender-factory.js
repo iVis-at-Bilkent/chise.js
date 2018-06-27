@@ -743,7 +743,8 @@ module.exports = function () {
         },
         statesandinfos: [],
         ports: [],
-        clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
+        clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined,
+        init: true
       };
 
       if(id) {
