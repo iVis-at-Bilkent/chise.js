@@ -1675,12 +1675,12 @@ module.exports = function () {
         if (targetclass.startsWith("BA")) // we have separate classes for each biological activity
           targetclass = "biological activity"; // but same rule applies to all of them
 
-        var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
+        var edgeConstraints = elementUtilities.AF.connectivityConstraints[edgeclass];
       }
       else{
         sourceclass = sourceclass.replace(/\s*multimer$/, '')
         targetclass = targetclass.replace(/\s*multimer$/, '')
-        var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
+        var edgeConstraints = elementUtilities.PD.connectivityConstraints[edgeclass];
       }
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
       function hasTooManyEdges(node, sourceOrTarget) {
