@@ -49,7 +49,7 @@ module.exports = function () {
   /*
    * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
    */
-  mainUtilities.addEdge = function(source, target, edgeParams, id, visibility) {
+  mainUtilities.addEdge = function(source, target, edgeParams, id, visibility, invalidEdgeCallback) {
     // update map type
     if (typeof edgeParams == 'object'){
 
@@ -64,6 +64,9 @@ module.exports = function () {
 
     // If validation result is 'invalid' cancel the operation
     if (validation === 'invalid') {
+      if(typeof invalidEdgeCallback === "function"){
+        invalidEdgeCallback();
+      }
       return;
     }
 
