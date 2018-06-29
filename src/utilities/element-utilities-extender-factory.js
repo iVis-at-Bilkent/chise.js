@@ -679,17 +679,6 @@ module.exports = function () {
         "compartment":          {asSource: {},   asTarget: {}},
       },
     }
-    // initialize a global unit of information object
-    var uoi_obj = {};
-    uoi_obj.clazz = "unit of information";
-    uoi_obj.label = {
-      text: ""
-    };
-
-    uoi_obj.bbox = {
-       w: 30,
-       h: 12
-    };
 
     // Section Start
     // Add remove utilities
@@ -778,6 +767,17 @@ module.exports = function () {
 
       if (language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
         if (sbgnclass != "BA plain")  // if AF node can have label i.e: not plain biological activity
+          var uoi_obj = {
+            clazz: "unit of information"
+          };
+          uoi_obj.label = {
+            text: ""
+          };
+
+          uoi_obj.bbox = {
+             w: 12,
+             h: 12
+          };
           elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
       }
 
@@ -1555,8 +1555,8 @@ module.exports = function () {
           newLength = context.measureText(value).width;
           box.label.text = value;
         }
-        if (newLength < 8) {
-          box.bbox.w = 8;
+        if (newLength < 12) {
+          box.bbox.w = 12;
         }else if(newLength < 48){
           box.bbox.w = newLength; // Arrange information box size dynamically
         }else{
