@@ -404,6 +404,10 @@ module.exports = function () {
       var result = {
         nodes: nodes,
         obj: obj
+      };
+      return result;
+    };
+    
     undoRedoActionFunctions.fitUnits = function (param) {
       var node = param.node;
       var locations = param.locations;
