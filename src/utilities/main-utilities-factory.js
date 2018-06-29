@@ -560,6 +560,32 @@ module.exports = function () {
     cy.style().update();
   };
 
+
+  //Arrange information boxes
+  //If force check is true, it rearranges all information boxes
+  mainUtilities.fitUnits = function (node, locations) {
+    if (node.data('auxunitlayouts') === undefined || node.data('statesandinfos').length <= 0) {
+      return;
+    }
+    if (locations === undefined || locations.length <= 0) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.fitUnits(node, locations);
+    }
+    else {
+      var param = {
+        node: node,
+        locations: locations
+      };
+
+      cy.undoRedo().do("fitUnits", param);
+    }
+
+    cy.style().update();
+  };
+
   /*
    * Set multimer status of the given nodes to the given status.
    * Considers undoable option.
