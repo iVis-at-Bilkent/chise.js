@@ -404,6 +404,40 @@ module.exports = function () {
       var result = {
         nodes: nodes,
         obj: obj
+    undoRedoActionFunctions.fitUnits = function (param) {
+      var node = param.node;
+      var locations = param.locations;
+      var obj = elementUtilities.fitUnits(node, locations);
+
+      cy.forceRender();
+
+      var result = {
+        node: node,
+        obj: obj,
+        locations: locations
+      };
+      return result;
+    };
+
+    undoRedoActionFunctions.restoreUnits = function (param) {
+      var node = param.node;
+      var locations = param.locations;
+      var obj = param.obj;
+      var index = 0;
+      node.data('statesandinfos').forEach( function (ele) {
+        var box = obj[index++];
+        ele.bbox.x = box.x;
+        ele.bbox.y = box.y;
+        var oldSide = ele.anchorSide;
+        ele.anchorSide = box.anchorSide;
+        elementUtilities.modifyUnits(node, ele, oldSide);
+      });
+
+      cy.forceRender();
+
+      var result = {
+        node: node,
+        locations: locations
       };
       return result;
     };

@@ -1543,7 +1543,7 @@ module.exports = function () {
           if (box.state["value"] !== undefined) {
             newLength = context.measureText(box.state["value"]).width;
           }
-          if (box.state["variable"] !== undefined) {
+          if (box.state["variable"] !== undefined && box.state["variable"].length > 0) {
             newLength += context.measureText(box.state["variable"]).width + context.measureText("@").width;
           }
 
@@ -1579,10 +1579,10 @@ module.exports = function () {
           }
         }
 
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy);
       }
       
-      cy.forceRender();
+      //TODO find a way to elimate this redundancy to update info-box positions
+      node.data('border-width', node.data('border-width'));
 
       return result;
     };
@@ -1623,10 +1623,34 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy, unit.location);
       }
 
       return obj;
+    };
+
+
+    //Tiles informations boxes for given anchorSides
+    elementUtilities.fitUnits = function (node, locations) {
+      var obj = [];
+      node.data('statesandinfos').forEach( function (ele) {
+        obj.push({
+          x: ele.bbox.x,
+          y: ele.bbox.y,
+          anchorSide: ele.anchorSide
+        });
+      });
+      sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy, locations);
+      return obj;
+    };
+
+    //Check which anchorsides fits
+    elementUtilities.checkFit = function (node, location) { //if no location given, it checks all possible locations
+      return sbgnvizInstance.classes.AuxUnitLayout.checkFit(node, cy, location);
+    };
+
+    //Modify array of aux layout units
+    elementUtilities.modifyUnits = function (node, unit, anchorSide) {
+      sbgnvizInstance.classes.AuxUnitLayout.modifyUnits(node, unit, anchorSide, cy);
     };
 
     // Set multimer status of the given nodes to the given status.
