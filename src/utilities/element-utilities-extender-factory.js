@@ -784,6 +784,37 @@ module.exports = function () {
       return newNode;
     };
 
+    //Saves old aux units of given node
+    elementUtilities.saveUnits = function(node) {
+      var tempData = [];
+      var index = 0;
+      node.data('statesandinfos').forEach( function(ele) {
+        tempData.push({
+          x: ele.bbox.x,
+          y: ele.bbox.y,
+          anchorSide: ele.anchorSide,
+        });
+        index++;
+      });
+      return tempData;
+    };
+
+    //Restores from given data
+    elementUtilities.restoreUnits = function(node, data) {
+      var index = 0;
+      node.data('statesandinfos').forEach( function(ele) {
+        if (data !== undefined) {
+          ele.bbox.x = data[index].x;
+          ele.bbox.y = data[index].y
+          var anchorSide = ele.anchorSide;
+          ele.anchorSide = data[index].anchorSide;
+          appUtilities.modifyUnits(node, ele, anchorSide);
+          index++;
+        }
+      });
+    };
+
+
     //For reversible reactions both side of the process can be input/output
     //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
     elementUtilities.addEdge = function (source, target, edgeParams, id, visibility, groupID ) {

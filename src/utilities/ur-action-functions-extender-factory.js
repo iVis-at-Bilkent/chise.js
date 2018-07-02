@@ -380,15 +380,25 @@ module.exports = function () {
     undoRedoActionFunctions.addStateOrInfoBox = function (param) {
       var obj = param.obj;
       var nodes = param.nodes;
+      var data = param.data;
 
+      var tempData = elementUtilities.saveUnits(nodes);
       var locationObj = elementUtilities.addStateOrInfoBox(nodes, obj);
+      var locations = elementUtilities.checkFit(nodes);
+      if (locations !== undefined && locations.length > 0) {
+        elementUtilities.fitUnits(nodes, locations);
+      }
+      if (data !== undefined) {
+        elementUtilities.restoreUnits(nodes, data);
+      }
 
       cy.forceRender();
 
       var result = {
         nodes: nodes,
         locationObj: locationObj,
-        obj: obj
+        obj: obj,
+        data: tempData
       };
       return result;
     };
@@ -396,14 +406,20 @@ module.exports = function () {
     undoRedoActionFunctions.removeStateOrInfoBox = function (param) {
       var locationObj = param.locationObj;
       var nodes = param.nodes;
+      var data = param.data;
 
+      var tempData = elementUtilities.saveUnits(nodes);
       var obj = elementUtilities.removeStateOrInfoBox(nodes, locationObj);
+      if (data !== undefined) {
+        elementUtilities.restoreUnits(nodes, data);
+      }
 
       cy.forceRender();
 
       var result = {
         nodes: nodes,
-        obj: obj
+        obj: obj,
+        data: tempData
       };
       return result;
     };
