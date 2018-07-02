@@ -808,10 +808,15 @@ module.exports = function () {
           ele.bbox.y = data[index].y
           var anchorSide = ele.anchorSide;
           ele.anchorSide = data[index].anchorSide;
-          appUtilities.modifyUnits(node, ele, anchorSide);
+          elementUtilities.modifyUnits(node, ele, anchorSide);
           index++;
         }
       });
+    };
+
+    //Modify aux unit layouts
+    elementUtilities.modifyUnits = function (node, ele, anchorSide) {
+      instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
     };
 
 
