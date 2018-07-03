@@ -369,11 +369,20 @@ module.exports = function () {
       result.type = param.type;
       result.nodes = param.nodes;
       result.index = param.index;
+      var data = param.data;
 
+      var tempData = elementUtilities.saveUnits(param.nodes);
       result.value = elementUtilities.changeStateOrInfoBox(param.nodes, param.index, param.value, param.type);
+      var locations = elementUtilities.checkFit(param.nodes);
+      if (locations !== undefined && locations.length > 0) {
+        elementUtilities.fitUnits(param.nodes, locations);
+      }
+      if (data !== undefined) {
+        elementUtilities.restoreUnits(param.nodes, data);
+      }
 
       cy.forceRender();
-
+      result.data = tempData;
       return result;
     };
 
