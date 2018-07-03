@@ -829,7 +829,7 @@ module.exports = function () {
           var sbgnclass = edgeParams.class;
           var language = edgeParams.language;
       }
-      var defaultProperties = this.defaultProperties;
+      var defaultProperties = elementUtilities.defaultProperties;
       var defaults = defaultProperties[sbgnclass];
 
       var css = {};

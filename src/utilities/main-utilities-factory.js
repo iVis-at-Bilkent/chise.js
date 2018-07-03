@@ -49,7 +49,7 @@ module.exports = function () {
   /*
    * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
    */
-  mainUtilities.addEdge = function(source, target, edgeParams, id, visibility, invalidEdgeCallback) {
+  mainUtilities.addEdge = function(source, target, edgeParams, invalidEdgeCallback, id, visibility) {
     // update map type
     if (typeof edgeParams == 'object'){
 
@@ -91,7 +91,8 @@ module.exports = function () {
         }
       };
 
-      cy.undoRedo().do("addEdge", param);
+      var result = cy.undoRedo().do("addEdge", param);
+      return result.eles;
     }
   };
 
