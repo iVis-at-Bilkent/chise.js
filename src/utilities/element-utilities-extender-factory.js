@@ -766,7 +766,7 @@ module.exports = function () {
       }
 
       if (language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
-        if (sbgnclass != "BA plain")  // if AF node can have label i.e: not plain biological activity
+        if (sbgnclass != "BA plain") { // if AF node can have label i.e: not plain biological activity
           var uoi_obj = {
             clazz: "unit of information"
           };
@@ -779,6 +779,7 @@ module.exports = function () {
              h: 12
           };
           elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
+        }
       }
 
       return newNode;
