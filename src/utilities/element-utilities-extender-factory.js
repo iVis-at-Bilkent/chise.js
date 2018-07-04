@@ -976,7 +976,7 @@ module.exports = function () {
       return newEdge;
     };
 
-    elementUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+    elementUtilities.addProcessWithConvenientEdges = function(_source, _target, nodeParams) {
       // If source and target IDs are given get the elements by IDs
       var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
       var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
@@ -989,7 +989,7 @@ module.exports = function () {
       var y = ( source.position('y') + target.position('y') ) / 2;
 
       // Create the process with given/calculated variables
-      var process = elementUtilities.addNode(x, y, processType, undefined, processParent.id());
+      var process = elementUtilities.addNode(x, y, nodeParams, undefined, processParent.id());
         var xdiff = source.position('x') - target.position('x');
         var ydiff = source.position('y') - target.position('y')
         if (Math.abs(xdiff) >= Math.abs(ydiff))
@@ -1011,8 +1011,8 @@ module.exports = function () {
       // Create the edges one is between the process and the source node (which should be a consumption),
       // the other one is between the process and the target node (which should be a production).
       // For more information please refer to SBGN-PD reference card.
-      var edgeBtwSrc = elementUtilities.addEdge(source.id(), process.id(), 'consumption');
-      var edgeBtwTgt = elementUtilities.addEdge(process.id(), target.id(), 'production');
+      var edgeBtwSrc = elementUtilities.addEdge(source.id(), process.id(), {class : 'consumption', language : nodeParams.language});
+      var edgeBtwTgt = elementUtilities.addEdge(process.id(), target.id(), {class : 'production', language : nodeParams.language});
 
       // Create a collection including the elements and to be returned
       var collection = cy.collection([process[0], edgeBtwSrc[0], edgeBtwTgt[0]]);
