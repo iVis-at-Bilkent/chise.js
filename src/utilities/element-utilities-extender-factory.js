@@ -1633,12 +1633,12 @@ module.exports = function () {
 
         var locationObj;
         if(obj.clazz == "unit of information") {
-          if (!node.data("language") || node.data("language") == "PD"){
-            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
-          }
-          else if (node.data("language") == "AF"){
+          if (node.data("language") == "AF"){
             locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
                 libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
+          }
+          else {
+            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
           }
         }
         else if (obj.clazz == "state variable") {
