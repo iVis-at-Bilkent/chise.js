@@ -1045,8 +1045,16 @@ module.exports = function () {
      */
     elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compoundType) {
       var oldParentId = nodesToMakeCompound[0].data("parent");
+      var language = nodesToMakeCompound[0].data("language");
+      // if nodesToMakeCompound contain both PD and AF nodes, then set language of compound as Unknown
+      for( var i=1; i<nodesToMakeCompound.length; i++){
+        if(nodesToMakeCompound[i] != language){
+          language = "Unknown";
+          break;
+        }
+      }
       // The parent of new compound will be the old parent of the nodes to make compound. x, y and id parameters are not set.
-      var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
+      var newCompound = elementUtilities.addNode(undefined, undefined, {class : compoundType, language : language}, undefined, oldParentId);
       var newCompoundId = newCompound.id();
       var newEles = elementUtilities.changeParent(nodesToMakeCompound, newCompoundId);
       newEles = newEles.union(newCompound);
@@ -1108,12 +1116,12 @@ module.exports = function () {
       //Create the process in template type
       var process;
       if (templateType === 'reversible') {
-        process = elementUtilities.addNode(processPosition.x, processPosition.y, "process");
-        elementUtilities.setPortsOrdering(process, 'L-to-R')
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, {class : 'process', language : 'PD'});
+        elementUtilities.setPortsOrdering(process, 'L-to-R');
       }
       else{
-        process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
-        elementUtilities.setPortsOrdering(process, 'L-to-R')
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, {class : templateType, language : 'PD'});
+        elementUtilities.setPortsOrdering(process, 'L-to-R');
       }
       process.data('justAdded', true);
 
@@ -1124,12 +1132,12 @@ module.exports = function () {
       for (var i = 0; i < numOfMolecules; i++) {
         // node addition operation is determined by molecule type
         if(nodeList[i].type == "Simple Chemical"){
-          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "simple chemical");
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, {class : 'simple chemical', language : 'PD'});
           //update the y position
           yPosition += simpleChemicalHeight + tilingPaddingVertical;
         }
         else{
-          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, {class : 'macromolecule', language : 'PD'});
           //update the y position
           yPosition += macromoleculeHeight + tilingPaddingVertical;
         }
@@ -1139,14 +1147,14 @@ module.exports = function () {
         //create the edge connected to the new molecule
         var newEdge;
         if (templateType === 'association') {
-          newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+          newEdge = elementUtilities.addEdge(newNode.id(), process.id(), {class : 'consumption', language : 'PD'});
         }
         else if(templateType === 'dissociation'){
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'});
         }
         else{
           //Group right or top elements in group id 1
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 1);
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 1);
         }
 
         newEdge.data('justAdded', true);
@@ -1155,7 +1163,7 @@ module.exports = function () {
       if(templateType === 'association' || templateType == 'dissociation'){
         //Create the complex including macromolecules inside of it
         //Temprorarily add it to the process position we will move it according to the last size of it
-        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, {class : 'complex', language : 'PD'});
         complex.data('justAdded', true);
         complex.data('justAddedLayoutNode', true);
 
@@ -1168,10 +1176,10 @@ module.exports = function () {
         var edgeOfComplex;
 
         if (templateType === 'association') {
-          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
+          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), {class : 'production', language : 'PD'});
         }
         else {
-          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), {class : 'consumption', language : 'PD'});
         }
 
         edgeOfComplex.data('justAdded', true);
@@ -1180,10 +1188,10 @@ module.exports = function () {
 
           // Add a molecule(dependent on it's type) not having a previously defined id and having the complex created in this reaction as parent
           if(nodeList[i].type == 'Simple Chemical'){
-            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "simple chemical", undefined, complex.id());
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), {class : 'simple chemical', language : 'PD'}, undefined, complex.id());
           }
           else{
-            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), {class : 'macromolecule', language : 'PD'}, undefined, complex.id());
           }
 
           newNode.data('justAdded', true);
@@ -1200,11 +1208,11 @@ module.exports = function () {
         for (var i = 0; i < numOfInputMacromolecules; i++) {
 
           if(complexName[i].type == 'Simple Chemical'){
-            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "simple chemical");
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, {class : 'simple chemical', language : 'PD'});
             yPosition += simpleChemicalHeight + tilingPaddingVertical;
           }
           else{
-            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, {class : 'macromolecule', language : 'PD'});
             yPosition += macromoleculeHeight + tilingPaddingVertical;
           }
 
@@ -1215,7 +1223,7 @@ module.exports = function () {
           var newEdge;
 
           //Group the left or bottom elements in group id 0
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 0);
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 0);
           newEdge.data('justAdded', true);
 
         }
