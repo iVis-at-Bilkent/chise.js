@@ -935,7 +935,7 @@ module.exports = function () {
             portsource = sourceNodeInputPortId;
           }
         }
-        else if(this.isModulationArcClass(sbgnclass)){
+        else if(elementUtilities.isModulationArcClass(sbgnclass)){
             portsource = sourceNodeOutputPortId;
         }
         else if (sbgnclass === 'logic arc') {
