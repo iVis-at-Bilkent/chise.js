@@ -935,8 +935,8 @@ module.exports = function () {
             portsource = sourceNodeInputPortId;
           }
         }
-        else if(elementUtilities.isModulationArcClass(sbgnclass)){
-            portsource = sourceNodeOutputPortId;
+        else if(elementUtilities.isModulationArcClass(sbgnclass) || elementUtilities.isAFArcClass(sbgnclass)){
+          portsource = sourceNodeOutputPortId;
         }
         else if (sbgnclass === 'logic arc') {
           var srcClass = sourceNode.data('class');
@@ -1512,13 +1512,20 @@ module.exports = function () {
       return (sbgnclass == 'tag' || sbgnclass == 'terminal');
     };
 
-    // Returns wether the class of given elemnt is a modulation arc as defined in PD specs
+    // Returns whether the class of given element is a modulation arc as defined in PD specs
     elementUtilities.isModulationArcClass = function (ele) {
       var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
       return (sbgnclass == 'modulation'
               || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
               || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation');
-    }
+    };
+    
+    // Returns whether the class of given element is an arc of AF specs except logical arc
+    elementUtilities.isAFArcClass = function (ele) {
+      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
+      return (sbgnclass == 'positive influence' || sbgnclass == 'negative influence' 
+              || sbgnclass == 'unknown influence' || sbgnclass == 'necessary stimulation');
+    };
 
     // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
     elementUtilities.relocateStateAndInfos = function (ele) {
