@@ -997,7 +997,7 @@ module.exports = function () {
     return elementUtilities.getMapType();
   };
 
-  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage){
+  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage, validateURL){
     if (nodes.length === 0 || !bgObj) {
       return;
     }
@@ -1008,13 +1008,14 @@ module.exports = function () {
         bgObj: bgObj,
         nodes: nodes,
         updateInfo: updateInfo,
-        promptInvalidImage: promptInvalidImage
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL,
       };
 
       cy.undoRedo().do("addBackgroundImage", param);
     }
     else {
-      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL);
     }
 
     cy.style().update();
@@ -1061,7 +1062,7 @@ module.exports = function () {
     cy.style().update();
   }
 
-  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg, updateInfo, promptInvalidImage){
+  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg, updateInfo, promptInvalidImage, validateURL){
     if (nodes.length === 0 || !oldImg || !newImg) {
       return;
     }
@@ -1073,13 +1074,14 @@ module.exports = function () {
         nodes: nodes,
         firstTime: true,
         updateInfo: updateInfo,
-        promptInvalidImage: promptInvalidImage
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL
       };
 
       cy.undoRedo().do("changeBackgroundImage", param);
     }
     else {
-      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, true, updateInfo, promptInvalidImage);
+      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, true, updateInfo, promptInvalidImage, validateURL);
     }
 
     cy.style().update();

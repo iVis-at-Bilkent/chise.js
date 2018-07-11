@@ -575,8 +575,9 @@ module.exports = function () {
       var nodes = param.nodes;
       var updateInfo = param.updateInfo;
       var promptInvalidImage = param.promptInvalidImage;
+      var validateURL = param.validateURL;
 
-      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL);
 
       cy.forceRender();
 
@@ -584,7 +585,8 @@ module.exports = function () {
         nodes: nodes,
         bgObj: bgObj,
         updateInfo: updateInfo,
-        promptInvalidImage: promptInvalidImage
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL
       };
       return result;
     };
@@ -626,8 +628,9 @@ module.exports = function () {
       var firstTime = param.firstTime;
       var updateInfo = param.updateInfo;
       var promptInvalidImage = param.promptInvalidImage;
+      var validateURL= param.validateURL;
 
-      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage);
+      var result = elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage, validateURL);
 
       cy.forceRender();
 

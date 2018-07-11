@@ -2257,7 +2257,7 @@ module.exports = function () {
       return bgObj;
     }
 
-    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage) {
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage, validateURL) {
       if(!nodes || nodes.length == 0 || !oldImg || !newImg)
         return;
 
@@ -2265,18 +2265,20 @@ module.exports = function () {
       for(var key in newImg){
         newImg[key]['firstTime'] = firstTime;
       }
-      elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage);
+      elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage, validateURL);
       
       return {
         nodes: nodes,
         oldImg: newImg,
         newImg: oldImg,
-        firstTime: false
+        firstTime: false,
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL
       };
     }
 
     // Add a background image to given nodes.
-    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
+    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage, validateURL) {
       if(!nodes || nodes.length == 0 || !bgObj)
         return;
 
@@ -2290,8 +2292,12 @@ module.exports = function () {
         if(obj['fromFile'])
         loadBackgroundThenApply(node, obj);
         // Validity of given URL should be checked before applying it
-        else if(obj['firstTime'])
-          checkGivenURL(node, obj);
+        else if(obj['firstTime']){
+          if(typeof validateURL === 'function')
+            validateURL(node, obj, applyBackground, promptInvalidImage);
+          else
+            checkGivenURL(node, obj);
+        }
         else
           applyBackground(node, obj);
       }
@@ -2329,7 +2335,7 @@ module.exports = function () {
         var validExtensions = ["png", "svg", "jpg", "jpeg"];
 
         if(!validExtensions.includes(extension)){
-          if(promptInvalidImage)
+          if(typeof promptInvalidImage === 'function')
             promptInvalidImage("Invalid URL is given!");
           return;
         }
