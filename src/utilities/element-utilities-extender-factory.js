@@ -26,48 +26,48 @@ module.exports = function () {
 
     elementUtilities.defaultProperties = {
       "process": {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "omitted process": {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "uncertain process": {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "association": {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
         'background-color': '#707070',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "dissociation": {
-        width: 15,
-        height: 15,
+        width: 18,
+        height: 18,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "macromolecule": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -79,8 +79,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "nucleic acid feature": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -92,8 +92,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "simple chemical": {
-        width: 35,
-        height: 35,
+        width: 30,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -105,8 +105,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "source and sink": {
-        width: 25,
-        height: 25,
+        width: 22,
+        height: 22,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -118,8 +118,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "tag": {
-        width: 35,
-        height: 35,
+        width: 30,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -131,8 +131,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "phenotype": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -144,8 +144,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "unspecified entity": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -157,8 +157,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "perturbing agent": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -170,8 +170,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "complex": {
-        width: 50,
-        height: 50,
+        width: 44,
+        height: 44,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -196,24 +196,24 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "and": {
-        width: 25,
-        height: 25,
+        width: 30,
+        height: 30,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "or": {
-        width: 25,
-        height: 25,
+        width: 30,
+        height: 30,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "not": {
-        width: 25,
-        height: 25,
+        width: 30,
+        height: 30,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
@@ -256,8 +256,8 @@ module.exports = function () {
         'width': 1.25
       },
       "biological activity": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -269,8 +269,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA plain": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -282,8 +282,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA unspecified entity": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -295,8 +295,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA simple chemical": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -308,8 +308,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA macromolecule": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -321,8 +321,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA nucleic acid feature": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -334,8 +334,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA perturbing agent": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -347,8 +347,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "BA complex": {
-        width: 70,
-        height: 35,
+        width: 60,
+        height: 30,
         'font-size': 11,
         'font-family': 'Helvetica',
         'font-style': 'normal',
@@ -360,8 +360,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "delay": {
-        width: 25,
-        height: 25,
+        width: 22,
+        height: 22,
         'font-family': 'Cambria',
         'background-color': '#ffffff',
         'background-opacity': 0.5,
