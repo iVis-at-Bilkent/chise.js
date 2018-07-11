@@ -389,7 +389,7 @@ module.exports = function () {
    * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
    * Considers undoable option.
    */
-  mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
+  mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio, preserveRelativePos) {
     if (nodes.length === 0) {
       return;
     }
@@ -400,7 +400,8 @@ module.exports = function () {
         width: width,
         height: height,
         useAspectRatio: useAspectRatio,
-        performOperation: true
+        performOperation: true,
+        preserveRelativePos: preserveRelativePos
       };
 
       cy.undoRedo().do("resizeNodes", param);
@@ -416,26 +417,36 @@ module.exports = function () {
      * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
      * Considers undoable option.
      */
-    mainUtilities.resizeNodesToContent = function(node, bbox, actions) {
-        if (node.length === 0) {
+    mainUtilities.resizeNodesToContent = function(nodes, useAspectRatio) {
+        if (nodes.length === 0) {
             return;
         }
 
         if (options.undoable) {
-            var param = {
+          var actions = [];
+          nodes.forEach(function(node){
+            var width = elementUtilities.calculateMinWidth(node);
+            var height = elementUtilities.calculateMinHeight(node);
+            actions.push({name: "resizeNodes", param: {
                 nodes: node,
-                width: bbox.w,
-                height: bbox.h,
-                useAspectRatio: false,
-                performOperation: true
-            };
+                width: width,
+                height: height,
+                useAspectRatio: useAspectRatio,
+                performOperation: true,
+                preserveRelativePos: true
+            }});
+          });
 
-            actions.push({name: "resizeNodes", param: param});
-            // cy.undoRedo().do("resizeNodes", param);
-            return actions;
+          cy.undoRedo().do("batch", actions);
+          cy.style().update();
+          return actions;
         }
         else {
-            elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+            nodes.forEach(function(node){
+              var width = elementUtilities.calculateMinWidth(node);
+              var height = elementUtilities.calculateMinHeight(node);
+              elementUtilities.resizeNodes(node, width, height, useAspectRatio, true);
+            });
         }
 
         cy.style().update();

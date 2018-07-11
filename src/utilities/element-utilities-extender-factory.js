@@ -1290,11 +1290,17 @@ module.exports = function () {
     };
 
     // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
-    elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
+    elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio, preserveRelativePos) {
       for (var i = 0; i < nodes.length; i++) {
+
         var node = nodes[i];
         var ratio = undefined;
         var eleMustBeSquare = elementUtilities.mustBeSquare(node.data('class'));
+
+        if (preserveRelativePos === true) {
+          var oldWidth = node.data("bbox").w;
+          var oldHeight = node.data("bbox").h;
+        }
 
         // Note that both width and height should not be set if useAspectRatio is truthy
         if (width) {
@@ -1319,8 +1325,82 @@ module.exports = function () {
         else if (ratio && !width) {
           node.data("bbox").w = node.width() * ratio;
         }
+
+        if (preserveRelativePos === true) {
+          var statesandinfos = node.data('statesandinfos');
+          var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
+          var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
+
+          topBottom.forEach(function(box){
+            box.bbox.x = node.data("bbox").w * box.bbox.x / oldWidth;
+          });
+
+          rightLeft.forEach(function(box){
+            box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
+          });
+        }
       }
     };
+
+
+
+    elementUtilities.calculateMinWidth = function(node) {
+        // Label width calculation
+        var context = document.createElement('canvas').getContext("2d");
+        var style = node.style();
+        context.font = style['font-size'].strValue + " " + style['font-family'].strValue;
+
+        var labelText = (style['label']).split("\n");
+
+        var max = 15;
+        labelText.forEach(function(text){
+          var textWidth = context.measureText(text).width;
+          if (max < textWidth) {
+            max = textWidth;
+          }
+        });
+        var labelWidth = max;
+
+        // Separation of info boxes based on their locations
+        var statesandinfos = node.data('statesandinfos');
+        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
+        var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
+
+        var middleWidth = 0;
+        var leftWidth = 0;
+        var rightWidth = 0;
+
+        leftInfoBoxes.forEach(function (infoBox) {
+            leftWidth = (leftWidth > infoBox.bbox.w/2) ? leftWidth : infoBox.bbox.w/2;
+        });
+
+        rightInfoBoxes.forEach(function (infoBox) {
+            rightWidth = (rightWidth > infoBox.bbox.w/2) ? rightWidth : infoBox.bbox.w/2;
+        });
+
+        var margin = 10;
+        middleWidth = labelWidth + leftWidth + rightWidth + 2 * margin;
+        return middleWidth;
+    }
+
+    elementUtilities.calculateMinHeight = function(node) {
+
+        var margin = 10;
+        var context = document.createElement('canvas').getContext("2d");
+        var style = node.style();
+        context.font = style['font-size'].strValue + " " + style['font-family'].strValue;
+
+        var labelText = (style['label']).split("\n");
+
+        var totalHeight = 0;
+        labelText.forEach(function(text){
+          totalHeight += context.measureText(text).height;
+        });
+
+        var labelHeight = (totalHeight > 30) ? totalHeight : 30 + 2 * margin;
+
+        return labelHeight;
+    }
 
     // Section End
     // Add remove utilities

@@ -170,6 +170,7 @@ module.exports = function () {
 
       result.sizeMap = {};
       result.useAspectRatio = false;
+      result.preserveRelativePos = param.preserveRelativePos;
 
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
@@ -186,11 +187,30 @@ module.exports = function () {
 
         if (param.performOperation) {
           if (param.sizeMap) {
+            if (param.preserveRelativePos === true) {
+              var oldWidth = node.data("bbox").w;
+              var oldHeight = node.data("bbox").h;
+            }
+
             node.data("bbox").w = param.sizeMap[node.id()].w;
             node.data("bbox").h = param.sizeMap[node.id()].h;
+
+            if (param.preserveRelativePos === true) {
+              var statesandinfos = node.data('statesandinfos');
+              var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
+              var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
+
+              topBottom.forEach(function(box){
+                box.bbox.x = node.data("bbox").w * box.bbox.x / oldWidth;
+              });
+
+              rightLeft.forEach(function(box){
+                box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
+              });
+            }
           }
           else {
-            elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio);
+            elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio, param.preserveRelativePos);
           }
         }
       }
