@@ -201,10 +201,22 @@ module.exports = function () {
               var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
 
               topBottom.forEach(function(box){
+                if (box.bbox.x < 0) {
+                  box.bbox.x = 0;
+                }
+                else if (box.bbox.x > oldWidth) {
+                  box.bbox.x = oldWidth;
+                }
                 box.bbox.x = node.data("bbox").w * box.bbox.x / oldWidth;
               });
 
               rightLeft.forEach(function(box){
+                if (box.bbox.y < 0) {
+                  box.bbox.y = 0;
+                }
+                else if (box.bbox.y > oldHeight) {
+                  box.bbox.y = oldHeight;
+                }
                 box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
               });
             }

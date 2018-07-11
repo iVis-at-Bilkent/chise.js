@@ -1332,10 +1332,22 @@ module.exports = function () {
           var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
 
           topBottom.forEach(function(box){
+            if (box.bbox.x < 0) {
+              box.bbox.x = 0;
+            }
+            else if (box.bbox.x > oldWidth) {
+              box.bbox.x = oldWidth;
+            }
             box.bbox.x = node.data("bbox").w * box.bbox.x / oldWidth;
           });
 
           rightLeft.forEach(function(box){
+            if (box.bbox.y < 0) {
+              box.bbox.y = 0;
+            }
+            else if (box.bbox.y > oldHeight) {
+              box.bbox.y = oldHeight;
+            }
             box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
           });
         }
@@ -1345,21 +1357,23 @@ module.exports = function () {
 
 
     elementUtilities.calculateMinWidth = function(node) {
+
+        var defaultWidth = ((this.defaultProperties)[node.data('class')]).width;
+
         // Label width calculation
         var context = document.createElement('canvas').getContext("2d");
         var style = node.style();
-        context.font = style['font-size'].strValue + " " + style['font-family'].strValue;
+        context.font = style['font-size'] + " " + style['font-family'];
 
         var labelText = (style['label']).split("\n");
 
-        var max = 15;
+        var max = 0;
         labelText.forEach(function(text){
           var textWidth = context.measureText(text).width;
           if (max < textWidth) {
             max = textWidth;
           }
         });
-        var labelWidth = max;
 
         // Separation of info boxes based on their locations
         var statesandinfos = node.data('statesandinfos');
@@ -1379,27 +1393,21 @@ module.exports = function () {
         });
 
         var margin = 10;
-        middleWidth = labelWidth + leftWidth + rightWidth + 2 * margin;
-        return middleWidth;
+        var middleWidth = max + leftWidth + rightWidth + 2 * margin;
+        return (middleWidth > defaultWidth) ? middleWidth : defaultWidth;
     }
 
     elementUtilities.calculateMinHeight = function(node) {
 
-        var margin = 10;
-        var context = document.createElement('canvas').getContext("2d");
+        var margin = 7;
+        var defaultHeight = ((this.defaultProperties)[node.data('class')]).height;
         var style = node.style();
-        context.font = style['font-size'].strValue + " " + style['font-family'].strValue;
 
         var labelText = (style['label']).split("\n");
+        var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
+        var totalHeight = labelText.length * fontSize + 2 * margin;
 
-        var totalHeight = 0;
-        labelText.forEach(function(text){
-          totalHeight += context.measureText(text).height;
-        });
-
-        var labelHeight = (totalHeight > 30) ? totalHeight : 30 + 2 * margin;
-
-        return labelHeight;
+        return (totalHeight > defaultHeight) ? totalHeight : defaultHeight;
     }
 
     // Section End
