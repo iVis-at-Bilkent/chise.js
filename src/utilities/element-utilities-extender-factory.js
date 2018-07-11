@@ -26,40 +26,40 @@ module.exports = function () {
 
     elementUtilities.defaultProperties = {
       "process": {
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "omitted process": {
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "uncertain process": {
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "association": {
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         'background-color': '#707070',
         'background-opacity': 0.5,
         'border-width': 1.25,
         'border-color': '#555'
       },
       "dissociation": {
-        width: 18,
-        height: 18,
+        width: 20,
+        height: 20,
         'background-color': '#ffffff',
         'background-opacity': 0.5,
         'border-width': 1.25,
@@ -360,8 +360,8 @@ module.exports = function () {
         'text-wrap': 'wrap'
       },
       "delay": {
-        width: 22,
-        height: 22,
+        width: 30,
+        height: 30,
         'font-family': 'Cambria',
         'background-color': '#ffffff',
         'background-opacity': 0.5,
