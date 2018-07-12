@@ -226,7 +226,7 @@ module.exports = function () {
           }
         }
       }
-
+      cy.style().update();
       return result;
     };
 

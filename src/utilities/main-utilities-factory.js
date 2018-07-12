@@ -408,9 +408,10 @@ module.exports = function () {
     }
     else {
       elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+      cy.style().update();
     }
 
-    cy.style().update();
+
   };
 
     /*
