@@ -1367,11 +1367,11 @@ module.exports = function () {
 
         var labelText = (style['label']).split("\n");
 
-        var max = 0;
+        var maxLabel = 0;
         labelText.forEach(function(text){
           var textWidth = context.measureText(text).width;
-          if (max < textWidth) {
-            max = textWidth;
+          if (maxLabel < textWidth) {
+            maxLabel = textWidth;
           }
         });
 
@@ -1392,9 +1392,9 @@ module.exports = function () {
             rightWidth = (rightWidth > infoBox.bbox.w/2) ? rightWidth : infoBox.bbox.w/2;
         });
 
-        var margin = 10;
-        var middleWidth = max + leftWidth + rightWidth + 2 * margin;
-        return (middleWidth > defaultWidth) ? middleWidth : defaultWidth;
+        var margin = 5;
+        var middleWidth = maxLabel + 2 * Math.max(leftWidth, rightWidth) + 2 * margin;
+        return (middleWidth > defaultWidth/2) ? middleWidth : defaultWidth/2;
     }
 
     elementUtilities.calculateMinHeight = function(node) {
@@ -1403,11 +1403,11 @@ module.exports = function () {
         var defaultHeight = ((this.defaultProperties)[node.data('class')]).height;
         var style = node.style();
 
-        var labelText = (style['label']).split("\n");
+        var labelText = ((style['label']).split("\n")).filter( text => text !== '');
         var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
         var totalHeight = labelText.length * fontSize + 2 * margin;
 
-        return (totalHeight > defaultHeight) ? totalHeight : defaultHeight;
+        return (totalHeight > defaultHeight/2) ? totalHeight : defaultHeight/2;
     }
 
     // Section End
