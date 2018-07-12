@@ -1375,8 +1375,22 @@ module.exports = function () {
           }
         });
 
-        // Separation of info boxes based on their locations
         var statesandinfos = node.data('statesandinfos');
+        //Top and bottom infoBoxes
+        var topInfoBoxes = statesandinfos.filter(box => box.anchorSide === "top");
+        var bottomInfoBoxes = statesandinfos.filter(box => box.anchorSide === "bottom");
+        var unitGap = 5;
+        var topWidth = unitGap;
+        topInfoBoxes.forEach(function(box){
+          topWidth += box.bbox.w + unitGap;
+        });
+
+        var bottomWidth = 5;
+        bottomInfoBoxes.forEach(function(box){
+          bottomWidth += box.bbox.w + unitGap;
+        });
+
+        // Separation of info boxes based on their locations
         var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
         var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
 
@@ -1385,29 +1399,44 @@ module.exports = function () {
         var rightWidth = 0;
 
         leftInfoBoxes.forEach(function (infoBox) {
+          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
             leftWidth = (leftWidth > infoBox.bbox.w/2) ? leftWidth : infoBox.bbox.w/2;
+          }
         });
 
         rightInfoBoxes.forEach(function (infoBox) {
+          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
             rightWidth = (rightWidth > infoBox.bbox.w/2) ? rightWidth : infoBox.bbox.w/2;
+          }
         });
 
         var margin = 5;
         var middleWidth = maxLabel + 2 * Math.max(leftWidth, rightWidth) + 2 * margin;
-        return (middleWidth > defaultWidth/2) ? middleWidth : defaultWidth/2;
+        return Math.max(middleWidth, defaultWidth/2, topWidth, bottomWidth);
     }
 
     elementUtilities.calculateMinHeight = function(node) {
-
+        var statesandinfos = node.data('statesandinfos');
         var margin = 7;
+        var unitGap = 5;
         var defaultHeight = ((this.defaultProperties)[node.data('class')]).height;
-        var style = node.style();
+        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
+        var leftHeight = unitGap;
+        leftInfoBoxes.forEach(function(box){
+            leftHeight += box.bbox.h + unitGap;
+        });
+        var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
+        var rightHeight = unitGap;
+        rightInfoBoxes.forEach(function(box){
+            rightHeight += box.bbox.h + unitGap;
+        });
 
+        var style = node.style();
         var labelText = ((style['label']).split("\n")).filter( text => text !== '');
         var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
         var totalHeight = labelText.length * fontSize + 2 * margin;
 
-        return (totalHeight > defaultHeight/2) ? totalHeight : defaultHeight/2;
+        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight);
     }
 
     // Section End
