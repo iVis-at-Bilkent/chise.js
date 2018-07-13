@@ -1400,14 +1400,56 @@ module.exports = function () {
         var bottomInfoBoxes = statesandinfos.filter(box => box.anchorSide === "bottom");
         var unitGap = 5;
         var topWidth = unitGap;
+        var rightOverFlow = 0;
+        var leftOverFlow = 0;
         topInfoBoxes.forEach(function(box){
           topWidth += box.bbox.w + unitGap;
+          if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+            var overFlow = node.data('bbox').w - (box.bbox.x + box.bbox.w/2);
+            if (overFlow > rightOverFlow) {
+              rightOverFlow = overFlow;
+            }
+          }
+          if (box.bbox.x - box.bbox.w/2 < 0) {
+            var overFlow = -(box.bbox.x - box.bbox.w/2);
+            if (overFlow > leftOverFlow) {
+              leftOverFlow = overFlow;
+            }
+          }
         });
+        if (rightOverFlow > 0) {
+          topWidth -= rightOverFlow + unitGap;
+        }
 
-        var bottomWidth = 5;
+        if (leftOverFlow > 0) {
+          topWidth -= leftOverFlow + unitGap;
+        }
+
+        var bottomWidth = unitGap;
+        rightOverFlow = 0;
+        leftOverFlow = 0;
         bottomInfoBoxes.forEach(function(box){
           bottomWidth += box.bbox.w + unitGap;
+          if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+            var overFlow = node.data('bbox').w - (box.bbox.x + box.bbox.w/2);
+            if (overFlow > rightOverFlow) {
+              rightOverFlow = overFlow;
+            }
+          }
+          if (box.bbox.x - box.bbox.w/2 < 0) {
+            var overFlow = -(box.bbox.x - box.bbox.w/2);
+            if (overFlow > leftOverFlow) {
+              leftOverFlow = overFlow;
+            }
+          }
         });
+        if (rightOverFlow > 0) {
+          bottomWidth -= rightOverFlow + unitGap;
+        }
+
+        if (leftOverFlow > 0) {
+          bottomWidth -= leftOverFlow + unitGap;
+        }
 
         // Separation of info boxes based on their locations
         var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
@@ -1441,14 +1483,57 @@ module.exports = function () {
         var defaultHeight = ((this.defaultProperties)[node.data('class')]).height;
         var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
         var leftHeight = unitGap;
+        var topOverFlow = 0;
+        var bottomOverFlow = 0;
         leftInfoBoxes.forEach(function(box){
             leftHeight += box.bbox.h + unitGap;
+            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
+              var overFlow = node.data('bbox').h - (box.bbox.y + box.bbox.h/2);
+              if (overFlow > bottomOverFlow) {
+                bottomOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.y - box.bbox.h/2 < 0) {
+              var overFlow = -(box.bbox.y - box.bbox.h/2);
+              if (overFlow > topOverFlow) {
+                topOverFlow = overFlow;
+              }
+            }
         });
+        if (topOverFlow > 0) {
+          leftHeight -= topOverFlow + unitGap;
+        }
+
+        if (bottomOverFlow > 0) {
+          leftHeight -= bottomOverFlow + unitGap;
+        }
+
         var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
         var rightHeight = unitGap;
+        topOverFlow = 0;
+        bottomOverFlow = 0;
         rightInfoBoxes.forEach(function(box){
             rightHeight += box.bbox.h + unitGap;
+            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
+              var overFlow = node.data('bbox').h - (box.bbox.y + box.bbox.h/2);
+              if (overFlow > bottomOverFlow) {
+                bottomOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.y - box.bbox.h/2 < 0) {
+              var overFlow = -(box.bbox.y - box.bbox.h/2);
+              if (overFlow > topOverFlow) {
+                topOverFlow = overFlow;
+              }
+            }
         });
+        if (topOverFlow > 0) {
+          rightHeight -= topOverFlow + unitGap;
+        }
+
+        if (bottomOverFlow > 0) {
+          rightHeight -= bottomOverFlow + unitGap;
+        }
 
         var style = node.style();
         var labelText = ((style['label']).split("\n")).filter( text => text !== '');
