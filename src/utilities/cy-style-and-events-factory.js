@@ -39,6 +39,9 @@ module.exports = function () {
           if (!ele.data('font-weight') && classProperties['font-weight']) {
             ele.data('font-weight', classProperties['font-weight']);
           }
+          if (!ele.data('color') && classProperties['color']) {
+            ele.data('color', classProperties['color']);
+          }
           if (!ele.data('background-color') && classProperties['background-color']) {
             ele.data('background-color', classProperties['background-color']);
           }
@@ -126,6 +129,12 @@ module.exports = function () {
       .style({
         'font-weight': function (ele) {
           return ele.data('font-weight');
+        }
+      })
+      .selector("node[class][color]")
+      .style({
+        'color': function (ele) {
+          return ele.data('color');
         }
       })
       .selector("node[class][background-color]")
