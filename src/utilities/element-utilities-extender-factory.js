@@ -1407,7 +1407,7 @@ module.exports = function () {
         topInfoBoxes.forEach(function(box){
           topWidth += box.bbox.w + unitGap;
           if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-            var overFlow = node.data('bbox').w - (box.bbox.x + box.bbox.w/2);
+            var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
             if (overFlow > rightOverFlow) {
               rightOverFlow = overFlow;
             }
@@ -1433,7 +1433,7 @@ module.exports = function () {
         bottomInfoBoxes.forEach(function(box){
           bottomWidth += box.bbox.w + unitGap;
           if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-            var overFlow = node.data('bbox').w - (box.bbox.x + box.bbox.w/2);
+            var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
             if (overFlow > rightOverFlow) {
               rightOverFlow = overFlow;
             }
@@ -1490,7 +1490,7 @@ module.exports = function () {
         leftInfoBoxes.forEach(function(box){
             leftHeight += box.bbox.h + unitGap;
             if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
-              var overFlow = node.data('bbox').h - (box.bbox.y + box.bbox.h/2);
+              var overFlow = (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
               if (overFlow > bottomOverFlow) {
                 bottomOverFlow = overFlow;
               }
@@ -1517,7 +1517,7 @@ module.exports = function () {
         rightInfoBoxes.forEach(function(box){
             rightHeight += box.bbox.h + unitGap;
             if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
-              var overFlow = node.data('bbox').h - (box.bbox.y + box.bbox.h/2);
+              var overFlow =  (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
               if (overFlow > bottomOverFlow) {
                 bottomOverFlow = overFlow;
               }
