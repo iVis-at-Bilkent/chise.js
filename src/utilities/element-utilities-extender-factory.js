@@ -1370,8 +1370,6 @@ module.exports = function () {
             box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
           });
         }
-        
-        node.unselect();
       }
     };
 
