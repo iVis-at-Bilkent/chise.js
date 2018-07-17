@@ -1375,8 +1375,6 @@ module.exports = function () {
       }
     };
 
-
-
     elementUtilities.calculateMinWidth = function(node) {
 
         var defaultWidth = ((this.defaultProperties)[node.data('class')]).width;
@@ -1543,6 +1541,23 @@ module.exports = function () {
         var totalHeight = labelText.length * fontSize + 2 * margin;
 
         return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight);
+    }
+
+    elementUtilities.isResizedToContent = function (node) {
+      if(!node || !node.isNode() || !node.data('bbox')){
+        return false;
+      }
+
+      var w = node.data('bbox').w;
+      var h = node.data('bbox').h;
+
+      var minW = elementUtilities.calculateMinWidth(node);
+      var minH = elementUtilities.calculateMinHeight(node);
+
+      if(w === minW && h === minH)
+        return true;
+      else
+        return false;
     }
 
     // Section End
