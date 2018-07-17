@@ -1394,26 +1394,41 @@ module.exports = function () {
 
         var statesandinfos = node.data('statesandinfos');
         //Top and bottom infoBoxes
-        var topInfoBoxes = statesandinfos.filter(box => box.anchorSide === "top");
-        var bottomInfoBoxes = statesandinfos.filter(box => box.anchorSide === "bottom");
+        var topInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "top" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y <= 12))));
+        var bottomInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "bottom" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y >= node.data('bbox').h - 12))));
         var unitGap = 5;
         var topWidth = unitGap;
         var rightOverFlow = 0;
         var leftOverFlow = 0;
         topInfoBoxes.forEach(function(box){
           topWidth += box.bbox.w + unitGap;
-          if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-            var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+          if (box.anchorSide === "right") {
+            var overFlow = box.bbox.w/2;
             if (overFlow > rightOverFlow) {
               rightOverFlow = overFlow;
             }
           }
-          if (box.bbox.x - box.bbox.w/2 < 0) {
-            var overFlow = -(box.bbox.x - box.bbox.w/2);
+          else if(box.anchorSide === "left") {
+            var overFlow = - box.bbox.w/2;
             if (overFlow > leftOverFlow) {
               leftOverFlow = overFlow;
             }
           }
+          else {
+            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+              if (overFlow > rightOverFlow) {
+                rightOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.x - box.bbox.w/2 < 0) {
+              var overFlow = -(box.bbox.x - box.bbox.w/2);
+              if (overFlow > leftOverFlow) {
+                leftOverFlow = overFlow;
+              }
+            }
+          }
+
         });
         if (rightOverFlow > 0) {
           topWidth -= rightOverFlow + unitGap;
@@ -1428,18 +1443,33 @@ module.exports = function () {
         leftOverFlow = 0;
         bottomInfoBoxes.forEach(function(box){
           bottomWidth += box.bbox.w + unitGap;
-          if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-            var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+          if (box.anchorSide === "right") {
+            var overFlow = box.bbox.w/2;
             if (overFlow > rightOverFlow) {
               rightOverFlow = overFlow;
             }
           }
-          if (box.bbox.x - box.bbox.w/2 < 0) {
-            var overFlow = -(box.bbox.x - box.bbox.w/2);
+          else if(box.anchorSide === "left") {
+            var overFlow = - box.bbox.w/2;
             if (overFlow > leftOverFlow) {
               leftOverFlow = overFlow;
             }
           }
+          else {
+            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+              if (overFlow > rightOverFlow) {
+                rightOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.x - box.bbox.w/2 < 0) {
+              var overFlow = -(box.bbox.x - box.bbox.w/2);
+              if (overFlow > leftOverFlow) {
+                leftOverFlow = overFlow;
+              }
+            }
+          }
+
         });
         if (rightOverFlow > 0) {
           bottomWidth -= rightOverFlow + unitGap;
