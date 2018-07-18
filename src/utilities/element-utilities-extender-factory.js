@@ -1375,7 +1375,7 @@ module.exports = function () {
 
     elementUtilities.calculateMinWidth = function(node) {
 
-        var defaultWidth = ((this.defaultProperties)[node.data('class')]).width;
+        var defaultWidth = ((this.defaultProperties)[node.data('class').replace(/\s*multimer$/, '')]).width;
 
         // Label width calculation
         var context = document.createElement('canvas').getContext("2d");
@@ -1508,7 +1508,7 @@ module.exports = function () {
         var statesandinfos = node.data('statesandinfos');
         var margin = 7;
         var unitGap = 5;
-        var defaultHeight = ((this.defaultProperties)[node.data('class')]).height;
+        var defaultHeight = ((this.defaultProperties)[node.data('class').replace(/\s*multimer$/, '')]).height;
         var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
         var leftHeight = unitGap;
         var topOverFlow = 0;
