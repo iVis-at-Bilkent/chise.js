@@ -13,9 +13,6 @@
     var sbgnvizInstanceUtilities = require('./utilities/sbgnviz-instance-utilities-factory')();
     var sbgnvizInstance = sbgnvizInstanceUtilities(options);
 
-    // Update style and bind events
-    var cyStyleAndEvents = require('./utilities/cy-style-and-events-factory')();
-
     // Register undo/redo actions
     var registerUndoRedoActions = require('./utilities/register-undo-redo-actions-factory')();
 
@@ -33,7 +30,6 @@
 
     undoRedoActionFunctionsExtender(param);
     elementUtilitiesExtender(param);
-    cyStyleAndEvents(param);
     registerUndoRedoActions(param);
     mainUtilities(param);
 
