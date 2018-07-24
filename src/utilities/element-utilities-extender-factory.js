@@ -19,686 +19,6 @@ module.exports = function () {
 
   // Extends elementUtilities with chise specific facilities
   function extend () {
-    elementUtilities.mapType = undefined; // initialize map type
-
-    elementUtilities.PD = {}; // namespace for all PD specific stuff
-    elementUtilities.AF = {}; // namespace for all AF specific stuff
-
-    elementUtilities.defaultProperties = {
-      "process": {
-        width: 20,
-        height: 20,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "omitted process": {
-        width: 20,
-        height: 20,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "uncertain process": {
-        width: 20,
-        height: 20,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "association": {
-        width: 20,
-        height: 20,
-        'background-color': '#707070',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "dissociation": {
-        width: 20,
-        height: 20,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "macromolecule": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "nucleic acid feature": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "simple chemical": {
-        width: 30,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "source and sink": {
-        width: 22,
-        height: 22,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "tag": {
-        width: 30,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "phenotype": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "unspecified entity": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "perturbing agent": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "complex": {
-        width: 44,
-        height: 44,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "compartment": {
-        width: 80,
-        height: 80,
-        'font-size': 14,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 3.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "and": {
-        width: 30,
-        height: 30,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "or": {
-        width: 30,
-        height: 30,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "not": {
-        width: 30,
-        height: 30,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "consumption": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "production": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "modulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "stimulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "catalysis": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "inhibition": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "necessary stimulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "logic arc": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "equivalence arc": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "biological activity": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA plain": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA unspecified entity": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA simple chemical": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA macromolecule": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA nucleic acid feature": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA perturbing agent": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA complex": {
-        width: 60,
-        height: 30,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "delay": {
-        width: 30,
-        height: 30,
-        'font-family': 'Cambria',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "unknown influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "positive influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "negative influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "submap": {
-        width: 80,
-        height: 80,
-        'font-size': 14,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'color': '#000',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 2.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap',
-      },
-    };
-
-
-    /*
-      see http://journal.imbio.de/articles/pdf/jib-263.pdf p.41 <-- but beware, outdated
-      following tables have been updated with PD lvl1 v2.0 of November 7, 2016 working draft
-      only the following things have been changed from 2.0 (this version is not clear on connectivity):
-       - empty set has no limit on its edge count
-       - logic operators can be source and target
-       - limit of 1 catalysis and 1 necessary stimulation on a process
-
-      for each edge class and nodeclass define 2 cases:
-       - node can be a source of this edge -> asSource
-       - node can be a target of this edge -> asTarget
-      for both cases, tells if it is allowed and what is the limit of edges allowed.
-      Limits can concern only this type of edge (maxEdge) or the total number of edges for this node (maxTotal).
-      Consider undefined things as false/unallowed -> whitelist behavior.
-
-      the nodes/edges class listed below are those used in the program.
-      For instance "compartment" isn't a node in SBGN specs.
-    */
-    elementUtilities.PD.connectivityConstraints = {
-      "consumption": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {isAllowed: true}},
-        "dissociation":         {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      },
-      "production": {
-        "macromolecule":        {asSource: {},   asTarget: {isAllowed: true}},
-        "simple chemical":      {asSource: {},   asTarget: {isAllowed: true}},
-        "unspecified entity":   {asSource: {},   asTarget: {isAllowed: true}},
-        "complex":              {asSource: {},   asTarget: {isAllowed: true}},
-        "nucleic acid feature": {asSource: {},   asTarget: {isAllowed: true}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {},   asTarget: {isAllowed: true}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {isAllowed: true},    asTarget: {}},
-        "omitted process":      {asSource: {isAllowed: true},    asTarget: {}},
-        "uncertain process":    {asSource: {isAllowed: true},    asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "dissociation":         {asSource: {isAllowed: true},    asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      },
-      "modulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "stimulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "catalysis": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "inhibition": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "necessary stimulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-      },
-      "logic arc": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {}},
-        "omitted process":      {asSource: {},   asTarget: {}},
-        "uncertain process":    {asSource: {},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-      },
-      "equivalence arc": {
-        "macromolecule":        {asSource: {isAllowed: true},   asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},   asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},   asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},   asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "source and sink":      {asSource: {},   asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {isAllowed: true}},
-        "process":              {asSource: {},   asTarget: {}},
-        "omitted process":      {asSource: {},   asTarget: {}},
-        "uncertain process":    {asSource: {},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      }
-    };
-
-    /* AF node connectivity rules
-     * See: Systems Biology Graphical Notation: Activity Flow language Level 1, Version 1.2, Date: July 27, 2015
-     *   Section 3.3.1: Activity Nodes connectivity definition
-     *   URL: https://doi.org/10.2390/biecoll-jib-2015-265
-     */
-    elementUtilities.AF.connectivityConstraints = {
-      "positive influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "negative influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "unknown influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "necessary stimulation": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "logic arc": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "or":                   {asSource: {},   asTarget: {isAllowed: true}},
-        "not":                  {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "delay":                {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "equivalence arc": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
-        "phenotype":            {asSource: {isAllowed: true},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "submap":               {asSource: {},   asTarget: {isAllowed: true}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}},
-        "delay":                {asSource: {},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-    }
-
     // Section Start
     // Add remove utilities
 
@@ -724,35 +44,28 @@ module.exports = function () {
           var sbgnclass = nodeParams.class;
           var language = nodeParams.language;
       }
-      var defaultProperties = this.defaultProperties;
-      var defaults = defaultProperties[sbgnclass];
-
-      var width = defaults ? defaults.width : 50;
-      var height = defaults ? defaults.height : 50;
 
       var css = {};
-
+      // if there is no specific default width or height for
+      // sbgnclass these sizes are used
+      var defaultWidth = 50;
+      var defaultHeight = 50;
 
       if (visibility) {
         css.visibility = visibility;
       }
 
-      if (defaults && defaults.multimer) {
-        sbgnclass += " multimer";
-      }
       var data = {
         class: sbgnclass,
-    	language: language,
+    	  language: language,
         bbox: {
-          h: height,
-          w: width,
+          h: defaultWidth,
+          w: defaultHeight,
           x: x,
           y: y
         },
         statesandinfos: [],
-        ports: [],
-        clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined,
-        init: true
+        ports: []
       };
 
       if(id) {
@@ -766,6 +79,28 @@ module.exports = function () {
         data.parent = parent;
       }
 
+      var defaults = this.getDefaultProperties( sbgnclass );
+
+      // extend the data with default properties of node style
+      Object.keys( defaults ).forEach( function( prop ) {
+        if ( prop === 'width' || prop === 'height' ) {
+          var bboxDimMap = {
+            'width': 'w',
+            'height': 'h'
+          };
+
+          var bboxDim = bboxDimMap[ prop ];
+
+          data.bbox[ bboxDim ] = defaults[ prop ];
+        }
+        else if ( prop === 'multimer' ) {
+          data.sbgnclass += ' multimer';
+        }
+        else {
+          data[ prop ] = defaults[ prop ];
+        }
+      } );
+
       var eles = cy.add({
         group: "nodes",
         data: data,
@@ -777,7 +112,8 @@ module.exports = function () {
       });
 
       var newNode = eles[eles.length - 1];
-      var ordering = this.defaultProperties[sbgnclass.replace(/\s*multimer$/, '')]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
+      // Get the default ports ordering for the nodes with given sbgnclass
+      var ordering = defaults['ports-ordering'];
 
       // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
       if (ordering && ordering !== 'none') {
@@ -849,8 +185,6 @@ module.exports = function () {
           var sbgnclass = edgeParams.class;
           var language = edgeParams.language;
       }
-      var defaultProperties = elementUtilities.defaultProperties;
-      var defaults = defaultProperties[sbgnclass];
 
       var css = {};
 
@@ -864,6 +198,13 @@ module.exports = function () {
           class: sbgnclass,
           language: language,
       };
+
+      var defaults = elementUtilities.getDefaultProperties( sbgnclass );
+
+      // extend the data with default properties of edge style
+      Object.keys( defaults ).forEach( function( prop ) {
+        data[ prop ] = defaults[ prop ];
+      } );
 
       if(id) {
         data.id = id;
@@ -1039,26 +380,6 @@ module.exports = function () {
     };
 
     /*
-     * Returns if the elements with the given parent class can be parent of the elements with the given node class
-     */
-    elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
-      // If nodeClass and parentClass params are elements itselves instead of their class names handle it
-      var nodeClass = typeof _nodeClass !== 'string' ? _nodeClass.data('class') : _nodeClass;
-      var parentClass = _parentClass != undefined && typeof _parentClass !== 'string' ? _parentClass.data('class') : _parentClass;
-
-      if (parentClass == undefined || parentClass === 'compartment'
-              || parentClass === 'submap') { // Compartments, submaps and the root can include any type of nodes
-        return true;
-      }
-      else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0  // Complexes can only include EPNs which do not have edges
-              || elementUtilities.mapType == "Unknown")) { // When map type is unknown, allow complexes to include EPNs with edges
-        return elementUtilities.isEPNClass(nodeClass);
-      }
-
-      return false; // Currently just 'compartment' and 'complex' compounds are supported return false for any other parentClass
-    };
-
-    /*
      * This method assumes that param.nodesToMakeCompound contains at least one node
      * and all of the nodes including in it have the same parent. It creates a compound fot the given nodes an having the given type.
      */
@@ -1093,10 +414,10 @@ module.exports = function () {
      */
     elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
 
-      var defaultMacromoleculProperties = elementUtilities.defaultProperties["macromolecule"];
-      var defaultSimpleChemicalProperties = elementUtilities.defaultProperties["simple chemical"];
-      var templateType = templateType;
-      var processWidth = elementUtilities.defaultProperties[templateType] ? elementUtilities.defaultProperties[templateType].width : 50;
+      var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
+      var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
+      var defaultProcessProperties = elementUtilities.getDefaultProperties( templateType );
+      var processWidth = defaultProcessProperties ? defaultProcessProperties.width : 50;
       var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
       var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
       var simpleChemicalWidth = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.width : 35;
@@ -1375,7 +696,7 @@ module.exports = function () {
 
     elementUtilities.calculateMinWidth = function(node) {
 
-        var defaultWidth = ((this.defaultProperties)[node.data('class').replace(/\s*multimer$/, '')]).width;
+        var defaultWidth = this.getDefaultProperties(node.data('class')).width;
 
         // Label width calculation
         var context = document.createElement('canvas').getContext("2d");
@@ -1508,7 +829,7 @@ module.exports = function () {
         var statesandinfos = node.data('statesandinfos');
         var margin = 7;
         var unitGap = 5;
-        var defaultHeight = ((this.defaultProperties)[node.data('class').replace(/\s*multimer$/, '')]).height;
+        var defaultHeight = this.getDefaultProperties(node.data('class')).height;
         var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
         var leftHeight = unitGap;
         var topOverFlow = 0;
@@ -1590,208 +911,6 @@ module.exports = function () {
 
     // Section End
     // Add remove utilities
-
-    // Section Start
-    // Common element properties
-
-    // Get common properties of given elements. Returns null if the given element list is empty or the
-    // property is not common for all elements. dataOrCss parameter specify whether to check the property on data or css.
-    // The default value for it is data. If propertyName parameter is given as a function instead of a string representing the
-    // property name then use what that function returns.
-    elementUtilities.getCommonProperty = function (elements, propertyName, dataOrCss) {
-      if (elements.length == 0) {
-        return null;
-      }
-
-      var isFunction;
-      // If we are not comparing the properties directly users can specify a function as well
-      if (typeof propertyName === 'function') {
-        isFunction = true;
-      }
-
-      // Use data as default
-      if (!isFunction && !dataOrCss) {
-        dataOrCss = 'data';
-      }
-
-      var value = isFunction ? propertyName(elements[0]) : elements[0][dataOrCss](propertyName);
-
-      for (var i = 1; i < elements.length; i++) {
-        if ( ( isFunction ? propertyName(elements[i]) : elements[i][dataOrCss](propertyName) ) != value) {
-          return null;
-        }
-      }
-
-      return value;
-    };
-
-    // Returns if the function returns a truthy value for all of the given elements.
-    elementUtilities.trueForAllElements = function (elements, fcn) {
-      for (var i = 0; i < elements.length; i++) {
-        if (!fcn(elements[i])) {
-          return false;
-        }
-      }
-
-      return true;
-    };
-
-    // Returns whether the give element can have sbgncardinality
-    elementUtilities.canHaveSBGNCardinality = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return sbgnclass == 'consumption' || sbgnclass == 'production';
-    };
-
-    // Returns whether the give element can have sbgnlabel
-    elementUtilities.canHaveSBGNLabel = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not' && sbgnclass != 'delay'
-              && sbgnclass != 'association' && sbgnclass != 'dissociation' && sbgnclass != 'source and sink' && !sbgnclass.endsWith('process');
-    };
-
-    // Returns whether the give element have unit of information
-    elementUtilities.canHaveUnitOfInformation = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      if (sbgnclass == 'simple chemical'
-              || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
-              || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-              || sbgnclass == 'complex multimer' || (sbgnclass.startsWith('BA') && sbgnclass != "BA plain")
-              || sbgnclass == 'compartment') {
-        return true;
-      }
-      return false;
-    };
-
-    // Returns whether the given element can have more than one units of information
-    elementUtilities.canHaveMultipleUnitOfInformation = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return !sbgnclass.startsWith('BA');
-    };
-
-
-    // Returns whether the give element have state variable
-    elementUtilities.canHaveStateVariable = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      if (sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex'
-              || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-              || sbgnclass == 'complex multimer') {
-        return true;
-      }
-      return false;
-    };
-
-    // Returns whether the given ele should be square in shape
-    elementUtilities.mustBeSquare = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return (sbgnclass.indexOf('process') != -1 || sbgnclass == 'source and sink'
-              || sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not'
-              || sbgnclass == 'association' || sbgnclass == 'dissociation' || sbgnclass == 'delay');
-    };
-
-    // Returns whether any of the given nodes must not be in square shape
-    elementUtilities.someMustNotBeSquare = function (nodes) {
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (!elementUtilities.mustBeSquare(node.data('class'))) {
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    // Returns whether the gives element can be cloned
-    elementUtilities.canBeCloned = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      var list = {
-        'unspecified entity': true,
-        'macromolecule': true,
-        'complex': true,
-        'nucleic acid feature': true,
-        'simple chemical': true,
-        'perturbing agent': true
-      };
-
-      return list[sbgnclass] ? true : false;
-    };
-
-    // Returns whether the gives element can be cloned
-    elementUtilities.canBeMultimer = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      var list = {
-        'macromolecule': true,
-        'complex': true,
-        'nucleic acid feature': true,
-        'simple chemical': true
-      };
-
-      return list[sbgnclass] ? true : false;
-    };
-
-    // Returns whether the given element is an EPN
-    elementUtilities.isEPNClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      return (sbgnclass == 'unspecified entity'
-              || sbgnclass == 'simple chemical'
-              || sbgnclass == 'macromolecule'
-              || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex');
-    };
-
-    // Returns whether the given element is a PN
-    elementUtilities.isPNClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      return (sbgnclass == 'process'
-              || sbgnclass == 'omitted process'
-              || sbgnclass == 'uncertain process'
-              || sbgnclass == 'association'
-              || sbgnclass == 'dissociation'
-              || sbgnclass == 'phenotype');
-    };
-
-    // Returns wether the given element or string is of the special empty set/source and sink class
-    elementUtilities.isEmptySetClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-      return sbgnclass == 'source and sink';
-    };
-
-    // Returns whether the given element is a logical operator
-    elementUtilities.isLogicalOperator = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not' || sbgnclass == 'delay');
-    };
-
-    // Returns whether the class of given element is a equivalance class
-    elementUtilities.convenientToEquivalence = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'tag' || sbgnclass == 'terminal');
-    };
-
-    // Returns whether the class of given element is a modulation arc as defined in PD specs
-    elementUtilities.isModulationArcClass = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'modulation'
-              || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-              || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation');
-    };
-    
-    // Returns whether the class of given element is an arc of AF specs except logical arc
-    elementUtilities.isAFArcClass = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'positive influence' || sbgnclass == 'negative influence' 
-              || sbgnclass == 'unknown influence' || sbgnclass == 'necessary stimulation');
-    };
 
     // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
     elementUtilities.relocateStateAndInfos = function (ele) {
@@ -1898,7 +1017,7 @@ module.exports = function () {
         }
 
       }
-      
+
       //TODO find a way to elimate this redundancy to update info-box positions
       node.data('border-width', node.data('border-width'));
 
@@ -2273,21 +1392,21 @@ module.exports = function () {
     elementUtilities.getBackgroundImageURL = function (eles) {
       if(!eles || eles.length < 1)
         return;
-      
+
       var commonURL = "";
       for(var i = 0; i < eles.length; i++){
         var ele = eles[i];
 
         if(!ele.isNode() || !elementUtilities.hasBackgroundImage(ele))
           return;
-        
+
         var url = ele.data('background-image').split(" ").pop();
         if(!url || url.indexOf('http') !== 0 || (commonURL !== "" && commonURL !== url))
           return;
         else if(commonURL === "")
           commonURL = url;
       }
-      
+
       return commonURL;
     }
 
@@ -2301,7 +1420,7 @@ module.exports = function () {
         var obj = getBgObj(ele);
         if(obj === undefined)
           return;
-        
+
         list[ele.data('id')] = obj;
       }
       return list;
@@ -2310,20 +1429,20 @@ module.exports = function () {
         if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
           var keys = ['background-image', 'background-fit', 'background-image-opacity',
           'background-position-x', 'background-position-y', 'background-height', 'background-width'];
-          
+
           var obj = {};
           keys.forEach(function(key){
             var arr = ele.data(key);
             obj[key] = arr ? arr : "";
           });
-          
+
           return obj;
         }
         else if(ele.isNode())
           return {};
       }
     }
-      
+
     elementUtilities.getBackgroundFitOptions = function (eles) {
       if(!eles || eles.length < 1)
         return;
@@ -2358,7 +1477,7 @@ module.exports = function () {
 
         if(!f || !h)
           return;
-        
+
         f = f.split(" ");
         h = h.split(" ");
         if(f[f.length-1] === "none")
@@ -2377,7 +1496,7 @@ module.exports = function () {
         var obj = bgObj[node.data('id')];
         if(!obj || $.isEmptyObject(obj))
           continue;
-        
+
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
         var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
@@ -2385,7 +1504,7 @@ module.exports = function () {
         var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
         var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-        
+
         var index = -1;
         if(typeof obj['background-image'] === "string")
           index = imgs.indexOf(obj['background-image']);
@@ -2452,7 +1571,7 @@ module.exports = function () {
         newImg[key]['firstTime'] = firstTime;
       }
       elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage, validateURL);
-      
+
       return {
         nodes: nodes,
         oldImg: newImg,
@@ -2473,7 +1592,7 @@ module.exports = function () {
         var obj = bgObj[node.data('id')];
         if(!obj || $.isEmptyObject(obj))
           continue;
-        
+
         // Load the image from local, else just put the URL
         if(obj['fromFile'])
         loadBackgroundThenApply(node, obj);
@@ -2543,7 +1662,7 @@ module.exports = function () {
 
         if(elementUtilities.hasBackgroundImage(node))
           return;
-      
+
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
         var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
@@ -2551,7 +1670,7 @@ module.exports = function () {
         var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
         var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-        
+
         var indexToInsert = imgs.length;
 
         // insert to length-1
@@ -2578,7 +1697,7 @@ module.exports = function () {
 
         if(updateInfo)
           updateInfo();
-        
+
       }
 
       function hasCloneMarker(node, imgs){
@@ -2597,7 +1716,7 @@ module.exports = function () {
         var obj = bgObj[node.data('id')];
         if(!obj)
           continue;
-        
+
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
         var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
@@ -2605,7 +1724,7 @@ module.exports = function () {
         var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
         var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-        
+
         var index = -1;
         if(typeof obj['background-image'] === "string")
           index = imgs.indexOf(obj['background-image']);

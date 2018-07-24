@@ -570,14 +570,17 @@ module.exports = function () {
       var sbgnclass = param.class;
       var name = param.name;
       var value = param.value;
-      var classDefaults = elementUtilities.defaultProperties[sbgnclass];
+      var classDefaults = elementUtilities.getDefaultProperties(sbgnclass);
       var result = {
         class: sbgnclass,
         name: name,
         value: classDefaults.hasOwnProperty(name) ? classDefaults[name] : undefined
       };
 
-      classDefaults[name] = value;
+      var propMap = {};
+      propMap[ name ] = value;
+
+      elementUtilities.setDefaultProperties( sbgnclass, propMap );
 
       return result;
     };

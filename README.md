@@ -183,40 +183,12 @@ Requires `viewUtilities` extension and considers undoable option.
 `instance.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
- * `defaultProperties` Access the default properties for elements by their classes using this map. These properties are considered upon new element creation. The speciel fields are the followings.<br>
-    'width': The default width<br>
-    'height': The default height<br>
-    'font-size': The default font size<br>
-    'font-family': The default font family<br>
-    'font-style': The default font style<br>
-    'font-weight': The default font weight<br>
-    'background-color': The default background color<br>
-    'background-opacity': The default background opacity<br>
-    'border-width': The default border width<br>
-    'border-color': The default border color
  * `addNode(x, y, sbgnclass, id, parent, visibility)` Similar to `instance.addNode()` but do not considers undoable option.
  * `addEdge(source, target, sbgnclass, id, visibility)` Similar to `instance.addEdge()` but do not considers undoable option.
  * `addProcessWithConvenientEdges(source, target, processType)` Similar to `instance.addProcessWithConvenientEdges()` but do not considers undoable option.
  * `createCompoundForGivenNodes(nodesToMakeCompound, compoundType)` Similar to `instance.createCompoundForGivenNodes()` but do not considers undoable option.
  * `changeParent(nodes, newParent, posDiffX, posDiffY)` Similar to `instance.changeParent()` but do not considers undoable option.
  * `resizeNodes(nodes, width, height, useAspectRatio)` Similar to `instance.resizeNodes()` but do not considers undoable option.
- * `isValidParent(nodeClass, parentClass)` Returns if the elements with the given parent class can be parent of the elements with the given node class.
- * `getCommonProperty(nodes, width, height, useAspectRatio)` Get common properties of given elements. Returns null if the given element list is empty or the property is not common for all elements. 
-    dataOrCss parameter specify whether to check the property on data or css. The default value for it is data. If propertyName parameter is given as a function instead of a string representing the 
-    property name then use what that function returns.
- * `trueForAllElements(elements, fcn)` Returns if the function returns a truthy value for all of the given elements.
- * `canHaveSBGNCardinality(ele)` Returns whether the given element or elements with the given class can have sbgncardinality.
- * `canHaveSBGNLabel(ele)` Returns whether the given element or elements with the given class can have sbgnlabel.
- * `canHaveUnitOfInformation(ele)` Returns whether the given element or elements with the given class have unit of information.
- * `canHaveStateVariable(ele)` Returns whether the given element or elements with the given class have state variable.
- * `mustBeSquare(ele)` Returns whether the given element or elements with the given class should have the same width and height.
- * `someMustNotBeSquare(ele)` Returns whether the given element or elements with the given class must not be in square shape.
- * `canBeCloned(ele)` Returns whether the given element or elements with the given class can be cloned.
- * `canBeMultimer(ele)` Returns whether the given element or elements with the given class can be multimer.
- * `isEPNClass(ele)` Returns whether the given class is an EPN class or the given element is an EPN.
- * `isPNClass(ele)` Returns whether the given class is an PN class or the given element is an PN.
- * `isLogicalOperator(ele)` Returns whether the given class is a logical operator class or the given element is a logical operator.
- * `convenientToEquivalence(ele)` Returns whether the given class or the class of the given element is an equivalance class.
  * `relocateStateAndInfos(ele)` Relocates the state and info boxes of the given node.
  * `changeStateOrInfoBox(nodes, index, value, type)` Similar to `instance.changeStateOrInfoBox()` but do not considers undoable option.
  * `addStateOrInfoBox(nodes, obj)` Similar to `instance.addStateOrInfoBox()` but do not considers undoable option.
