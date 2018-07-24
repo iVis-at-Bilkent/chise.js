@@ -94,7 +94,7 @@ module.exports = function () {
           data.bbox[ bboxDim ] = defaults[ prop ];
         }
         else if ( prop === 'multimer' ) {
-          data.sbgnclass += ' multimer';
+          data.class += ' multimer';
         }
         else {
           data[ prop ] = defaults[ prop ];
