@@ -417,18 +417,18 @@ module.exports = function () {
       var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
       var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
       var defaultProcessProperties = elementUtilities.getDefaultProperties( templateType );
-      var processWidth = defaultProcessProperties ? defaultProcessProperties.width : 50;
-      var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
-      var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
-      var simpleChemicalWidth = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.width : 35;
-      var simpleChemicalHeight = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.height : 35;
-      var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var processWidth = defaultProcessProperties.width || 50;
+      var macromoleculeWidth = defaultMacromoleculProperties.width || 50;
+      var macromoleculeHeight = defaultMacromoleculProperties.height || 50;
+      var simpleChemicalWidth = defaultSimpleChemicalProperties.width || 35;
+      var simpleChemicalHeight = defaultSimpleChemicalProperties.height || 35;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       var nodeList = nodeList;
       var complexName = complexName;
       var numOfMolecules = nodeList.length;
-      var tilingPaddingVertical = tilingPaddingVertical ? tilingPaddingVertical : 15;
-      var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
-      var edgeLength = edgeLength ? edgeLength : 60;
+      var tilingPaddingVertical = tilingPaddingVertical || 15;
+      var tilingPaddingHorizontal = tilingPaddingHorizontal || 15;
+      var edgeLength = edgeLength || 60;
 
       cy.startBatch();
 
