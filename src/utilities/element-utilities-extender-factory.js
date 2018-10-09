@@ -1128,21 +1128,21 @@ module.exports = function () {
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
       var sourceclass = source.data('class');
       var targetclass = target.data('class');
+      var mapType = elementUtilities.getMapType();
+      var edgeConstraints = this[mapType].connectivityConstraints[edgeclass];
 
-      if (elementUtilities.getMapType() == "AF"){
+      if (mapType == "AF"){
         if (sourceclass.startsWith("BA")) // we have separate classes for each biological activity
           sourceclass = "biological activity"; // but same rule applies to all of them
 
         if (targetclass.startsWith("BA")) // we have separate classes for each biological activity
           targetclass = "biological activity"; // but same rule applies to all of them
+      }
+      else if (mapType == "PD"){
+        sourceclass = sourceclass.replace(/\s*multimer$/, '');
+        targetclass = targetclass.replace(/\s*multimer$/, '');
+      }
 
-        var edgeConstraints = elementUtilities.AF.connectivityConstraints[edgeclass];
-      }
-      else{
-        sourceclass = sourceclass.replace(/\s*multimer$/, '')
-        targetclass = targetclass.replace(/\s*multimer$/, '')
-        var edgeConstraints = elementUtilities.PD.connectivityConstraints[edgeclass];
-      }
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
       function hasTooManyEdges(node, sourceOrTarget) {
         var nodeclass = node.data('class');
