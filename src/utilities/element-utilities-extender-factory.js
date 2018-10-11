@@ -1032,17 +1032,24 @@ module.exports = function () {
         var node = nodes[i];
 
         var locationObj;
+        var defaults = elementUtilities.getDefaultProperties( node.data('class') )[ obj.clazz ];
+        // TODO: maybe add this to sbgnviz level and use from there
+        var style = {
+          borderWidth: defaults['border-width'],
+          borderColor: defaults['border-color'],
+          backgroundColor: defaults['background-color'],
+          shapeName: defaults['shape-name'],
+          fontStyle: defaults['font-style'],
+          fontWeight: defaults['font-weight'],
+          fontSize: defaults['font-size'],
+          fontFamily: defaults['font-family'],
+          textColor: defaults['font-color']
+        };
         if(obj.clazz == "unit of information") {
-          if (node.data("language") == "AF"){
-            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
-                libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
-          }
-          else {
-            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
-          }
+          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, style, obj.index);
         }
         else if (obj.clazz == "state variable") {
-          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
+          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, style, obj.index);
         }
       }
       return locationObj;
