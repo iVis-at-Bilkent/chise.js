@@ -699,6 +699,23 @@ module.exports = function () {
     cy.style().update();
   };
 
+  mainUtilities.updateInfoboxStyle = function( node, index, newProps ) {
+    if (!options.undoable) {
+      elementUtilities.updateInfoboxStyle( node, index, newProps );
+    }
+    else {
+      var param = {
+        node: node,
+        index: index,
+        newProps: newProps
+      };
+
+      cy.undoRedo().do("changeData", param);
+    }
+
+    cy.style().update();
+  };
+
 
   /*
    * Hides given eles (the ones which are selected) and perform given layout afterward. Layout parameter may be layout options

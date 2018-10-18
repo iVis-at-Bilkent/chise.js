@@ -255,6 +255,19 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateInfoboxStyle = function (param) {
+      var result = {
+      };
+      var style = param.node.data('statesandinfos')[param.index].style;
+      result.newProps = $.extend( {}, style );
+      result.node = param.node;
+      result.index = param.index;
+
+      elementUtilities.updateInfoboxStyle( param.node, param.index, param.newProps );
+
+      return result;
+    };
+
     undoRedoActionFunctions.changeData = function (param) {
       var result = {
       };
@@ -464,7 +477,7 @@ module.exports = function () {
       };
       return result;
     };
-    
+
     undoRedoActionFunctions.fitUnits = function (param) {
       var node = param.node;
       var locations = param.locations;
@@ -667,15 +680,15 @@ module.exports = function () {
         edge.move({source: targetNode, target: sourceNode});
 
         let convertedEdge = cy.getElementById(edge.id());
-        
+
         if(convertedEdge.data("cyedgebendeditingDistances")){
-          let distance = convertedEdge.data("cyedgebendeditingDistances");      
+          let distance = convertedEdge.data("cyedgebendeditingDistances");
           distance = distance.map(function(element) {
             return -1*element;
           });
           convertedEdge.data("cyedgebendeditingDistances", distance.reverse());
 
-          let weight = convertedEdge.data("cyedgebendeditingWeights");       
+          let weight = convertedEdge.data("cyedgebendeditingWeights");
           weight = weight.map(function(element) {
             return 1-element;
           });

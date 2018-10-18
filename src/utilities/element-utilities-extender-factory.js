@@ -629,6 +629,12 @@ module.exports = function () {
       return movedEles;
     };
 
+    elementUtilities.updateInfoboxStyle = function( node, index, newProps ) {
+      var infoboxObj = node.data('statesandinfos')[index];
+      $.extend( infoboxObj.style, newProps );
+      cy.style().update();
+    };
+
     // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
     elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio, preserveRelativePos) {
       for (var i = 0; i < nodes.length; i++) {
@@ -1030,21 +1036,12 @@ module.exports = function () {
     elementUtilities.addStateOrInfoBox = function (nodes, obj) {
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-
         var locationObj;
-        var defaults = elementUtilities.getDefaultProperties( node.data('class') )[ obj.clazz ];
-        // TODO: maybe add this to sbgnviz level and use from there
-        var style = {
-          borderWidth: defaults['border-width'],
-          borderColor: defaults['border-color'],
-          backgroundColor: defaults['background-color'],
-          shapeName: defaults['shape-name'],
-          fontStyle: defaults['font-style'],
-          fontWeight: defaults['font-weight'],
-          fontSize: defaults['font-size'],
-          fontFamily: defaults['font-family'],
-          textColor: defaults['font-color']
-        };
+
+        var defaultProps = elementUtilities.getDefaultProperties( node.data('class') );
+        // All defaults are style properties now, a filtering maybe needed in the future
+        var style = $.extend( {}, defaultProps[ obj.clazz ] );
+
         if(obj.clazz == "unit of information") {
           locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, style, obj.index);
         }
