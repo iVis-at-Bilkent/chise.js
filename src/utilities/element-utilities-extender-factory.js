@@ -44,8 +44,8 @@ module.exports = function () {
         class: sbgnclass,
     	  language: language,
         bbox: {
-          h: defaultWidth,
-          w: defaultHeight,
+          w: defaultWidth,
+          h: defaultHeight,
           x: x,
           y: y
         },
@@ -64,27 +64,21 @@ module.exports = function () {
         data.parent = parent;
       }
 
+      this.extendNodeDataWithClassDefaults( data, sbgnclass );
+
+      // some defaults are not set by extendNodeDataWithClassDefaults()
       var defaults = this.getDefaultProperties( sbgnclass );
 
-      // extend the data with default properties of node style
-      Object.keys( defaults ).forEach( function( prop ) {
-        if ( prop === 'width' || prop === 'height' ) {
-          var bboxDimMap = {
-            'width': 'w',
-            'height': 'h'
-          };
+      if ( defaults[ 'multimer' ] ) {
+        data.class += ' multimer';
+      }
 
-          var bboxDim = bboxDimMap[ prop ];
+      if ( defaults[ 'clonemarker' ] ) {
+        data[ 'clonemarker' ] = true;
+      }
 
-          data.bbox[ bboxDim ] = defaults[ prop ];
-        }
-        else if ( prop === 'multimer' ) {
-          data.class += ' multimer';
-        }
-        else {
-          data[ prop ] = defaults[ prop ];
-        }
-      } );
+      data.bbox[ 'w' ] = defaults[ 'width' ];
+      data.bbox[ 'h' ] = defaults[ 'height' ];
 
       var eles = cy.add({
         group: "nodes",
