@@ -1018,14 +1018,15 @@ module.exports = function () {
         var locationObj;
 
         var defaultProps = elementUtilities.getDefaultProperties( node.data('class') );
-        // All defaults are style properties now, a filtering maybe needed in the future
-        var style = $.extend( {}, defaultProps[ obj.clazz ] );
+        var infoboxProps = defaultProps[ obj.clazz ];
+        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };
+        var style = elementUtilities.getDefaultInfoboxStyle( node.data('class'), obj.clazz );
 
         if(obj.clazz == "unit of information") {
-          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, style, obj.index);
+          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index);
         }
         else if (obj.clazz == "state variable") {
-          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, style, obj.index);
+          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index);
         }
       }
       return locationObj;
