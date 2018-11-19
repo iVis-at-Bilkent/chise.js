@@ -18,6 +18,10 @@ module.exports = function () {
    * Adds a new node with the given class and at the given coordinates. Considers undoable option.
    */
   mainUtilities.addNode = function(x, y , nodeParams, id, parent, visibility) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // update map type
     if (typeof nodeParams == 'object'){
 
@@ -50,6 +54,10 @@ module.exports = function () {
    * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
    */
   mainUtilities.addEdge = function(source, target, edgeParams, invalidEdgeCallback, id, visibility) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // update map type
     if (typeof edgeParams == 'object'){
 
@@ -101,6 +109,10 @@ module.exports = function () {
    * Considers undoable option.
    */
   mainUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // If source and target IDs are given get the elements by IDs
     var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
     var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
@@ -127,6 +139,10 @@ module.exports = function () {
   // convert collapsed compound nodes to simple nodes
   // and update port values of pasted nodes and edges
   var cloneCollapsedNodesAndPorts = function (elesBefore){
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     cy.elements().unselect();
     var elesAfter = cy.elements();
     var elesDiff = elesAfter.diff(elesBefore).left;
@@ -189,12 +205,16 @@ module.exports = function () {
    * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
    */
   mainUtilities.cloneElements = function (eles, pasteAtMouseLoc) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     if (eles.length === 0) {
       return;
     }
-    
+
     this.copyElements(eles);
-    
+
     this.pasteElements(pasteAtMouseLoc);
   };
 
@@ -209,6 +229,10 @@ module.exports = function () {
    * Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
    */
   mainUtilities.pasteElements = function(pasteAtMouseLoc) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var elesBefore = cy.elements();
 
     if (options.undoable) {
@@ -249,6 +273,10 @@ module.exports = function () {
    * This method considers undoable option.
    */
   mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var nodes = _nodes;
     /*
      * Eleminate the nodes which cannot have a parent with given compound type
@@ -292,6 +320,10 @@ module.exports = function () {
    * Considers undoable option and checks if the operation is valid.
    */
   mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
     // New parent is supposed to be one of the root, a complex or a compartment
     if (newParent && !newParent.data("class").startsWith("complex") && newParent.data("class") != "compartment"
@@ -367,6 +399,10 @@ module.exports = function () {
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
   mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     if (!options.undoable) {
       elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
     }

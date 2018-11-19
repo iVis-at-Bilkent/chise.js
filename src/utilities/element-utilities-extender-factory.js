@@ -57,7 +57,7 @@ module.exports = function () {
         data.id = id;
       }
       else {
-        data.id = "nwtN_" + elementUtilities.generateUUID();
+        data.id = elementUtilities.generateNodeId();
       }
 
       if (parent) {
@@ -189,7 +189,7 @@ module.exports = function () {
         data.id = id;
       }
       else {
-        data.id = "nwtE_" + elementUtilities.generateUUID();
+        data.id = elementUtilities.generateEdgeId();
       }
 
       if(elementUtilities.canHaveSBGNCardinality(sbgnclass)){
