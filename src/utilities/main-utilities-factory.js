@@ -735,6 +735,23 @@ module.exports = function () {
     cy.style().update();
   };
 
+  mainUtilities.updateSetField = function(ele, fieldName, toDelete, toAdd, callback) {
+    if (!options.undoable) {
+      elementUtilities.changeData(ele, fieldName, toDelete, toAdd, callback);
+    }
+    else {
+      var param = {
+        ele,
+        fieldName,
+        toDelete,
+        toAdd,
+        callback
+      };
+
+      cy.undoRedo().do("updateSetField", param);
+    }
+  };
+
   mainUtilities.updateInfoboxStyle = function( node, index, newProps ) {
     if (!options.undoable) {
       elementUtilities.updateInfoboxStyle( node, index, newProps );

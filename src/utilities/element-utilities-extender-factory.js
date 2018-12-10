@@ -1271,6 +1271,30 @@ module.exports = function () {
       }
     };
 
+    elementUtilities.updateSetField = function(ele, fieldName, toDelete, toAdd, callback) {
+      var set = ele.data( fieldName );
+      if ( !set ) {
+        return;
+      }
+      var updates = {};
+
+      if ( toDelete != null && set[ toDelete ] ) {
+        delete set[ toDelete ];
+        updates.deleted = toDelete;
+      }
+
+      if ( toAdd != null ) {
+        set[ toAdd ] = true;
+        updates.added = toAdd;
+      }
+
+      if ( callback && ( updates[ 'deleted' ] != null || updates[ 'added' ] != null ) ) {
+        callback();
+      }
+
+      return updates;
+    };
+
     /*
      * Return the set of all nodes present under the given position
      * renderedPos must be a point defined relatively to cytoscape container

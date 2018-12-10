@@ -286,6 +286,20 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateSetField = function( param ) {
+      var updates = elementUtilities.updateSetField( param.ele, param.fieldName, param.toDelete, param.toAdd, param.callback );
+
+      var result = {
+        ele: param.ele,
+        fieldName: param.fieldName,
+        callback: param.callback,
+        toDelete: updates.added,
+        toAdd: updates.deleted
+      };
+
+      return result;
+    };
+
     undoRedoActionFunctions.changeCss = function (param) {
       var result = {
       };
