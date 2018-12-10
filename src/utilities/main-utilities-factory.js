@@ -752,6 +752,24 @@ module.exports = function () {
     }
   };
 
+  mainUtilities.setDefaultProperty = function( _class, name, value ) {
+    if (!options.undoable) {
+      var propMap = {};
+      propMap[ name ] = value;
+
+      elementUtilities.setDefaultProperties(_class, propMap);
+    }
+    else {
+      var param = {
+        class: _class,
+        name,
+        value
+      };
+
+      cy.undoRedo().do("setDefaultProperty", param);
+    }
+  };
+
   mainUtilities.updateInfoboxStyle = function( node, index, newProps ) {
     if (!options.undoable) {
       elementUtilities.updateInfoboxStyle( node, index, newProps );
