@@ -116,6 +116,15 @@ module.exports = function () {
         }
       }
 
+      newNode.select();
+
+      // node bg image was unexpectedly not rendered until it is clicked
+      // use this dirty hack until finding a solution to the problem
+      var bgImage = newNode.data('background-image');
+      if ( bgImage ) {
+        newNode.data( 'background-image', bgImage );
+      }
+
       return newNode;
     };
 
@@ -954,8 +963,8 @@ module.exports = function () {
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
         var newLength = 0;
-        var context = document.createElement('canvas').getContext("2d");
-        context.font = "10px sans-serif"; //font of information boxes
+
+        var content = '';
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
@@ -963,10 +972,10 @@ module.exports = function () {
 
           box.state[type] = value;
           if (box.state["value"] !== undefined) {
-            newLength = context.measureText(box.state["value"]).width;
+            content += box.state["value"];
           }
           if (box.state["variable"] !== undefined && box.state["variable"].length > 0) {
-            newLength += context.measureText(box.state["variable"]).width + context.measureText("@").width;
+            content += box.state["variable"] + "@";
           }
 
         }
@@ -974,9 +983,14 @@ module.exports = function () {
           if (!result) {
             result = box.label.text;
           }
-          newLength = context.measureText(value).width;
+          content += value;
           box.label.text = value;
         }
+
+        var fontFamily = box.style[ 'font-family' ];
+        var fontSize = box.style[ 'font-size' ];
+        newLength = elementUtilities.getWidthByContent( content, fontSize, fontFamily );
+
         if (newLength < 12) {
           box.bbox.w = 12;
         }else if(newLength < 48){

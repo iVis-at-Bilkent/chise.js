@@ -781,7 +781,7 @@ module.exports = function () {
         newProps: newProps
       };
 
-      cy.undoRedo().do("changeData", param);
+      cy.undoRedo().do("updateInfoboxStyle", param);
     }
 
     cy.style().update();
