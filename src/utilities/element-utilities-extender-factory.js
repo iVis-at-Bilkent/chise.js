@@ -693,19 +693,13 @@ module.exports = function () {
         var defaultWidth = this.getDefaultProperties(node.data('class')).width;
 
         // Label width calculation
-        var context = document.createElement('canvas').getContext("2d");
         var style = node.style();
-        context.font = style['font-size'] + " " + style['font-family'];
 
-        var labelText = (style['label']).split("\n");
+        var fontFamiliy = style['font-family'];
+        var fontSize = style['font-size'];
+        var labelText = style['label'];
 
-        var maxLabel = 0;
-        labelText.forEach(function(text){
-          var textWidth = context.measureText(text).width;
-          if (maxLabel < textWidth) {
-            maxLabel = textWidth;
-          }
-        });
+        var labelWidth = elementUtilities.getWidthByContent( labelText, fontFamiliy, fontSize );
 
         var statesandinfos = node.data('statesandinfos');
         //Top and bottom infoBoxes
@@ -814,8 +808,7 @@ module.exports = function () {
           }
         });
 
-        var margin = 5;
-        var middleWidth = maxLabel + 2 * Math.max(leftWidth, rightWidth) + 2 * margin;
+        var middleWidth = labelWidth + 2 * Math.max(leftWidth, rightWidth);
         return Math.max(middleWidth, defaultWidth/2, topWidth, bottomWidth);
     }
 
@@ -989,16 +982,13 @@ module.exports = function () {
 
         var fontFamily = box.style[ 'font-family' ];
         var fontSize = box.style[ 'font-size' ];
-        newLength = elementUtilities.getWidthByContent( content, fontSize, fontFamily );
+        var opts = {
+          min: 12,
+          max: 48,
+          margin: 0
+        };
 
-        if (newLength < 12) {
-          box.bbox.w = 12;
-        }else if(newLength < 48){
-          box.bbox.w = newLength; // Arrange information box size dynamically
-        }else{
-          box.bbox.w = 48; // Maximum size of a state or information box
-        }
-
+        box.bbox.w = elementUtilities.getWidthByContent( content, fontSize, fontFamily, opts );
 
         if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
