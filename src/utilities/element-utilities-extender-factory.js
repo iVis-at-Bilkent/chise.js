@@ -116,8 +116,6 @@ module.exports = function () {
         }
       }
 
-      newNode.select();
-
       // node bg image was unexpectedly not rendered until it is clicked
       // use this dirty hack until finding a solution to the problem
       var bgImage = newNode.data('background-image');
