@@ -180,6 +180,12 @@ Change data of given `eles` by setting given property `name` to the given value/
 Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
 Requires `viewUtilities` extension and considers undoable option.
 
+`instance.updateInfoboxStyle(node, index, newProps)`
+Extends the style of infobox that is at the given index of the given node by newProps. Considers undoable option.
+
+`instance.updateSetField(ele, fieldName, toDelete, toAdd, callback)`
+From the data of given ele updates the field recognized by the fieldName. The field is supposed to represent a set. Deletes 'toDelete' and adds 'toAdd' to the set if they exists.
+
 `instance.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
 
@@ -200,6 +206,8 @@ General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.ele
     It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid 
     if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
  * `showAndPerformLayout(eles, layoutparam)` Similar to `instance.showAndPerformLayout()` but do not considers undoable option.
+ * `updateInfoboxStyle(node, index, newProps)` Similar to `instance.updateInfoboxStyle()` but do not considers undoable option.
+ * `updateSetField(ele, fieldName, toDelete, toAdd, callback)` Similar to `instance.updateSetField()` but do not considers undoable option.
 
 `instance.undoRedoActionFunctions`
 Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` extension. These are exposed for the users who builds
@@ -215,6 +223,8 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `changeCss(param)` Do/Undo/Redo function for 'changeCss' undo redo command.
  * `changeFontProperties(param)` Do/Undo/Redo function for 'changeFontProperties' undo redo command.
  * `showAndPerformLayout(param)` Do/Redo function for 'showAndPerformLayout' undo redo command.
+ * `updateInfoboxStyle(param)` Do/Redo function for 'updateInfoboxStyle' undo redo command.
+ * `updateSetField(param)` Do/Redo function for 'updateSetField' undo redo command.
  * `undoShowAndPerformLayout(param)` Undo/ function for 'showAndPerformLayout' undo redo command.
  * `changeStateOrInfoBox(param)` Do/Undo/Redo function for 'changeStateOrInfoBox' undo redo command.
  * `addStateOrInfoBox(param)` Do/Redo function for 'addStateOrInfoBox' undo redo command (Also Undo function for 'removeStateOrInfoBox' undo redo command).
