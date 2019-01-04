@@ -950,6 +950,7 @@ module.exports = function () {
       var result;
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
+        var sbgnclass = node.data('class');
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
@@ -978,16 +979,17 @@ module.exports = function () {
           box.label.text = value;
         }
 
+        var min = ( sbgnclass === 'protein' || sbgnclass === 'small molecule' ) ? 15 : 12;
         var fontFamily = box.style[ 'font-family' ];
         var fontSize = box.style[ 'font-size' ];
+        var borderWidth = box.style[ 'border-width' ];
         var opts = {
-          min: 12,
+          min,
           max: 48,
-          margin: 0
+          margin: borderWidth / 2 + 0.5
         };
 
-        box.bbox.w = elementUtilities.getWidthByContent( content, fontSize, fontFamily, opts );
-
+        box.bbox.w = elementUtilities.getWidthByContent( content, fontFamily, fontSize, opts );
         if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
           var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
