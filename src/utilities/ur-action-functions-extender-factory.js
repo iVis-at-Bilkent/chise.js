@@ -268,6 +268,19 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateInfoboxObj = function (param) {
+      var result = {
+      };
+      var obj = param.node.data('statesandinfos')[param.index];
+      result.newProps = $.extend( {}, obj );
+      result.node = param.node;
+      result.index = param.index;
+
+      elementUtilities.updateInfoboxObj( param.node, param.index, param.newProps );
+
+      return result;
+    };
+
     undoRedoActionFunctions.changeData = function (param) {
       var result = {
       };

@@ -621,6 +621,11 @@ module.exports = function () {
       cy.style().update();
     };
 
+    elementUtilities.updateInfoboxObj = function( node, index, newProps ) {
+      var infoboxObj = node.data('statesandinfos')[index];
+      $.extend( infoboxObj, newProps );
+    };
+
     // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
     elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio, preserveRelativePos) {
       for (var i = 0; i < nodes.length; i++) {
@@ -1027,10 +1032,10 @@ module.exports = function () {
         var style = elementUtilities.getDefaultInfoboxStyle( node.data('class'), obj.clazz );
 
         if(obj.clazz == "unit of information") {
-          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index);
+          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
         else if (obj.clazz == "state variable") {
-          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index);
+          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
       }
       return locationObj;
