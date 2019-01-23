@@ -3,7 +3,7 @@ var libs = require('./lib-utilities').getLibs();
 
 module.exports = function () {
 
-  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities, cy;
+  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities, cy, topologyGrouping;
 
   function undoRedoActionFunctionsExtender (param) {
 
@@ -11,12 +11,40 @@ module.exports = function () {
     cy = param.sbgnvizInstanceUtilities.getCy();
     undoRedoActionFunctions = sbgnvizInstance.undoRedoActionFunctions;
     elementUtilities = param.elementUtilities;
+    topologyGrouping = param.sifTopologyGrouping;
 
     extend();
   }
 
   // Extends undoRedoActionFunctions with chise specific features
   function extend () {
+
+    undoRedoActionFunctions.applySIFTopologyGrouping = function(param) {
+      var oldEles, newEles;
+      if ( param.firstTime ) {
+        oldEles = cy.elements();
+
+        if (param.apply) {
+          topologyGrouping.apply();
+        }
+        else {
+          topologyGrouping.unapply();
+        }
+
+        newEles = cy.elements();
+      }
+      else {
+        oldEles = param.oldEles;
+        newEles = param.newEles;
+
+        oldEles.remove();
+        newEles.restore();
+      }
+
+      var result = { oldEles: newEles, newEles: oldEles };
+      return result;
+    };
+
     // Section Start
     // add/remove action functions
 
