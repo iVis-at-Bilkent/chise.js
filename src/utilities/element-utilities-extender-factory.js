@@ -984,7 +984,7 @@ module.exports = function () {
           box.label.text = value;
         }
 
-        var min = ( sbgnclass === 'protein' || sbgnclass === 'small molecule' ) ? 15 : 12;
+        var min = ( sbgnclass === 'SIF macromolecule' || sbgnclass === 'SIF simple chemical' ) ? 15 : 12;
         var fontFamily = box.style[ 'font-family' ];
         var fontSize = box.style[ 'font-size' ];
         var borderWidth = box.style[ 'border-width' ];
