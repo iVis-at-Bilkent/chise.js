@@ -19,6 +19,7 @@
     var mainUtilities = require('./utilities/main-utilities-factory')();
     var elementUtilitiesExtender = require('./utilities/element-utilities-extender-factory')();
     var undoRedoActionFunctionsExtender = require('./utilities/ur-action-functions-extender-factory')();
+    var sifTopologyGrouping = require('./utilities/topology-grouping-factory')();
 
     var elementUtilities =  sbgnvizInstance.elementUtilities;
     var undoRedoActionFunctions = sbgnvizInstance.undoRedoActionFunctions;
@@ -27,11 +28,17 @@
     param.optionUtilities = optionUtilities;
     param.elementUtilities = elementUtilities;
     param.undoRedoActionFunctions = undoRedoActionFunctions;
+    param.sifTopologyGrouping = sifTopologyGrouping;
+
+    var shouldApply = function() {
+      return param.elementUtilities.mapType === 'SIF';
+    };
 
     undoRedoActionFunctionsExtender(param);
     elementUtilitiesExtender(param);
     registerUndoRedoActions(param);
     mainUtilities(param);
+    sifTopologyGrouping(param, {metaEdgeIdentifier: 'sif-meta', lockGraphTopology: true, shouldApply});
 
     // Expose the api
     var api = {};
@@ -53,6 +60,7 @@
     // Expose elementUtilities and undoRedoActionFunctions as is
     api.elementUtilities = elementUtilities;
     api.undoRedoActionFunctions = undoRedoActionFunctions;
+    api.sifTopologyGrouping = sifTopologyGrouping;
 
     return api;
   };

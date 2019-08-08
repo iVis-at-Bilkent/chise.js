@@ -3,7 +3,7 @@ var libs = require('./lib-utilities').getLibs();
 
 module.exports = function () {
 
-  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities, cy;
+  var sbgnvizInstance, undoRedoActionFunctions, elementUtilities, cy, topologyGrouping;
 
   function undoRedoActionFunctionsExtender (param) {
 
@@ -11,12 +11,40 @@ module.exports = function () {
     cy = param.sbgnvizInstanceUtilities.getCy();
     undoRedoActionFunctions = sbgnvizInstance.undoRedoActionFunctions;
     elementUtilities = param.elementUtilities;
+    topologyGrouping = param.sifTopologyGrouping;
 
     extend();
   }
 
   // Extends undoRedoActionFunctions with chise specific features
   function extend () {
+
+    undoRedoActionFunctions.applySIFTopologyGrouping = function(param) {
+      var oldEles, newEles;
+      if ( param.firstTime ) {
+        oldEles = cy.elements();
+
+        if (param.apply) {
+          topologyGrouping.apply();
+        }
+        else {
+          topologyGrouping.unapply();
+        }
+
+        newEles = cy.elements();
+      }
+      else {
+        oldEles = param.oldEles;
+        newEles = param.newEles;
+
+        oldEles.remove();
+        newEles.restore();
+      }
+
+      var result = { oldEles: newEles, newEles: oldEles };
+      return result;
+    };
+
     // Section Start
     // add/remove action functions
 
@@ -255,6 +283,32 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.updateInfoboxStyle = function (param) {
+      var result = {
+      };
+      var style = param.node.data('statesandinfos')[param.index].style;
+      result.newProps = $.extend( {}, style );
+      result.node = param.node;
+      result.index = param.index;
+
+      elementUtilities.updateInfoboxStyle( param.node, param.index, param.newProps );
+
+      return result;
+    };
+
+    undoRedoActionFunctions.updateInfoboxObj = function (param) {
+      var result = {
+      };
+      var obj = param.node.data('statesandinfos')[param.index];
+      result.newProps = $.extend( {}, obj );
+      result.node = param.node;
+      result.index = param.index;
+
+      elementUtilities.updateInfoboxObj( param.node, param.index, param.newProps );
+
+      return result;
+    };
+
     undoRedoActionFunctions.changeData = function (param) {
       var result = {
       };
@@ -269,6 +323,20 @@ module.exports = function () {
       }
 
       elementUtilities.changeData(param.eles, param.name, param.valueMap);
+
+      return result;
+    };
+
+    undoRedoActionFunctions.updateSetField = function( param ) {
+      var updates = elementUtilities.updateSetField( param.ele, param.fieldName, param.toDelete, param.toAdd, param.callback );
+
+      var result = {
+        ele: param.ele,
+        fieldName: param.fieldName,
+        callback: param.callback,
+        toDelete: updates.added,
+        toAdd: updates.deleted
+      };
 
       return result;
     };
@@ -464,7 +532,7 @@ module.exports = function () {
       };
       return result;
     };
-    
+
     undoRedoActionFunctions.fitUnits = function (param) {
       var node = param.node;
       var locations = param.locations;
@@ -667,15 +735,15 @@ module.exports = function () {
         edge.move({source: targetNode, target: sourceNode});
 
         let convertedEdge = cy.getElementById(edge.id());
-        
+
         if(convertedEdge.data("cyedgebendeditingDistances")){
-          let distance = convertedEdge.data("cyedgebendeditingDistances");      
+          let distance = convertedEdge.data("cyedgebendeditingDistances");
           distance = distance.map(function(element) {
             return -1*element;
           });
           convertedEdge.data("cyedgebendeditingDistances", distance.reverse());
 
-          let weight = convertedEdge.data("cyedgebendeditingWeights");       
+          let weight = convertedEdge.data("cyedgebendeditingWeights");
           weight = weight.map(function(element) {
             return 1-element;
           });
