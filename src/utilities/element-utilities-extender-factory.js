@@ -1122,7 +1122,7 @@ module.exports = function () {
       var sourceclass = source.data('class');
       var targetclass = target.data('class');
       var mapType = elementUtilities.getMapType();
-      var edgeConstraints = this[mapType].connectivityConstraints[edgeclass];
+      var edgeConstraints = elementUtilities[mapType].connectivityConstraints[edgeclass];
 
       if (mapType == "AF"){
         if (sourceclass.startsWith("BA")) // we have separate classes for each biological activity
