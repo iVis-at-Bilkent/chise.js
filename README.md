@@ -1,6 +1,8 @@
-# ChiSE version 1
+# ChiSE
 
-ChiSE is a web application based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by [SBGN](http://www.sbgn.org) Process Description (PD) and Activity Flow (AF) Notation. It accepts the pathway models represented in [SBGN-ML](http://sourceforge.net/apps/mediawiki/libsbgn/index.php?title=Exchange_Format) format, and can save edited pathways back to the same format as well as static image formats (PNG, JPEG, and SVG).
+ChiSE is a library with an API based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [Cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by process description (PD) and activity flow (AF) languages of [SBGN](http://sbgn.org) or in [simple interaction format (SIF)](https://www.pathwaycommons.org/pc/sif_interaction_rules.do). 
+
+It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats such as SIF and [CellDesigner](http://www.celldesigner.org/).
 <br/>
 
 ## Software
@@ -293,14 +295,10 @@ This project is set up to automatically be published to npm.  To publish:
 1. Set the version number environment variable: `export VERSION=1.2.3`
 2. Publish: `gulp publish`
 
-## Credits
-
-Thanks to JetBrains for an [Open Source License](https://www.jetbrains.com/buy/opensource/)
-
 ## Team
 
-  * [Hasan Balci](https://github.com/hasanbalci), [Ahmet Candiroglu](https://github.com/ahmetcandiroglu), [Kaan Sancak](https://github.com/kaansancak), and [Ugur Dogrusoz](https://github.com/ugurdogrusoz) of [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis), and [Metin Can Siper](https://github.com/metincansiper) of the Demir Lab at [OHSU](http://www.ohsu.edu/)
+  * [Hasan Balci](https://github.com/hasanbalci), [Nasim Saleh](https://github.com/nasimsaleh), and [Ugur Dogrusoz](https://github.com/ugurdogrusoz) of [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis), and [Metin Can Siper](https://github.com/metincansiper) of the Demir Lab at [OHSU](http://www.ohsu.edu/)
   
 #### Alumni
 
-  * [Ilkin Safarli](https://github.com/kinimesi), [Ludovic Roy](https://github.com/royludo), [Leonard Dervishi](https://github.com/leonarddrv), Alper Karacelik, Selim Firat Yilmaz, Istemi Bahceci, Mecit Sari, Ayhun Tekat, M.Furkan Sahin
+  * [Ilkin Safarli](https://github.com/kinimesi), [Ludovic Roy](https://github.com/royludo), [Leonard Dervishi](https://github.com/leonarddrv), [Alper Karacelik](https://github.com/alperkaracelik), [Selim Firat Yilmaz](https://github.com/mrsfy), [Istemi Bahceci](https://github.com/istemi-bahceci), [Ayhun Tekat](https://github.com/ayhun), [M.Furkan Sahin](https://github.com/furkansahin)
