@@ -970,162 +970,276 @@ module.exports = function () {
       
   }
   
-    undoRedoActionFunctions.unfixError = function(param){
-      var errorCode = param.errorCode;
-      var result = {};
-      result.errorCode = errorCode;
-      if(errorCode == "pd10101" || errorCode == 'pd10102'){
-        var oldSource = param.edge.source().id();
-        var oldTarget = param.edge.target().id();
-        var oldPortSource = param.edge.data("portsource");
-        var oldPortTarget = param.edge.data("porttarget");
-        elementUtilities.changeData(param.edge, 'source', oldTarget);
-        elementUtilities.changeData(param.edge, 'target', oldSource);
-        elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-        elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-        param.edge = param.edge.move({
-          target: oldSource,
-          source : oldTarget        
-        });
+  undoRedoActionFunctions.unfixError = function(param){
+    var errorCode = param.errorCode;
+    var result = {};
+    result.errorCode = errorCode;
+    if(errorCode == "pd10101" || errorCode == 'pd10102'){
+      var oldSource = param.edge.source().id();
+      var oldTarget = param.edge.target().id();
+      var oldPortSource = param.edge.data("portsource");
+      var oldPortTarget = param.edge.data("porttarget");
+      elementUtilities.changeData(param.edge, 'source', oldTarget);
+      elementUtilities.changeData(param.edge, 'target', oldSource);
+      elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
+      elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
+      param.edge = param.edge.move({
+        target: oldSource,
+        source : oldTarget        
+      });
 
-        result.edge = param.edge;
+      result.edge = param.edge;
 
-        return result;
-      }else if(errorCode == "pd10103" || errorCode == 'pd10107'){
+      return result;
+    }else if(errorCode == "pd10103" || errorCode == 'pd10107'){
 
-        param.newNodes.forEach(function(newNode){    
-          cy.remove(cy.$('#'+newNode.id))      
-         
-        });
-
-        param.node.restore();
-
-        param.oldEdges.forEach(function(oldEdge){  
-          oldEdge.restore();
-        });
-
-       cy.animate({
-          duration: 100,
-          easing: 'ease',
-          fit :{eles:{},padding:20}, 
-          complete: function(){
-               
-          }
-       });
-
-        return param;
-
-      }else if(errorCode == "pd10105" || errorCode == 'pd10106'){
-        var oldSource = param.edge.source().id();
-        var oldTarget = param.edge.target().id();
-        var oldPortSource = param.edge.data("portsource");
-        var oldPortTarget = param.edge.data("porttarget");
-        elementUtilities.changeData(param.edge, 'source', oldTarget);
-        elementUtilities.changeData(param.edge, 'target', oldSource);
-        elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-        elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-        param.edge = param.edge.move({
-          target: oldSource,
-          source : oldTarget        
-        });
-
-        result.edge = param.edge;
-
-        return result;//asdfasdfasdfsadfsdaf
-      }else if(errorCode == "pd10140"){
-        param.node.restore();
-        cy.animate({
-          duration: 100,
-          easing: 'ease',
-          fit :{eles:{},padding:20}, 
-          complete: function(){
-               
-          }
-       });
-        return param;
-      }else if(errorCode == "pd10104") {
-       
-        param.nodes.forEach(function(node){
-          node.restore();
-        });
-        param.edges.forEach(function(edge){
-          edge.restore();
-        });
-        return param;
-      }else if(errorCode == "pd10108"){
-       
-        param.nodes.forEach(function(node){
-          node.restore();
-        });
-        param.edges.forEach(function(edge){
-          edge.restore();
-        });
-        return param;
-      }else if(errorCode == "pd10111"){
-        param.edges.forEach(function(edge){
-          edge.restore();
-        });
-        return param;
-      }else if(errorCode == "pd10126"){
-        param.nodes.forEach(function(node){
-          node.restore();
-        });
-        param.edges.forEach(function(edge){
-          edge.restore();
-        });       
-        return param;
-      }else if(errorCode == "pd10109" || errorCode == "pd10124" || errorCode == "pd10127") {
-        result.newSource = param.edge.source().id();
-        result.newTarget = param.edge.target().id();
-        result.portsource = param.edge.data("portsource");
-        result.edge = param.edge.move({
-          target: param.newTarget,
-          source : param.newSource      
-        });
-
-        elementUtilities.changeData(result.edge, 'portsource', param.portsource);
-        return result;
-      }else if(errorCode == "pd10112") {
-        result.node = param.node;
-        result.parent = param.node.parent().id();
-        param.node = param.node.move({
-          parent : param.parent
-        });
-        return result;
+      param.newNodes.forEach(function(newNode){    
+        cy.remove(cy.$('#'+newNode.id))      
         
-      }else if(errorCode == "pd10125") {
+      });
 
-       cy.$('#'+param.newEdge.id).remove();
-       param.edge = param.edge.restore();
+      param.node.restore();
 
-     
-       return param;
-        
-      }else if(errorCode == "pd10142") {
-        cy.$('#'+param.newEdge.id).remove();
-        param.edge = param.edge.restore();
- 
+      param.oldEdges.forEach(function(oldEdge){  
+        oldEdge.restore();
+      });
+
+      cy.animate({
+        duration: 100,
+        easing: 'ease',
+        fit :{eles:{},padding:20}, 
+        complete: function(){
+              
+        }
+      });
+
+      return param;
+
+    }else if(errorCode == "pd10105" || errorCode == 'pd10106'){
+      var oldSource = param.edge.source().id();
+      var oldTarget = param.edge.target().id();
+      var oldPortSource = param.edge.data("portsource");
+      var oldPortTarget = param.edge.data("porttarget");
+      elementUtilities.changeData(param.edge, 'source', oldTarget);
+      elementUtilities.changeData(param.edge, 'target', oldSource);
+      elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
+      elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
+      param.edge = param.edge.move({
+        target: oldSource,
+        source : oldTarget        
+      });
+
+      result.edge = param.edge;
+
+      return result;//asdfasdfasdfsadfsdaf
+    }else if(errorCode == "pd10140"){
+      param.node.restore();
+      cy.animate({
+        duration: 100,
+        easing: 'ease',
+        fit :{eles:{},padding:20}, 
+        complete: function(){
+              
+        }
+      });
+      return param;
+    }else if(errorCode == "pd10104") {
       
-        return param;
-      }else {
+      param.nodes.forEach(function(node){
+        node.restore();
+      });
+      param.edges.forEach(function(edge){
+        edge.restore();
+      });
+      return param;
+    }else if(errorCode == "pd10108"){
+      
+      param.nodes.forEach(function(node){
+        node.restore();
+      });
+      param.edges.forEach(function(edge){
+        edge.restore();
+      });
+      return param;
+    }else if(errorCode == "pd10111"){
+      param.edges.forEach(function(edge){
+        edge.restore();
+      });
+      return param;
+    }else if(errorCode == "pd10126"){
+      param.nodes.forEach(function(node){
+        node.restore();
+      });
+      param.edges.forEach(function(edge){
+        edge.restore();
+      });       
+      return param;
+    }else if(errorCode == "pd10109" || errorCode == "pd10124" || errorCode == "pd10127") {
+      result.newSource = param.edge.source().id();
+      result.newTarget = param.edge.target().id();
+      result.portsource = param.edge.data("portsource");
+      result.edge = param.edge.move({
+        target: param.newTarget,
+        source : param.newSource      
+      });
 
-        result.newSource = param.edge.source().id();
-        result.newTarget = param.edge.target().id();
-        result.porttarget = param.edge.data("porttarget");
-        result.edge = param.edge.move({
-          target: param.newTarget,
-          source : param.newSource      
-        });
+      elementUtilities.changeData(result.edge, 'portsource', param.portsource);
+      return result;
+    }else if(errorCode == "pd10112") {
+      result.node = param.node;
+      result.parent = param.node.parent().id();
+      param.node = param.node.move({
+        parent : param.parent
+      });
+      return result;
+      
+    }else if(errorCode == "pd10125") {
 
-        elementUtilities.changeData(result.edge, 'porttarget', param.porttarget);
-        return result;
+      cy.$('#'+param.newEdge.id).remove();
+      param.edge = param.edge.restore();
 
-        
-      }
+    
+      return param;
+      
+    }else if(errorCode == "pd10142") {
+      cy.$('#'+param.newEdge.id).remove();
+      param.edge = param.edge.restore();
+
+    
+      return param;
+    }else {
+
+      result.newSource = param.edge.source().id();
+      result.newTarget = param.edge.target().id();
+      result.porttarget = param.edge.data("porttarget");
+      result.edge = param.edge.move({
+        target: param.newTarget,
+        source : param.newSource      
+      });
+
+      elementUtilities.changeData(result.edge, 'porttarget', param.porttarget);
+      return result;
 
       
     }
 
+    
+  }
+
+  undoRedoActionFunctions.cloneHighDegreeNode = function(node){
+
+    var result = {};
+    var oldX = node.position().x;
+    var oldY = node.position().y;
+    
+    
+    var claculateNewClonePosition = function(sourceEndPointX,sourceEndPointY,targetEndPointX,targetEndPointY,desiredDistance,direction){
+      var distance = Math.sqrt(Math.pow(targetEndPointY-sourceEndPointY,2)+ Math.pow(targetEndPointX-sourceEndPointX,2));
+      var ratio = desiredDistance/distance;
+      var result = {};
+      if(direction == "source"){ 
+        result.cx = ((1-ratio) * sourceEndPointX)  + (ratio * targetEndPointX);
+        result.cy = ((1-ratio) * sourceEndPointY)  + (ratio * targetEndPointY);
+      }else{      
+        result.cx = ((1-ratio) * targetEndPointX)  + (ratio * sourceEndPointX);
+        result.cy = ((1-ratio) * targetEndPointY)  + (ratio * sourceEndPointY);
+      }
+      
+      return result;
+    };   
+    var edges = node.connectedEdges();
+    var desiredDistance = (node.height() > node.width()? node.height(): node.width())* 0.5;
+    for(var i = 1 ; i < edges.length ; i++){
+      var edge = edges[i];
+      var index = i;
+      var edgeClone = edge.clone();
+      var startPosition = edge.source().id() == node.id() ? "source" : "target";    
+      var newPosition = claculateNewClonePosition(edge.sourceEndpoint().x,edge.sourceEndpoint().y,edge.targetEndpoint().x,edge.targetEndpoint().y,desiredDistance,startPosition); 
+      var newNodeId = node.id()+'clone-'+index;
+      //edgeClone.data().id = edgeClone.data().id+ "-"+newNodeId;
+      if(edge.source().id() == node.id()){        
+        edgeClone.data().source = newNodeId;
+        edgeClone.data().portsource = newNodeId;    
+      }else{
+          
+        edgeClone.data().target = newNodeId;
+        edgeClone.data().porttarget = newNodeId;    
+      }
+      var newNode = node.clone();
+      newNode.data().id = newNodeId;
+      cy.add(newNode);
+     
+      edge.remove();
+      cy.add(edgeClone);
+      newNode.position({
+        x: newPosition.cx,
+        y: newPosition.cy
+      });
+      elementUtilities.setCloneMarkerStatus(newNode, true);
+      
+    }  
+    
+    var newPosition = claculateNewClonePosition(
+      edges[0].sourceEndpoint().x,
+      edges[0].sourceEndpoint().y,
+      edges[0].targetEndpoint().x,
+      edges[0].targetEndpoint().y,
+      desiredDistance,edges[0].source().id() == node.id() ? "source" : "target"
+      );
+  
+    var cloneEdge = edges[0].clone();
+    //cloneEdge.data().id = cloneEdge.data().id+ "-"+node.id()+'clone-0';
+    
+    edges[0].remove();
+    cy.add(cloneEdge);
+    elementUtilities.setCloneMarkerStatus(node,true);
+    node.position({
+      x: newPosition.cx,
+      y: newPosition.cy
+    });
+  
+    result.oldX = oldX;    
+    result.oldY = oldY;
+    result.node = node;
+    result.numberOfEdges = edges.length;
+    return result;
+
+  }
+
+  undoRedoActionFunctions.unCloneHighDegreeNode = function(param){
+
+    var node = param.node;
+    elementUtilities.setCloneMarkerStatus(node,false);
+    node.position({
+      x: param.oldX,
+      y: param.oldY
+    });
+  
+    for(var i = 1 ; i < param.numberOfEdges ; i++){
+      var cloneId = node.id()+'clone-'+i;
+      var clone = cy.$("#"+cloneId);
+      var cloneEdge = clone.connectedEdges()[0];
+      var edge = cloneEdge.clone();
+      
+    
+      if(edge.data().source == cloneId){        
+        edge.data().source = node.id();
+        edge.data().portsource =  node.id();    
+      }else{          
+        edge.data().target =  node.id();
+        edge.data().porttarget =  node.id();    
+      }
+
+      cloneEdge.remove();
+      clone.remove();
+      
+      cy.add(edge);
+    }
+
+    return node;
+  }
+
+  
 
   }
 
