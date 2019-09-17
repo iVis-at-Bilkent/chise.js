@@ -61,6 +61,8 @@ module.exports = function () {
 
     ur.action("moveEdge", undoRedoActionFunctions.moveEdge, undoRedoActionFunctions.moveEdge);
     ur.action("fixError", undoRedoActionFunctions.fixError,undoRedoActionFunctions.unfixError);
+    ur.action("cloneHighDegreeNode", undoRedoActionFunctions.cloneHighDegreeNode,undoRedoActionFunctions.unCloneHighDegreeNode);
+
 
   };
 
