@@ -911,18 +911,7 @@ module.exports = function () {
 
       }else if(errorCode == "pd10112") {    
         
-        var param = {
-          firstTime: true,
-          parentData: param.parentId, // It keeps the newParentId (Just an id for each nodes for the first time)
-          nodes: param.node,
-          posDiffX: param.diffX,
-          posDiffY:param.diffY,
-          // This is needed because the changeParent function called is not from elementUtilities
-          // but from the undoRedo extension directly, so maintaining pointer is not automatically done.
-          callback: elementUtilities.maintainPointer
-        };
-
-       
+        param.callback = elementUtilities.maintainPointer;  
         // If this is first time we should move the node to its new parent and relocate it by given posDiff params
         // else we should remove the moved eles and restore the eles to restore
         if (param.firstTime) {
@@ -1111,7 +1100,7 @@ module.exports = function () {
         edge.restore();
       });       
       return param;
-    }else if(errorCode == "pd10109" || errorCode == "pd10124" || errorCode == "pd10127") {
+    }else if(errorCode == "pd10109" || errorCode == "pd10124") {
       result.newSource = param.edge.source().id();
       result.newTarget = param.edge.target().id();
       result.portsource = param.edge.data("portsource");
@@ -1152,6 +1141,7 @@ module.exports = function () {
         param.callback(result.movedEles); // apply the callback on newly created elements
       }
 
+     
       return result;
       
     }else if(errorCode == "pd10125") {
