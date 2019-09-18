@@ -909,13 +909,50 @@ module.exports = function () {
         elementUtilities.changeData(result.edge, 'portsource', param.portsource);
         return result;
 
-      }else if(errorCode == "pd10112") {
-        result.node = param.node;
-        result.parent = param.node.parent().id();
-        param.node = param.node.move({
-          parent : param.parent
-        });
+      }else if(errorCode == "pd10112") {    
+        
+        var param = {
+          firstTime: true,
+          parentData: param.parentId, // It keeps the newParentId (Just an id for each nodes for the first time)
+          nodes: param.node,
+          posDiffX: param.diffX,
+          posDiffY:param.diffY,
+          // This is needed because the changeParent function called is not from elementUtilities
+          // but from the undoRedo extension directly, so maintaining pointer is not automatically done.
+          callback: elementUtilities.maintainPointer
+        };
+
+       
+        // If this is first time we should move the node to its new parent and relocate it by given posDiff params
+        // else we should remove the moved eles and restore the eles to restore
+        if (param.firstTime) {
+          var newParentId = param.parentData == undefined ? null : param.parentData;
+          // These eles includes the nodes and their connected edges and will be removed in nodes.move().
+          // They should be restored in undo
+          var withDescendant = param.nodes.union(param.nodes.descendants());
+          result.elesToRestore = withDescendant.union(withDescendant.connectedEdges());
+          // These are the eles created by nodes.move(), they should be removed in undo.
+          result.movedEles = param.nodes.move({"parent": newParentId});
+
+          var posDiff = {
+            x: param.posDiffX,
+            y: param.posDiffY
+          };
+
+          elementUtilities.moveNodes(posDiff, result.movedEles);
+        }
+        else {
+          result.elesToRestore = param.movedEles.remove();
+          result.movedEles = param.elesToRestore.restore();
+        }
+
+        if (param.callback) {
+          result.callback = param.callback; // keep the provided callback so it can be reused after undo/redo
+          param.callback(result.movedEles); // apply the callback on newly created elements
+        }
+
         return result;
+      
       }else if(errorCode == "pd10125") {
 
        result.edge = param.edge.remove();       
@@ -1086,11 +1123,35 @@ module.exports = function () {
       elementUtilities.changeData(result.edge, 'portsource', param.portsource);
       return result;
     }else if(errorCode == "pd10112") {
-      result.node = param.node;
-      result.parent = param.node.parent().id();
-      param.node = param.node.move({
-        parent : param.parent
-      });
+     
+      // If this is first time we should move the node to its new parent and relocate it by given posDiff params
+      // else we should remove the moved eles and restore the eles to restore
+      if (param.firstTime) {
+        var newParentId = param.parentData == undefined ? null : param.parentData;
+        // These eles includes the nodes and their connected edges and will be removed in nodes.move().
+        // They should be restored in undo
+        var withDescendant = param.nodes.union(param.nodes.descendants());
+        result.elesToRestore = withDescendant.union(withDescendant.connectedEdges());
+        // These are the eles created by nodes.move(), they should be removed in undo.
+        result.movedEles = param.nodes.move({"parent": newParentId});
+
+        var posDiff = {
+          x: param.posDiffX,
+          y: param.posDiffY
+        };
+
+        elementUtilities.moveNodes(posDiff, result.movedEles);
+      }
+      else {
+        result.elesToRestore = param.movedEles.remove();
+        result.movedEles = param.elesToRestore.restore();
+      }
+
+      if (param.callback) {
+        result.callback = param.callback; // keep the provided callback so it can be reused after undo/redo
+        param.callback(result.movedEles); // apply the callback on newly created elements
+      }
+
       return result;
       
     }else if(errorCode == "pd10125") {
