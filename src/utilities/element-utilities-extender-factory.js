@@ -1769,6 +1769,34 @@ module.exports = function () {
       }
     };
 
+    elementUtilities.reverseEdge = function(edge){
+      var oldSource = edge.source().id();
+      var oldTarget = edge.target().id();
+      var oldPortSource = edge.data("portsource");
+      var oldPortTarget = edge.data("porttarget");
+      var segmentPoints = edge.segmentPoints();
+
+
+      edge.data().source = oldTarget;
+      edge.data().target = oldSource;
+      edge.data().portsource = oldPortTarget;
+      edge.data().porttarget = oldPortSource;
+       edge = edge.move({
+         target: oldSource,
+         source : oldTarget        
+      });
+
+      if(Array.isArray(segmentPoints)){
+        segmentPoints.reverse();
+        edge.data().bendPointPositions = segmentPoints;
+        var edgeEditing = cy.edgeEditing('get');
+        edgeEditing.initBendPoints(edge);
+      }
+    
+
+      return edge;
+    }
+
   }
 
   return elementUtilitiesExtender;

@@ -805,20 +805,7 @@ module.exports = function () {
       result.errorCode = errorCode;
       if(errorCode == "pd10101" || errorCode == 'pd10102'){
 
-          var oldSource = param.edge.source().id();
-          var oldTarget = param.edge.target().id();
-          var oldPortSource = param.edge.data("portsource");
-          var oldPortTarget = param.edge.data("porttarget");
-          elementUtilities.changeData(param.edge, 'source', oldTarget);
-          elementUtilities.changeData(param.edge, 'target', oldSource);
-          elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-          elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-          param.edge = param.edge.move({
-            target: oldSource,
-            source : oldTarget        
-         });
-
-         result.edge = param.edge;
+        result.edge = elementUtilities.reverseEdge(param.edge);
 
          return result;
       }else if(errorCode == "pd10103" || errorCode == 'pd10107'){
@@ -846,23 +833,9 @@ module.exports = function () {
         return param;
 
       }else if(errorCode == "pd10105" || errorCode == 'pd10106'){
-
-        var oldSource = param.edge.source().id();
-        var oldTarget = param.edge.target().id();
-        var oldPortSource = param.edge.data("portsource");
-        var oldPortTarget = param.edge.data("porttarget");
-        elementUtilities.changeData(param.edge, 'source', oldTarget);
-        elementUtilities.changeData(param.edge, 'target', oldSource);
-        elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-        elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-        param.edge = param.edge.move({
-          target: oldSource,
-          source : oldTarget        
-       });
-
-       result.edge = param.edge;
-
-       return result;
+   
+        result.edge = elementUtilities.reverseEdge(param.edge);
+        return result;
       }else if(errorCode == "pd10140"){
         param.node.remove();
         return param;
@@ -1001,21 +974,8 @@ module.exports = function () {
     var result = {};
     result.errorCode = errorCode;
     if(errorCode == "pd10101" || errorCode == 'pd10102'){
-      var oldSource = param.edge.source().id();
-      var oldTarget = param.edge.target().id();
-      var oldPortSource = param.edge.data("portsource");
-      var oldPortTarget = param.edge.data("porttarget");
-      elementUtilities.changeData(param.edge, 'source', oldTarget);
-      elementUtilities.changeData(param.edge, 'target', oldSource);
-      elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-      elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-      param.edge = param.edge.move({
-        target: oldSource,
-        source : oldTarget        
-      });
-
-      result.edge = param.edge;
-
+     
+        result.edge = elementUtilities.reverseEdge(param.edge);
       return result;
     }else if(errorCode == "pd10103" || errorCode == 'pd10107'){
 
@@ -1041,23 +1001,11 @@ module.exports = function () {
 
       return param;
 
-    }else if(errorCode == "pd10105" || errorCode == 'pd10106'){
-      var oldSource = param.edge.source().id();
-      var oldTarget = param.edge.target().id();
-      var oldPortSource = param.edge.data("portsource");
-      var oldPortTarget = param.edge.data("porttarget");
-      elementUtilities.changeData(param.edge, 'source', oldTarget);
-      elementUtilities.changeData(param.edge, 'target', oldSource);
-      elementUtilities.changeData(param.edge, 'portsource', oldPortTarget);
-      elementUtilities.changeData(param.edge, 'porttarget', oldPortSource); 
-      param.edge = param.edge.move({
-        target: oldSource,
-        source : oldTarget        
-      });
+    }else if(errorCode == "pd10105" || errorCode == 'pd10106'){  
 
-      result.edge = param.edge;
+      result.edge = elementUtilities.reverseEdge(param.edge);
+      return result;
 
-      return result;//asdfasdfasdfsadfsdaf
     }else if(errorCode == "pd10140"){
       param.node.restore();
       cy.animate({
@@ -1173,7 +1121,6 @@ module.exports = function () {
 
       
     }
-
     
   }
 
