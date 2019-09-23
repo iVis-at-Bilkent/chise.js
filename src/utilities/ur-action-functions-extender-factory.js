@@ -869,17 +869,18 @@ module.exports = function () {
           node.remove();
         });
         return param;
-      }else if(errorCode == "pd10109" || errorCode == "pd10124" || errorCode == "pd10127") {
+      }else if(errorCode == "pd10109" || errorCode == "pd10124") {
         
-        result.newSource = param.edge.source().id();
-        result.newTarget = param.edge.target().id();
-        result.portsource = param.edge.data("portsource");
-        result.edge = param.edge.move({
-          target: param.newTarget,
-          source : param.newSource      
-        });
-
-        elementUtilities.changeData(result.edge, 'portsource', param.portsource);
+        result.newSource = param.edge.data().source;
+        result.newTarget = param.edge.data().target;
+        result.portsource = param.edge.data().portsource;
+        var clonedEdge = param.edge.clone();
+       
+        var edgeParams = {class : clonedEdge.data().class, language :clonedEdge.data().language};
+        clonedEdge.data().source = param.newSource;
+        clonedEdge.data().target = param.newTarget;
+        cy.remove(param.edge);
+        result.edge = elementUtilities.addEdge(param.newSource,param.newTarget,edgeParams, clonedEdge.data().id);      
         return result;
 
       }else if(errorCode == "pd10112") {    
@@ -1049,15 +1050,16 @@ module.exports = function () {
       });       
       return param;
     }else if(errorCode == "pd10109" || errorCode == "pd10124") {
+
       result.newSource = param.edge.source().id();
       result.newTarget = param.edge.target().id();
-      result.portsource = param.edge.data("portsource");
+      result.portsource = param.portsource;
       result.edge = param.edge.move({
         target: param.newTarget,
         source : param.newSource      
       });
 
-      elementUtilities.changeData(result.edge, 'portsource', param.portsource);
+      elementUtilities.changeData(result.edge, 'portsource', param.portsource); 
       return result;
     }else if(errorCode == "pd10112") {
      
