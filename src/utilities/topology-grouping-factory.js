@@ -96,6 +96,10 @@ module.exports = function() {
     topologyGrouping.applied = applied;
   };
 
+  topologyGrouping.toggleAppliedFlag = function() {
+    topologyGrouping.applied = !topologyGrouping.applied;
+  };
+
   function initMetaStyleMap() {
     topologyGrouping.metaStyleMap = {};
     EDGE_STYLE_NAMES.forEach( function( name ) {

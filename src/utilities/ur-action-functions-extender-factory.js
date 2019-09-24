@@ -37,8 +37,17 @@ module.exports = function () {
         oldEles = param.oldEles;
         newEles = param.newEles;
 
+        if ( elementUtilities.isGraphTopologyLocked() ) {
+          elementUtilities.unlockGraphTopology();
+        }
+        else {
+          elementUtilities.lockGraphTopology();
+        }
+
         oldEles.remove();
         newEles.restore();
+
+        topologyGrouping.toggleAppliedFlag();
       }
 
       var result = { oldEles: newEles, newEles: oldEles };
