@@ -44,15 +44,8 @@ module.exports = function () {
           elementUtilities.lockGraphTopology();
         }
 
-        var mapType = elementUtilities.getMapType();
-
         oldEles.remove();
         newEles.restore();
-
-        // restore the existing mapType (supposed to be SIF) after the operation
-        // this is needed at least for now because Newt listens to
-        // node removal events and resets map type if the graph became empty
-        elementUtilities.setMapType( mapType );
         
         topologyGrouping.toggleAppliedFlag();
       }
