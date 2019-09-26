@@ -46,7 +46,7 @@ module.exports = function () {
 
         oldEles.remove();
         newEles.restore();
-        
+
         topologyGrouping.toggleAppliedFlag();
       }
 
@@ -1157,7 +1157,7 @@ module.exports = function () {
       return result;
     };   
     var edges = node.connectedEdges();
-    var desiredDistance = (node.height() > node.width()? node.height(): node.width())* 0.5;
+    var desiredDistance = (node.height() > node.width()? node.height(): node.width())* 0.1;
     for(var i = 1 ; i < edges.length ; i++){
       var edge = edges[i];
       var index = i;
