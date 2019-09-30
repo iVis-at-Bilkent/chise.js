@@ -2,7 +2,7 @@
 
 ChiSE is a library with an API based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [Cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by process description (PD) and activity flow (AF) languages of [SBGN](http://sbgn.org) or in [simple interaction format (SIF)](https://www.pathwaycommons.org/pc/sif_interaction_rules.do). 
 
-It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats such as SIF and [CellDesigner](http://www.celldesigner.org/).
+It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats such as SIF and simple AF.
 <br/>
 
 ## Software
