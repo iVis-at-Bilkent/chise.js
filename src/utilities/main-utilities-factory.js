@@ -398,13 +398,13 @@ module.exports = function () {
    * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
-  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam);
     }
     else {
       var param = {
@@ -414,7 +414,8 @@ module.exports = function () {
         processPosition: processPosition,
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
-        edgeLength: edgeLength
+        edgeLength: edgeLength,
+        layoutParam: layoutParam
       };
 
       cy.undoRedo().do("createTemplateReaction", param);
