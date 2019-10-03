@@ -134,16 +134,17 @@ Create compound for given nodes. compoundType may be 'complex' or 'compartment'.
 `instance.changeParent(nodes, newParent, posDiffX, posDiffY)`
 Move the nodes to a new parent and change their position if possDiff params are set. Considers undoable option and checks if the operation is valid.
 
-`instance.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
-Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included in the complex.
+`instance.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam)`
+Creates a template reaction with given parameters. Requires a layout to tile the free macromolecules included in the complex.
 Considers undoable option. Parameters are explained below.<br>
 `templateType`: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
 `macromoleculeList`: The list of the names of macromolecules which will involve in the reaction.<br>
 `complexName`: The name of the complex in the reaction.<br>
 `processPosition`: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
-`tilingPaddingVertical`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
-`tilingPaddingHorizontal`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`tilingPaddingVertical`: This option will be passed to the layout with the same name. The default value is 15.<br>
+`tilingPaddingHorizontal`: This option will be passed to the layout with the same name. The default value is 15.<br>
 `edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
+`layoutParam`: An object with key 'name' (e.g. { name: 'fcose' }) that indicates the name of the layout to be used.<br>
 
 `instance.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
 Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
