@@ -581,8 +581,8 @@ module.exports = function () {
             supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
           }
 
-          var positionDiffX = supposedXPosition - complex.position('x');
-          var positionDiffY = supposedYPosition - complex.position('y');
+          var positionDiffX = (supposedXPosition - complex.position('x')) / 2;
+          var positionDiffY = (supposedYPosition - complex.position('y')) / 2;
           elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
         }
       });
