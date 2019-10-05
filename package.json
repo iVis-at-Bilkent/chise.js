@@ -20,7 +20,9 @@
   "peer-dependencies": {
     "jquery": "^2.2.4",
     "filesaverjs": "~0.2.2",
-    "cytoscape": "iVis-at-Bilkent/cytoscape.js#master"
+    "cytoscape": "iVis-at-Bilkent/cytoscape.js#unstable",
+    "sbgnviz": "github:iVis-at-Bilkent/sbgnviz.js#unstable",
+    "tippy.js": "^3.4.0"
   },
   "devDependencies": {
     "browserify": "^11.2.0",
@@ -36,5 +38,8 @@
     "run-sequence": "^1.1.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
   }
 }

@@ -18,6 +18,10 @@ module.exports = function () {
    * Adds a new node with the given class and at the given coordinates. Considers undoable option.
    */
   mainUtilities.addNode = function(x, y , nodeParams, id, parent, visibility) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // update map type
     if (typeof nodeParams == 'object'){
 
@@ -49,7 +53,11 @@ module.exports = function () {
   /*
    * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
    */
-  mainUtilities.addEdge = function(source, target, edgeParams, id, visibility) {
+  mainUtilities.addEdge = function(source, target, edgeParams, invalidEdgeCallback, id, visibility) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // update map type
     if (typeof edgeParams == 'object'){
 
@@ -64,6 +72,9 @@ module.exports = function () {
 
     // If validation result is 'invalid' cancel the operation
     if (validation === 'invalid') {
+      if(typeof invalidEdgeCallback === "function"){
+        invalidEdgeCallback();
+      }
       return;
     }
 
@@ -88,7 +99,8 @@ module.exports = function () {
         }
       };
 
-      cy.undoRedo().do("addEdge", param);
+      var result = cy.undoRedo().do("addEdge", param);
+      return result.eles;
     }
   };
 
@@ -97,6 +109,10 @@ module.exports = function () {
    * Considers undoable option.
    */
   mainUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     // If source and target IDs are given get the elements by IDs
     var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
     var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
@@ -123,6 +139,10 @@ module.exports = function () {
   // convert collapsed compound nodes to simple nodes
   // and update port values of pasted nodes and edges
   var cloneCollapsedNodesAndPorts = function (elesBefore){
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     cy.elements().unselect();
     var elesAfter = cy.elements();
     var elesDiff = elesAfter.diff(elesBefore).left;
@@ -185,12 +205,16 @@ module.exports = function () {
    * Clone given elements. Considers undoable option. Requires cytoscape-clipboard extension.
    */
   mainUtilities.cloneElements = function (eles, pasteAtMouseLoc) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     if (eles.length === 0) {
       return;
     }
-    
+
     this.copyElements(eles);
-    
+
     this.pasteElements(pasteAtMouseLoc);
   };
 
@@ -205,6 +229,10 @@ module.exports = function () {
    * Paste the elements copied to clipboard. Considers undoable option. Requires cytoscape-clipboard extension.
    */
   mainUtilities.pasteElements = function(pasteAtMouseLoc) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var elesBefore = cy.elements();
 
     if (options.undoable) {
@@ -245,6 +273,10 @@ module.exports = function () {
    * This method considers undoable option.
    */
   mainUtilities.createCompoundForGivenNodes = function (_nodes, compoundType) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var nodes = _nodes;
     /*
      * Eleminate the nodes which cannot have a parent with given compound type
@@ -288,6 +320,10 @@ module.exports = function () {
    * Considers undoable option and checks if the operation is valid.
    */
   mainUtilities.changeParent = function(nodes, _newParent, posDiffX, posDiffY) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     var newParent = typeof _newParent === 'string' ? cy.getElementById(_newParent) : _newParent;
     // New parent is supposed to be one of the root, a complex or a compartment
     if (newParent && !newParent.data("class").startsWith("complex") && newParent.data("class") != "compartment"
@@ -362,9 +398,13 @@ module.exports = function () {
    * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
-  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
     if (!options.undoable) {
-      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam);
     }
     else {
       var param = {
@@ -374,7 +414,8 @@ module.exports = function () {
         processPosition: processPosition,
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
-        edgeLength: edgeLength
+        edgeLength: edgeLength,
+        layoutParam: layoutParam
       };
 
       cy.undoRedo().do("createTemplateReaction", param);
@@ -385,7 +426,7 @@ module.exports = function () {
    * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
    * Considers undoable option.
    */
-  mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio) {
+  mainUtilities.resizeNodes = function(nodes, width, height, useAspectRatio, preserveRelativePos) {
     if (nodes.length === 0) {
       return;
     }
@@ -396,42 +437,54 @@ module.exports = function () {
         width: width,
         height: height,
         useAspectRatio: useAspectRatio,
-        performOperation: true
+        performOperation: true,
+        preserveRelativePos: preserveRelativePos
       };
 
       cy.undoRedo().do("resizeNodes", param);
     }
     else {
       elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+      cy.style().update();
     }
 
-    cy.style().update();
+
   };
 
     /*
      * Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
      * Considers undoable option.
      */
-    mainUtilities.resizeNodesToContent = function(node, bbox, actions) {
-        if (node.length === 0) {
+    mainUtilities.resizeNodesToContent = function(nodes, useAspectRatio) {
+        if (nodes.length === 0) {
             return;
         }
 
         if (options.undoable) {
-            var param = {
+          var actions = [];
+          nodes.forEach(function(node){
+            var width = elementUtilities.calculateMinWidth(node);
+            var height = elementUtilities.calculateMinHeight(node);
+            actions.push({name: "resizeNodes", param: {
                 nodes: node,
-                width: bbox.w,
-                height: bbox.h,
-                useAspectRatio: false,
-                performOperation: true
-            };
+                width: width,
+                height: height,
+                useAspectRatio: useAspectRatio,
+                performOperation: true,
+                preserveRelativePos: true
+            }});
+          });
 
-            actions.push({name: "resizeNodes", param: param});
-            // cy.undoRedo().do("resizeNodes", param);
-            return actions;
+          cy.undoRedo().do("batch", actions);
+          cy.style().update();
+          return actions;
         }
         else {
-            elementUtilities.resizeNodes(nodes, width, height, useAspectRatio);
+            nodes.forEach(function(node){
+              var width = elementUtilities.calculateMinWidth(node);
+              var height = elementUtilities.calculateMinHeight(node);
+              elementUtilities.resizeNodes(node, width, height, useAspectRatio, true);
+            });
         }
 
         cy.style().update();
@@ -557,6 +610,32 @@ module.exports = function () {
     cy.style().update();
   };
 
+
+  //Arrange information boxes
+  //If force check is true, it rearranges all information boxes
+  mainUtilities.fitUnits = function (node, locations) {
+    if (node.data('auxunitlayouts') === undefined || node.data('statesandinfos').length <= 0) {
+      return;
+    }
+    if (locations === undefined || locations.length <= 0) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.fitUnits(node, locations);
+    }
+    else {
+      var param = {
+        node: node,
+        locations: locations
+      };
+
+      cy.undoRedo().do("fitUnits", param);
+    }
+
+    cy.style().update();
+  };
+
   /*
    * Set multimer status of the given nodes to the given status.
    * Considers undoable option.
@@ -652,6 +731,75 @@ module.exports = function () {
       };
 
       cy.undoRedo().do("changeData", param);
+    }
+
+    cy.style().update();
+  };
+
+  mainUtilities.updateSetField = function(ele, fieldName, toDelete, toAdd, callback) {
+    if (!options.undoable) {
+      elementUtilities.changeData(ele, fieldName, toDelete, toAdd, callback);
+    }
+    else {
+      var param = {
+        ele,
+        fieldName,
+        toDelete,
+        toAdd,
+        callback
+      };
+
+      cy.undoRedo().do("updateSetField", param);
+    }
+  };
+
+  mainUtilities.setDefaultProperty = function( _class, name, value ) {
+    if (!options.undoable) {
+      var propMap = {};
+      propMap[ name ] = value;
+
+      elementUtilities.setDefaultProperties(_class, propMap);
+    }
+    else {
+      var param = {
+        class: _class,
+        name,
+        value
+      };
+
+      cy.undoRedo().do("setDefaultProperty", param);
+    }
+  };
+
+  mainUtilities.updateInfoboxStyle = function( node, index, newProps ) {
+    if (!options.undoable) {
+      elementUtilities.updateInfoboxStyle( node, index, newProps );
+    }
+    else {
+      var param = {
+        node: node,
+        index: index,
+        newProps: newProps
+      };
+
+      cy.undoRedo().do("updateInfoboxStyle", param);
+    }
+
+    cy.style().update();
+  };
+
+  mainUtilities.updateInfoboxObj = function( node, index, newProps ) {
+    if (!options.undoable) {
+      elementUtilities.updateInfoboxObj( node, index, newProps );
+    }
+    else {
+      var param = {
+        node: node,
+        index: index,
+        newProps: newProps
+      };
+
+      cy.undoRedo().do("updateInfoboxObj", param);
     }
 
     cy.style().update();
@@ -956,7 +1104,7 @@ module.exports = function () {
     return elementUtilities.getMapType();
   };
 
-  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage){
+  mainUtilities.addBackgroundImage = function(nodes, bgObj, updateInfo, promptInvalidImage, validateURL){
     if (nodes.length === 0 || !bgObj) {
       return;
     }
@@ -967,13 +1115,14 @@ module.exports = function () {
         bgObj: bgObj,
         nodes: nodes,
         updateInfo: updateInfo,
-        promptInvalidImage: promptInvalidImage
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL,
       };
 
       cy.undoRedo().do("addBackgroundImage", param);
     }
     else {
-      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage);
+      elementUtilities.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL);
     }
 
     cy.style().update();
@@ -1020,7 +1169,7 @@ module.exports = function () {
     cy.style().update();
   }
 
-  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg){
+  mainUtilities.changeBackgroundImage = function(nodes, oldImg, newImg, updateInfo, promptInvalidImage, validateURL){
     if (nodes.length === 0 || !oldImg || !newImg) {
       return;
     }
@@ -1030,13 +1179,16 @@ module.exports = function () {
         oldImg: oldImg,
         newImg: newImg,
         nodes: nodes,
-        firstTime: true
+        firstTime: true,
+        updateInfo: updateInfo,
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL
       };
 
       cy.undoRedo().do("changeBackgroundImage", param);
     }
     else {
-      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg);
+      elementUtilities.changeBackgroundImage(nodes, oldImg, newImg, true, updateInfo, promptInvalidImage, validateURL);
     }
 
     cy.style().update();

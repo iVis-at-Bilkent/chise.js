@@ -19,695 +19,8 @@ module.exports = function () {
 
   // Extends elementUtilities with chise specific facilities
   function extend () {
-    elementUtilities.mapType = undefined; // initialize map type
-
-    elementUtilities.PD = {}; // namespace for all PD specific stuff
-    elementUtilities.AF = {}; // namespace for all AF specific stuff
-
-    elementUtilities.defaultProperties = {
-      "process": {
-        width: 15,
-        height: 15,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "omitted process": {
-        width: 15,
-        height: 15,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "uncertain process": {
-        width: 15,
-        height: 15,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "association": {
-        width: 15,
-        height: 15,
-        'background-color': '#707070',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "dissociation": {
-        width: 15,
-        height: 15,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "macromolecule": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "nucleic acid feature": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "simple chemical": {
-        width: 35,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "source and sink": {
-        width: 25,
-        height: 25,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "tag": {
-        width: 35,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "phenotype": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "unspecified entity": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "perturbing agent": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "complex": {
-        width: 50,
-        height: 50,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "compartment": {
-        width: 80,
-        height: 80,
-        'font-size': 14,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 3.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "and": {
-        width: 25,
-        height: 25,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "or": {
-        width: 25,
-        height: 25,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "not": {
-        width: 25,
-        height: 25,
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "consumption": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "production": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "modulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "stimulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "catalysis": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "inhibition": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "necessary stimulation": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "logic arc": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "equivalence arc": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "biological activity": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA plain": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA unspecified entity": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA simple chemical": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA macromolecule": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA nucleic acid feature": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA perturbing agent": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "BA complex": {
-        width: 70,
-        height: 35,
-        'font-size': 11,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap'
-      },
-      "delay": {
-        width: 25,
-        height: 25,
-        'font-family': 'Cambria',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 1.25,
-        'border-color': '#555'
-      },
-      "unknown influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "positive influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "negative influence": {
-        'line-color': '#555',
-        'width': 1.25
-      },
-      "submap": {
-        width: 80,
-        height: 80,
-        'font-size': 14,
-        'font-family': 'Helvetica',
-        'font-style': 'normal',
-        'font-weight': 'normal',
-        'background-color': '#ffffff',
-        'background-opacity': 0.5,
-        'border-width': 2.25,
-        'border-color': '#555',
-        'text-wrap': 'wrap',
-      },
-    };
-
-
-    /*
-      see http://journal.imbio.de/articles/pdf/jib-263.pdf p.41 <-- but beware, outdated
-      following tables have been updated with PD lvl1 v2.0 of November 7, 2016 working draft
-      only the following things have been changed from 2.0 (this version is not clear on connectivity):
-       - empty set has no limit on its edge count
-       - logic operators can be source and target
-       - limit of 1 catalysis and 1 necessary stimulation on a process
-
-      for each edge class and nodeclass define 2 cases:
-       - node can be a source of this edge -> asSource
-       - node can be a target of this edge -> asTarget
-      for both cases, tells if it is allowed and what is the limit of edges allowed.
-      Limits can concern only this type of edge (maxEdge) or the total number of edges for this node (maxTotal).
-      Consider undefined things as false/unallowed -> whitelist behavior.
-
-      the nodes/edges class listed below are those used in the program.
-      For instance "compartment" isn't a node in SBGN specs.
-    */
-    elementUtilities.PD.connectivityConstraints = {
-      "consumption": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {isAllowed: true}},
-        "dissociation":         {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      },
-      "production": {
-        "macromolecule":        {asSource: {},   asTarget: {isAllowed: true}},
-        "simple chemical":      {asSource: {},   asTarget: {isAllowed: true}},
-        "unspecified entity":   {asSource: {},   asTarget: {isAllowed: true}},
-        "complex":              {asSource: {},   asTarget: {isAllowed: true}},
-        "nucleic acid feature": {asSource: {},   asTarget: {isAllowed: true}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {},   asTarget: {isAllowed: true}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {isAllowed: true},    asTarget: {}},
-        "omitted process":      {asSource: {isAllowed: true},    asTarget: {}},
-        "uncertain process":    {asSource: {isAllowed: true},    asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "dissociation":         {asSource: {isAllowed: true},    asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      },
-      "modulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "stimulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "catalysis": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "inhibition": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}}
-      },
-      "necessary stimulation": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {isAllowed: true},    asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "omitted process":      {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "uncertain process":    {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {}},
-      },
-      "logic arc": {
-        "macromolecule":        {asSource: {isAllowed: true},    asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},    asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},    asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},    asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},    asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "source and sink":      {asSource: {isAllowed: true},    asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "process":              {asSource: {},   asTarget: {}},
-        "omitted process":      {asSource: {},   asTarget: {}},
-        "uncertain process":    {asSource: {},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},      asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-      },
-      "equivalence arc": {
-        "macromolecule":        {asSource: {isAllowed: true},   asTarget: {}},
-        "simple chemical":      {asSource: {isAllowed: true},   asTarget: {}},
-        "unspecified entity":   {asSource: {isAllowed: true},   asTarget: {}},
-        "complex":              {asSource: {isAllowed: true},   asTarget: {}},
-        "nucleic acid feature": {asSource: {isAllowed: true},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "source and sink":      {asSource: {},   asTarget: {}},
-        "perturbing agent":     {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {isAllowed: true}},
-        "process":              {asSource: {},   asTarget: {}},
-        "omitted process":      {asSource: {},   asTarget: {}},
-        "uncertain process":    {asSource: {},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "association":          {asSource: {},   asTarget: {}},
-        "dissociation":         {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}}
-      }
-    };
-
-    /* AF node connectivity rules
-     * See: Systems Biology Graphical Notation: Activity Flow language Level 1, Version 1.2, Date: July 27, 2015
-     *   Section 3.3.1: Activity Nodes connectivity definition
-     *   URL: https://doi.org/10.2390/biecoll-jib-2015-265
-     */
-    elementUtilities.AF.connectivityConstraints = {
-      "positive influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "negative influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "unknown influence": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "necessary stimulation": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {isAllowed: true}},
-        "phenotype":            {asSource: {},   asTarget: {isAllowed: true}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "or":                   {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "not":                  {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "delay":                {asSource: {isAllowed: true, maxEdge: 1, maxTotal: 1},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "logic arc": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
-        "phenotype":            {asSource: {},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {}},
-        "submap":               {asSource: {},   asTarget: {}},
-        "and":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "or":                   {asSource: {},   asTarget: {isAllowed: true}},
-        "not":                  {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "delay":                {asSource: {},   asTarget: {isAllowed: true, maxEdge: 1, maxTotal: 1}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-      "equivalence arc": {
-        "biological activity":  {asSource: {isAllowed: true},   asTarget: {}},
-        "phenotype":            {asSource: {isAllowed: true},   asTarget: {}},
-        "tag":                  {asSource: {},   asTarget: {isAllowed: true}},
-        "submap":               {asSource: {},   asTarget: {isAllowed: true}},
-        "and":                  {asSource: {},   asTarget: {}},
-        "or":                   {asSource: {},   asTarget: {}},
-        "not":                  {asSource: {},   asTarget: {}},
-        "delay":                {asSource: {},   asTarget: {}},
-        "compartment":          {asSource: {},   asTarget: {}},
-      },
-    }
-    // initialize a global unit of information object
-    var uoi_obj = {};
-    uoi_obj.clazz = "unit of information";
-    uoi_obj.label = {
-      text: ""
-    };
-
-    uoi_obj.bbox = {
-       w: 30,
-       h: 12
-    };
-
     // Section Start
     // Add remove utilities
-
-    // see http://stackoverflow.com/a/8809472
-    // we need to take care of our own IDs because the ones automatically generated by cytoscape (also UUID)
-    // don't comply with xsd:SID type that must not begin with a number
-    function generateUUID () { // Public Domain/MIT
-        var d = Date.now();
-        if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-            d += performance.now(); //use high-precision timer if available
-        }
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-    }
 
     elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
       if (typeof nodeParams != 'object'){
@@ -716,46 +29,56 @@ module.exports = function () {
           var sbgnclass = nodeParams.class;
           var language = nodeParams.language;
       }
-      var defaultProperties = this.defaultProperties;
-      var defaults = defaultProperties[sbgnclass];
-
-      var width = defaults ? defaults.width : 50;
-      var height = defaults ? defaults.height : 50;
 
       var css = {};
-
+      // if there is no specific default width or height for
+      // sbgnclass these sizes are used
+      var defaultWidth = 50;
+      var defaultHeight = 50;
 
       if (visibility) {
         css.visibility = visibility;
       }
 
-      if (defaults && defaults.multimer) {
-        sbgnclass += " multimer";
-      }
       var data = {
         class: sbgnclass,
-    	language: language,
+    	  language: language,
         bbox: {
-          h: height,
-          w: width,
+          w: defaultWidth,
+          h: defaultHeight,
           x: x,
           y: y
         },
         statesandinfos: [],
-        ports: [],
-        clonemarker: defaults && defaults.clonemarker ? defaults.clonemarker : undefined
+        ports: []
       };
 
       if(id) {
         data.id = id;
       }
       else {
-        data.id = "nwtN_" + generateUUID();
+        data.id = elementUtilities.generateNodeId();
       }
 
       if (parent) {
         data.parent = parent;
       }
+
+      this.extendNodeDataWithClassDefaults( data, sbgnclass );
+
+      // some defaults are not set by extendNodeDataWithClassDefaults()
+      var defaults = this.getDefaultProperties( sbgnclass );
+
+      if ( defaults[ 'multimer' ] ) {
+        data.class += ' multimer';
+      }
+
+      if ( defaults[ 'clonemarker' ] ) {
+        data[ 'clonemarker' ] = true;
+      }
+
+      data.bbox[ 'w' ] = defaults[ 'width' ];
+      data.bbox[ 'h' ] = defaults[ 'height' ];
 
       var eles = cy.add({
         group: "nodes",
@@ -768,7 +91,8 @@ module.exports = function () {
       });
 
       var newNode = eles[eles.length - 1];
-      var ordering = this.defaultProperties[sbgnclass.replace(/\s*multimer$/, '')]['ports-ordering']; // Get the default ports ordering for the nodes with given sbgnclass
+      // Get the default ports ordering for the nodes with given sbgnclass
+      var ordering = defaults['ports-ordering'];
 
       // If there is a default ports ordering for the nodes with given sbgnclass and it is different than 'none' set the ports ordering to that ordering
       if (ordering && ordering !== 'none') {
@@ -776,12 +100,67 @@ module.exports = function () {
       }
 
       if (language == "AF" && !elementUtilities.canHaveMultipleUnitOfInformation(newNode)){
-        if (sbgnclass != "BA plain")  // if AF node can have label i.e: not plain biological activity
+        if (sbgnclass != "BA plain") { // if AF node can have label i.e: not plain biological activity
+          var uoi_obj = {
+            clazz: "unit of information"
+          };
+          uoi_obj.label = {
+            text: ""
+          };
+
+          uoi_obj.bbox = {
+             w: 12,
+             h: 12
+          };
           elementUtilities.addStateOrInfoBox(newNode, uoi_obj);
+        }
+      }
+
+      // node bg image was unexpectedly not rendered until it is clicked
+      // use this dirty hack until finding a solution to the problem
+      var bgImage = newNode.data('background-image');
+      if ( bgImage ) {
+        newNode.data( 'background-image', bgImage );
       }
 
       return newNode;
     };
+
+    //Saves old aux units of given node
+    elementUtilities.saveUnits = function(node) {
+      var tempData = [];
+      var index = 0;
+      node.data('statesandinfos').forEach( function(ele) {
+        tempData.push({
+          x: ele.bbox.x,
+          y: ele.bbox.y,
+          anchorSide: ele.anchorSide,
+        });
+        index++;
+      });
+      return tempData;
+    };
+
+    //Restores from given data
+    elementUtilities.restoreUnits = function(node, data) {
+      var index = 0;
+      node.data('statesandinfos').forEach( function(ele) {
+        if (data !== undefined) {
+          ele.bbox.x = data[index].x;
+          ele.bbox.y = data[index].y
+          var anchorSide = ele.anchorSide;
+          ele.anchorSide = data[index].anchorSide;
+          elementUtilities.modifyUnits(node, ele, anchorSide);
+          index++;
+        }
+      });
+    };
+
+    //Modify aux unit layouts
+    elementUtilities.modifyUnits = function (node, ele, anchorSide) {
+      instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
+    };
+
 
     //For reversible reactions both side of the process can be input/output
     //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
@@ -792,8 +171,6 @@ module.exports = function () {
           var sbgnclass = edgeParams.class;
           var language = edgeParams.language;
       }
-      var defaultProperties = this.defaultProperties;
-      var defaults = defaultProperties[sbgnclass];
 
       var css = {};
 
@@ -808,11 +185,18 @@ module.exports = function () {
           language: language,
       };
 
+      var defaults = elementUtilities.getDefaultProperties( sbgnclass );
+
+      // extend the data with default properties of edge style
+      Object.keys( defaults ).forEach( function( prop ) {
+        data[ prop ] = defaults[ prop ];
+      } );
+
       if(id) {
         data.id = id;
       }
       else {
-        data.id = "nwtE_" + generateUUID();
+        data.id = elementUtilities.generateEdgeId();
       }
 
       if(elementUtilities.canHaveSBGNCardinality(sbgnclass)){
@@ -897,8 +281,8 @@ module.exports = function () {
             portsource = sourceNodeInputPortId;
           }
         }
-        else if(this.isModulationArcClass(sbgnclass)){
-            portsource = sourceNodeOutputPortId;
+        else if(elementUtilities.isModulationArcClass(sbgnclass) || elementUtilities.isAFArcClass(sbgnclass)){
+          portsource = sourceNodeOutputPortId;
         }
         else if (sbgnclass === 'logic arc') {
           var srcClass = sourceNode.data('class');
@@ -938,7 +322,7 @@ module.exports = function () {
       return newEdge;
     };
 
-    elementUtilities.addProcessWithConvenientEdges = function(_source, _target, processType) {
+    elementUtilities.addProcessWithConvenientEdges = function(_source, _target, nodeParams) {
       // If source and target IDs are given get the elements by IDs
       var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
       var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
@@ -951,7 +335,7 @@ module.exports = function () {
       var y = ( source.position('y') + target.position('y') ) / 2;
 
       // Create the process with given/calculated variables
-      var process = elementUtilities.addNode(x, y, processType, undefined, processParent.id());
+      var process = elementUtilities.addNode(x, y, nodeParams, undefined, processParent.id());
         var xdiff = source.position('x') - target.position('x');
         var ydiff = source.position('y') - target.position('y')
         if (Math.abs(xdiff) >= Math.abs(ydiff))
@@ -973,32 +357,12 @@ module.exports = function () {
       // Create the edges one is between the process and the source node (which should be a consumption),
       // the other one is between the process and the target node (which should be a production).
       // For more information please refer to SBGN-PD reference card.
-      var edgeBtwSrc = elementUtilities.addEdge(source.id(), process.id(), 'consumption');
-      var edgeBtwTgt = elementUtilities.addEdge(process.id(), target.id(), 'production');
+      var edgeBtwSrc = elementUtilities.addEdge(source.id(), process.id(), {class : 'consumption', language : nodeParams.language});
+      var edgeBtwTgt = elementUtilities.addEdge(process.id(), target.id(), {class : 'production', language : nodeParams.language});
 
       // Create a collection including the elements and to be returned
       var collection = cy.collection([process[0], edgeBtwSrc[0], edgeBtwTgt[0]]);
       return collection;
-    };
-
-    /*
-     * Returns if the elements with the given parent class can be parent of the elements with the given node class
-     */
-    elementUtilities.isValidParent = function(_nodeClass, _parentClass, node) {
-      // If nodeClass and parentClass params are elements itselves instead of their class names handle it
-      var nodeClass = typeof _nodeClass !== 'string' ? _nodeClass.data('class') : _nodeClass;
-      var parentClass = _parentClass != undefined && typeof _parentClass !== 'string' ? _parentClass.data('class') : _parentClass;
-
-      if (parentClass == undefined || parentClass === 'compartment'
-              || parentClass === 'submap') { // Compartments, submaps and the root can include any type of nodes
-        return true;
-      }
-      else if (parentClass.startsWith('complex') && (!node || node.connectedEdges().length == 0  // Complexes can only include EPNs which do not have edges
-              || elementUtilities.mapType == "Unknown")) { // When map type is unknown, allow complexes to include EPNs with edges
-        return elementUtilities.isEPNClass(nodeClass);
-      }
-
-      return false; // Currently just 'compartment' and 'complex' compounds are supported return false for any other parentClass
     };
 
     /*
@@ -1007,8 +371,16 @@ module.exports = function () {
      */
     elementUtilities.createCompoundForGivenNodes = function (nodesToMakeCompound, compoundType) {
       var oldParentId = nodesToMakeCompound[0].data("parent");
+      var language = nodesToMakeCompound[0].data("language");
+      // if nodesToMakeCompound contain both PD and AF nodes, then set language of compound as Unknown
+      for( var i=1; i<nodesToMakeCompound.length; i++){
+        if(nodesToMakeCompound[i] != language){
+          language = "Unknown";
+          break;
+        }
+      }
       // The parent of new compound will be the old parent of the nodes to make compound. x, y and id parameters are not set.
-      var newCompound = elementUtilities.addNode(undefined, undefined, compoundType, undefined, oldParentId);
+      var newCompound = elementUtilities.addNode(undefined, undefined, {class : compoundType, language : language}, undefined, oldParentId);
       var newCompoundId = newCompound.id();
       var newEles = elementUtilities.changeParent(nodesToMakeCompound, newCompoundId);
       newEles = newEles.union(newCompound);
@@ -1026,23 +398,23 @@ module.exports = function () {
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * edgeLength: The distance between the process and the macromolecules at the both sides.
      */
-    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
 
-      var defaultMacromoleculProperties = elementUtilities.defaultProperties["macromolecule"];
-      var defaultSimpleChemicalProperties = elementUtilities.defaultProperties["simple chemical"];
-      var templateType = templateType;
-      var processWidth = elementUtilities.defaultProperties[templateType] ? elementUtilities.defaultProperties[templateType].width : 50;
-      var macromoleculeWidth = defaultMacromoleculProperties ? defaultMacromoleculProperties.width : 50;
-      var macromoleculeHeight = defaultMacromoleculProperties ? defaultMacromoleculProperties.height : 50;
-      var simpleChemicalWidth = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.width : 35;
-      var simpleChemicalHeight = defaultSimpleChemicalProperties ? defaultSimpleChemicalProperties.height : 35;
-      var processPosition = processPosition ? processPosition : elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
+      var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
+      var defaultProcessProperties = elementUtilities.getDefaultProperties( templateType );
+      var processWidth = defaultProcessProperties.width || 50;
+      var macromoleculeWidth = defaultMacromoleculProperties.width || 50;
+      var macromoleculeHeight = defaultMacromoleculProperties.height || 50;
+      var simpleChemicalWidth = defaultSimpleChemicalProperties.width || 35;
+      var simpleChemicalHeight = defaultSimpleChemicalProperties.height || 35;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       var nodeList = nodeList;
       var complexName = complexName;
       var numOfMolecules = nodeList.length;
-      var tilingPaddingVertical = tilingPaddingVertical ? tilingPaddingVertical : 15;
-      var tilingPaddingHorizontal = tilingPaddingHorizontal ? tilingPaddingHorizontal : 15;
-      var edgeLength = edgeLength ? edgeLength : 60;
+      var tilingPaddingVertical = tilingPaddingVertical || 15;
+      var tilingPaddingHorizontal = tilingPaddingHorizontal || 15;
+      var edgeLength = edgeLength || 60;
 
       cy.startBatch();
 
@@ -1070,12 +442,12 @@ module.exports = function () {
       //Create the process in template type
       var process;
       if (templateType === 'reversible') {
-        process = elementUtilities.addNode(processPosition.x, processPosition.y, "process");
-        elementUtilities.setPortsOrdering(process, 'L-to-R')
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, {class : 'process', language : 'PD'});
+        elementUtilities.setPortsOrdering(process, 'L-to-R');
       }
       else{
-        process = elementUtilities.addNode(processPosition.x, processPosition.y, templateType);
-        elementUtilities.setPortsOrdering(process, 'L-to-R')
+        process = elementUtilities.addNode(processPosition.x, processPosition.y, {class : templateType, language : 'PD'});
+        elementUtilities.setPortsOrdering(process, 'L-to-R');
       }
       process.data('justAdded', true);
 
@@ -1086,12 +458,12 @@ module.exports = function () {
       for (var i = 0; i < numOfMolecules; i++) {
         // node addition operation is determined by molecule type
         if(nodeList[i].type == "Simple Chemical"){
-          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "simple chemical");
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, {class : 'simple chemical', language : 'PD'});
           //update the y position
           yPosition += simpleChemicalHeight + tilingPaddingVertical;
         }
         else{
-          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, "macromolecule");
+          var newNode = elementUtilities.addNode(xPositionOfFreeMacromolecules, yPosition, {class : 'macromolecule', language : 'PD'});
           //update the y position
           yPosition += macromoleculeHeight + tilingPaddingVertical;
         }
@@ -1101,14 +473,14 @@ module.exports = function () {
         //create the edge connected to the new molecule
         var newEdge;
         if (templateType === 'association') {
-          newEdge = elementUtilities.addEdge(newNode.id(), process.id(), 'consumption');
+          newEdge = elementUtilities.addEdge(newNode.id(), process.id(), {class : 'consumption', language : 'PD'});
         }
         else if(templateType === 'dissociation'){
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production');
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'});
         }
         else{
           //Group right or top elements in group id 1
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 1);
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 1);
         }
 
         newEdge.data('justAdded', true);
@@ -1117,7 +489,7 @@ module.exports = function () {
       if(templateType === 'association' || templateType == 'dissociation'){
         //Create the complex including macromolecules inside of it
         //Temprorarily add it to the process position we will move it according to the last size of it
-        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, 'complex');
+        var complex = elementUtilities.addNode(processPosition.x, processPosition.y, {class : 'complex', language : 'PD'});
         complex.data('justAdded', true);
         complex.data('justAddedLayoutNode', true);
 
@@ -1130,10 +502,10 @@ module.exports = function () {
         var edgeOfComplex;
 
         if (templateType === 'association') {
-          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), 'production');
+          edgeOfComplex = elementUtilities.addEdge(process.id(), complex.id(), {class : 'production', language : 'PD'});
         }
         else {
-          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), 'consumption');
+          edgeOfComplex = elementUtilities.addEdge(complex.id(), process.id(), {class : 'consumption', language : 'PD'});
         }
 
         edgeOfComplex.data('justAdded', true);
@@ -1142,10 +514,10 @@ module.exports = function () {
 
           // Add a molecule(dependent on it's type) not having a previously defined id and having the complex created in this reaction as parent
           if(nodeList[i].type == 'Simple Chemical'){
-            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "simple chemical", undefined, complex.id());
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), {class : 'simple chemical', language : 'PD'}, undefined, complex.id());
           }
           else{
-            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), "macromolecule", undefined, complex.id());
+            var newNode = elementUtilities.addNode(complex.position('x'), complex.position('y'), {class : 'macromolecule', language : 'PD'}, undefined, complex.id());
           }
 
           newNode.data('justAdded', true);
@@ -1162,11 +534,11 @@ module.exports = function () {
         for (var i = 0; i < numOfInputMacromolecules; i++) {
 
           if(complexName[i].type == 'Simple Chemical'){
-            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "simple chemical");
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, {class : 'simple chemical', language : 'PD'});
             yPosition += simpleChemicalHeight + tilingPaddingVertical;
           }
           else{
-            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, "macromolecule");
+            var newNode = elementUtilities.addNode(xPositionOfInputMacromolecules, yPosition, {class : 'macromolecule', language : 'PD'});
             yPosition += macromoleculeHeight + tilingPaddingVertical;
           }
 
@@ -1177,7 +549,7 @@ module.exports = function () {
           var newEdge;
 
           //Group the left or bottom elements in group id 0
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), 'production', undefined, undefined, 0);
+          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 0);
           newEdge.data('justAdded', true);
 
         }
@@ -1188,7 +560,7 @@ module.exports = function () {
       var layoutNodes = cy.nodes('[justAddedLayoutNode]');
       layoutNodes.removeData('justAddedLayoutNode');
       var layout = layoutNodes.layout({
-        name: 'cose-bilkent',
+        name: layoutParam.name,
         randomize: false,
         fit: false,
         animate: false,
@@ -1209,8 +581,8 @@ module.exports = function () {
             supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
           }
 
-          var positionDiffX = supposedXPosition - complex.position('x');
-          var positionDiffY = supposedYPosition - complex.position('y');
+          var positionDiffX = (supposedXPosition - complex.position('x')) / 2;
+          var positionDiffY = (supposedYPosition - complex.position('y')) / 2;
           elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
         }
       });
@@ -1243,12 +615,29 @@ module.exports = function () {
       return movedEles;
     };
 
+    elementUtilities.updateInfoboxStyle = function( node, index, newProps ) {
+      var infoboxObj = node.data('statesandinfos')[index];
+      $.extend( infoboxObj.style, newProps );
+      cy.style().update();
+    };
+
+    elementUtilities.updateInfoboxObj = function( node, index, newProps ) {
+      var infoboxObj = node.data('statesandinfos')[index];
+      $.extend( infoboxObj, newProps );
+    };
+
     // Resize given nodes if useAspectRatio is truthy one of width or height should not be set.
-    elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio) {
+    elementUtilities.resizeNodes = function (nodes, width, height, useAspectRatio, preserveRelativePos) {
       for (var i = 0; i < nodes.length; i++) {
+
         var node = nodes[i];
         var ratio = undefined;
         var eleMustBeSquare = elementUtilities.mustBeSquare(node.data('class'));
+
+        if (preserveRelativePos === true) {
+          var oldWidth = node.data("bbox").w;
+          var oldHeight = node.data("bbox").h;
+        }
 
         // Note that both width and height should not be set if useAspectRatio is truthy
         if (width) {
@@ -1273,206 +662,245 @@ module.exports = function () {
         else if (ratio && !width) {
           node.data("bbox").w = node.width() * ratio;
         }
+
+        if (preserveRelativePos === true) {
+          var statesandinfos = node.data('statesandinfos');
+          var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
+          var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
+
+          topBottom.forEach(function(box){
+            if (box.bbox.x < 0) {
+              box.bbox.x = 0;
+            }
+            else if (box.bbox.x > oldWidth) {
+              box.bbox.x = oldWidth;
+            }
+            box.bbox.x = node.data("bbox").w * box.bbox.x / oldWidth;
+          });
+
+          rightLeft.forEach(function(box){
+            if (box.bbox.y < 0) {
+              box.bbox.y = 0;
+            }
+            else if (box.bbox.y > oldHeight) {
+              box.bbox.y = oldHeight;
+            }
+            box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
+          });
+        }
       }
     };
+
+    elementUtilities.calculateMinWidth = function(node) {
+
+        var defaultWidth = this.getDefaultProperties(node.data('class')).width;
+
+        // Label width calculation
+        var style = node.style();
+
+        var fontFamiliy = style['font-family'];
+        var fontSize = style['font-size'];
+        var labelText = style['label'];
+
+        var labelWidth = elementUtilities.getWidthByContent( labelText, fontFamiliy, fontSize );
+
+        var statesandinfos = node.data('statesandinfos');
+        //Top and bottom infoBoxes
+        var topInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "top" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y <= 12))));
+        var bottomInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "bottom" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y >= node.data('bbox').h - 12))));
+        var unitGap = 5;
+        var topWidth = unitGap;
+        var rightOverFlow = 0;
+        var leftOverFlow = 0;
+        topInfoBoxes.forEach(function(box){
+          topWidth += box.bbox.w + unitGap;
+          if (box.anchorSide === "right") {
+            var overFlow = box.bbox.w/2;
+            if (overFlow > rightOverFlow) {
+              rightOverFlow = overFlow;
+            }
+          }
+          else if(box.anchorSide === "left") {
+            var overFlow = - box.bbox.w/2;
+            if (overFlow > leftOverFlow) {
+              leftOverFlow = overFlow;
+            }
+          }
+          else {
+            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+              if (overFlow > rightOverFlow) {
+                rightOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.x - box.bbox.w/2 < 0) {
+              var overFlow = -(box.bbox.x - box.bbox.w/2);
+              if (overFlow > leftOverFlow) {
+                leftOverFlow = overFlow;
+              }
+            }
+          }
+
+        });
+        if (rightOverFlow > 0) {
+          topWidth -= rightOverFlow + unitGap;
+        }
+
+        if (leftOverFlow > 0) {
+          topWidth -= leftOverFlow + unitGap;
+        }
+
+        var bottomWidth = unitGap;
+        rightOverFlow = 0;
+        leftOverFlow = 0;
+        bottomInfoBoxes.forEach(function(box){
+          bottomWidth += box.bbox.w + unitGap;
+          if (box.anchorSide === "right") {
+            var overFlow = box.bbox.w/2;
+            if (overFlow > rightOverFlow) {
+              rightOverFlow = overFlow;
+            }
+          }
+          else if(box.anchorSide === "left") {
+            var overFlow = - box.bbox.w/2;
+            if (overFlow > leftOverFlow) {
+              leftOverFlow = overFlow;
+            }
+          }
+          else {
+            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
+              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
+              if (overFlow > rightOverFlow) {
+                rightOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.x - box.bbox.w/2 < 0) {
+              var overFlow = -(box.bbox.x - box.bbox.w/2);
+              if (overFlow > leftOverFlow) {
+                leftOverFlow = overFlow;
+              }
+            }
+          }
+
+        });
+        if (rightOverFlow > 0) {
+          bottomWidth -= rightOverFlow + unitGap;
+        }
+
+        if (leftOverFlow > 0) {
+          bottomWidth -= leftOverFlow + unitGap;
+        }
+
+        // Separation of info boxes based on their locations
+        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
+        var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
+
+        var middleWidth = 0;
+        var leftWidth = 0;
+        var rightWidth = 0;
+
+        leftInfoBoxes.forEach(function (infoBox) {
+          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
+            leftWidth = (leftWidth > infoBox.bbox.w/2) ? leftWidth : infoBox.bbox.w/2;
+          }
+        });
+
+        rightInfoBoxes.forEach(function (infoBox) {
+          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
+            rightWidth = (rightWidth > infoBox.bbox.w/2) ? rightWidth : infoBox.bbox.w/2;
+          }
+        });
+
+        var middleWidth = labelWidth + 2 * Math.max(leftWidth, rightWidth);
+        return Math.max(middleWidth, defaultWidth/2, topWidth, bottomWidth);
+    }
+
+    elementUtilities.calculateMinHeight = function(node) {
+        var statesandinfos = node.data('statesandinfos');
+        var margin = 7;
+        var unitGap = 5;
+        var defaultHeight = this.getDefaultProperties(node.data('class')).height;
+        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
+        var leftHeight = unitGap;
+        var topOverFlow = 0;
+        var bottomOverFlow = 0;
+        leftInfoBoxes.forEach(function(box){
+            leftHeight += box.bbox.h + unitGap;
+            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
+              var overFlow = (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
+              if (overFlow > bottomOverFlow) {
+                bottomOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.y - box.bbox.h/2 < 0) {
+              var overFlow = -(box.bbox.y - box.bbox.h/2);
+              if (overFlow > topOverFlow) {
+                topOverFlow = overFlow;
+              }
+            }
+        });
+        if (topOverFlow > 0) {
+          leftHeight -= topOverFlow + unitGap;
+        }
+
+        if (bottomOverFlow > 0) {
+          leftHeight -= bottomOverFlow + unitGap;
+        }
+
+        var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
+        var rightHeight = unitGap;
+        topOverFlow = 0;
+        bottomOverFlow = 0;
+        rightInfoBoxes.forEach(function(box){
+            rightHeight += box.bbox.h + unitGap;
+            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
+              var overFlow =  (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
+              if (overFlow > bottomOverFlow) {
+                bottomOverFlow = overFlow;
+              }
+            }
+            if (box.bbox.y - box.bbox.h/2 < 0) {
+              var overFlow = -(box.bbox.y - box.bbox.h/2);
+              if (overFlow > topOverFlow) {
+                topOverFlow = overFlow;
+              }
+            }
+        });
+        if (topOverFlow > 0) {
+          rightHeight -= topOverFlow + unitGap;
+        }
+
+        if (bottomOverFlow > 0) {
+          rightHeight -= bottomOverFlow + unitGap;
+        }
+
+        var style = node.style();
+        var labelText = ((style['label']).split("\n")).filter( text => text !== '');
+        var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
+        var totalHeight = labelText.length * fontSize + 2 * margin;
+
+        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight);
+    }
+
+    elementUtilities.isResizedToContent = function (node) {
+      if(!node || !node.isNode() || !node.data('bbox')){
+        return false;
+      }
+
+      var w = node.data('bbox').w;
+      var h = node.data('bbox').h;
+
+      var minW = elementUtilities.calculateMinWidth(node);
+      var minH = elementUtilities.calculateMinHeight(node);
+
+      if(w === minW && h === minH)
+        return true;
+      else
+        return false;
+    }
 
     // Section End
     // Add remove utilities
-
-    // Section Start
-    // Common element properties
-
-    // Get common properties of given elements. Returns null if the given element list is empty or the
-    // property is not common for all elements. dataOrCss parameter specify whether to check the property on data or css.
-    // The default value for it is data. If propertyName parameter is given as a function instead of a string representing the
-    // property name then use what that function returns.
-    elementUtilities.getCommonProperty = function (elements, propertyName, dataOrCss) {
-      if (elements.length == 0) {
-        return null;
-      }
-
-      var isFunction;
-      // If we are not comparing the properties directly users can specify a function as well
-      if (typeof propertyName === 'function') {
-        isFunction = true;
-      }
-
-      // Use data as default
-      if (!isFunction && !dataOrCss) {
-        dataOrCss = 'data';
-      }
-
-      var value = isFunction ? propertyName(elements[0]) : elements[0][dataOrCss](propertyName);
-
-      for (var i = 1; i < elements.length; i++) {
-        if ( ( isFunction ? propertyName(elements[i]) : elements[i][dataOrCss](propertyName) ) != value) {
-          return null;
-        }
-      }
-
-      return value;
-    };
-
-    // Returns if the function returns a truthy value for all of the given elements.
-    elementUtilities.trueForAllElements = function (elements, fcn) {
-      for (var i = 0; i < elements.length; i++) {
-        if (!fcn(elements[i])) {
-          return false;
-        }
-      }
-
-      return true;
-    };
-
-    // Returns whether the give element can have sbgncardinality
-    elementUtilities.canHaveSBGNCardinality = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return sbgnclass == 'consumption' || sbgnclass == 'production';
-    };
-
-    // Returns whether the give element can have sbgnlabel
-    elementUtilities.canHaveSBGNLabel = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return sbgnclass != 'and' && sbgnclass != 'or' && sbgnclass != 'not' && sbgnclass != 'delay'
-              && sbgnclass != 'association' && sbgnclass != 'dissociation' && sbgnclass != 'source and sink' && !sbgnclass.endsWith('process');
-    };
-
-    // Returns whether the give element have unit of information
-    elementUtilities.canHaveUnitOfInformation = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      if (sbgnclass == 'simple chemical'
-              || sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex' || sbgnclass == 'simple chemical multimer'
-              || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-              || sbgnclass == 'complex multimer' || (sbgnclass.startsWith('BA') && sbgnclass != "BA plain")
-              || sbgnclass == 'compartment') {
-        return true;
-      }
-      return false;
-    };
-
-    // Returns whether the given element can have more than one units of information
-    elementUtilities.canHaveMultipleUnitOfInformation = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return !sbgnclass.startsWith('BA');
-    };
-
-
-    // Returns whether the give element have state variable
-    elementUtilities.canHaveStateVariable = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      if (sbgnclass == 'macromolecule' || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex'
-              || sbgnclass == 'macromolecule multimer' || sbgnclass == 'nucleic acid feature multimer'
-              || sbgnclass == 'complex multimer') {
-        return true;
-      }
-      return false;
-    };
-
-    // Returns whether the given ele should be square in shape
-    elementUtilities.mustBeSquare = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-
-      return (sbgnclass.indexOf('process') != -1 || sbgnclass == 'source and sink'
-              || sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not'
-              || sbgnclass == 'association' || sbgnclass == 'dissociation' || sbgnclass == 'delay');
-    };
-
-    // Returns whether any of the given nodes must not be in square shape
-    elementUtilities.someMustNotBeSquare = function (nodes) {
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        if (!elementUtilities.mustBeSquare(node.data('class'))) {
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    // Returns whether the gives element can be cloned
-    elementUtilities.canBeCloned = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      var list = {
-        'unspecified entity': true,
-        'macromolecule': true,
-        'complex': true,
-        'nucleic acid feature': true,
-        'simple chemical': true,
-        'perturbing agent': true
-      };
-
-      return list[sbgnclass] ? true : false;
-    };
-
-    // Returns whether the gives element can be cloned
-    elementUtilities.canBeMultimer = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      var list = {
-        'macromolecule': true,
-        'complex': true,
-        'nucleic acid feature': true,
-        'simple chemical': true
-      };
-
-      return list[sbgnclass] ? true : false;
-    };
-
-    // Returns whether the given element is an EPN
-    elementUtilities.isEPNClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      return (sbgnclass == 'unspecified entity'
-              || sbgnclass == 'simple chemical'
-              || sbgnclass == 'macromolecule'
-              || sbgnclass == 'nucleic acid feature'
-              || sbgnclass == 'complex');
-    };
-
-    // Returns whether the given element is a PN
-    elementUtilities.isPNClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-
-      return (sbgnclass == 'process'
-              || sbgnclass == 'omitted process'
-              || sbgnclass == 'uncertain process'
-              || sbgnclass == 'association'
-              || sbgnclass == 'dissociation'
-              || sbgnclass == 'phenotype');
-    };
-
-    // Returns wether the given element or string is of the special empty set/source and sink class
-    elementUtilities.isEmptySetClass = function (ele) {
-      var sbgnclass = (typeof ele === 'string' ? ele : ele.data('class')).replace(" multimer", "");
-      return sbgnclass == 'source and sink';
-    };
-
-    // Returns whether the given element is a logical operator
-    elementUtilities.isLogicalOperator = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'and' || sbgnclass == 'or' || sbgnclass == 'not' || sbgnclass == 'delay');
-    };
-
-    // Returns whether the class of given element is a equivalance class
-    elementUtilities.convenientToEquivalence = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'tag' || sbgnclass == 'terminal');
-    };
-
-    // Returns wether the class of given elemnt is a modulation arc as defined in PD specs
-    elementUtilities.isModulationArcClass = function (ele) {
-      var sbgnclass = typeof ele === 'string' ? ele : ele.data('class');
-      return (sbgnclass == 'modulation'
-              || sbgnclass == 'stimulation' || sbgnclass == 'catalysis'
-              || sbgnclass == 'inhibition' || sbgnclass == 'necessary stimulation');
-    }
 
     // Relocates state and info boxes. This function is expected to be called after add/remove state and info boxes
     elementUtilities.relocateStateAndInfos = function (ele) {
@@ -1527,10 +955,13 @@ module.exports = function () {
       var result;
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
+        var sbgnclass = node.data('class');
         var stateAndInfos = node.data('statesandinfos');
         var box = stateAndInfos[index];
         var oldLength = box.bbox.w;
         var newLength = 0;
+
+        var content = '';
         if (box.clazz == "state variable") {
           if (!result) {
             result = box.state[type];
@@ -1538,10 +969,10 @@ module.exports = function () {
 
           box.state[type] = value;
           if (box.state["value"] !== undefined) {
-            newLength = box.state["value"].length;
+            content += box.state["value"];
           }
-          if (box.state["variable"] !== undefined) {
-            newLength += box.state["variable"].length + 1;
+          if (box.state["variable"] !== undefined && box.state["variable"].length > 0) {
+            content += box.state["variable"] + "@";
           }
 
         }
@@ -1549,18 +980,21 @@ module.exports = function () {
           if (!result) {
             result = box.label.text;
           }
-          newLength = value.length;
+          content += value;
           box.label.text = value;
         }
-        if (newLength == 0) {
-          box.bbox.w = 8;
-        }else if(newLength < 7){
-          box.bbox.w = 8 * newLength; // Arrange information box size dynamically
-        }else{
-          box.bbox.w = 48; // Maximum size of a state or information box
-        }
 
+        var min = ( sbgnclass === 'SIF macromolecule' || sbgnclass === 'SIF simple chemical' ) ? 15 : 12;
+        var fontFamily = box.style[ 'font-family' ];
+        var fontSize = box.style[ 'font-size' ];
+        var borderWidth = box.style[ 'border-width' ];
+        var opts = {
+          min,
+          max: 48,
+          margin: borderWidth / 2 + 0.5
+        };
 
+        box.bbox.w = elementUtilities.getWidthByContent( content, fontFamily, fontSize, opts );
         if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
           var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
@@ -1576,8 +1010,11 @@ module.exports = function () {
           }
         }
 
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
+
+      //TODO find a way to elimate this redundancy to update info-box positions
+      node.data('border-width', node.data('border-width'));
+
       return result;
     };
 
@@ -1587,21 +1024,19 @@ module.exports = function () {
     elementUtilities.addStateOrInfoBox = function (nodes, obj) {
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-
         var locationObj;
+
+        var defaultProps = elementUtilities.getDefaultProperties( node.data('class') );
+        var infoboxProps = defaultProps[ obj.clazz ];
+        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };
+        var style = elementUtilities.getDefaultInfoboxStyle( node.data('class'), obj.clazz );
+
         if(obj.clazz == "unit of information") {
-          if (!node.data("language") || node.data("language") == "PD"){
-            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index);
-          }
-          else if (node.data("language") == "AF"){
-            locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, obj.bbox, obj.location, obj.position, obj.index,
-                libs.cytoscape.sbgn.AfShapeFn, libs.cytoscape.sbgn.AfShapeArgsFn);
-          }
+          locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
         else if (obj.clazz == "state variable") {
-          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, obj.bbox, obj.location, obj.position, obj.index);
+          locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node);
       }
       return locationObj;
     };
@@ -1618,10 +1053,34 @@ module.exports = function () {
         var unitClass = sbgnvizInstance.classes.getAuxUnitClass(unit);
 
         obj = unitClass.remove(unit, cy);
-        sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, obj.location);
       }
 
       return obj;
+    };
+
+
+    //Tiles informations boxes for given anchorSides
+    elementUtilities.fitUnits = function (node, locations) {
+      var obj = [];
+      node.data('statesandinfos').forEach( function (ele) {
+        obj.push({
+          x: ele.bbox.x,
+          y: ele.bbox.y,
+          anchorSide: ele.anchorSide
+        });
+      });
+      sbgnvizInstance.classes.AuxUnitLayout.fitUnits(node, cy, locations);
+      return obj;
+    };
+
+    //Check which anchorsides fits
+    elementUtilities.checkFit = function (node, location) { //if no location given, it checks all possible locations
+      return sbgnvizInstance.classes.AuxUnitLayout.checkFit(node, cy, location);
+    };
+
+    //Modify array of aux layout units
+    elementUtilities.modifyUnits = function (node, unit, anchorSide) {
+      sbgnvizInstance.classes.AuxUnitLayout.modifyUnits(node, unit, anchorSide, cy);
     };
 
     // Set multimer status of the given nodes to the given status.
@@ -1662,21 +1121,21 @@ module.exports = function () {
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
       var sourceclass = source.data('class');
       var targetclass = target.data('class');
+      var mapType = elementUtilities.getMapType();
+      var edgeConstraints = elementUtilities[mapType].connectivityConstraints[edgeclass];
 
-      if (elementUtilities.getMapType() == "AF"){
+      if (mapType == "AF"){
         if (sourceclass.startsWith("BA")) // we have separate classes for each biological activity
           sourceclass = "biological activity"; // but same rule applies to all of them
 
         if (targetclass.startsWith("BA")) // we have separate classes for each biological activity
           targetclass = "biological activity"; // but same rule applies to all of them
+      }
+      else if (mapType == "PD"){
+        sourceclass = sourceclass.replace(/\s*multimer$/, '');
+        targetclass = targetclass.replace(/\s*multimer$/, '');
+      }
 
-        var edgeConstraints = this.AF.connectivityConstraints[edgeclass];
-      }
-      else{
-        sourceclass = sourceclass.replace(/\s*multimer$/, '')
-        targetclass = targetclass.replace(/\s*multimer$/, '')
-        var edgeConstraints = this.PD.connectivityConstraints[edgeclass];
-      }
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
       function hasTooManyEdges(node, sourceOrTarget) {
         var nodeclass = node.data('class');
@@ -1821,6 +1280,30 @@ module.exports = function () {
       }
     };
 
+    elementUtilities.updateSetField = function(ele, fieldName, toDelete, toAdd, callback) {
+      var set = ele.data( fieldName );
+      if ( !set ) {
+        return;
+      }
+      var updates = {};
+
+      if ( toDelete != null && set[ toDelete ] ) {
+        delete set[ toDelete ];
+        updates.deleted = toDelete;
+      }
+
+      if ( toAdd != null ) {
+        set[ toAdd ] = true;
+        updates.added = toAdd;
+      }
+
+      if ( callback && ( updates[ 'deleted' ] != null || updates[ 'added' ] != null ) ) {
+        callback();
+      }
+
+      return updates;
+    };
+
     /*
      * Return the set of all nodes present under the given position
      * renderedPos must be a point defined relatively to cytoscape container
@@ -1898,6 +1381,20 @@ module.exports = function () {
       });
     }
 
+    elementUtilities.anyHasBackgroundImage = function (eles) {
+      var obj = elementUtilities.getBackgroundImageObjs(eles);
+      if(obj === undefined)
+        return false;
+      else{
+        for(var key in obj){
+          var value = obj[key];
+          if(value && !$.isEmptyObject(value))
+            return true;
+        }
+        return false;
+      }
+    }
+
     elementUtilities.hasBackgroundImage = function (ele) {
       if(ele.isNode()){
         var bg = ele.data('background-image') ? ele.data('background-image') : "";
@@ -1909,62 +1406,101 @@ module.exports = function () {
       return false;
     }
 
-    elementUtilities.getBackgroundImageURL = function (ele) {
-      if(ele.isNode()){
-        var bg = ele.data('background-image');
-
-        if(bg){
-          bg = bg.split(" ");  
-          for(var i = 0; i < bg.length; i++){
-            if(bg[i].indexOf('http') === 0)
-              return bg[i];
-          }
-        }
-      }
-    }
-
-    elementUtilities.getBackgroundImageObj = function (ele) {
-      if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
-        var keys = ['background-image', 'background-fit', 'background-image-opacity',
-        'background-position-x', 'background-position-y', 'background-height', 'background-width'];
-
-        var obj = {};
-        keys.forEach(function(key){
-          var arr = ele.data(key);
-          obj[key] = arr ? arr : "";
-        });
-        
-        return obj;
-      }
-    }
-
-    elementUtilities.getBackgroundFitOptions = function (ele) {
-      if(!ele || !ele.isNode())
+    elementUtilities.getBackgroundImageURL = function (eles) {
+      if(!eles || eles.length < 1)
         return;
 
-      var style = ele._private.style;
-      if(style['background-fit'] && style['background-fit'].value && style['background-fit'].value.length > 0){
-        var fit = style['background-fit'].value[0];
-        if(!fit || fit === "")
+      var commonURL = "";
+      for(var i = 0; i < eles.length; i++){
+        var ele = eles[i];
+
+        if(!ele.isNode() || !elementUtilities.hasBackgroundImage(ele))
           return;
 
-        var selected = "";
-        if(fit === "none"){
-          var height = style['background-height'].value[0];
-          selected = height === "auto" ? "none":"fit";
+        var url = ele.data('background-image').split(" ").pop();
+        if(!url || url.indexOf('http') !== 0 || (commonURL !== "" && commonURL !== url))
+          return;
+        else if(commonURL === "")
+          commonURL = url;
+      }
+
+      return commonURL;
+    }
+
+    elementUtilities.getBackgroundImageObjs = function (eles) {
+      if(!eles || eles.length < 1)
+        return;
+
+      var list = {};
+      for(var i = 0; i < eles.length; i++){
+        var ele = eles[i];
+        var obj = getBgObj(ele);
+        if(obj === undefined)
+          return;
+
+        list[ele.data('id')] = obj;
+      }
+      return list;
+
+      function getBgObj (ele) {
+        if(ele.isNode() && elementUtilities.hasBackgroundImage(ele)){
+          var keys = ['background-image', 'background-fit', 'background-image-opacity',
+          'background-position-x', 'background-position-y', 'background-height', 'background-width'];
+
+          var obj = {};
+          keys.forEach(function(key){
+            var arr = ele.data(key);
+            obj[key] = arr ? arr : "";
+          });
+
+          return obj;
         }
-        else if(fit)
-          selected = fit;
-        else
+        else if(ele.isNode())
+          return {};
+      }
+    }
+
+    elementUtilities.getBackgroundFitOptions = function (eles) {
+      if(!eles || eles.length < 1)
+        return;
+
+      var commonFit = "";
+      for(var i = 0; i < eles.length; i++){
+        var node = eles[i];
+        if(!node.isNode())
           return;
 
-        var options = '<option value="none">None</option>'
-                    + '<option value="fit">Fit</option>'
-                    + '<option value="cover">Cover</option>'
-                    + '<option value="contain">Contain</option>';
-        var searchKey = 'value="' + selected + '"';
-        var index = options.indexOf(searchKey) + searchKey.length;
-        return options.substr(0, index) + ' selected' + options.substr(index);
+        var fit = getFitOption(node);
+        if(!fit || (commonFit !== "" && fit !== commonFit))
+          return;
+        else if(commonFit === "")
+          commonFit = fit;
+      }
+
+      var options = '<option value="none">None</option>'
+                  + '<option value="fit">Fit</option>'
+                  + '<option value="cover">Cover</option>'
+                  + '<option value="contain">Contain</option>';
+      var searchKey = 'value="' + commonFit + '"';
+      var index = options.indexOf(searchKey) + searchKey.length;
+      return options.substr(0, index) + ' selected' + options.substr(index);
+
+      function getFitOption(node) {
+        if(!elementUtilities.hasBackgroundImage(node))
+          return;
+
+        var f = node.data('background-fit');
+        var h = node.data('background-height');
+
+        if(!f || !h)
+          return;
+
+        f = f.split(" ");
+        h = h.split(" ");
+        if(f[f.length-1] === "none")
+          return (h[h.length-1] === "auto" ? "none" : "fit");
+        else
+          return f[f.length-1];
       }
     }
 
@@ -1973,7 +1509,10 @@ module.exports = function () {
         return;
 
       for(var i = 0; i < nodes.length; i++){
-        var node = nodes[0];
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj || $.isEmptyObject(obj))
+          continue;
 
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
@@ -1982,50 +1521,50 @@ module.exports = function () {
         var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
         var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-        
+
         var index = -1;
-        if(typeof bgObj['background-image'] === "string")
-          index = imgs.indexOf(bgObj['background-image']);
-        else if(Array.isArray(bgObj['background-image']))
-          index = imgs.indexOf(bgObj['background-image'][0]);
+        if(typeof obj['background-image'] === "string")
+          index = imgs.indexOf(obj['background-image']);
+        else if(Array.isArray(obj['background-image']))
+          index = imgs.indexOf(obj['background-image'][0]);
 
         if(index < 0)
           continue;
 
-        if(bgObj['background-image'] && imgs.length > index){
+        if(obj['background-image'] && imgs.length > index){
           var tmp = imgs[index];
-          imgs[index] = bgObj['background-image'];
-          bgObj['background-image'] = tmp;
+          imgs[index] = obj['background-image'];
+          obj['background-image'] = tmp;
         }
-        if(bgObj['background-fit'] && fits.length > index){
+        if(obj['background-fit'] && fits.length > index){
           var tmp = fits[index];
-          fits[index] = bgObj['background-fit'];
-          bgObj['background-fit'] = tmp;
+          fits[index] = obj['background-fit'];
+          obj['background-fit'] = tmp;
         }
-        if(bgObj['background-width'] && widths.length > index){
+        if(obj['background-width'] && widths.length > index){
           var tmp = widths[index];
-          widths[index] = bgObj['background-width'];
-          bgObj['background-width'] = tmp;
+          widths[index] = obj['background-width'];
+          obj['background-width'] = tmp;
         }
-        if(bgObj['background-height'] && heights.length > index){
+        if(obj['background-height'] && heights.length > index){
           var tmp = heights[index];
-          heights[index] = bgObj['background-height'];
-          bgObj['background-height'] = tmp;
+          heights[index] = obj['background-height'];
+          obj['background-height'] = tmp;
         }
-        if(bgObj['background-position-x'] && xPos.length > index){
+        if(obj['background-position-x'] && xPos.length > index){
           var tmp = xPos[index];
-          xPos[index] = bgObj['background-position-x'];
-          bgObj['background-position-x'] = tmp;
+          xPos[index] = obj['background-position-x'];
+          obj['background-position-x'] = tmp;
         }
-        if(bgObj['background-position-y'] && yPos.length > index){
+        if(obj['background-position-y'] && yPos.length > index){
           var tmp = yPos[index];
-          yPos[index] = bgObj['background-position-y'];
-          bgObj['background-position-y'] = tmp;
+          yPos[index] = obj['background-position-y'];
+          obj['background-position-y'] = tmp;
         }
-        if(bgObj['background-image-opacity'] && opacities.length > index){
+        if(obj['background-image-opacity'] && opacities.length > index){
           var tmp = opacities[index];
-          opacities[index] = bgObj['background-image-opacity'];
-          bgObj['background-image-opacity'] = tmp;
+          opacities[index] = obj['background-image-opacity'];
+          obj['background-image-opacity'] = tmp;
         }
 
         node.data('background-image', imgs.join(" "));
@@ -2040,38 +1579,52 @@ module.exports = function () {
       return bgObj;
     }
 
-    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime) {
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage, validateURL) {
       if(!nodes || nodes.length == 0 || !oldImg || !newImg)
         return;
 
-      
       elementUtilities.removeBackgroundImage(nodes, oldImg);
-      newImg['firstTime'] = firstTime;
-      elementUtilities.addBackgroundImage(nodes, newImg);
-      
+      for(var key in newImg){
+        newImg[key]['firstTime'] = firstTime;
+      }
+      elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage, validateURL);
+
       return {
         nodes: nodes,
         oldImg: newImg,
         newImg: oldImg,
-        firstTime: false
+        firstTime: false,
+        promptInvalidImage: promptInvalidImage,
+        validateURL: validateURL
       };
     }
 
     // Add a background image to given nodes.
-    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage) {
-      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage, validateURL) {
+      if(!nodes || nodes.length == 0 || !bgObj)
         return;
 
-      // Load the image from local, else just put the URL
-      if(bgObj['fromFile'])
-        loadBackgroundThenApply(nodes, bgObj);
-      // Validity of given URL should be checked before applying it
-      else if(bgObj['firstTime'])
-        checkGivenURL(nodes, bgObj);
-      else
-        applyBackground(nodes, bgObj);
+      for(var i = 0; i < nodes.length; i++){
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj || $.isEmptyObject(obj))
+          continue;
 
-      function loadBackgroundThenApply(nodes, bgObj) {
+        // Load the image from local, else just put the URL
+        if(obj['fromFile'])
+        loadBackgroundThenApply(node, obj);
+        // Validity of given URL should be checked before applying it
+        else if(obj['firstTime']){
+          if(typeof validateURL === 'function')
+            validateURL(node, obj, applyBackground, promptInvalidImage);
+          else
+            checkGivenURL(node, obj);
+        }
+        else
+          applyBackground(node, obj);
+      }
+
+      function loadBackgroundThenApply(node, bgObj) {
         var reader = new FileReader();
         var imgFile = bgObj['background-image'];
 
@@ -2089,7 +1642,7 @@ module.exports = function () {
           if(img){
             bgObj['background-image'] = img;
             bgObj['fromFile'] = false;
-            applyBackground(nodes, bgObj);
+            applyBackground(node, bgObj);
           }
           else{
             if(promptInvalidImage)
@@ -2098,13 +1651,13 @@ module.exports = function () {
         };
       }
 
-      function checkGivenURL(nodes, bgObj){
+      function checkGivenURL(node, bgObj){
         var url = bgObj['background-image'];
         var extension = (url.split(/[?#]/)[0]).split(".").pop();
         var validExtensions = ["png", "svg", "jpg", "jpeg"];
 
         if(!validExtensions.includes(extension)){
-          if(promptInvalidImage)
+          if(typeof promptInvalidImage === 'function')
             promptInvalidImage("Invalid URL is given!");
           return;
         }
@@ -2113,7 +1666,7 @@ module.exports = function () {
           url: url,
           type: 'GET',
           success: function(result, status, xhr){
-            applyBackground(nodes, bgObj);
+            applyBackground(node, bgObj);
           },
           error: function(xhr, status, error){
             if(promptInvalidImage)
@@ -2122,49 +1675,46 @@ module.exports = function () {
         });
       }
 
-      function applyBackground(nodes, bgObj) {
+      function applyBackground(node, bgObj) {
 
-        for(var i = 0; i < nodes.length; i++){
-          var node = nodes[0];
-        
-          if(elementUtilities.hasBackgroundImage(node))
-            continue;
-        
-          var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
-          var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
-          var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
-          var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
-          var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
-          var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
-          var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-          
-          var indexToInsert = imgs.length;
+        if(elementUtilities.hasBackgroundImage(node))
+          return;
 
-          // insert to length-1
-          if(hasCloneMarker(node, imgs)){
-            indexToInsert--;
-          }
+        var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
+        var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
+        var yPos = node.data('background-position-y') ? node.data('background-position-y').split(" ") : [];
+        var widths = node.data('background-width') ? node.data('background-width').split(" ") : [];
+        var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
+        var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
+        var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
 
-          imgs.splice(indexToInsert, 0, bgObj['background-image']);
-          fits.splice(indexToInsert, 0, bgObj['background-fit']);
-          opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
-          xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
-          yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
-          widths.splice(indexToInsert, 0, bgObj['background-width']);
-          heights.splice(indexToInsert, 0, bgObj['background-height']);
+        var indexToInsert = imgs.length;
 
-          node.data('background-image', imgs.join(" "));
-          node.data('background-position-x', xPos.join(" "));
-          node.data('background-position-y', yPos.join(" "));
-          node.data('background-width', widths.join(" "));
-          node.data('background-height', heights.join(" "));
-          node.data('background-fit', fits.join(" "));
-          node.data('background-image-opacity', opacities.join(" "));
-          bgObj['firstTime'] = false;
-
-          if(updateInfo)
-            updateInfo();
+        // insert to length-1
+        if(hasCloneMarker(node, imgs)){
+          indexToInsert--;
         }
+
+        imgs.splice(indexToInsert, 0, bgObj['background-image']);
+        fits.splice(indexToInsert, 0, bgObj['background-fit']);
+        opacities.splice(indexToInsert, 0, bgObj['background-image-opacity']);
+        xPos.splice(indexToInsert, 0, bgObj['background-position-x']);
+        yPos.splice(indexToInsert, 0, bgObj['background-position-y']);
+        widths.splice(indexToInsert, 0, bgObj['background-width']);
+        heights.splice(indexToInsert, 0, bgObj['background-height']);
+
+        node.data('background-image', imgs.join(" "));
+        node.data('background-position-x', xPos.join(" "));
+        node.data('background-position-y', yPos.join(" "));
+        node.data('background-width', widths.join(" "));
+        node.data('background-height', heights.join(" "));
+        node.data('background-fit', fits.join(" "));
+        node.data('background-image-opacity', opacities.join(" "));
+        bgObj['firstTime'] = false;
+
+        if(updateInfo)
+          updateInfo();
+
       }
 
       function hasCloneMarker(node, imgs){
@@ -2175,11 +1725,14 @@ module.exports = function () {
 
     // Remove a background image from given nodes.
     elementUtilities.removeBackgroundImage = function (nodes, bgObj) {
-      if(!nodes || nodes.length == 0 || !bgObj || !bgObj['background-image'])
+      if(!nodes || nodes.length == 0 || !bgObj)
         return;
 
       for(var i = 0; i < nodes.length; i++){
-        var node = nodes[0];
+        var node = nodes[i];
+        var obj = bgObj[node.data('id')];
+        if(!obj)
+          continue;
 
         var imgs = node.data('background-image') ? node.data('background-image').split(" ") : [];
         var xPos = node.data('background-position-x') ? node.data('background-position-x').split(" ") : [];
@@ -2188,12 +1741,12 @@ module.exports = function () {
         var heights = node.data('background-height') ? node.data('background-height').split(" ") : [];
         var fits = node.data('background-fit') ? node.data('background-fit').split(" ") : [];
         var opacities = node.data('background-image-opacity') ? ("" + node.data('background-image-opacity')).split(" ") : [];
-        
+
         var index = -1;
-        if(typeof bgObj['background-image'] === "string")
-          index = imgs.indexOf(bgObj['background-image']);
-        else if(Array.isArray(bgObj['background-image']))
-          index = imgs.indexOf(bgObj['background-image'][0]);
+        if(typeof obj['background-image'] === "string")
+          index = imgs.indexOf(obj['background-image']);
+        else if(Array.isArray(obj['background-image']))
+          index = imgs.indexOf(obj['background-image'][0]);
 
         if(index > -1){
           imgs.splice(index, 1);
@@ -2215,6 +1768,35 @@ module.exports = function () {
         bgObj['firstTime'] = false;
       }
     };
+
+    elementUtilities.reverseEdge = function(edge){
+      var oldSource = edge.source().id();
+      var oldTarget = edge.target().id();
+      var oldPortSource = edge.data("portsource");
+      var oldPortTarget = edge.data("porttarget");
+      var segmentPoints = edge.segmentPoints();
+
+
+      edge.data().source = oldTarget;
+      edge.data().target = oldSource;
+      edge.data().portsource = oldPortTarget;
+      edge.data().porttarget = oldPortSource;
+       edge = edge.move({
+         target: oldSource,
+         source : oldTarget        
+      });
+
+      if(Array.isArray(segmentPoints)){
+        segmentPoints.reverse();
+        edge.data().bendPointPositions = segmentPoints;
+        var edgeEditing = cy.edgeEditing('get');
+        edgeEditing.initBendPoints(edge);
+      }
+    
+
+      return edge;
+    }
+
   }
 
   return elementUtilitiesExtender;
