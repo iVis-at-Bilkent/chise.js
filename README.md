@@ -92,7 +92,7 @@ edge.data('line-color');// 'line-color' style of edges are controlled by this da
 ## API
 ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js as well ([SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api)). Other ChiSE.js API is presented below.
 
-`chise.register(options)`
+`chise.register(libs)`
 Register with libraries before creating instances
 
 `var instance = chise(options)`
@@ -306,6 +306,7 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * cytoscape
  * jQuery
  * filesaverjs
+ * tippy.js
  * sbgnviz
  * lodash.isequal
 
@@ -334,6 +335,7 @@ var cytoscape = require('cytoscape-for-sbgnviz');
 var jQuery = require('jQuery');
 var filesaverjs = require('filesaverjs');
 var sbgnviz = require('sbgnviz');
+var tippy = require('tippy.js');
 
 var options = {
 };
@@ -342,10 +344,15 @@ var libs = {
     cytoscape: cytoscape,
     jQuery: jQuery,
     filesaverjs: filesaverjs,
-    sbgnviz: sbgnviz
+    sbgnviz: sbgnviz,
+    tippy = tippy
 };
 
-chise( options, libs );
+// Register chise with libs
+chise.register(libs);
+
+// Create a new chise.js instance
+var chiseInstance = chise(options);
 ```
 
 In plain JS you do not need to require the libraries you just need to register chise with the options.
