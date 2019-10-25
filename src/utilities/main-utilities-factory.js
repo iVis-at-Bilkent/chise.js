@@ -24,11 +24,11 @@ module.exports = function () {
 
     // update map type
     if (typeof nodeParams == 'object'){
-
+/* 
       if (!elementUtilities.getMapType())
         elementUtilities.setMapType(nodeParams.language);
       else if (elementUtilities.getMapType() != nodeParams.language)
-        elementUtilities.setMapType("Unknown");
+        elementUtilities.setMapType("Unknown"); */
     }
 
     if (!options.undoable) {
@@ -61,10 +61,10 @@ module.exports = function () {
     // update map type
     if (typeof edgeParams == 'object'){
 
-      if (!elementUtilities.getMapType())
+     /*  if (!elementUtilities.getMapType())
         elementUtilities.setMapType(edgeParams.language);
       else if (elementUtilities.getMapType() != edgeParams.language)
-        elementUtilities.setMapType("Unknown");
+        elementUtilities.setMapType("HybridAny"); */
     }
     // Get the validation result
     var edgeclass = edgeParams.class ? edgeParams.class : edgeParams;

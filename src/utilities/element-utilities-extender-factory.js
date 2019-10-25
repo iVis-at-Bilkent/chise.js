@@ -434,7 +434,7 @@ module.exports = function () {
         }
       }
       else{
-        elementUtilities.setMapType("Unknown");
+        elementUtilities.setMapType("HybridAny");
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
         xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
@@ -1115,7 +1115,7 @@ module.exports = function () {
     // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
     elementUtilities.validateArrowEnds = function (edge, source, target) {
       // if map type is Unknown -- no rules applied
-      if (elementUtilities.getMapType() == "Unknown" || !elementUtilities.getMapType())
+      if (elementUtilities.getMapType() == "HybridAny" || elementUtilities.getMapType() == "HybridSbgn" || !elementUtilities.getMapType())
         return "valid";
 
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
