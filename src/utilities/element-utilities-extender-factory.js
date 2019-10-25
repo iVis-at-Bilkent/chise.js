@@ -398,7 +398,7 @@ module.exports = function () {
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * edgeLength: The distance between the process and the macromolecules at the both sides.
      */
-    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
 
       var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
       var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
@@ -560,7 +560,7 @@ module.exports = function () {
       var layoutNodes = cy.nodes('[justAddedLayoutNode]');
       layoutNodes.removeData('justAddedLayoutNode');
       var layout = layoutNodes.layout({
-        name: 'cose-bilkent',
+        name: layoutParam.name,
         randomize: false,
         fit: false,
         animate: false,
@@ -581,8 +581,8 @@ module.exports = function () {
             supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
           }
 
-          var positionDiffX = supposedXPosition - complex.position('x');
-          var positionDiffY = supposedYPosition - complex.position('y');
+          var positionDiffX = (supposedXPosition - complex.position('x')) / 2;
+          var positionDiffY = (supposedYPosition - complex.position('y')) / 2;
           elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
         }
       });

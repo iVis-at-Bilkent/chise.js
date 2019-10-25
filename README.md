@@ -2,7 +2,7 @@
 
 ChiSE is a library with an API based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [Cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by process description (PD) and activity flow (AF) languages of [SBGN](http://sbgn.org) or in [simple interaction format (SIF)](https://www.pathwaycommons.org/pc/sif_interaction_rules.do). 
 
-It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats such as SIF and [CellDesigner](http://www.celldesigner.org/).
+It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats from SIF to SBML to CellDesigner.
 <br/>
 
 ## Software
@@ -29,6 +29,10 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
         dynamicLabelSize: function () {
           return 'regular';
         },
+         // Whether to adjust labels to fit automatically.
+        fitLabelsToInfoboxes: function () {
+          return false;
+        },
         // Whether to infer nesting on load 
         inferNestingOnLoad: function () {
           return false;
@@ -36,13 +40,7 @@ M. Sari, I. Bahceci, U. Dogrusoz, S.O. Sumer, B.A. Aksoy, O. Babur, E. Demir, "[
         // percentage used to calculate compound paddings
         compoundPadding: function () {
           return 10;
-        },
-        // Whether to adjust node label font size automatically.
-        // If this option returns false, do not adjust label sizes according to node heights; use node.data('font-size')
-        // instead.
-        adjustNodeLabelFontSizeAutomatically: function() {
-          return true;
-        },
+        },       
         // The selector of the component containing the sbgn network
         networkContainerSelector: '#sbgn-network-container',
         // Whether the actions are undoable, requires cytoscape-undo-redo extension
@@ -94,7 +92,7 @@ edge.data('line-color');// 'line-color' style of edges are controlled by this da
 ## API
 ChiSE.js is built at the top of SBGNViz.js and any method exposed by SBGNViz.js is exposed in ChiSE.js as well ([SBGNViz.js API](https://github.com/iVis-at-Bilkent/sbgnviz.js#api)). Other ChiSE.js API is presented below.
 
-`chise.register(options)`
+`chise.register(libs)`
 Register with libraries before creating instances
 
 `var instance = chise(options)`
@@ -111,6 +109,24 @@ Adds a new node with the given class and at the given coordinates. Optionally yo
 
 `instance.addEdge(source, target , edgeclass, id, visibility)`
 Adds a new edge with the given class and having the given source and target ids. Optionally you can set the id and visibility of the node. Considers undoable option.
+
+`instance.saveUnits(node)`
+Saves old aux units of given node. Considers undoable option.
+
+`instance.restoreUnits(node)`
+Restores aux units from given data. Considers undoable option.
+
+`instance.modifyUnits(node, ele, anchorSide)`
+Modify aux unit layouts. Considers undoable option.
+
+`instance.fitUnits(node, locations)`
+Arranges information boxes. If force check is true, it rearranges all information boxes. Considers undoable option.
+
+`instance.setDefaultProperty (_class, name, value)`
+Sets the default property of elements with given class. Considers undoable option.
+
+`instance.updateInfoboxObj (node, index, newProps)`
+Updates the infobox at the given index in the given node with given properties. Considers undoable option.
 
 `instance.addProcessWithConvenientEdges(source, target , processType)`
 Adds a process with convenient edges. For more information please see 'https://github.com/iVis-at-Bilkent/newt/issues/9'. Considers undoable option.
@@ -134,16 +150,17 @@ Create compound for given nodes. compoundType may be 'complex' or 'compartment'.
 `instance.changeParent(nodes, newParent, posDiffX, posDiffY)`
 Move the nodes to a new parent and change their position if possDiff params are set. Considers undoable option and checks if the operation is valid.
 
-`instance.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
-Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included in the complex.
+`instance.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam)`
+Creates a template reaction with given parameters. Requires a layout to tile the free macromolecules included in the complex.
 Considers undoable option. Parameters are explained below.<br>
 `templateType`: The type of the template reaction. It may be 'association' or 'dissociation' for now.<br>
 `macromoleculeList`: The list of the names of macromolecules which will involve in the reaction.<br>
 `complexName`: The name of the complex in the reaction.<br>
 `processPosition`: The modal position of the process in the reaction. The default value is the center of the canvas.<br>
-`tilingPaddingVertical`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
-`tilingPaddingHorizontal`: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.<br>
+`tilingPaddingVertical`: This option will be passed to the layout with the same name. The default value is 15.<br>
+`tilingPaddingHorizontal`: This option will be passed to the layout with the same name. The default value is 15.<br>
 `edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
+`layoutParam`: An object with key 'name' (e.g. { name: 'fcose' }) that indicates the name of the layout to be used.<br>
 
 `instance.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
 Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
@@ -182,11 +199,43 @@ Change data of given `eles` by setting given property `name` to the given value/
 Unhide given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
 Requires `viewUtilities` extension and considers undoable option.
 
+`instance.hideAndPerformLayout(eles, layoutparam)`
+Hides given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Requires `viewUtilities` extension and considers undoable option.
+
+`instance.showAllAndPerformLayout(eles, layoutparam)`
+Unhide all elements and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Requires `viewUtilities` extension and considers undoable option.
+
+`instance.closeUpElements(mainEle, hiddenEles)`
+Moves the hidden elements close to the nodes whose neighbors will be shown. Considers undoable option.
+
+`instance.highlightProcesses(_nodes)`
+Overrides highlightProcesses from SBGNVIZ - does not highlight any nodes when the map type is AF.
+
 `instance.updateInfoboxStyle(node, index, newProps)`
 Extends the style of infobox that is at the given index of the given node by newProps. Considers undoable option.
 
 `instance.updateSetField(ele, fieldName, toDelete, toAdd, callback)`
 From the data of given ele updates the field recognized by the fieldName. The field is supposed to represent a set. Deletes 'toDelete' and adds 'toAdd' to the set if they exists.
+
+`instance.resetMapType()`
+Resets map type to undefined
+
+`instance.getMapType()`
+Gets map type.
+
+`instance.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL)`
+Adds the given background image to the given nodes. Considers undoable option.
+
+`instance.removeBackgroundImage(nodes, bgObj)`
+Removes the given background image from the given nodes. Considers undoable option.
+
+`instance.updateBackgroundImage(nodes, bgObj)`
+Updates the given background image on the given node. Considers undoable option.
+
+`instance.changeBackgroundImage(nodes, oldImg, newImg, updateInfo, promptInvalidImage, validateURL)`
+Replaces the given old background image with the new given one on the given nodes. Considers undoable option.
 
 `instance.elementUtilities`
 General and sbgn specific utilities for cytoscape elements. Extends `sbgnviz.elementUtilities`, you can find the ChiSE extensions for `sbgnviz.elementUtilities` below.
@@ -216,6 +265,7 @@ Functions to be utilized in defining new actions for `cytoscape.js-undo-redo` ex
 an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`, you can find the ChiSE extensions for `sbgnvizInstance.undoRedoActionFunctions` below.
 
  * `addNode(param)` Do/Redo function for 'addNode' undo redo command.
+ * `addEdge(param)` Do/Redo function for 'addEdge' undo redo command.
  * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
  * `createCompoundForGivenNodes(param)` Do/Undo/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.
@@ -225,14 +275,22 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `changeCss(param)` Do/Undo/Redo function for 'changeCss' undo redo command.
  * `changeFontProperties(param)` Do/Undo/Redo function for 'changeFontProperties' undo redo command.
  * `showAndPerformLayout(param)` Do/Redo function for 'showAndPerformLayout' undo redo command.
+ * `hideAndPerformLayout(param)` Undo/ function for 'hideAndPerformLayout' undo redo command.
  * `updateInfoboxStyle(param)` Do/Redo function for 'updateInfoboxStyle' undo redo command.
  * `updateSetField(param)` Do/Redo function for 'updateSetField' undo redo command.
- * `undoShowAndPerformLayout(param)` Undo/ function for 'showAndPerformLayout' undo redo command.
  * `changeStateOrInfoBox(param)` Do/Undo/Redo function for 'changeStateOrInfoBox' undo redo command.
  * `addStateOrInfoBox(param)` Do/Redo function for 'addStateOrInfoBox' undo redo command (Also Undo function for 'removeStateOrInfoBox' undo redo command).
  * `removeStateOrInfoBox(param)` Do/Redo function for 'removeStateOrInfoBox' undo redo command (Also Undo function for 'addStateOrInfoBox' undo redo command).
  * `setMultimerStatus(param)` Do/Undo/Redo function for 'setMultimerStatus' undo redo command.
  * `setCloneMarkerStatus(param)` Do/Undo/Redo function for 'setCloneMarkerStatus' undo redo command.
+ * `addBackgroundImage(param)` Do/Undo/Redo function for 'addBackgroundImage' undo redo command.
+ * `removeBackgroundImage(param)` Do/Undo/Redo function for 'removeBackgroundImage' undo redo command.
+ * `updateBackgroundImage(param)` Do/Undo/Redo function for 'updateBackgroundImage' undo redo command.
+ * `changeBackgroundImage(param)` Do/Undo/Redo function for 'changeBackgroundImage' undo redo command.
+ * `updateInfoboxObj(param)` Do/Undo/Redo function for 'updateInfoboxObj' undo redo command.
+ * `fitUnits(param)` Do/Undo/Redo function for 'fitUnits' undo redo command.
+
+ * `cloneHighDegreeNode(node)` It creates a number of clones of the given node corrosponding to all node edges. Useful when there are many edges connected to the node (high degree node) 
 
 ## Events
 `$(document).on('sbgnvizLoadSample', function(event, filename, cy) { ... });` Triggered when a sample is being loaded
@@ -245,18 +303,23 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
 
 ## Dependencies
 
- * cytoscape (iVis-at-Bilkent/cytoscape.js#unstable)
- * jQuery ^2.2.4
- * filesaverjs ~0.2.2
- * sbgnviz ~3.4.2
+ * cytoscape
+ * jQuery
+ * filesaverjs
+ * tippy.js
+ * sbgnviz
+ * lodash.isequal
+
+for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)
 
 ## Optional Dependencies
 The following extensions are used by this library if they are registered.
- * cytoscape-undo-redo ^1.2.1
- * cytoscape-expand-collapse ^3.0.0
- * cytoscape-edge-bend-editing ^1.4.0
- * cytoscape-view-utilities ^2.0.0
+ * cytoscape-undo-redo
+ * cytoscape-expand-collapse
+ * cytoscape-edge-bend-editing
+ * cytoscape-view-utilities
 
+for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)
 
 ## Usage instructions
 Download the library:
@@ -272,6 +335,7 @@ var cytoscape = require('cytoscape-for-sbgnviz');
 var jQuery = require('jQuery');
 var filesaverjs = require('filesaverjs');
 var sbgnviz = require('sbgnviz');
+var tippy = require('tippy.js');
 
 var options = {
 };
@@ -280,10 +344,15 @@ var libs = {
     cytoscape: cytoscape,
     jQuery: jQuery,
     filesaverjs: filesaverjs,
-    sbgnviz: sbgnviz
+    sbgnviz: sbgnviz,
+    tippy = tippy
 };
 
-chise( options, libs );
+// Register chise with libs
+chise.register(libs);
+
+// Create a new chise.js instance
+var chiseInstance = chise(options);
 ```
 
 In plain JS you do not need to require the libraries you just need to register chise with the options.
@@ -297,8 +366,4 @@ This project is set up to automatically be published to npm.  To publish:
 
 ## Team
 
-  * [Hasan Balci](https://github.com/hasanbalci), [Nasim Saleh](https://github.com/nasimsaleh), and [Ugur Dogrusoz](https://github.com/ugurdogrusoz) of [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis), and [Metin Can Siper](https://github.com/metincansiper) of the Demir Lab at [OHSU](http://www.ohsu.edu/)
-  
-#### Alumni
-
-  * [Ilkin Safarli](https://github.com/kinimesi), [Ludovic Roy](https://github.com/royludo), [Leonard Dervishi](https://github.com/leonarddrv), [Alper Karacelik](https://github.com/alperkaracelik), [Selim Firat Yilmaz](https://github.com/mrsfy), [Istemi Bahceci](https://github.com/istemi-bahceci), [Ayhun Tekat](https://github.com/ayhun), [M.Furkan Sahin](https://github.com/furkansahin)
+Chise.js has been mainly developed by [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis).

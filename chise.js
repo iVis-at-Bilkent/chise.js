@@ -2348,7 +2348,7 @@ module.exports = function () {
      * tilingPaddingHorizontal: This option will be passed to the cose-bilkent layout with the same name. The default value is 15.
      * edgeLength: The distance between the process and the macromolecules at the both sides.
      */
-    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createTemplateReaction = function (templateType, nodeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
 
       var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
       var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
@@ -2510,7 +2510,7 @@ module.exports = function () {
       var layoutNodes = cy.nodes('[justAddedLayoutNode]');
       layoutNodes.removeData('justAddedLayoutNode');
       var layout = layoutNodes.layout({
-        name: 'cose-bilkent',
+        name: layoutParam.name,
         randomize: false,
         fit: false,
         animate: false,
@@ -2531,8 +2531,8 @@ module.exports = function () {
             supposedXPosition = processPosition.x - edgeLength - processWidth / 2 - complex.outerWidth() / 2;
           }
 
-          var positionDiffX = supposedXPosition - complex.position('x');
-          var positionDiffY = supposedYPosition - complex.position('y');
+          var positionDiffX = (supposedXPosition - complex.position('x')) / 2;
+          var positionDiffY = (supposedYPosition - complex.position('y')) / 2;
           elementUtilities.moveNodes({x: positionDiffX, y: positionDiffY}, complex);
         }
       });
@@ -4170,13 +4170,13 @@ module.exports = function () {
    * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
-  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  mainUtilities.createTemplateReaction = function (templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+      elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam);
     }
     else {
       var param = {
@@ -4186,7 +4186,8 @@ module.exports = function () {
         processPosition: processPosition,
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
-        edgeLength: edgeLength
+        edgeLength: edgeLength,
+        layoutParam: layoutParam
       };
 
       cy.undoRedo().do("createTemplateReaction", param);
@@ -5641,7 +5642,7 @@ module.exports = function () {
       var eles;
 
       if (firstTime) {
-        eles = elementUtilities.createTemplateReaction(param.templateType, param.macromoleculeList, param.complexName, param.processPosition, param.tilingPaddingVertical, param.tilingPaddingHorizontal, param.edgeLength)
+        eles = elementUtilities.createTemplateReaction(param.templateType, param.macromoleculeList, param.complexName, param.processPosition, param.tilingPaddingVertical, param.tilingPaddingHorizontal, param.edgeLength, param.layoutParam)
       }
       else {
         eles = param;
