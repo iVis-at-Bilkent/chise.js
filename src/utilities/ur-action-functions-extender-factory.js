@@ -1248,7 +1248,15 @@ module.exports = function () {
     return node;
   }
 
-  
+  undoRedoActionFunctions.changeMapType = function(param){
+    var result ={};
+    var currentMapType = elementUtilities.getMapType();
+    elementUtilities.setMapType(param.mapType);
+    result.mapType = currentMapType;
+    result.callback = param.callback;
+    param.callback();
+    return result;
+  }
 
   }
 
