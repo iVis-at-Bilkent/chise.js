@@ -232,7 +232,7 @@ module.exports = function () {
             node.data("bbox").w = param.sizeMap[node.id()].w;
             node.data("bbox").h = param.sizeMap[node.id()].h;
 
-            if (param.preserveRelativePos === true) {
+            /* if (param.preserveRelativePos === true) {
               var statesandinfos = node.data('statesandinfos');
               var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
               var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
@@ -256,7 +256,7 @@ module.exports = function () {
                 }
                 box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
               });
-            }
+            } */
           }
           else {
             elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio, param.preserveRelativePos);
@@ -482,10 +482,10 @@ module.exports = function () {
 
       var tempData = elementUtilities.saveUnits(param.nodes);
       result.value = elementUtilities.changeStateOrInfoBox(param.nodes, param.index, param.value, param.type);
-      var locations = elementUtilities.checkFit(param.nodes);
+      /* var locations = elementUtilities.checkFit(param.nodes);
       if (locations !== undefined && locations.length > 0) {
         elementUtilities.fitUnits(param.nodes, locations);
-      }
+      } */
       if (data !== undefined) {
         elementUtilities.restoreUnits(param.nodes, data);
       }

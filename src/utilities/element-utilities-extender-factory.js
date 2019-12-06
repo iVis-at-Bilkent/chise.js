@@ -663,7 +663,7 @@ module.exports = function () {
           node.data("bbox").w = node.width() * ratio;
         }
 
-        if (preserveRelativePos === true) {
+     /*    if (preserveRelativePos === true) {
           var statesandinfos = node.data('statesandinfos');
           var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
           var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
@@ -687,7 +687,7 @@ module.exports = function () {
             }
             box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
           });
-        }
+        } */
       }
     };
 
@@ -995,7 +995,7 @@ module.exports = function () {
         };
 
         box.bbox.w = elementUtilities.getWidthByContent( content, fontFamily, fontSize, opts );
-        if (box.anchorSide === "top" || box.anchorSide === "bottom") {
+        /* if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
           var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
           var shiftIndex = 0;
@@ -1008,7 +1008,7 @@ module.exports = function () {
           for (var j = shiftIndex+1; j < units.length; j++) {
               units[j].bbox.x += (box.bbox.w - oldLength);
           }
-        }
+        } */
 
       }
 
