@@ -993,8 +993,38 @@ module.exports = function () {
           max: 48,
           margin: borderWidth / 2 + 0.5
         };
-
+        var previousWidth = box.bbox.w;
         box.bbox.w = elementUtilities.getWidthByContent( content, fontFamily, fontSize, opts );
+
+        if(box.anchorSide == "top" || box.anchorSide == "bottom"){
+          var unitLayout = node.data()["auxunitlayouts"][box.anchorSide];
+          if(unitLayout.units[unitLayout.units.length-1].id == box.id){
+             
+            var borderWidth = node.data()['border-width'];
+            var shiftAmount = (((box.bbox.w - previousWidth) / 2) * 100 )/ (node.outerWidth() - borderWidth);
+           
+            if(shiftAmount > 0){
+            
+              if(box.bbox.x + shiftAmount <= 100){
+                box.bbox.x = box.bbox.x + shiftAmount;
+              }
+            }else{
+              var previousInfoBbox = {x : 0, w:0};
+              if(unitLayout.units.length > 1){
+                previousInfoBbox= unitLayout.units[unitLayout.units.length-2].bbox;      
+              }
+
+              var idealGap = sbgnvizInstance.classes.AuxUnitLayout.getCurrentGap(box.anchorSide);
+              var newPosition = previousInfoBbox.x + (previousInfoBbox.w/2 + idealGap + box.bbox.w/2)*100 / (node.outerWidth() - borderWidth);
+              box.bbox.x = newPosition;
+              
+            }
+           
+           
+          }
+        }
+        
+        
         /* if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
           var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
