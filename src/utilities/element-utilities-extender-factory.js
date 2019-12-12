@@ -1003,7 +1003,7 @@ module.exports = function () {
             var borderWidth = node.data()['border-width'];
             var shiftAmount = (((box.bbox.w - previousWidth) / 2) * 100 )/ (node.outerWidth() - borderWidth);
            
-            if(shiftAmount > 0){
+            if(shiftAmount >= 0){
             
               if(box.bbox.x + shiftAmount <= 100){
                 box.bbox.x = box.bbox.x + shiftAmount;
