@@ -1014,6 +1014,9 @@ module.exports = function () {
                 previousInfoBbox= unitLayout.units[unitLayout.units.length-2].bbox;      
               }
 
+              
+              
+              sbgnvizInstance.classes.AuxUnitLayout.setIdealGap(node, box.anchorSide);
               var idealGap = sbgnvizInstance.classes.AuxUnitLayout.getCurrentGap(box.anchorSide);
               var newPosition = previousInfoBbox.x + (previousInfoBbox.w/2 + idealGap + box.bbox.w/2)*100 / (node.outerWidth() - borderWidth);
               box.bbox.x = newPosition;
