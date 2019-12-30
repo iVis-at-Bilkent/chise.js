@@ -474,7 +474,11 @@ module.exports = function () {
                 preserveRelativePos: true
             }});
           });
-
+          var param = {
+            node: nodes[0],
+            locations: ["top","right","bottom","left"]
+          };
+          actions.push({name:"fitUnits",param : param})
           cy.undoRedo().do("batch", actions);
           cy.style().update();
           return actions;
