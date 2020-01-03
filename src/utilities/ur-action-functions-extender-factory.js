@@ -211,10 +211,18 @@ module.exports = function () {
 
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        result.sizeMap[node.id()] = {
-          w: node.width(),
-          h: node.height()
-        };
+        if(node.isParent()){
+          result.sizeMap[node.id()] = {
+            w: node.css("min-width") != 0?  node.css("min-width") : node.children().boundingBox().w,
+            h: node.css("min-height") != 0?  node.css("min-height") : node.children().boundingBox().h
+          };
+        }else{
+          result.sizeMap[node.id()] = {
+            w: node.width(),
+            h: node.height()
+          };
+        }
+        
       }
 
       result.nodes = nodes;
@@ -224,13 +232,20 @@ module.exports = function () {
 
         if (param.performOperation) {
           if (param.sizeMap) {
-            if (param.preserveRelativePos === true) {
+            /* if (param.preserveRelativePos === true) {
               var oldWidth = node.data("bbox").w;
               var oldHeight = node.data("bbox").h;
-            }
+            } */
 
-            node.data("bbox").w = param.sizeMap[node.id()].w;
-            node.data("bbox").h = param.sizeMap[node.id()].h;
+            if(node.isParent()){
+              node.css("min-height" , ""+ param.sizeMap[node.id()].h);
+              node.css("min-width" , ""+ param.sizeMap[node.id()].w);
+
+            }else{
+              node.data("bbox").w = param.sizeMap[node.id()].w;
+              node.data("bbox").h = param.sizeMap[node.id()].h;
+            }
+           
 
             /* if (param.preserveRelativePos === true) {
               var statesandinfos = node.data('statesandinfos');

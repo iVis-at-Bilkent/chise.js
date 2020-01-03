@@ -458,8 +458,7 @@ module.exports = function () {
     mainUtilities.resizeNodesToContent = function(nodes, useAspectRatio) {
         if (nodes.length === 0) {
             return;
-        }
-
+        } 
         if (options.undoable) {
           var actions = [];
           nodes.forEach(function(node){
@@ -473,12 +472,22 @@ module.exports = function () {
                 performOperation: true,
                 preserveRelativePos: true
             }});
+
+            var stateAndInfos = node.data('statesandinfos');
+            var length = stateAndInfos.length;
+            if (length != 0) {
+              var param = {
+                node: node,
+                locations: ["top","right","bottom","left"]
+              };          
+              actions.push({name:"fitUnits",param : param})
+             }
+  
+
           });
-          var param = {
-            node: nodes[0],
-            locations: ["top","right","bottom","left"]
-          };
-          actions.push({name:"fitUnits",param : param})
+
+        
+         
           cy.undoRedo().do("batch", actions);
           cy.style().update();
           return actions;
@@ -487,6 +496,7 @@ module.exports = function () {
             nodes.forEach(function(node){
               var width = elementUtilities.calculateMinWidth(node);
               var height = elementUtilities.calculateMinHeight(node);
+              
               elementUtilities.resizeNodes(node, width, height, useAspectRatio, true);
             });
         }

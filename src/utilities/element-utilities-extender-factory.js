@@ -640,28 +640,34 @@ module.exports = function () {
         }
 
         // Note that both width and height should not be set if useAspectRatio is truthy
-        if (width) {
-          if (useAspectRatio || eleMustBeSquare) {
-            ratio = width / node.width();
+        if(!node.isParent()){
+          if (width) {
+            if (useAspectRatio || eleMustBeSquare) {
+              ratio = width / node.width();
+            }
+  
+            node.data("bbox").w = width;
           }
-
-          node.data("bbox").w = width;
-        }
-
-        if (height) {
-          if (useAspectRatio || eleMustBeSquare) {
-            ratio = height / node.height();
+  
+          if (height) {
+            if (useAspectRatio || eleMustBeSquare) {
+              ratio = height / node.height();
+            }
+  
+            node.data("bbox").h = height;
           }
-
-          node.data("bbox").h = height;
+  
+          if (ratio && !height) {
+            node.data("bbox").h = node.height() * ratio;
+          }
+          else if (ratio && !width) {
+            node.data("bbox").w = node.width() * ratio;
+          }
+        }else{
+          node.css("min-height" , ""+ height);
+          node.css("min-width" , ""+ width);
         }
-
-        if (ratio && !height) {
-          node.data("bbox").h = node.height() * ratio;
-        }
-        else if (ratio && !width) {
-          node.data("bbox").w = node.width() * ratio;
-        }
+        
 
      /*    if (preserveRelativePos === true) {
           var statesandinfos = node.data('statesandinfos');
@@ -730,7 +736,12 @@ module.exports = function () {
         });      
 
         var middleWidth = labelWidth + 2 * Math.max(rightMaxWidth/2, leftMaxWidth/2);
-        return Math.max(middleWidth, defaultWidth/2, topIdealWidth, bottomIdealWidth);
+
+        var compoundWidth = 0;
+        if(node.isParent()){
+          compoundWidth = node.children().boundingBox().w;
+        }
+        return Math.max(middleWidth, defaultWidth/2, topIdealWidth, bottomIdealWidth, compoundWidth);
     }
 
     elementUtilities.calculateMinHeight = function(node) {
@@ -754,7 +765,13 @@ module.exports = function () {
         var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
         var totalHeight = labelText.length * fontSize + 2 * margin;
 
-        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight);
+        
+
+        var compoundHeight = 0;
+        if(node.isParent()){
+          compoundHeight = node.children().boundingBox().h;
+        }
+        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight, compoundHeight);
     }
 
     elementUtilities.isResizedToContent = function (node) {
