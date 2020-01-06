@@ -666,6 +666,10 @@ module.exports = function () {
         }else{
           node.data("minHeight" , ""+ height);
           node.data("minWidth" , ""+ width);
+          node.data("minWidthBiasLeft", "50%");
+          node.data("minWidthBiasRight", "50%");
+          node.data("minHeightBiasTop", "50%" );
+          node.data("minHeightBiasBottom", "50%");
         }
         
 

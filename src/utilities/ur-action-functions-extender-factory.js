@@ -214,7 +214,11 @@ module.exports = function () {
         if(node.isParent()){
           result.sizeMap[node.id()] = {
             w: node.data("minWidth"),
-            h: node.data("minHeight")
+            h: node.data("minHeight"),
+            biasL : node.data("minWidthBiasLeft"),
+            bisaR : node.data("minWidthBiasRight"),
+            biasT : node.data("minHeightBiasTop"),
+            biasB : node.data("minHeightBiasBottom")
            // w: node.css("minWidth") != 0?  node.data("minWidth") : node.children().boundingBox().w,
             //h: node.css("min-height") != 0?  node.data("minHeight") : node.children().boundingBox().h
           };
@@ -242,6 +246,10 @@ module.exports = function () {
             if(node.isParent()){
               node.data("minHeight" , ""+ param.sizeMap[node.id()].h);
               node.data("minWidth" , ""+ param.sizeMap[node.id()].w);
+              node.data("minWidthBiasLeft", ""+ param.sizeMap[node.id()].biasL);
+              node.data("minWidthBiasRight", ""+ param.sizeMap[node.id()].biasR);
+              node.data("minHeightBiasTop", ""+ param.sizeMap[node.id()].biasT);
+              node.data("minHeightBiasBottom", ""+ param.sizeMap[node.id()].biasB);
 
             }else{
               node.data("bbox").w = param.sizeMap[node.id()].w;
