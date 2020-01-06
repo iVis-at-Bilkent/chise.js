@@ -664,8 +664,8 @@ module.exports = function () {
             node.data("bbox").w = node.width() * ratio;
           }
         }else{
-          node.css("min-height" , ""+ height);
-          node.css("min-width" , ""+ width);
+          node.data("minHeight" , ""+ height);
+          node.data("minWidth" , ""+ width);
         }
         
 

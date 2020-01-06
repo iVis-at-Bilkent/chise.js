@@ -213,8 +213,10 @@ module.exports = function () {
         var node = nodes[i];
         if(node.isParent()){
           result.sizeMap[node.id()] = {
-            w: node.css("min-width") != 0?  node.css("min-width") : node.children().boundingBox().w,
-            h: node.css("min-height") != 0?  node.css("min-height") : node.children().boundingBox().h
+            w: node.data("minWidth"),
+            h: node.data("minHeight")
+           // w: node.css("minWidth") != 0?  node.data("minWidth") : node.children().boundingBox().w,
+            //h: node.css("min-height") != 0?  node.data("minHeight") : node.children().boundingBox().h
           };
         }else{
           result.sizeMap[node.id()] = {
@@ -238,8 +240,8 @@ module.exports = function () {
             } */
 
             if(node.isParent()){
-              node.css("min-height" , ""+ param.sizeMap[node.id()].h);
-              node.css("min-width" , ""+ param.sizeMap[node.id()].w);
+              node.data("minHeight" , ""+ param.sizeMap[node.id()].h);
+              node.data("minWidth" , ""+ param.sizeMap[node.id()].w);
 
             }else{
               node.data("bbox").w = param.sizeMap[node.id()].w;
