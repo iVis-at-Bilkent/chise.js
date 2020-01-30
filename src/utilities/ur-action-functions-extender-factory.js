@@ -527,10 +527,10 @@ module.exports = function () {
 
       var tempData = elementUtilities.saveUnits(nodes);
       var locationObj = elementUtilities.addStateOrInfoBox(nodes, obj);
-      var locations = elementUtilities.checkFit(nodes);
+     /*  var locations = elementUtilities.checkFit(nodes);
       if (locations !== undefined && locations.length > 0) {
         elementUtilities.fitUnits(nodes, locations);
-      }
+      } */
       if (data !== undefined) {
         elementUtilities.restoreUnits(nodes, data);
       }
