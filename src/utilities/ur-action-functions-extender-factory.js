@@ -244,12 +244,13 @@ module.exports = function () {
             } */
 
             if(node.isParent()){
-              node.data("minHeight" , ""+ param.sizeMap[node.id()].h);
-              node.data("minWidth" , ""+ param.sizeMap[node.id()].w);
-              node.data("minWidthBiasLeft", ""+ param.sizeMap[node.id()].biasL);
-              node.data("minWidthBiasRight", ""+ param.sizeMap[node.id()].biasR);
-              node.data("minHeightBiasTop", ""+ param.sizeMap[node.id()].biasT);
-              node.data("minHeightBiasBottom", ""+ param.sizeMap[node.id()].biasB);
+              
+              node.data("minHeight" , param.sizeMap[node.id()].h);
+              node.data("minWidth" , param.sizeMap[node.id()].w);
+              node.data("minWidthBiasLeft", param.sizeMap[node.id()].biasL);
+              node.data("minWidthBiasRight", param.sizeMap[node.id()].biasR);
+              node.data("minHeightBiasTop", param.sizeMap[node.id()].biasT);
+              node.data("minHeightBiasBottom", param.sizeMap[node.id()].biasB);
 
             }else{
               node.data("bbox").w = param.sizeMap[node.id()].w;
