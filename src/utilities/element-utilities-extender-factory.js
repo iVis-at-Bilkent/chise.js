@@ -904,7 +904,8 @@ module.exports = function () {
               if(box.bbox.x + shiftAmount <= 100){
                 box.bbox.x = box.bbox.x + shiftAmount;
               }
-            }else{
+            }
+           /*  else{
               var previousInfoBbox = {x : 0, w:0};
               if(unitLayout.units.length > 1){
                 previousInfoBbox= unitLayout.units[unitLayout.units.length-2].bbox;      
@@ -917,7 +918,7 @@ module.exports = function () {
               var newPosition = previousInfoBbox.x + (previousInfoBbox.w/2 + idealGap + box.bbox.w/2)*100 / (node.outerWidth() - borderWidth);
               box.bbox.x = newPosition;
               
-            }
+            } */
            
            
           }
