@@ -783,8 +783,10 @@ module.exports = function () {
         return false;
       }
 
-      var w = node.data('bbox').w;
-      var h = node.data('bbox').h;
+      //var w = node.data('bbox').w;
+      //var h = node.data('bbox').h;
+      var w = node.width();
+      var h = node.height();
 
       var minW = elementUtilities.calculateMinWidth(node);
       var minH = elementUtilities.calculateMinHeight(node);
