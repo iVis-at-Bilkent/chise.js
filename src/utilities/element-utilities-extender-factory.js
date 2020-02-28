@@ -960,9 +960,12 @@ module.exports = function () {
 
         var defaultProps = elementUtilities.getDefaultProperties( node.data('class') );
         var infoboxProps = defaultProps[ obj.clazz ];
-        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };
+        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };        
         var style = elementUtilities.getDefaultInfoboxStyle( node.data('class'), obj.clazz );
-
+        if(obj.style){
+          $.extend( style, obj.style );
+        }
+       
         if(obj.clazz == "unit of information") {
           locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
