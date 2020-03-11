@@ -305,7 +305,7 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
 
  * cytoscape
  * jQuery
- * filesaverjs
+ * file-saver
  * tippy.js
  * sbgnviz
  * lodash.isequal
@@ -333,7 +333,7 @@ CommonJS:
 var sbgnviz = require('sbgnviz');
 var cytoscape = require('cytoscape-for-sbgnviz');
 var jQuery = require('jQuery');
-var filesaverjs = require('filesaverjs');
+var filesaver = require('file-saver');
 var sbgnviz = require('sbgnviz');
 var tippy = require('tippy.js');
 
@@ -343,7 +343,7 @@ var options = {
 var libs = {
     cytoscape: cytoscape,
     jQuery: jQuery,
-    filesaverjs: filesaverjs,
+    filesaver: filesaver,
     sbgnviz: sbgnviz,
     tippy = tippy
 };

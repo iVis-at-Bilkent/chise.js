@@ -72,7 +72,7 @@
     libs.jQuery = _libs.jQuery || jQuery;
     libs.cytoscape = _libs.cytoscape || cytoscape;
     libs.sbgnviz = _libs.sbgnviz || sbgnviz;
-    libs.saveAs = _libs.filesaverjs ? _libs.filesaverjs.saveAs : saveAs;
+    libs.saveAs = _libs.filesaver ? _libs.filesaver.saveAs : saveAs;
 
     libs.sbgnviz.register(_libs); // Register sbgnviz with the given libs
 
