@@ -420,21 +420,19 @@ module.exports = function () {
 
       var xPositionOfFreeMacromolecules;
       var xPositionOfInputMacromolecules;
-
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
-        if (!elementUtilities.getMapType()) {
-          elementUtilities.setMapType("PD");
-        }
+       
       }
       else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
-        if (!elementUtilities.getMapType()) {
-          elementUtilities.setMapType("PD");
-        }
+       
       }
       else{
-        elementUtilities.setMapType("HybridAny");
+        
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
         xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
