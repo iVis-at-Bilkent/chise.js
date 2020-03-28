@@ -266,6 +266,9 @@ module.exports = function () {
     } else {
       nodes.align(horizontal, vertical, alignTo);
     }
+
+    cy.edges().unselect();
+    cy.nodes().unselect();
   };
 
   /*
