@@ -267,8 +267,11 @@ module.exports = function () {
       nodes.align(horizontal, vertical, alignTo);
     }
 
-    cy.edges().unselect();
-    cy.nodes().unselect();
+    if(cy.edges(":selected").length == 1 ) {
+      cy.edges().unselect();
+      cy.nodes().unselect();
+    }
+    
   };
 
   /*
