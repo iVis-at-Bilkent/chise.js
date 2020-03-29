@@ -268,8 +268,7 @@ module.exports = function () {
     }
 
     if(cy.edges(":selected").length == 1 ) {
-      cy.edges().unselect();
-      cy.nodes().unselect();
+      cy.edges().unselect();      
     }
     
   };
