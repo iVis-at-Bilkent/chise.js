@@ -328,7 +328,7 @@ for exact versions of dependencies refer to [package.json](https://github.com/iV
 
 ## Usage instructions
 Download the library (we recommend the use of LTS version 10.x.x of node.js):
- * via npm: `npm install cytoscape-expand-collapse` or
+ * via npm: `npm install chise` or
  * via direct download in the repository (probably from a tag).
 
 `require()` the library as appropriate for your project:
@@ -371,4 +371,4 @@ This project is set up to automatically be published to npm.  To publish:
 
 ## Team
 
-Chise.js has been mainly developed by [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis).
+Chise.js has been developed by [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis).
