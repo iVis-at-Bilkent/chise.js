@@ -327,7 +327,7 @@ The following extensions are used by this library if they are registered.
 for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)
 
 ## Usage instructions
-Download the library:
+Download the library (we recommend the use of LTS version 10.x.x of node.js):
  * via npm: `npm install cytoscape-expand-collapse` or
  * via direct download in the repository (probably from a tag).
 
