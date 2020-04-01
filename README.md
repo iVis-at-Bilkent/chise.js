@@ -225,6 +225,9 @@ Resets map type to undefined
 `instance.getMapType()`
 Gets map type.
 
+`instance.setMapType(newMapType)`
+Sets map type.
+
 `instance.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL)`
 Adds the given background image to the given nodes. Considers undoable option.
 
@@ -289,6 +292,8 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `changeBackgroundImage(param)` Do/Undo/Redo function for 'changeBackgroundImage' undo redo command.
  * `updateInfoboxObj(param)` Do/Undo/Redo function for 'updateInfoboxObj' undo redo command.
  * `fitUnits(param)` Do/Undo/Redo function for 'fitUnits' undo redo command.
+ * `changeMapType(param)` Do/Undo/Redo function for 'setMapType' and 'getMapType' functionalities.
+ 
 
  * `cloneHighDegreeNode(node)` It creates a number of clones of the given node corrosponding to all node edges. Useful when there are many edges connected to the node (high degree node) 
 
