@@ -211,10 +211,24 @@ module.exports = function () {
 
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        result.sizeMap[node.id()] = {
-          w: node.width(),
-          h: node.height()
-        };
+        if(node.isParent()){
+          result.sizeMap[node.id()] = {
+            w: node.data("minWidth"),
+            h: node.data("minHeight"),
+            biasL : node.data("minWidthBiasLeft"),
+            bisaR : node.data("minWidthBiasRight"),
+            biasT : node.data("minHeightBiasTop"),
+            biasB : node.data("minHeightBiasBottom")
+           // w: node.css("minWidth") != 0?  node.data("minWidth") : node.children().boundingBox().w,
+            //h: node.css("min-height") != 0?  node.data("minHeight") : node.children().boundingBox().h
+          };
+        }else{
+          result.sizeMap[node.id()] = {
+            w: node.width(),
+            h: node.height()
+          };
+        }
+        
       }
 
       result.nodes = nodes;
@@ -224,15 +238,27 @@ module.exports = function () {
 
         if (param.performOperation) {
           if (param.sizeMap) {
-            if (param.preserveRelativePos === true) {
+            /* if (param.preserveRelativePos === true) {
               var oldWidth = node.data("bbox").w;
               var oldHeight = node.data("bbox").h;
+            } */
+
+            if(node.isParent()){
+              
+              node.data("minHeight" , param.sizeMap[node.id()].h);
+              node.data("minWidth" , param.sizeMap[node.id()].w);
+              node.data("minWidthBiasLeft", param.sizeMap[node.id()].biasL);
+              node.data("minWidthBiasRight", param.sizeMap[node.id()].biasR);
+              node.data("minHeightBiasTop", param.sizeMap[node.id()].biasT);
+              node.data("minHeightBiasBottom", param.sizeMap[node.id()].biasB);
+
+            }else{
+              node.data("bbox").w = param.sizeMap[node.id()].w;
+              node.data("bbox").h = param.sizeMap[node.id()].h;
             }
+           
 
-            node.data("bbox").w = param.sizeMap[node.id()].w;
-            node.data("bbox").h = param.sizeMap[node.id()].h;
-
-            if (param.preserveRelativePos === true) {
+            /* if (param.preserveRelativePos === true) {
               var statesandinfos = node.data('statesandinfos');
               var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
               var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
@@ -256,7 +282,7 @@ module.exports = function () {
                 }
                 box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
               });
-            }
+            } */
           }
           else {
             elementUtilities.resizeNodes(param.nodes, param.width, param.height, param.useAspectRatio, param.preserveRelativePos);
@@ -482,10 +508,10 @@ module.exports = function () {
 
       var tempData = elementUtilities.saveUnits(param.nodes);
       result.value = elementUtilities.changeStateOrInfoBox(param.nodes, param.index, param.value, param.type);
-      var locations = elementUtilities.checkFit(param.nodes);
+      /* var locations = elementUtilities.checkFit(param.nodes);
       if (locations !== undefined && locations.length > 0) {
         elementUtilities.fitUnits(param.nodes, locations);
-      }
+      } */
       if (data !== undefined) {
         elementUtilities.restoreUnits(param.nodes, data);
       }
@@ -502,10 +528,10 @@ module.exports = function () {
 
       var tempData = elementUtilities.saveUnits(nodes);
       var locationObj = elementUtilities.addStateOrInfoBox(nodes, obj);
-      var locations = elementUtilities.checkFit(nodes);
+     /*  var locations = elementUtilities.checkFit(nodes);
       if (locations !== undefined && locations.length > 0) {
         elementUtilities.fitUnits(nodes, locations);
-      }
+      } */
       if (data !== undefined) {
         elementUtilities.restoreUnits(nodes, data);
       }
@@ -1248,7 +1274,15 @@ module.exports = function () {
     return node;
   }
 
-  
+  undoRedoActionFunctions.changeMapType = function(param){
+    var result ={};
+    var currentMapType = elementUtilities.getMapType();
+    elementUtilities.setMapType(param.mapType);
+    result.mapType = currentMapType;
+    result.callback = param.callback;
+    param.callback();
+    return result;
+  }
 
   }
 

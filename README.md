@@ -225,6 +225,9 @@ Resets map type to undefined
 `instance.getMapType()`
 Gets map type.
 
+`instance.setMapType(newMapType)`
+Sets map type.
+
 `instance.addBackgroundImage(nodes, bgObj, updateInfo, promptInvalidImage, validateURL)`
 Adds the given background image to the given nodes. Considers undoable option.
 
@@ -289,6 +292,8 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `changeBackgroundImage(param)` Do/Undo/Redo function for 'changeBackgroundImage' undo redo command.
  * `updateInfoboxObj(param)` Do/Undo/Redo function for 'updateInfoboxObj' undo redo command.
  * `fitUnits(param)` Do/Undo/Redo function for 'fitUnits' undo redo command.
+ * `changeMapType(param)` Do/Undo/Redo function for 'setMapType' and 'getMapType' functionalities.
+ 
 
  * `cloneHighDegreeNode(node)` It creates a number of clones of the given node corrosponding to all node edges. Useful when there are many edges connected to the node (high degree node) 
 
@@ -305,7 +310,7 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
 
  * cytoscape
  * jQuery
- * filesaverjs
+ * file-saver
  * tippy.js
  * sbgnviz
  * lodash.isequal
@@ -322,8 +327,8 @@ The following extensions are used by this library if they are registered.
 for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)
 
 ## Usage instructions
-Download the library:
- * via npm: `npm install cytoscape-expand-collapse` or
+Download the library (we recommend the use of LTS version 10.x.x of node.js):
+ * via npm: `npm install chise` or
  * via direct download in the repository (probably from a tag).
 
 `require()` the library as appropriate for your project:
@@ -333,7 +338,7 @@ CommonJS:
 var sbgnviz = require('sbgnviz');
 var cytoscape = require('cytoscape-for-sbgnviz');
 var jQuery = require('jQuery');
-var filesaverjs = require('filesaverjs');
+var filesaver = require('file-saver');
 var sbgnviz = require('sbgnviz');
 var tippy = require('tippy.js');
 
@@ -343,7 +348,7 @@ var options = {
 var libs = {
     cytoscape: cytoscape,
     jQuery: jQuery,
-    filesaverjs: filesaverjs,
+    filesaver: filesaver,
     sbgnviz: sbgnviz,
     tippy = tippy
 };
@@ -366,4 +371,4 @@ This project is set up to automatically be published to npm.  To publish:
 
 ## Team
 
-Chise.js has been mainly developed by [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis).
+Chise.js has been developed by [i-Vis at Bilkent University](http://www.cs.bilkent.edu.tr/~ivis).

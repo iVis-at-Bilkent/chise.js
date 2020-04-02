@@ -420,21 +420,19 @@ module.exports = function () {
 
       var xPositionOfFreeMacromolecules;
       var xPositionOfInputMacromolecules;
-
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
-        if (!elementUtilities.getMapType()) {
-          elementUtilities.setMapType("PD");
-        }
+       
       }
       else if(templateType === 'dissociation'){
         xPositionOfFreeMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
-        if (!elementUtilities.getMapType()) {
-          elementUtilities.setMapType("PD");
-        }
+       
       }
       else{
-        elementUtilities.setMapType("Unknown");
+        
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
         xPositionOfInputMacromolecules = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
       }
@@ -640,30 +638,40 @@ module.exports = function () {
         }
 
         // Note that both width and height should not be set if useAspectRatio is truthy
-        if (width) {
-          if (useAspectRatio || eleMustBeSquare) {
-            ratio = width / node.width();
+        if(!node.isParent()){
+          if (width) {
+            if (useAspectRatio || eleMustBeSquare) {
+              ratio = width / node.width();
+            }
+  
+            node.data("bbox").w = width;
           }
-
-          node.data("bbox").w = width;
-        }
-
-        if (height) {
-          if (useAspectRatio || eleMustBeSquare) {
-            ratio = height / node.height();
+  
+          if (height) {
+            if (useAspectRatio || eleMustBeSquare) {
+              ratio = height / node.height();
+            }
+  
+            node.data("bbox").h = height;
           }
-
-          node.data("bbox").h = height;
+  
+          if (ratio && !height) {
+            node.data("bbox").h = node.height() * ratio;
+          }
+          else if (ratio && !width) {
+            node.data("bbox").w = node.width() * ratio;
+          }
+        }else{
+          node.data("minHeight" , ""+ height);
+          node.data("minWidth" , ""+ width);
+          node.data("minWidthBiasLeft", "50%");
+          node.data("minWidthBiasRight", "50%");
+          node.data("minHeightBiasTop", "50%" );
+          node.data("minHeightBiasBottom", "50%");
         }
+        
 
-        if (ratio && !height) {
-          node.data("bbox").h = node.height() * ratio;
-        }
-        else if (ratio && !width) {
-          node.data("bbox").w = node.width() * ratio;
-        }
-
-        if (preserveRelativePos === true) {
+     /*    if (preserveRelativePos === true) {
           var statesandinfos = node.data('statesandinfos');
           var topBottom = statesandinfos.filter(box => (box.anchorSide === "top" || box.anchorSide === "bottom"));
           var rightLeft = statesandinfos.filter(box => (box.anchorSide === "right" || box.anchorSide === "left"));
@@ -687,7 +695,7 @@ module.exports = function () {
             }
             box.bbox.y = node.data("bbox").h * box.bbox.y / oldHeight;
           });
-        }
+        } */
       }
     };
 
@@ -706,113 +714,36 @@ module.exports = function () {
 
         var statesandinfos = node.data('statesandinfos');
         //Top and bottom infoBoxes
-        var topInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "top" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y <= 12))));
-        var bottomInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "bottom" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y >= node.data('bbox').h - 12))));
+        //var topInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "top" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y <= 12))));
+        //var bottomInfoBoxes = statesandinfos.filter(box => (box.anchorSide === "bottom" || ((box.anchorSide === "right" || box.anchorSide === "left") && (box.bbox.y >= node.data('bbox').h - 12))));
         var unitGap = 5;
-        var topWidth = unitGap;
-        var rightOverFlow = 0;
-        var leftOverFlow = 0;
-        topInfoBoxes.forEach(function(box){
-          topWidth += box.bbox.w + unitGap;
-          if (box.anchorSide === "right") {
-            var overFlow = box.bbox.w/2;
-            if (overFlow > rightOverFlow) {
-              rightOverFlow = overFlow;
-            }
-          }
-          else if(box.anchorSide === "left") {
-            var overFlow = - box.bbox.w/2;
-            if (overFlow > leftOverFlow) {
-              leftOverFlow = overFlow;
-            }
-          }
-          else {
-            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
-              if (overFlow > rightOverFlow) {
-                rightOverFlow = overFlow;
-              }
-            }
-            if (box.bbox.x - box.bbox.w/2 < 0) {
-              var overFlow = -(box.bbox.x - box.bbox.w/2);
-              if (overFlow > leftOverFlow) {
-                leftOverFlow = overFlow;
-              }
-            }
-          }
+        var topIdealWidth = unitGap;
+        var bottomIdealWidth = unitGap;        
+        var rightMaxWidth = 0;
+        var leftMaxWidth =0;
+        statesandinfos.forEach(function(box){
+          if(box.anchorSide === "top"){
+            topIdealWidth += box.bbox.w + unitGap;
 
-        });
-        if (rightOverFlow > 0) {
-          topWidth -= rightOverFlow + unitGap;
+          }else if(box.anchorSide === "bottom"){
+            bottomIdealWidth += box.bbox.w + unitGap;
+
+          }else if(box.anchorSide === "right")
+          {           
+            rightMaxWidth = (box.bbox.w > rightMaxWidth) ? box.bbox.w : rightMaxWidth;
+          }else{
+            
+            leftMaxWidth = (box.bbox.w > leftMaxWidth) ? box.bbox.w : leftMaxWidth;
+          }
+        });      
+
+        var middleWidth = labelWidth + 2 * Math.max(rightMaxWidth/2, leftMaxWidth/2);
+
+        var compoundWidth = 0;
+        if(node.isParent()){
+          compoundWidth = node.children().boundingBox().w;
         }
-
-        if (leftOverFlow > 0) {
-          topWidth -= leftOverFlow + unitGap;
-        }
-
-        var bottomWidth = unitGap;
-        rightOverFlow = 0;
-        leftOverFlow = 0;
-        bottomInfoBoxes.forEach(function(box){
-          bottomWidth += box.bbox.w + unitGap;
-          if (box.anchorSide === "right") {
-            var overFlow = box.bbox.w/2;
-            if (overFlow > rightOverFlow) {
-              rightOverFlow = overFlow;
-            }
-          }
-          else if(box.anchorSide === "left") {
-            var overFlow = - box.bbox.w/2;
-            if (overFlow > leftOverFlow) {
-              leftOverFlow = overFlow;
-            }
-          }
-          else {
-            if (box.bbox.x + box.bbox.w/2 > node.data('bbox').w) {
-              var overFlow = (box.bbox.x + box.bbox.w/2) - node.data('bbox').w;
-              if (overFlow > rightOverFlow) {
-                rightOverFlow = overFlow;
-              }
-            }
-            if (box.bbox.x - box.bbox.w/2 < 0) {
-              var overFlow = -(box.bbox.x - box.bbox.w/2);
-              if (overFlow > leftOverFlow) {
-                leftOverFlow = overFlow;
-              }
-            }
-          }
-
-        });
-        if (rightOverFlow > 0) {
-          bottomWidth -= rightOverFlow + unitGap;
-        }
-
-        if (leftOverFlow > 0) {
-          bottomWidth -= leftOverFlow + unitGap;
-        }
-
-        // Separation of info boxes based on their locations
-        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
-        var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
-
-        var middleWidth = 0;
-        var leftWidth = 0;
-        var rightWidth = 0;
-
-        leftInfoBoxes.forEach(function (infoBox) {
-          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
-            leftWidth = (leftWidth > infoBox.bbox.w/2) ? leftWidth : infoBox.bbox.w/2;
-          }
-        });
-
-        rightInfoBoxes.forEach(function (infoBox) {
-          if (infoBox.bbox.y !== 0 && infoBox.bbox.y !== node.data('bbox').h) {
-            rightWidth = (rightWidth > infoBox.bbox.w/2) ? rightWidth : infoBox.bbox.w/2;
-          }
-        });
-
-        var middleWidth = labelWidth + 2 * Math.max(leftWidth, rightWidth);
-        return Math.max(middleWidth, defaultWidth/2, topWidth, bottomWidth);
+        return Math.max(middleWidth, defaultWidth/2, topIdealWidth, bottomIdealWidth, compoundWidth);
     }
 
     elementUtilities.calculateMinHeight = function(node) {
@@ -820,66 +751,29 @@ module.exports = function () {
         var margin = 7;
         var unitGap = 5;
         var defaultHeight = this.getDefaultProperties(node.data('class')).height;
-        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");
-        var leftHeight = unitGap;
-        var topOverFlow = 0;
-        var bottomOverFlow = 0;
+        var leftInfoBoxes = statesandinfos.filter(box => box.anchorSide === "left");        
+        var leftHeight = unitGap; 
         leftInfoBoxes.forEach(function(box){
             leftHeight += box.bbox.h + unitGap;
-            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
-              var overFlow = (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
-              if (overFlow > bottomOverFlow) {
-                bottomOverFlow = overFlow;
-              }
-            }
-            if (box.bbox.y - box.bbox.h/2 < 0) {
-              var overFlow = -(box.bbox.y - box.bbox.h/2);
-              if (overFlow > topOverFlow) {
-                topOverFlow = overFlow;
-              }
-            }
-        });
-        if (topOverFlow > 0) {
-          leftHeight -= topOverFlow + unitGap;
-        }
-
-        if (bottomOverFlow > 0) {
-          leftHeight -= bottomOverFlow + unitGap;
-        }
-
+           
+        });      
         var rightInfoBoxes = statesandinfos.filter(box => box.anchorSide === "right");
-        var rightHeight = unitGap;
-        topOverFlow = 0;
-        bottomOverFlow = 0;
+        var rightHeight = unitGap;        
         rightInfoBoxes.forEach(function(box){
-            rightHeight += box.bbox.h + unitGap;
-            if (box.bbox.y + box.bbox.h/2 > node.data('bbox').h) {
-              var overFlow =  (box.bbox.y + box.bbox.h/2) - node.data('bbox').h;
-              if (overFlow > bottomOverFlow) {
-                bottomOverFlow = overFlow;
-              }
-            }
-            if (box.bbox.y - box.bbox.h/2 < 0) {
-              var overFlow = -(box.bbox.y - box.bbox.h/2);
-              if (overFlow > topOverFlow) {
-                topOverFlow = overFlow;
-              }
-            }
-        });
-        if (topOverFlow > 0) {
-          rightHeight -= topOverFlow + unitGap;
-        }
-
-        if (bottomOverFlow > 0) {
-          rightHeight -= bottomOverFlow + unitGap;
-        }
-
+            rightHeight += box.bbox.h + unitGap;           
+        });       
         var style = node.style();
         var labelText = ((style['label']).split("\n")).filter( text => text !== '');
         var fontSize = parseFloat(style['font-size'].substring(0, style['font-size'].length - 2));
         var totalHeight = labelText.length * fontSize + 2 * margin;
 
-        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight);
+        
+
+        var compoundHeight = 0;
+        if(node.isParent()){
+          compoundHeight = node.children().boundingBox().h;
+        }
+        return Math.max(totalHeight, defaultHeight/2, leftHeight, rightHeight, compoundHeight);
     }
 
     elementUtilities.isResizedToContent = function (node) {
@@ -887,8 +781,10 @@ module.exports = function () {
         return false;
       }
 
-      var w = node.data('bbox').w;
-      var h = node.data('bbox').h;
+      //var w = node.data('bbox').w;
+      //var h = node.data('bbox').h;
+      var w = node.width();
+      var h = node.height();
 
       var minW = elementUtilities.calculateMinWidth(node);
       var minH = elementUtilities.calculateMinHeight(node);
@@ -993,9 +889,43 @@ module.exports = function () {
           max: 48,
           margin: borderWidth / 2 + 0.5
         };
-
+        var previousWidth = box.bbox.w;
         box.bbox.w = elementUtilities.getWidthByContent( content, fontFamily, fontSize, opts );
-        if (box.anchorSide === "top" || box.anchorSide === "bottom") {
+
+        if(box.anchorSide == "top" || box.anchorSide == "bottom"){
+          var unitLayout = node.data()["auxunitlayouts"][box.anchorSide];
+          if(unitLayout.units[unitLayout.units.length-1].id == box.id){
+             
+            var borderWidth = node.data()['border-width'];
+            var shiftAmount = (((box.bbox.w - previousWidth) / 2) * 100 )/ (node.outerWidth() - borderWidth);
+           
+            if(shiftAmount >= 0){
+            
+              if(box.bbox.x + shiftAmount <= 100){
+                box.bbox.x = box.bbox.x + shiftAmount;
+              }
+            }
+           /*  else{
+              var previousInfoBbox = {x : 0, w:0};
+              if(unitLayout.units.length > 1){
+                previousInfoBbox= unitLayout.units[unitLayout.units.length-2].bbox;      
+              }
+
+              
+              
+              sbgnvizInstance.classes.AuxUnitLayout.setIdealGap(node, box.anchorSide);
+              var idealGap = sbgnvizInstance.classes.AuxUnitLayout.getCurrentGap(box.anchorSide);
+              var newPosition = previousInfoBbox.x + (previousInfoBbox.w/2 + idealGap + box.bbox.w/2)*100 / (node.outerWidth() - borderWidth);
+              box.bbox.x = newPosition;
+              
+            } */
+           
+           
+          }
+        }
+        
+        
+        /* if (box.anchorSide === "top" || box.anchorSide === "bottom") {
           box.bbox.x += (box.bbox.w - oldLength) / 2;
           var units = (node.data('auxunitlayouts')[box.anchorSide]).units;
           var shiftIndex = 0;
@@ -1008,7 +938,7 @@ module.exports = function () {
           for (var j = shiftIndex+1; j < units.length; j++) {
               units[j].bbox.x += (box.bbox.w - oldLength);
           }
-        }
+        } */
 
       }
 
@@ -1028,9 +958,12 @@ module.exports = function () {
 
         var defaultProps = elementUtilities.getDefaultProperties( node.data('class') );
         var infoboxProps = defaultProps[ obj.clazz ];
-        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };
+        var bbox = obj.bbox || { w: infoboxProps.width, h: infoboxProps.height };        
         var style = elementUtilities.getDefaultInfoboxStyle( node.data('class'), obj.clazz );
-
+        if(obj.style){
+          $.extend( style, obj.style );
+        }
+       
         if(obj.clazz == "unit of information") {
           locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
@@ -1115,7 +1048,7 @@ module.exports = function () {
     // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
     elementUtilities.validateArrowEnds = function (edge, source, target) {
       // if map type is Unknown -- no rules applied
-      if (elementUtilities.getMapType() == "Unknown" || !elementUtilities.getMapType())
+      if (elementUtilities.getMapType() == "HybridAny" || elementUtilities.getMapType() == "HybridSbgn" || !elementUtilities.getMapType())
         return "valid";
 
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');

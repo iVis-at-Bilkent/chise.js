@@ -63,6 +63,8 @@ module.exports = function () {
     ur.action("fixError", undoRedoActionFunctions.fixError,undoRedoActionFunctions.unfixError);
     ur.action("cloneHighDegreeNode", undoRedoActionFunctions.cloneHighDegreeNode,undoRedoActionFunctions.unCloneHighDegreeNode);
 
+    ur.action("changeMapType", undoRedoActionFunctions.changeMapType,undoRedoActionFunctions.changeMapType);
+    ur.action("setCompoundPadding", undoRedoActionFunctions.setCompoundPadding, undoRedoActionFunctions.setCompoundPadding);
 
   };
 

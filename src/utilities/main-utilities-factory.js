@@ -24,11 +24,11 @@ module.exports = function () {
 
     // update map type
     if (typeof nodeParams == 'object'){
-
+/* 
       if (!elementUtilities.getMapType())
         elementUtilities.setMapType(nodeParams.language);
       else if (elementUtilities.getMapType() != nodeParams.language)
-        elementUtilities.setMapType("Unknown");
+        elementUtilities.setMapType("Unknown"); */
     }
 
     if (!options.undoable) {
@@ -61,10 +61,10 @@ module.exports = function () {
     // update map type
     if (typeof edgeParams == 'object'){
 
-      if (!elementUtilities.getMapType())
+     /*  if (!elementUtilities.getMapType())
         elementUtilities.setMapType(edgeParams.language);
       else if (elementUtilities.getMapType() != edgeParams.language)
-        elementUtilities.setMapType("Unknown");
+        elementUtilities.setMapType("HybridAny"); */
     }
     // Get the validation result
     var edgeclass = edgeParams.class ? edgeParams.class : edgeParams;
@@ -266,6 +266,11 @@ module.exports = function () {
     } else {
       nodes.align(horizontal, vertical, alignTo);
     }
+
+    if(cy.edges(":selected").length == 1 ) {
+      cy.edges().unselect();      
+    }
+    
   };
 
   /*
@@ -458,8 +463,7 @@ module.exports = function () {
     mainUtilities.resizeNodesToContent = function(nodes, useAspectRatio) {
         if (nodes.length === 0) {
             return;
-        }
-
+        } 
         if (options.undoable) {
           var actions = [];
           nodes.forEach(function(node){
@@ -473,8 +477,22 @@ module.exports = function () {
                 performOperation: true,
                 preserveRelativePos: true
             }});
+
+            var stateAndInfos = node.data('statesandinfos');
+            var length = stateAndInfos.length;
+            if (length != 0) {
+              var param = {
+                node: node,
+                locations: ["top","right","bottom","left"]
+              };          
+              actions.push({name:"fitUnits",param : param})
+             }
+  
+
           });
 
+        
+         
           cy.undoRedo().do("batch", actions);
           cy.style().update();
           return actions;
@@ -483,6 +501,7 @@ module.exports = function () {
             nodes.forEach(function(node){
               var width = elementUtilities.calculateMinWidth(node);
               var height = elementUtilities.calculateMinHeight(node);
+              
               elementUtilities.resizeNodes(node, width, height, useAspectRatio, true);
             });
         }
