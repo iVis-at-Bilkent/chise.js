@@ -785,6 +785,20 @@ module.exports = function () {
           convertedEdge.data("cyedgebendeditingWeights", weight.reverse());
         }
 
+        if(convertedEdge.data("cyedgecontroleditingDistances")){
+          let distance = convertedEdge.data("cyedgecontroleditingDistances");
+          distance = distance.map(function(element) {
+            return -1*element;
+          });
+          convertedEdge.data("cyedgecontroleditingDistances", distance.reverse());
+
+          let weight = convertedEdge.data("cyedgecontroleditingWeigths");
+          weight = weight.map(function(element) {
+            return 1-element;
+          });
+          convertedEdge.data("cyedgecontroleditingWeigths", weight.reverse());
+        }
+
         if (convertedEdge._private.data.class === "consumption") {
           convertedEdge._private.data.class = "production";
           convertedEdge._private.data.portsource = targetNode + ".1";

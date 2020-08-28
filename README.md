@@ -84,7 +84,8 @@ edge.data('class'); // SBGN specific class of an edge.
 edge.data('cardinality'); // SBGN cardinality of an edge.
 edge.data('portsource'); // This is set if the edge is connected to its source node by a specific port of that node.
 edge.data('porttarget'); // This is set if the edge is connected to its target node by a specific port of that node.
-edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeBendEditing extension.
+edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeEditing extension.
+edge.data('controlPointPositions'); // Control point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeEditing extension.
 edge.data('width');// 'width' style of edges are controlled by this data.
 edge.data('line-color');// 'line-color' style of edges are controlled by this data.
 ```
@@ -321,7 +322,7 @@ for exact versions of dependencies refer to [package.json](https://github.com/iV
 The following extensions are used by this library if they are registered.
  * cytoscape-undo-redo
  * cytoscape-expand-collapse
- * cytoscape-edge-bend-editing
+ * cytoscape-edge-editing
  * cytoscape-view-utilities
 
 for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)

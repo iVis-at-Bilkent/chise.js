@@ -1708,7 +1708,7 @@ module.exports = function () {
       var oldPortSource = edge.data("portsource");
       var oldPortTarget = edge.data("porttarget");
       var segmentPoints = edge.segmentPoints();
-
+      var controlPoints = edge.controlPoints();
 
       edge.data().source = oldTarget;
       edge.data().target = oldSource;
@@ -1722,8 +1722,12 @@ module.exports = function () {
       if(Array.isArray(segmentPoints)){
         segmentPoints.reverse();
         edge.data().bendPointPositions = segmentPoints;
+        if(Array.isArray(controlPoints)) {
+          controlPoints.reverse();
+          edge.data().controlPointPositions = controlPoints;
+        }
         var edgeEditing = cy.edgeEditing('get');
-        edgeEditing.initBendPoints(edge);
+        edgeEditing.initAnchorPoints(edge);
       }
     
 
