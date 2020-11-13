@@ -680,6 +680,14 @@ module.exports = function () {
     cy.style().update();
   };
 
+  /**
+   * Redraw clone markers on given nodes without considering undo.
+   * See https://github.com/iVis-at-Bilkent/newt/issues/574 
+   */
+  mainUtilities.redrawCloneMarkers = function(nodes) {
+    elementUtilities.setCloneMarkerStatus(nodes, true);
+  }
+
   /*
    * Set clone marker status of given nodes to the given status.
    * Considers undoable option.
