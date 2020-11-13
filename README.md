@@ -201,7 +201,11 @@ Unhide given `eles` and perform given layout afterward. `layoutparam` parameter 
 Requires `viewUtilities` extension and considers undoable option.
 
 `instance.hideAndPerformLayout(eles, layoutparam)`
-Hides given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Extend the given list of `eles` in a smart way to leave the map intact, hide the extended list of elements and and perform the given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Requires `viewUtilities` extension and considers undoable option.
+
+`instance.hideSimpleAndPerformLayout(eles, layoutparam)`
+Hide the given list of `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
 Requires `viewUtilities` extension and considers undoable option.
 
 `instance.showAllAndPerformLayout(eles, layoutparam)`
