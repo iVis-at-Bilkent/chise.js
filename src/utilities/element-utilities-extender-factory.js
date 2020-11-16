@@ -1135,6 +1135,23 @@ module.exports = function () {
       return 'invalid';
     };
 
+    elementUtilities.deleteAndPerformLayout = function(eles, layoutparam) {
+      var result = eles.remove();
+      if (typeof layoutparam === 'function') {
+        layoutparam(); // If layoutparam is a function execute it
+      }
+      else {
+          var layout = cy.layout(layoutparam); // If layoutparam is layout options call layout with that options.
+
+          // Do this check for cytoscape.js backward compatibility
+          if (layout && layout.run) {
+              layout.run();
+          }
+      }
+
+      return result;
+    };
+
     /*
      * Hide given eles and perform given layout afterward. Layout parameter may be layout options
      * or a function to call.

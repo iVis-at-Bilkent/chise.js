@@ -832,42 +832,29 @@ module.exports = function () {
     cy.style().update();
   };
 
-  /*
-   * Hides given eles (the ones which are selected) and perform given layout afterward. Layout parameter may be layout options
-   * or a function to call. Requires viewUtilities extension and considers undoable option.
-   */
-  mainUtilities.hideSimpleAndPerformLayout = function(eles, layoutparam) {
+  mainUtilities.deleteAndPerformLayout = function (eles, layoutparam) {
+    var nodes = eles.nodes(); // Ensure that nodes list just include nodes
 
-    if (eles.length === 0) {
+    var allNodes = cy.nodes(":visible");
+    var nodesToKeep = elementUtilities.extendRemainingNodes(nodes, allNodes);
+    var nodesToRemove = allNodes.not(nodesToKeep);
+
+    if (nodesToRemove.length === 0) {
         return;
     }
 
     if (!options.undoable) {
 
-        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-        sbgnvizInstance.thinBorder(nodesWithHiddenNeighbor);
-        elementUtilities.hideAndPerformLayout(eles, layoutparam);
-        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes(':visible');
-        sbgnvizInstance.thickenBorder(nodesWithHiddenNeighbor);
+        elementUtilities.deleteAndPerformLayout(nodesToRemove, layoutparam);
     }
     else {
         var param = {
-            eles: eles,
+            eles: nodesToRemove,
             layoutparam: layoutparam,
             firstTime: true
         };
 
-        var ur = cy.undoRedo();
-        ur.action("thickenBorder", sbgnvizInstance.thickenBorder, sbgnvizInstance.thinBorder);
-        ur.action("thinBorder", sbgnvizInstance.thinBorder, sbgnvizInstance.thickenBorder);
-
-        var actions = [];
-        var nodesWithHiddenNeighbor = cy.edges(":hidden").connectedNodes().intersection(eles);
-        actions.push({name: "thinBorder", param: nodesWithHiddenNeighbor});
-        actions.push({name: "hideAndPerformLayout", param: param});
-        nodesWithHiddenNeighbor = eles.neighborhood(":visible").nodes().difference(eles).difference(cy.nodes("[thickBorder]"));
-        actions.push({name: "thickenBorder", param: nodesWithHiddenNeighbor});
-        cy.undoRedo().do("batch", actions);
+        cy.undoRedo().do("deleteAndPerformLayout", param);
     }
   };
 

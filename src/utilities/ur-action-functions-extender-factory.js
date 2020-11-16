@@ -492,6 +492,38 @@ module.exports = function () {
         return result;
     };
 
+    /*
+     * Delete eles and perform layout.
+     */
+    undoRedoActionFunctions.deleteAndPerformLayout = function (param) {
+      var eles = param.eles;
+
+      var result = {};
+      result.positions = undoRedoActionFunctions.getNodePositions();
+
+      if (param.firstTime) {
+          result.eles = elementUtilities.deleteAndPerformLayout(param.eles, param.layoutparam);
+      }
+      else {
+          result.eles = eles.remove();
+          undoRedoActionFunctions.returnToPositions(param.positions);
+      }
+
+      return result;
+  };
+
+  undoRedoActionFunctions.undoDeleteAndPerformLayout = function (param) {
+      var eles = param.eles;
+
+      var result = {};
+      result.positions = undoRedoActionFunctions.getNodePositions();
+      result.eles = elementUtilities.restoreEles(eles); 
+
+      undoRedoActionFunctions.returnToPositions(param.positions);
+
+      return result;
+  };
+
     // Section End
     // general action functions
 
