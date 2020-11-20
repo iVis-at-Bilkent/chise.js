@@ -1346,13 +1346,27 @@ module.exports = function () {
     }
 
     elementUtilities.hasBackgroundImage = function (ele) {
-      if(ele.isNode()){
-        var bg = ele.data('background-image') ? ele.data('background-image') : "";
-        var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
-        if(bg !== "" && !(bg.indexOf(cloneImg) > -1 && bg === cloneImg))
-          return true;
-
+      if (!ele.isNode() || !ele.data('background-image')) {
+        return false;
       }
+      var bg;
+      
+      if(typeof ele.data('background-image') === "string") {
+        bg = ele.data('background-image').split(" ");
+      }
+      else if(Array.isArray(obj['background-image'])) {
+        bg = ele.data('background-image');
+      }
+
+      if (!bg) return false;
+
+      var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23838383%22/%3E%20%3C/svg%3E';
+      // If cloneImg is not the only image or there are multiple images there is a background image
+      var onlyHasCloneMarkerAsBgImage = (bg.length === 1) && (bg.indexOf(cloneImg) === 0);
+
+      if(bg.length > 1 || !(onlyHasCloneMarkerAsBgImage))
+        return true;
+
       return false;
     }
 
@@ -1385,7 +1399,7 @@ module.exports = function () {
       for(var i = 0; i < eles.length; i++){
         var ele = eles[i];
         var obj = getBgObj(ele);
-        if(obj === undefined)
+        if(Object.keys(obj).length < 1)
           return;
 
         list[ele.data('id')] = obj;
@@ -1398,9 +1412,15 @@ module.exports = function () {
           'background-position-x', 'background-position-y', 'background-height', 'background-width'];
 
           var obj = {};
-          keys.forEach(function(key){
-            var arr = ele.data(key);
-            obj[key] = arr ? arr : "";
+          keys.forEach(function(key) {
+            var value;
+            if (ele.data(key) && (typeof ele.data(key) === "string")) {
+              value = ele.data(key).split(" ")[0];
+            }
+            else {
+              value = ele.data(key);
+            }           
+            obj[key] = value;
           });
 
           return obj;
@@ -1641,7 +1661,7 @@ module.exports = function () {
         var indexToInsert = imgs.length;
 
         // insert to length-1
-        if(hasCloneMarker(node, imgs)){
+        if(elementUtilities.hasCloneMarker(imgs)){
           indexToInsert--;
         }
 
@@ -1666,11 +1686,11 @@ module.exports = function () {
           updateInfo();
 
       }
+    };
 
-      function hasCloneMarker(node, imgs){
-        var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23a9a9a9%22/%3E%20%3C/svg%3E';
-        return (imgs.indexOf(cloneImg) > -1);
-      }
+    elementUtilities.hasCloneMarker = function (imgs) {
+      var cloneImg = 'data:image/svg+xml;utf8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20style%3D%22fill%3Anone%3Bstroke%3Ablack%3Bstroke-width%3A0%3B%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%22100%22%20height%3D%22100%22%20style%3D%22fill%3A%23838383%22/%3E%20%3C/svg%3E';
+      return (imgs.indexOf(cloneImg) > -1);
     };
 
     // Remove a background image from given nodes.
@@ -1694,7 +1714,7 @@ module.exports = function () {
 
         var index = -1;
         if(typeof obj['background-image'] === "string")
-          index = imgs.indexOf(obj['background-image']);
+          index = imgs.indexOf(obj['background-image'].split(" ")[0]);
         else if(Array.isArray(obj['background-image']))
           index = imgs.indexOf(obj['background-image'][0]);
 
