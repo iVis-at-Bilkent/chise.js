@@ -1046,7 +1046,7 @@ module.exports = function () {
     // This function gets an edge, and ends of that edge (Optionally it may take just the classes of the edge as well) as parameters.
     // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid
     // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
-    elementUtilities.validateArrowEnds = function (edge, source, target) {
+    elementUtilities.validateArrowEnds = function (edge, source, target, isReplacement) {
       // if map type is Unknown -- no rules applied
       if (elementUtilities.getMapType() == "HybridAny" || elementUtilities.getMapType() == "HybridSbgn" || !elementUtilities.getMapType())
         return "valid";
@@ -1076,38 +1076,84 @@ module.exports = function () {
         if (nodeclass.startsWith("BA"))
           nodeclass = "biological activity";
 
+        /*
+          On the logic below:
+
+          Current edge count (incoming or outgoing) of nodes should be strictly less 
+          than the maximum allowed if we are adding an edge to the node. This way
+          it will never exceed the max count.
+          
+          Edges can be added in two different ways. Either they are added directly or
+          they are added by being replaced from another node, i.e disconnected from
+          one and connected to another.
+
+          We can detect if the edge being added is added from a replacement by checking
+          whether the source stayed the same when checking edge counts of the source node,
+          and whether the target stayed the same when checking edge counts of the
+          target node.
+
+          Current edge count of nodes can be allowed to be equal to the maximum in 
+          cases where a replacement is made. But we should be careful that this
+          replacement operation is not also an addition operation as described above.
+        */
+
         var totalTooMany = true;
         var edgeTooMany = true;
         if (sourceOrTarget == "source") {
             var sameEdgeCountOut = node.outgoers('edge[class="'+edgeclass+'"]').size();
             var totalEdgeCountOut = node.outgoers('edge').size();
-            // check that the total edge count is within the limits
-            if (typeof edgeConstraints[nodeclass].asSource.maxTotal == 'undefined'
-                || totalEdgeCountOut < edgeConstraints[nodeclass].asSource.maxTotal ) {
+            var maxTotal = edgeConstraints[nodeclass].asSource.maxTotal; 
+            var maxEdge = edgeConstraints[nodeclass].asSource.maxEdge;
+
+            var compareStrict = !(isReplacement &&
+                                  (edge.source() === source));
+
+            var withinLimits = !maxTotal || 
+                              (compareStrict && (totalEdgeCountOut < maxTotal)) ||
+                              (!compareStrict && (totalEdgeCountOut <= maxTotal));
+
+            if (withinLimits) {
                 totalTooMany = false;
             }
             // then check limits for this specific edge class
-            if (typeof edgeConstraints[nodeclass].asSource.maxEdge == 'undefined'
-                || sameEdgeCountOut < edgeConstraints[nodeclass].asSource.maxEdge ) {
+
+            withinLimits = !maxEdge ||
+                            (compareStrict && (sameEdgeCountOut < maxEdge) ||
+                            (!compareStrict && (sameEdgeCountOut <= maxEdge))); 
+
+            if (withinLimits) {
                 edgeTooMany = false;
             }
+
             // if only one of the limits is reached then edge is invalid
             return totalTooMany || edgeTooMany;
         }
         else { // node is used as target
             var sameEdgeCountIn = node.incomers('edge[class="'+edgeclass+'"]').size();
             var totalEdgeCountIn = node.incomers('edge').size();
-            if (typeof edgeConstraints[nodeclass].asTarget.maxTotal == 'undefined'
-                || totalEdgeCountIn < edgeConstraints[nodeclass].asTarget.maxTotal ) {
+            var maxTotal = edgeConstraints[nodeclass].asTarget.maxTotal; 
+            var maxEdge = edgeConstraints[nodeclass].asTarget.maxEdge;
+
+            var compareStrict = !(isReplacement &&
+                                (edge.target() === target));
+
+            var withinLimits = !maxTotal || 
+                              (compareStrict && (totalEdgeCountIn < maxTotal)) ||
+                              (!compareStrict && (totalEdgeCountIn <= maxTotal));
+
+            if (withinLimits) {
                 totalTooMany = false;
             }
-            if (typeof edgeConstraints[nodeclass].asTarget.maxEdge == 'undefined'
-                || sameEdgeCountIn < edgeConstraints[nodeclass].asTarget.maxEdge ) {
+
+            withinLimits = !maxEdge ||
+                          (compareStrict && (sameEdgeCountIn < maxEdge) ||
+                          (!compareStrict && (sameEdgeCountIn <= maxEdge))); 
+
+            if (withinLimits) {
                 edgeTooMany = false;
             }
             return totalTooMany || edgeTooMany;
         }
-        return false;
       }
 
       function isInComplex(node) {
