@@ -400,6 +400,101 @@ module.exports = function () {
   };
 
   /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createTranslationReaction = function (mRnaName, proteinName, processPosition, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranslationReaction(mRnaName, proteinName, processPosition, edgeLength);
+    }
+    else {
+      var param = {
+        mRnaName: mRnaName,
+        proteinName: proteinName,
+        processPosition: processPosition,
+        edgeLength: edgeLength
+      };
+
+      cy.undoRedo().do("createTranslationReaction", param);
+  }};
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createTranscriptionReaction = function (geneName, mRnaName, processPosition, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranscriptionReaction(geneName, mRnaName, processPosition, edgeLength);
+    }
+    else {
+      var param = {
+        geneName: geneName,
+        mRnaName: mRnaName,
+        processPosition: processPosition,
+        edgeLength: edgeLength
+      };
+
+      cy.undoRedo().do("createTranscriptionReaction", param);
+  }};
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createMetabolicCatalyticActivity = function (inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+    }
+    else {
+      var param = {
+        inputNodeList: inputNodeList,
+        outputNodeList: outputNodeList,
+        catalystName: catalystName,
+        processPosition: processPosition,
+        tilingPaddingVertical: tilingPaddingVertical,
+        tilingPaddingHorizontal: tilingPaddingHorizontal,
+        edgeLength: edgeLength,
+      };
+
+      cy.undoRedo().do("createMetabolicCatalyticActivity", param);
+  }};
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createActivationReaction = function (proteinName, processPosition, edgeLength, reverse) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createActivationReaction(proteinName, processPosition, edgeLength, reverse);
+    }
+    else {
+      var param = {
+        proteinName: proteinName,
+        processPosition: processPosition,
+        edgeLength: edgeLength,
+        reverse: reverse
+      };
+
+      cy.undoRedo().do("createActivationReaction", param);
+  }};
+
+  /*
    * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */

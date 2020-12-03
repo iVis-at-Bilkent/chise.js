@@ -387,10 +387,326 @@ module.exports = function () {
       return newEles;
     };
 
+    elementUtilities.createTranslationReaction = function(mRnaName, proteinName, processPosition, edgeLength) {
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("translation");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
+      const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
+      const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
+      const sourceAndSinkWidth = defaultSourceAndSinkProperties.width  || 50;
+      const nucleicAcidFeatureHeight = defaultNucleicAcidFeatureProperties.height || 50;
+      const processWidth = defaultProcessProperties.width || 50;
+      const processHeight = defaultProcessProperties.height || 50;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var edgeLength = edgeLength || 60;
+
+      cy.startBatch();
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      var processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      processNode.data('justAdded', true);
+
+      const xPosOfSourceAndSinkNode = processPosition.x - edgeLength - processWidth / 2 - sourceAndSinkWidth / 2;
+      const yPosOfSourceAndSinkNode = processPosition.y;
+      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'source and sink', language: 'PD'});
+      sourceAndSinkNode.data('justAdded', true);
+
+      var consumptionEdge = elementUtilities.addEdge(sourceAndSinkNode.id(), processNode.id(), {class: 'consumption', language: 'PD'});
+      consumptionEdge.data('justAdded', true);
+
+      const xPosOfmRnaNode = processPosition.x;
+      const yPosOfmRnaNode = processPosition.y - edgeLength - processHeight / 2 - nucleicAcidFeatureHeight / 2;
+      var mRnaNode = elementUtilities.addNode(xPosOfmRnaNode, yPosOfmRnaNode, {class: 'nucleic acid feature', language: 'PD'});
+      mRnaNode.data('justAdded', true);
+      mRnaNode.data('label', mRnaName);
+      const infoboxObjectOfGene = {
+        clazz: "unit of information",
+        label: {
+          text: 'ct:mRNA'
+        },
+        bbox: {
+          w: 45,
+          h: 15
+        }
+      };
+      elementUtilities.addStateOrInfoBox(mRnaNode, infoboxObjectOfGene);
+
+      var necessaryStimulationEdge = elementUtilities.addEdge(mRnaNode.id(), processNode.id(), {class: 'necessary stimulation', language: 'PD'});
+      necessaryStimulationEdge.data('justAdded', true);
+
+      const xPosOfProteinNode = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+      const yPostOfProteinNode = processPosition.y;
+      var proteinNode = elementUtilities.addNode(xPosOfProteinNode, yPostOfProteinNode, {class: 'macromolecule', language: 'PD'});
+      proteinNode.data('justAdded', true);
+      proteinNode.data('label', proteinName);
+  
+      var productionEdge = elementUtilities.addEdge(processNode.id(), proteinNode.id(), {class: 'production', language: 'PD'});
+      productionEdge.data('justAdded', true);
+
+      cy.endBatch();
+
+      //filter the just added elememts to return them and remove just added mark
+      var eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles; // Return the just added elements
+    };
+
+    elementUtilities.createTranscriptionReaction = function(geneName, mRnaName, processPosition, edgeLength) {
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("transcription");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
+      const sourceAndSinkWidth = defaultSourceAndSinkProperties.width  || 50;
+      const nucleicAcidFeatureHeight = defaultNucleicAcidFeatureProperties.height || 50;
+      const nucleicAcidFeatureWidth = defaultNucleicAcidFeatureProperties.width || 50;
+      const processWidth = defaultProcessProperties.width || 50;
+      const processHeight = defaultProcessProperties.height || 50;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var edgeLength = edgeLength || 60;
+
+      cy.startBatch();
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      var processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      processNode.data('justAdded', true);
+
+      const xPosOfSourceAndSinkNode = processPosition.x - edgeLength - processWidth / 2 - sourceAndSinkWidth / 2;
+      const yPosOfSourceAndSinkNode = processPosition.y;
+      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'source and sink', language: 'PD'});
+      sourceAndSinkNode.data('justAdded', true);
+
+      var consumptionEdge = elementUtilities.addEdge(sourceAndSinkNode.id(), processNode.id(), {class: 'consumption', language: 'PD'});
+      consumptionEdge.data('justAdded', true);
+
+      const xPosOfGeneNode = processPosition.x;
+      const yPosOfGeneNode = processPosition.y - edgeLength - processHeight / 2 - nucleicAcidFeatureHeight / 2;
+      var geneNode = elementUtilities.addNode(xPosOfGeneNode, yPosOfGeneNode, {class: 'nucleic acid feature', language: 'PD'});
+      geneNode.data('justAdded', true);
+      geneNode.data('label', geneName);
+      const infoboxObjectOfGene = {
+        clazz: "unit of information",
+        label: {
+          text: 'ct:gene'
+        },
+        bbox: {
+          w: 36,
+          h: 15
+        }
+      };
+      elementUtilities.addStateOrInfoBox(geneNode, infoboxObjectOfGene);
+
+      var necessaryStimulationEdge = elementUtilities.addEdge(geneNode.id(), processNode.id(), {class: 'necessary stimulation', language: 'PD'});
+      necessaryStimulationEdge.data('justAdded', true);
+
+      const xPosOfmRnaNode = processPosition.x + edgeLength + processWidth / 2 + nucleicAcidFeatureWidth / 2;
+      const yPostOfmRnaNode = processPosition.y;
+      var mRnaNode = elementUtilities.addNode(xPosOfmRnaNode, yPostOfmRnaNode, {class: 'nucleic acid feature', language: 'PD'});
+      mRnaNode.data('justAdded', true);
+      mRnaNode.data('label', mRnaName);
+      const infoboxObjectOfmRna = {
+        clazz: "unit of information",
+        label: {
+          text: 'ct:mRNA'
+        },
+        bbox: {
+          w: 45,
+          h: 15
+        }
+      };
+      elementUtilities.addStateOrInfoBox(mRnaNode, infoboxObjectOfmRna);
+
+      var productionEdge = elementUtilities.addEdge(processNode.id(), mRnaNode.id(), {class: 'production', language: 'PD'});
+      productionEdge.data('justAdded', true);
+
+      cy.endBatch();
+
+      //filter the just added elememts to return them and remove just added mark
+      var eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles; // Return the just added elements
+    };
+
+    elementUtilities.createMetabolicCatalyticActivity = function(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+      var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
+      var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
+      var defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
+      var processWidth = defaultProcessProperties.width || 50;
+      var processHeight = defaultProcessProperties.height || 50;
+      var simpleChemicalHeight = defaultSimpleChemicalProperties.height || 35;
+      var macromoleculeWidth = defaultMacromoleculProperties.width || 50;
+      var macromoleculeHeight = defaultMacromoleculProperties.height || 50;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var tilingPaddingVertical = tilingPaddingVertical || 15;
+      var tilingPaddingHorizontal = tilingPaddingHorizontal || 15;
+      var edgeLength = edgeLength || 60;
+
+      cy.startBatch();
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      var xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+      var xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+
+      var processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      processNode.data('justAdded', true);
+
+      const numOfInputNodes = inputNodeList.length;
+      const numOfOutputNodes = outputNodeList.length;
+      var yPosOfInput = processPosition.y - ((numOfInputNodes - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+
+      // add input side nodes
+      for (var i = 0; i < numOfInputNodes; i++) {
+        if(inputNodeList[i].type == "Simple Chemical"){
+          var newNode = elementUtilities.addNode(xPosOfInput, yPosOfInput, {class : 'simple chemical', language : 'PD'});
+          yPosOfInput += simpleChemicalHeight + tilingPaddingVertical;
+        }
+        else{
+          var newNode = elementUtilities.addNode(xPosOfInput, yPosOfInput, {class : 'macromolecule', language : 'PD'});
+          //update the y position
+          yPosOfInput += macromoleculeHeight + tilingPaddingVertical;
+        }
+        newNode.data('justAdded', true);
+        newNode.data('label', inputNodeList[i].name);
+
+        var newEdge = elementUtilities.addEdge(newNode.id(), processNode.id(), {class : 'consumption', language : 'PD'});
+        newEdge.data('justAdded', true);
+      }
+      
+      var yPosOfOutput = processPosition.y - ((numOfOutputNodes - 1) / 2) * (macromoleculeHeight + tilingPaddingVertical);
+
+      // add output side nodes
+      for (var i = 0; i < numOfOutputNodes; i++) {
+        if(outputNodeList[i].type == "Simple Chemical"){
+          var newNode = elementUtilities.addNode(xPosOfOutput, yPosOfOutput, {class : 'simple chemical', language : 'PD'});
+          yPosOfOutput += simpleChemicalHeight + tilingPaddingVertical;
+        }
+        else{
+          var newNode = elementUtilities.addNode(xPosOfOutput, yPosOfOutput, {class : 'macromolecule', language : 'PD'});
+          //update the y position
+          yPosOfOutput += macromoleculeHeight + tilingPaddingVertical;
+        }
+        newNode.data('justAdded', true);
+        newNode.data('label', outputNodeList[i].name);
+
+        var newEdge = elementUtilities.addEdge(processNode.id(), newNode.id(), {class : 'production', language : 'PD'});
+        newEdge.data('justAdded', true);
+      }
+
+      // add catalyst node
+      var xPosOfCatalyst = processPosition.x;
+      var yPosOfCatalyst = processPosition.y - (processHeight + macromoleculeHeight + tilingPaddingVertical); 
+      var catalystNode = elementUtilities.addNode(xPosOfCatalyst, yPosOfCatalyst, {class: 'unspecified entity', language: 'PD'});
+      catalystNode.data('justAdded', true);
+      catalystNode.data('label', catalystName);
+
+      var catalystEdge = elementUtilities.addEdge(catalystNode.id(), processNode.id(), {class: 'catalysis', language: 'PD'});
+      catalystEdge.data('justAdded', true);
+
+      cy.endBatch();
+
+      //filter the just added elememts to return them and remove just added mark
+      var eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles; // Return the just added elements
+    }
+
+    elementUtilities.createActivationReaction = function (proteinName, processPosition, edgeLength, reverse) {
+      var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
+      var defaultProcessProperties = elementUtilities.getDefaultProperties("activation");
+      var processWidth = defaultProcessProperties.width || 50;
+      var macromoleculeWidth = defaultMacromoleculProperties.width || 50;
+      var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      var edgeLength = edgeLength || 60;
+
+      cy.startBatch();
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      var xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+      var xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+
+      var processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      processNode.data('justAdded', true);
+
+      var yPosition = processPosition.y;
+
+      var inputNode = elementUtilities.addNode(xPosOfInput, yPosition, {class: "macromolecule", language: "PD"});
+      inputNode.data("justAdded", true);
+      inputNode.data("label", proteinName);
+      var infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: reverse ? "active" : "inactive"
+        },
+        style: {
+          "shape-name": "ellipse"
+        },
+        bbox: {
+          w: 36,
+          h: 15
+        }
+      };
+      elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
+
+      var outputNode = elementUtilities.addNode(xPosOfOutput, yPosition, {class: "macromolecule", language: "PD"});
+      outputNode.data("justAdded", true);
+      outputNode.data("label", proteinName);
+      infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: reverse ? "inactive" : "active"
+        },
+        style: {
+          "shape-name": "ellipse"
+        },
+        bbox: {
+          w: 36,
+          h: 15
+        }
+      }
+      elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+
+      var inputSideEdge = elementUtilities.addEdge(inputNode.id(), processNode.id(), {class: "consumption", language: "PD"});
+      inputSideEdge.data("justAdded", true);
+      var outputSideEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: "production", language: "PD"});
+      outputSideEdge.data("justAdded", true);
+      cy.endBatch();
+
+      //filter the just added elememts to return them and remove just added mark
+      var eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles; // Return the just added elements
+    }
+
     /*
      * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
      * in the complex. Parameters are explained below.
-     * templateType: The type of the template reaction. It may be 'association' or 'dissociation' for now.
+     * templateType: The type of the template reaction. It may be 'association', 'dissociation', 'reversible' or 'irreversible'.
      * nodeList: The list of the names and types of molecules which will involve in the reaction.
      * complexName: The name of the complex in the reaction.
      * processPosition: The modal position of the process in the reaction. The default value is the center of the canvas.
@@ -439,7 +755,7 @@ module.exports = function () {
 
       //Create the process in template type
       var process;
-      if (templateType === 'reversible') {
+      if (templateType === 'reversible' || templateType === 'irreversible') {
         process = elementUtilities.addNode(processPosition.x, processPosition.y, {class : 'process', language : 'PD'});
         elementUtilities.setPortsOrdering(process, 'L-to-R');
       }
@@ -478,7 +794,12 @@ module.exports = function () {
         }
         else{
           //Group right or top elements in group id 1
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 1);
+          if (templateType === "irreversible") {
+            newEdge = elementUtilities.addEdge(newNode.id(), process.id(), {class: "consumption", language: 'PD'});
+          }
+          else {
+            newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : "production", language : 'PD'}, undefined, undefined, 1);
+          }
         }
 
         newEdge.data('justAdded', true);
@@ -546,8 +867,13 @@ module.exports = function () {
           //create the edge connected to the new macromolecule
           var newEdge;
 
-          //Group the left or bottom elements in group id 0
-          newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : 'production', language : 'PD'}, undefined, undefined, 0);
+          //Group the left or bottom elements in group id 0 if reversible
+          if (templateType === "irreversible") {
+            newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class: "production", language: 'PD'});
+          }
+          else {
+            newEdge = elementUtilities.addEdge(process.id(), newNode.id(), {class : "production", language : 'PD'}, undefined, undefined, 0);
+          }
           newEdge.data('justAdded', true);
 
         }
@@ -586,7 +912,7 @@ module.exports = function () {
       });
 
       // Do this check for cytoscape.js backward compatibility
-      if (layout && layout.run && templateType !== 'reversible') {
+      if (layout && layout.run && templateType !== 'reversible' && templateType !== 'irreversible') {
         layout.run();
       }
 

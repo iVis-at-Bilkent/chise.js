@@ -163,6 +163,18 @@ Considers undoable option. Parameters are explained below.<br>
 `edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
 `layoutParam`: An object with key 'name' (e.g. { name: 'fcose' }) that indicates the name of the layout to be used.<br>
 
+`instance.createActivationReaction(proteinName, processPosition, edgeLength, reverse)`
+Creates an activation or deactivation type reaction (using the parameter `reverse`) for the given protein.
+
+`instance.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
+Creates a metabolic catalytic activity reaction.
+
+`instance.createTranscriptionReaction(geneName, mRnaName, processPosition, edgeLength)`
+Creates a transcription reaction.
+
+`instance.createTranslationReaction(mRnaName, proteinName, processPosition, edgeLength)`
+Creates a translation reaction.
+
 `instance.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
 Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
 
@@ -277,6 +289,10 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
  * `createCompoundForGivenNodes(param)` Do/Undo/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.
+ * `createActivationReaction(param)` Do/Redo function for 'createActivationReaction' undo redo command.
+ * `createMetabolicCatalyticActivity(param)` Do/Redo function for 'createMetabolicCatalyticActivity' undo redo command.
+ * `createTranscriptionReaction(param)` Do/Redo function for 'createTranscriptionReaction' undo redo command.
+ * `createTranslationReaction(param)` Do/Redo function for 'createTranslationReaction' undo redo command.
  * `resizeNodes(param)` Do/Undo/Redo function for 'resizeNodes' undo redo command.
  * `changeNodeLabel(param)` Do/Undo/Redo function for 'changeNodeLabel' undo redo command.
  * `changeData(param)` Do/Undo/Redo function for 'changeData' undo redo command.

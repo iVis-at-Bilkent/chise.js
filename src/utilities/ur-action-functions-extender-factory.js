@@ -152,6 +152,86 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createActivationReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createActivationReaction(param.proteinName, param.processPosition, param.edgeLength, param.reverse)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createMetabolicCatalyticActivity = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createMetabolicCatalyticActivity(param.inputNodeList, param.outputNodeList, param.catalystName, param.processPosition, param.tilingPaddingVertical, param.tilingPaddingHorizontal, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranscriptionReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranscriptionReaction(param.geneName, param.mRnaName, param.processPosition, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranslationReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranslationReaction(param.mRnaName, param.proteinName, param.processPosition, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     // Section End
     // easy creation action functions
 
