@@ -505,6 +505,9 @@ module.exports = function () {
     }
 
     if (!options.undoable) {
+      if (templateType === "reversible") {
+        elementUtilities.setMapType("HybridAny");
+      }
       elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam);
     }
     else {
@@ -518,8 +521,15 @@ module.exports = function () {
         edgeLength: edgeLength,
         layoutParam: layoutParam
       };
-
-      cy.undoRedo().do("createTemplateReaction", param);
+      if (templateType === "reversible") {
+        var actions = [];
+        actions.push({name:"changeMapType", param: {mapType: "HybridAny", callback: function(){} }});
+        actions.push({name:"createTemplateReaction", param: param});
+        cy.undoRedo().do("batch", actions);
+      }
+      else {
+        cy.undoRedo().do("createTemplateReaction", param);
+      }
     }
   };
 

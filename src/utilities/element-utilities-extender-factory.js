@@ -737,13 +737,10 @@ module.exports = function () {
       cy.startBatch();
 
       
-      if (templateType === "reversible") {
-        elementUtilities.setMapType("HybridAny");
-      }
-      else if (!elementUtilities.getMapType()) {
+      if (!elementUtilities.getMapType()) {
         elementUtilities.setMapType("PD");
       }
-      
+
       var xPositionOfFreeMacromolecules;
       var xPositionOfInputMacromolecules;
       if (templateType === 'association') {
