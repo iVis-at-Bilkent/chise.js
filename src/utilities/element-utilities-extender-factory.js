@@ -539,15 +539,17 @@ module.exports = function () {
       return eles; // Return the just added elements
     };
 
-    elementUtilities.createMetabolicCatalyticActivity = function(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    elementUtilities.createMetabolicCatalyticActivity = function(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
       var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
       var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
+      var defaultCatalystTypeProperties = elementUtilities.getDefaultProperties(catalystType);
       var defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
       var processWidth = defaultProcessProperties.width || 50;
       var processHeight = defaultProcessProperties.height || 50;
       var simpleChemicalHeight = defaultSimpleChemicalProperties.height || 35;
       var macromoleculeWidth = defaultMacromoleculProperties.width || 50;
       var macromoleculeHeight = defaultMacromoleculProperties.height || 50;
+      var catalystHeight = defaultCatalystTypeProperties.height || 50;
       var processPosition = processPosition || elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       var tilingPaddingVertical = tilingPaddingVertical || 15;
       var tilingPaddingHorizontal = tilingPaddingHorizontal || 15;
@@ -609,8 +611,8 @@ module.exports = function () {
 
       // add catalyst node
       var xPosOfCatalyst = processPosition.x;
-      var yPosOfCatalyst = processPosition.y - (processHeight + macromoleculeHeight + tilingPaddingVertical); 
-      var catalystNode = elementUtilities.addNode(xPosOfCatalyst, yPosOfCatalyst, {class: 'unspecified entity', language: 'PD'});
+      var yPosOfCatalyst = processPosition.y - (processHeight + catalystHeight + tilingPaddingVertical); 
+      var catalystNode = elementUtilities.addNode(xPosOfCatalyst, yPosOfCatalyst, {class: catalystType, language: 'PD'});
       catalystNode.data('justAdded', true);
       catalystNode.data('label', catalystName);
 
@@ -734,11 +736,16 @@ module.exports = function () {
 
       cy.startBatch();
 
-      var xPositionOfFreeMacromolecules;
-      var xPositionOfInputMacromolecules;
-      if (!elementUtilities.getMapType()) {
+      
+      if (templateType === "reversible") {
+        elementUtilities.setMapType("HybridAny");
+      }
+      else if (!elementUtilities.getMapType()) {
         elementUtilities.setMapType("PD");
       }
+      
+      var xPositionOfFreeMacromolecules;
+      var xPositionOfInputMacromolecules;
       if (templateType === 'association') {
         xPositionOfFreeMacromolecules = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
        

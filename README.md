@@ -166,7 +166,7 @@ Considers undoable option. Parameters are explained below.<br>
 `instance.createActivationReaction(proteinName, processPosition, edgeLength, reverse)`
 Creates an activation or deactivation type reaction (using the parameter `reverse`) for the given protein.
 
-`instance.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
+`instance.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
 Creates a metabolic catalytic activity reaction.
 
 `instance.createTranscriptionReaction(geneName, mRnaName, processPosition, edgeLength)`

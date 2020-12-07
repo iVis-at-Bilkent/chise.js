@@ -449,19 +449,20 @@ module.exports = function () {
    * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
-  mainUtilities.createMetabolicCatalyticActivity = function (inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+  mainUtilities.createMetabolicCatalyticActivity = function (inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+      elementUtilities.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
     }
     else {
       var param = {
         inputNodeList: inputNodeList,
         outputNodeList: outputNodeList,
         catalystName: catalystName,
+        catalystType: catalystType,
         processPosition: processPosition,
         tilingPaddingVertical: tilingPaddingVertical,
         tilingPaddingHorizontal: tilingPaddingHorizontal,
