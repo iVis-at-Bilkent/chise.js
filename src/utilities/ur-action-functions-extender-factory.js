@@ -296,7 +296,7 @@ module.exports = function () {
             w: node.data("minWidth") || 0,
             h: node.data("minHeight") || 0,
             biasL : node.data("minWidthBiasLeft") || 0,
-            bisaR : node.data("minWidthBiasRight") || 0,
+            biasR : node.data("minWidthBiasRight") || 0,
             biasT : node.data("minHeightBiasTop") || 0,
             biasB : node.data("minHeightBiasBottom") || 0
            // w: node.css("minWidth") != 0?  node.data("minWidth") : node.children().boundingBox().w,
