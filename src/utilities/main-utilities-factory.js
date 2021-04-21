@@ -445,6 +445,27 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createMetabolicReaction = function(inputs, outputs, reversible, regulator, regulatorMultimer) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMetabolicReaction(inputs, outputs, reversible, regulator, regulatorMultimer);
+    }
+    else {
+      const param = {
+        inputs: inputs,
+        outputs: outputs,
+        reversible: reversible,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer
+      };
+
+      cy.undoRedo().do("createMetabolicReaction", param);
+    }  
+  };
+
   /*
    * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
@@ -470,7 +491,8 @@ module.exports = function () {
       };
 
       cy.undoRedo().do("createMetabolicCatalyticActivity", param);
-  }};
+    }
+  };
 
   /*
    * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included

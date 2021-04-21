@@ -539,6 +539,104 @@ module.exports = function () {
       return eles; // Return the just added elements
     };
 
+    elementUtilities.createMetabolicReaction = function (inputs, outputs, reversible, regulator, regulatorMultimer) {
+      const hasRegulator = regulator.name !== undefined;
+      const defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
+      const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
+      const processWidth = defaultProcessProperties.width || 50;
+      const processHeight = defaultProcessProperties.height || 50;
+      const simpleChemicalHeight = defaultSimpleChemicalProperties.height || 35;
+      const simpleChemicalWidth = defaultSimpleChemicalProperties.width || 35;
+      const regulatorHeight = defaultRegulatorProperties.height || 50;
+      const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      const tilingPaddingVertical = 15;
+      const tilingPaddingHorizontal = 15;
+      const edgeLength = 60;
+      const processLeftSideEdgeType = reversible ? "production" : "consumption";
+      const processRightSideEdgeType = "production";
+
+      cy.startBatch();
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 -  simpleChemicalWidth / 2;
+      let xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + simpleChemicalWidth / 2;
+
+
+      let processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      processNode.data('justAdded', true);
+
+      const numOfInputNodes = inputs.length;
+      const numOfOutputNodes = outputs.length;
+
+      let yPosOfInput = processPosition.y - ((numOfInputNodes - 1) / 2) * (simpleChemicalHeight + tilingPaddingVertical);
+
+      inputs.forEach(function(data) {
+        const nodeName = data.name;
+        const nodeType = data.type;
+
+        let newNode = elementUtilities.addNode(xPosOfInput, yPosOfInput, {class: nodeType.toLowerCase(), language: "PD"});
+        newNode.data("justAdded", true);
+        newNode.data("label", nodeName);
+
+        let newEdge;
+        if (reversible) {
+          newEdge = elementUtilities.addEdge(processNode.id(), newNode.id(), {class: processLeftSideEdgeType, language: "PD"}, undefined, undefined, 1);
+        }
+        else {
+          newEdge = elementUtilities.addEdge(newNode.id(), processNode.id(), {class: processLeftSideEdgeType, language: "PD"});
+        }
+        newEdge.data("justAdded", true);
+
+        yPosOfInput += simpleChemicalHeight + tilingPaddingVertical;
+      });
+
+      let yPosOfOutput = processPosition.y - ((numOfOutputNodes - 1) / 2) * (simpleChemicalHeight + tilingPaddingVertical);
+
+      outputs.forEach(function(data) {
+        const nodeName = data.name;
+        const nodeType = data.type;
+
+        let newNode = elementUtilities.addNode(xPosOfOutput, yPosOfOutput, {class: nodeType.toLowerCase(), language: "PD"});
+        newNode.data("justAdded", true);
+        newNode.data("label", nodeName);
+
+        let newEdge = elementUtilities.addEdge(processNode.id(), newNode.id(), {class: processRightSideEdgeType, language: "PD"}, undefined, undefined, 0);
+        newEdge.data("justAdded", true);
+
+        yPosOfOutput += simpleChemicalHeight + tilingPaddingVertical;
+      });
+
+      // add regulator node
+      if (hasRegulator) {
+        const regulatorName = regulator.name;
+        const regulatorType = regulator.type;
+        let xPosOfRegulator = processPosition.x;
+        let yPosOfRegulator = processPosition.y - (processHeight + regulatorHeight + tilingPaddingVertical); 
+        let regulatorNode = elementUtilities.addNode(xPosOfRegulator, yPosOfRegulator, {class: regulatorType, language: 'PD'});
+        regulatorNode.data('justAdded', true);
+        regulatorNode.data('label', regulatorName);
+
+        elementUtilities.setMultimerStatus(regulatorNode, regulatorMultimer);
+
+        let regulatorEdge = elementUtilities.addEdge(regulatorNode.id(), processNode.id(), {class: 'catalysis', language: 'PD'});
+        regulatorEdge.data('justAdded', true);
+      }
+
+      cy.endBatch();
+
+      const eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles;
+    };
+
     elementUtilities.createMetabolicCatalyticActivity = function(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
       var defaultMacromoleculProperties = elementUtilities.getDefaultProperties( "macromolecule" );
       var defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
