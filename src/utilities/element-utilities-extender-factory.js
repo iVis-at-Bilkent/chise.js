@@ -539,7 +539,23 @@ module.exports = function () {
       return eles; // Return the just added elements
     };
 
-    elementUtilities.createMetabolicReaction = function (inputs, outputs, reversible, regulator, regulatorMultimer) {
+    elementUtilities.createMetabolicReaction = function (inputs, outputs, reversible, regulator, regulatorMultimer, orientation) {
+      // initialize some constants that need to be known to draw the brick
+      let rotate90 = function(point, center) {
+        const relativeX = center.x - point.x;
+        const relativeY = center.y - point.y;
+
+        const relativeRotatedX = relativeY;
+        const relativeRotatedY = -1 * relativeX;
+
+        const resultX = relativeRotatedX + center.x;
+        const resultY = relativeRotatedY + center.y;
+
+        return {
+          x: resultX,
+          y: resultY
+        }
+      };
       const hasRegulator = regulator.name !== undefined;
       const defaultSimpleChemicalProperties = elementUtilities.getDefaultProperties( "simple chemical" );
       const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
@@ -552,21 +568,22 @@ module.exports = function () {
       const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       const tilingPaddingVertical = 15;
       const tilingPaddingHorizontal = 15;
-      const edgeLength = 60;
+      const edgeLength = 30;
       const processLeftSideEdgeType = reversible ? "production" : "consumption";
       const processRightSideEdgeType = "production";
+      const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
 
       cy.startBatch();
       if (!elementUtilities.getMapType()) {
         elementUtilities.setMapType("PD");
       }
 
-      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 -  simpleChemicalWidth / 2;
+      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - simpleChemicalWidth / 2;
       let xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + simpleChemicalWidth / 2;
 
 
       let processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
-      elementUtilities.setPortsOrdering(processNode, "L-to-R");
+      elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
       processNode.data('justAdded', true);
 
       const numOfInputNodes = inputs.length;
@@ -574,11 +591,29 @@ module.exports = function () {
 
       let yPosOfInput = processPosition.y - ((numOfInputNodes - 1) / 2) * (simpleChemicalHeight + tilingPaddingVertical);
 
-      inputs.forEach(function(data) {
+      inputs.forEach(function(data, index) {
         const nodeName = data.name;
         const nodeType = data.type;
 
-        let newNode = elementUtilities.addNode(xPosOfInput, yPosOfInput, {class: nodeType.toLowerCase(), language: "PD"});
+        if (index === 0) {
+          yPosOfInput = processPosition.y;
+        }
+        else if (index % 2 === 1) {
+          yPosOfInput = processPosition.y - ((simpleChemicalHeight + tilingPaddingVertical) * Math.ceil(index / 2));
+        }
+        else {
+          yPosOfInput = processPosition.y + ((simpleChemicalHeight + tilingPaddingVertical) * (index / 2));
+        }
+
+        let nodePosition = {
+          x: xPosOfInput,
+          y: yPosOfInput
+        }
+        if (orientation === "vertical") {
+          nodePosition = rotate90(nodePosition, processPosition);
+        }
+
+        let newNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: nodeType.toLowerCase(), language: "PD"});
         newNode.data("justAdded", true);
         newNode.data("label", nodeName);
 
@@ -590,24 +625,38 @@ module.exports = function () {
           newEdge = elementUtilities.addEdge(newNode.id(), processNode.id(), {class: processLeftSideEdgeType, language: "PD"});
         }
         newEdge.data("justAdded", true);
-
-        yPosOfInput += simpleChemicalHeight + tilingPaddingVertical;
       });
 
       let yPosOfOutput = processPosition.y - ((numOfOutputNodes - 1) / 2) * (simpleChemicalHeight + tilingPaddingVertical);
 
-      outputs.forEach(function(data) {
+      outputs.forEach(function(data, index) {
         const nodeName = data.name;
         const nodeType = data.type;
 
-        let newNode = elementUtilities.addNode(xPosOfOutput, yPosOfOutput, {class: nodeType.toLowerCase(), language: "PD"});
+        if (index === 0) {
+          yPosOfOutput = processPosition.y;
+        }
+        else if (index % 2 === 1) {
+          yPosOfOutput = processPosition.y - ((simpleChemicalHeight + tilingPaddingVertical) * Math.ceil(index / 2));
+        }
+        else {
+          yPosOfOutput = processPosition.y + ((simpleChemicalHeight + tilingPaddingVertical) * (index / 2));
+        }
+
+        let nodePosition = {
+          x: xPosOfOutput,
+          y: yPosOfOutput
+        }
+        if (orientation === "vertical") {
+          nodePosition = rotate90(nodePosition, processPosition);
+        }
+
+        let newNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: nodeType.toLowerCase(), language: "PD"});
         newNode.data("justAdded", true);
         newNode.data("label", nodeName);
 
         let newEdge = elementUtilities.addEdge(processNode.id(), newNode.id(), {class: processRightSideEdgeType, language: "PD"}, undefined, undefined, 0);
         newEdge.data("justAdded", true);
-
-        yPosOfOutput += simpleChemicalHeight + tilingPaddingVertical;
       });
 
       // add regulator node
@@ -616,7 +665,16 @@ module.exports = function () {
         const regulatorType = regulator.type;
         let xPosOfRegulator = processPosition.x;
         let yPosOfRegulator = processPosition.y - (processHeight + regulatorHeight + tilingPaddingVertical); 
-        let regulatorNode = elementUtilities.addNode(xPosOfRegulator, yPosOfRegulator, {class: regulatorType, language: 'PD'});
+
+        let nodePosition = {
+          x: xPosOfRegulator,
+          y: yPosOfRegulator
+        }
+        if (orientation === "vertical") {
+          nodePosition = rotate90(nodePosition, processPosition);
+        }
+
+        let regulatorNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: regulatorType, language: 'PD'});
         regulatorNode.data('justAdded', true);
         regulatorNode.data('label', regulatorName);
 

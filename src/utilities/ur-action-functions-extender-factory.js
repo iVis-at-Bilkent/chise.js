@@ -177,7 +177,7 @@ module.exports = function () {
       let eles;
 
       if (firstTime) {
-        eles = elementUtilities.createMetabolicReaction(param.inputs, param.outputs, param.reversible, param.regulator, param.regulatorMultimer);
+        eles = elementUtilities.createMetabolicReaction(param.inputs, param.outputs, param.reversible, param.regulator, param.regulatorMultimer, param.orientation);
       }
       else {
         eles = param;

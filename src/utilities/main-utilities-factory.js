@@ -445,13 +445,13 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
-  mainUtilities.createMetabolicReaction = function(inputs, outputs, reversible, regulator, regulatorMultimer) {
+  mainUtilities.createMetabolicReaction = function(inputs, outputs, reversible, regulator, regulatorMultimer, orientation) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createMetabolicReaction(inputs, outputs, reversible, regulator, regulatorMultimer);
+      elementUtilities.createMetabolicReaction(inputs, outputs, reversible, regulator, regulatorMultimer, orientation);
     }
     else {
       const param = {
@@ -459,7 +459,8 @@ module.exports = function () {
         outputs: outputs,
         reversible: reversible,
         regulator: regulator,
-        regulatorMultimer: regulatorMultimer
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation
       };
 
       cy.undoRedo().do("createMetabolicReaction", param);
