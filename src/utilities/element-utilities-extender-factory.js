@@ -664,7 +664,7 @@ module.exports = function () {
         const regulatorName = regulator.name;
         const regulatorType = regulator.type;
         let xPosOfRegulator = processPosition.x;
-        let yPosOfRegulator = processPosition.y - (processHeight + regulatorHeight + tilingPaddingVertical); 
+        let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
 
         let nodePosition = {
           x: xPosOfRegulator,
