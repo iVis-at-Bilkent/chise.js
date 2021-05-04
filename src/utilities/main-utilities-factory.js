@@ -445,6 +445,28 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createConversion = function(macromoleculeName, regulator, regulatorMultimer, orientation, inputInfoboxLabel, outputInfoboxLabel) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createConversion(macromoleculeName, regulator, regulatorMultimer, orientation, inputInfoboxLabel, outputInfoboxLabel);
+    }
+    else {
+      const param = {
+        macromoleculeName: macromoleculeName,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation,
+        inputInfoboxLabel: inputInfoboxLabel,
+        outputInfoboxLabel: outputInfoboxLabel
+      };
+
+      cy.undoRedo().do("createConversion", param);
+    }  
+  };
+
   mainUtilities.createMetabolicReaction = function(inputs, outputs, reversible, regulator, regulatorMultimer, orientation) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;

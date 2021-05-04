@@ -539,8 +539,155 @@ module.exports = function () {
       return eles; // Return the just added elements
     };
 
+    elementUtilities.rotate90 = function(point, center) {
+      const relativeX = center.x - point.x;
+      const relativeY = center.y - point.y;
+
+      const relativeRotatedX = relativeY;
+      const relativeRotatedY = -1 * relativeX;
+
+      const resultX = relativeRotatedX + center.x;
+      const resultY = relativeRotatedY + center.y;
+
+      return {
+        x: resultX,
+        y: resultY
+      }
+    }
+
+    elementUtilities.createConversion = function (macromoleculeName, regulator, regulatorMultimer, orientation, inputInfoboxLabel, outputInfoboxLabel) {
+      const hasRegulator = regulator.name !== undefined;
+      const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
+      const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
+      const processWidth = defaultProcessProperties.width || 50;
+      const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
+      const macromoleculeHeight = defaultMacromoleculeProperties.height || 50; 
+      const processHeight = defaultProcessProperties.height || 50;
+      const regulatorHeight = defaultRegulatorProperties.height || 50;
+      const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      const edgeLength = 30;
+      const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
+
+      cy.startBatch();
+
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+      let xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+      let yPosOfInput = processPosition.y;
+      let yPosOfOutput = processPosition.y;
+
+      let processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
+      processNode.data('justAdded', true);
+
+      let nodePosition = {
+        x: xPosOfInput,
+        y: yPosOfInput
+      }
+      if (orientation === "vertical") {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      let inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'macromolecule', language: 'PD'});
+      inputNode.data("justAdded", true);
+      inputNode.data("label", macromoleculeName);
+
+      const minInfoboxDimension = 15;
+      const inputInfoboxWidth = inputInfoboxLabel.length > 0 ? 
+                                Math.max(5 * inputInfoboxLabel.length, minInfoboxDimension) : 
+                                minInfoboxDimension; 
+      let infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: inputInfoboxLabel
+        },
+        bbox: {
+          w: inputInfoboxWidth,
+          h: minInfoboxDimension
+        },
+        style: {
+          "shape-name": "ellipse"
+        }
+      };
+      elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
+
+      let inputEdge = elementUtilities.addEdge(inputNode.id(), processNode.id(), {class: 'consumption', language: 'PD'})
+      inputEdge.data("justAdded", true);
+
+      nodePosition = {
+        x: xPosOfOutput,
+        y: yPosOfOutput
+      }
+
+      if (orientation === "vertical") {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      let outputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'macromolecule', language: 'PD'});
+      outputNode.data("justAdded", true);
+      outputNode.data("label", macromoleculeName);
+
+      const outputInfoboxWidth = outputInfoboxLabel.length > 0 ? 
+                                Math.max(5 * outputInfoboxLabel.length, minInfoboxDimension) : 
+                                minInfoboxDimension;
+      infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: outputInfoboxLabel
+        },
+        bbox: {
+          w: outputInfoboxWidth,
+          h: minInfoboxDimension
+        },
+        style: {
+          "shape-name": "ellipse"
+        }
+      };
+      elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+
+      let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
+      outputEdge.data("justAdded", true);
+
+      if (hasRegulator) {
+        const regulatorName = regulator.name;
+        const regulatorType = regulator.type;
+        let xPosOfRegulator = processPosition.x;
+        let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
+
+        nodePosition = {
+          x: xPosOfRegulator,
+          y: yPosOfRegulator
+        }
+        if (orientation === "vertical") {
+          nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+        }
+
+        let regulatorNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: regulatorType, language: 'PD'});
+        regulatorNode.data('justAdded', true);
+        regulatorNode.data('label', regulatorName);
+
+        elementUtilities.setMultimerStatus(regulatorNode, regulatorMultimer);
+
+        let regulatorEdge = elementUtilities.addEdge(regulatorNode.id(), processNode.id(), {class: 'catalysis', language: 'PD'});
+        regulatorEdge.data('justAdded', true);
+      }
+
+      cy.endBatch();
+
+      const eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles;
+    };
+
     elementUtilities.createMetabolicReaction = function (inputs, outputs, reversible, regulator, regulatorMultimer, orientation) {
-      // initialize some constants that need to be known to draw the brick
       let rotate90 = function(point, center) {
         const relativeX = center.x - point.x;
         const relativeY = center.y - point.y;

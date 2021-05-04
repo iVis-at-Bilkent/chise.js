@@ -172,6 +172,26 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createConversion = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createConversion(param.macromoleculeName, param.regulator, param.regulatorMultimer, param.orientation, param.inputInfoboxLabel, param.outputInfoboxLabel);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     undoRedoActionFunctions.createMetabolicReaction = function(param) {
       let firstTime = param.firstTime;
       let eles;
