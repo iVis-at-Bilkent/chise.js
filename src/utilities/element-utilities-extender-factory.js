@@ -825,7 +825,28 @@ module.exports = function () {
         regulatorNode.data('justAdded', true);
         regulatorNode.data('label', regulatorName);
 
-        elementUtilities.setMultimerStatus(regulatorNode, regulatorMultimer);
+        if (regulatorMultimer.enabled) {
+          elementUtilities.setMultimerStatus(regulatorNode, true);
+
+          const cardinality = regulatorMultimer.cardinality;
+          const infoboxLabel = "N:" + cardinality;
+          infoboxObject = {
+            clazz: "unit of information",
+            label: {
+              text: infoboxLabel
+            },
+            bbox: {
+              w: infoboxLabel.length * 6,
+              h: 15
+            },
+            style: {
+              "shape-name": "ellipse"
+            }
+          };
+          if (cardinality != '') {
+            elementUtilities.addStateOrInfoBox(regulatorNode, infoboxObject);
+          }
+        }
 
         let regulatorEdge = elementUtilities.addEdge(regulatorNode.id(), processNode.id(), {class: 'catalysis', language: 'PD'});
         regulatorEdge.data('justAdded', true);
