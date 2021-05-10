@@ -596,9 +596,10 @@ module.exports = function () {
       inputNode.data("justAdded", true);
       inputNode.data("label", macromoleculeName);
 
-      const minInfoboxDimension = 15;
+      const minInfoboxDimension = 20;
+      const widthPerChar = 6;
       const inputInfoboxWidth = inputInfoboxLabel.length > 0 ? 
-                                Math.max(5 * inputInfoboxLabel.length, minInfoboxDimension) : 
+                                Math.max(widthPerChar * inputInfoboxLabel.length, minInfoboxDimension) : 
                                 minInfoboxDimension; 
       let infoboxObject = {
         clazz: "unit of information",
@@ -632,7 +633,7 @@ module.exports = function () {
       outputNode.data("label", macromoleculeName);
 
       const outputInfoboxWidth = outputInfoboxLabel.length > 0 ? 
-                                Math.max(5 * outputInfoboxLabel.length, minInfoboxDimension) : 
+                                Math.max(widthPerChar * outputInfoboxLabel.length, minInfoboxDimension) : 
                                 minInfoboxDimension;
       infoboxObject = {
         clazz: "unit of information",
