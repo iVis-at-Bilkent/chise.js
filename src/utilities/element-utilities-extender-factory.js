@@ -558,7 +558,8 @@ module.exports = function () {
     elementUtilities.createConversion = function (macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels) {
       const hasRegulator = regulator.name !== undefined;
       const macromoleculeName = macromolecule.name;
-      const macromoleculeIsMultimer = macromolecule.multimer;
+      const macromoleculeIsMultimer = macromolecule.multimer.enabled;
+      const macromoleculeMultimerCardinality = macromolecule.multimer.cardinality;
       const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
       const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
       const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
@@ -570,6 +571,8 @@ module.exports = function () {
       const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       const edgeLength = 30;
       const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
+      const minInfoboxDimension = 20;
+      const widthPerChar = 6;
 
       cy.startBatch();
 
@@ -598,11 +601,29 @@ module.exports = function () {
       inputNode.data("justAdded", true);
       inputNode.data("label", macromoleculeName);
       if (macromoleculeIsMultimer) {
+        
         elementUtilities.setMultimerStatus(inputNode, true);
+
+        const cardinality = macromoleculeMultimerCardinality;
+        const infoboxLabel = "N:" + cardinality;
+        infoboxObject = {
+          clazz: "unit of information",
+          label: {
+            text: infoboxLabel
+          },
+          bbox: {
+            w: infoboxLabel.length * widthPerChar,
+            h: minInfoboxDimension
+          },
+          style: {
+            "shape-name": "ellipse"
+          }
+        };
+        if (cardinality != '') {
+          elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
+        }
       }
 
-      const minInfoboxDimension = 20;
-      const widthPerChar = 6;
       inputInfoboxLabels.forEach(function(label) {
         const inputInfoboxWidth = label.length > 0 ? 
                                 Math.max(widthPerChar * label.length, minInfoboxDimension) : 
@@ -639,7 +660,27 @@ module.exports = function () {
       outputNode.data("justAdded", true);
       outputNode.data("label", macromoleculeName);
       if (macromoleculeIsMultimer) {
+        
         elementUtilities.setMultimerStatus(outputNode, true);
+
+        const cardinality = macromoleculeMultimerCardinality;
+        const infoboxLabel = "N:" + cardinality;
+        infoboxObject = {
+          clazz: "unit of information",
+          label: {
+            text: infoboxLabel
+          },
+          bbox: {
+            w: infoboxLabel.length * widthPerChar,
+            h: minInfoboxDimension
+          },
+          style: {
+            "shape-name": "ellipse"
+          }
+        };
+        if (cardinality != '') {
+          elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+        }
       }
 
       outputInfoboxLabels.forEach(function(label) {
