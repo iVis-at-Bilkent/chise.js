@@ -177,7 +177,7 @@ module.exports = function () {
       let eles;
 
       if (firstTime) {
-        eles = elementUtilities.createConversion(param.macromoleculeName, param.regulator, param.regulatorMultimer, param.orientation, param.inputInfoboxLabel, param.outputInfoboxLabel);
+        eles = elementUtilities.createConversion(param.macromolecule, param.regulator, param.regulatorMultimer, param.orientation, param.inputInfoboxLabels, param.outputInfoboxLabels);
       }
       else {
         eles = param;

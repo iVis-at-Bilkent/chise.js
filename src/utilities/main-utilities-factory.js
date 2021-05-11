@@ -445,22 +445,22 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
-  mainUtilities.createConversion = function(macromoleculeName, regulator, regulatorMultimer, orientation, inputInfoboxLabel, outputInfoboxLabel) {
+  mainUtilities.createConversion = function(macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createConversion(macromoleculeName, regulator, regulatorMultimer, orientation, inputInfoboxLabel, outputInfoboxLabel);
+      elementUtilities.createConversion(macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels);
     }
     else {
       const param = {
-        macromoleculeName: macromoleculeName,
+        macromolecule: macromolecule,
         regulator: regulator,
         regulatorMultimer: regulatorMultimer,
         orientation: orientation,
-        inputInfoboxLabel: inputInfoboxLabel,
-        outputInfoboxLabel: outputInfoboxLabel
+        inputInfoboxLabels: inputInfoboxLabels,
+        outputInfoboxLabels: outputInfoboxLabels
       };
 
       cy.undoRedo().do("createConversion", param);
