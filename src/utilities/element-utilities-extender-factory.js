@@ -605,21 +605,18 @@ module.exports = function () {
         elementUtilities.setMultimerStatus(inputNode, true);
 
         const cardinality = macromoleculeMultimerCardinality;
-        const infoboxLabel = "N:" + cardinality;
-        infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: infoboxLabel
-          },
-          bbox: {
-            w: infoboxLabel.length * widthPerChar,
-            h: minInfoboxDimension
-          },
-          style: {
-            "shape-name": "ellipse"
-          }
-        };
         if (cardinality != '') {
+          const infoboxLabel = "N:" + cardinality;
+          infoboxObject = {
+            clazz: "unit of information",
+            label: {
+              text: infoboxLabel
+            },
+            bbox: {
+              w: infoboxLabel.length * widthPerChar,
+              h: minInfoboxDimension
+            }
+          };
           elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
         }
       }
@@ -664,21 +661,18 @@ module.exports = function () {
         elementUtilities.setMultimerStatus(outputNode, true);
 
         const cardinality = macromoleculeMultimerCardinality;
-        const infoboxLabel = "N:" + cardinality;
-        infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: infoboxLabel
-          },
-          bbox: {
-            w: infoboxLabel.length * widthPerChar,
-            h: minInfoboxDimension
-          },
-          style: {
-            "shape-name": "ellipse"
-          }
-        };
         if (cardinality != '') {
+          const infoboxLabel = "N:" + cardinality;
+          infoboxObject = {
+            clazz: "unit of information",
+            label: {
+              text: infoboxLabel
+            },
+            bbox: {
+              w: infoboxLabel.length * widthPerChar,
+              h: minInfoboxDimension
+            }
+          };
           elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
         }
       }
@@ -702,6 +696,14 @@ module.exports = function () {
         };
         elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
       });
+
+      
+      [inputNode, outputNode].forEach(function(node){
+        const width = elementUtilities.calculateMinWidth(node);
+        
+        elementUtilities.resizeNodes(node, width, macromoleculeHeight, false, true);
+      });
+      
 
       let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
       outputEdge.data("justAdded", true);
@@ -728,21 +730,18 @@ module.exports = function () {
           elementUtilities.setMultimerStatus(regulatorNode, true);
 
           const cardinality = regulatorMultimer.cardinality;
-          const infoboxLabel = "N:" + cardinality;
-          infoboxObject = {
-            clazz: "unit of information",
-            label: {
-              text: infoboxLabel
-            },
-            bbox: {
-              w: infoboxLabel.length * widthPerChar,
-              h: minInfoboxDimension
-            },
-            style: {
-              "shape-name": "ellipse"
-            }
-          };
           if (cardinality != '') {
+            const infoboxLabel = "N:" + cardinality;
+            infoboxObject = {
+              clazz: "unit of information",
+              label: {
+                text: infoboxLabel
+              },
+              bbox: {
+                w: infoboxLabel.length * widthPerChar,
+                h: minInfoboxDimension
+              }
+            };
             elementUtilities.addStateOrInfoBox(regulatorNode, infoboxObject);
           }
         }
@@ -904,21 +903,19 @@ module.exports = function () {
           elementUtilities.setMultimerStatus(regulatorNode, true);
 
           const cardinality = regulatorMultimer.cardinality;
-          const infoboxLabel = "N:" + cardinality;
-          infoboxObject = {
-            clazz: "unit of information",
-            label: {
-              text: infoboxLabel
-            },
-            bbox: {
-              w: infoboxLabel.length * 6,
-              h: 15
-            },
-            style: {
-              "shape-name": "ellipse"
-            }
-          };
           if (cardinality != '') {
+            const infoboxLabel = "N:" + cardinality;
+            infoboxObject = {
+              clazz: "unit of information",
+              label: {
+                text: infoboxLabel
+              },
+              bbox: {
+                w: infoboxLabel.length * 6,
+                h: 15
+              }
+            };
+            
             elementUtilities.addStateOrInfoBox(regulatorNode, infoboxObject);
           }
         }
