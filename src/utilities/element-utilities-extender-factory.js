@@ -704,11 +704,20 @@ module.exports = function () {
         elementUtilities.resizeNodes(node, width, macromoleculeHeight, false, true);
       });
       
-      let newInputXPos = processPosition.x - edgeLength - processWidth / 2 - inputNode.data('bbox').w / 2;
-      inputNode.position('x', newInputXPos);
+      if (orientation === "horizontal") {
+        let newInputXPos = processPosition.x - edgeLength - processWidth / 2 - inputNode.data('bbox').w / 2;
+        inputNode.position('x', newInputXPos);
       
-      let newOutputXPos = processPosition.x + edgeLength + processWidth / 2 + outputNode.data('bbox').w / 2;
-      outputNode.position('x', newOutputXPos);
+        let newOutputXPos = processPosition.x + edgeLength + processWidth / 2 + outputNode.data('bbox').w / 2;
+        outputNode.position('x', newOutputXPos);
+      } 
+      else {
+        let newInputYPos = processPosition.y - edgeLength - processWidth / 2 - inputNode.data('bbox').h / 2;
+        inputNode.position('y', newInputYPos);
+      
+        let newOutputYPos = processPosition.y + edgeLength + processWidth / 2 + outputNode.data('bbox').h / 2;
+        outputNode.position('y', newOutputYPos);
+      }
 
       let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
       outputEdge.data("justAdded", true);
