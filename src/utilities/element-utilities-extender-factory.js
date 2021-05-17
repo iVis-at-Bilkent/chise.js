@@ -1441,6 +1441,10 @@ module.exports = function () {
         var fontSize = style['font-size'];
         var labelText = style['label'];
 
+        if (labelText === "" && node.data('label') && node.data('label') !== "") {
+          labelText = node.data('label');
+        }
+
         var labelWidth = elementUtilities.getWidthByContent( labelText, fontFamiliy, fontSize );
 
         var statesandinfos = node.data('statesandinfos');
