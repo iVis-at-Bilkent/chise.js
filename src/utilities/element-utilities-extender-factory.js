@@ -704,6 +704,11 @@ module.exports = function () {
         elementUtilities.resizeNodes(node, width, macromoleculeHeight, false, true);
       });
       
+      let newInputXPos = processPosition.x - edgeLength - processWidth / 2 - inputNode.data('bbox').w / 2;
+      inputNode.position('x', newInputXPos);
+      
+      let newOutputXPos = processPosition.x + edgeLength + processWidth / 2 + outputNode.data('bbox').w / 2;
+      outputNode.position('x', newOutputXPos);
 
       let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
       outputEdge.data("justAdded", true);
