@@ -589,8 +589,11 @@ module.exports = function () {
                                 : processPosition.x - offsetX;
 
       const proteinCount = proteinLabels.length;
-      const stepOffsetY = macromoleculeHeight + tilingPaddingVertical;
-      const offsetY = (proteinCount - 1) / 2 * (macromoleculeHeight + tilingPaddingVertical);
+
+      const macromoleculeDimension = orientation === "vertical" ? macromoleculeWidth : macromoleculeHeight;
+      const stepOffset = macromoleculeDimension + tilingPaddingVertical;
+      const offsetY = (proteinCount - 1) / 2 * (macromoleculeDimension + tilingPaddingVertical);
+      const horizontalOffsetX = (proteinCount - 1) / 2 * (macromoleculeDimension + tilingPaddingHorizontal);
       
       let yPosOfProtein = processPosition.y - offsetY;
 
@@ -603,10 +606,10 @@ module.exports = function () {
           nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
         }
 
-        const node = elementUtilities.addNode(xPosOfProtein, yPosOfProtein, {class: "macromolecule", language: "PD"});
+        const node = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: "macromolecule", language: "PD"});
         node.data("label", label);
         node.data("justAdded", true);
-        yPosOfProtein += stepOffsetY;
+        yPosOfProtein += stepOffset;
 
         const source = reverse ? processNode.id() : node.id();
         const target = reverse ? node.id() : processNode.id();
@@ -634,22 +637,33 @@ module.exports = function () {
       const complexEdge = elementUtilities.addEdge(source, target, {class: edgeClass, language: "PD"});
       complexEdge.data("justAdded", true);
 
-      yPosOfProtein = complex.position("y") - offsetY;
+      
+      if (orientation === "vertical") {
+        xPosOfProtein = complex.position("x") - horizontalOffsetX;
+        yPosOfProtein = complex.position("y");   
+      }
+      else {
+        xPosOfProtein = complex.position("x");
+        yPosOfProtein = complex.position("y") - offsetY;
+      }
 
       proteinLabels.forEach(function(label) {
 
         let nodePosition = {
-          x: complex.position("x"),
+          x: xPosOfProtein,
           y: yPosOfProtein
         }
-        if (orientation === "vertical") {
-          nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
-        }
         
-        const node = elementUtilities.addNode(complex.position('x'), yPosOfProtein, {class: "macromolecule", language: "PD"}, undefined, complex.id());
+        const node = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: "macromolecule", language: "PD"}, undefined, complex.id());
         node.data("label", label);
         node.data("justAdded", true);
-        yPosOfProtein += stepOffsetY;
+        
+        if (orientation === "vertical") {
+          xPosOfProtein += stepOffset;
+        }
+        else {
+          yPosOfProtein += stepOffset;
+        }
       });
 
       if (hasRegulator) {
