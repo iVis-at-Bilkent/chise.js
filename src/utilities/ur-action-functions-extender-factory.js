@@ -172,6 +172,26 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createComplexProteinFormation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createComplexProteinFormation(param.proteinLabels, param.complexLabel, param.regulator, param.orientation, param.reverse);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     undoRedoActionFunctions.createMultimerization = function(param) {
       let firstTime = param.firstTime;
       let eles;

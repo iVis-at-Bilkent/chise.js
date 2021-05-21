@@ -555,6 +555,160 @@ module.exports = function () {
       }
     }
 
+    elementUtilities.createComplexProteinFormation = function(proteinLabels, complexLabel, regulator, orientation, reverse) {
+      const hasRegulator = regulator.name !== undefined;
+      const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
+      const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
+      const defaultComplexProperties = elementUtilities.getDefaultProperties("complex");
+      const processWidth = defaultProcessProperties.width || 50;
+      const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
+      const macromoleculeHeight = defaultMacromoleculeProperties.height || 50; 
+      const processHeight = defaultProcessProperties.height || 50;
+      const regulatorHeight = defaultRegulatorProperties.height || 50;
+      const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      const edgeLength = 30;
+      const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
+      const minInfoboxDimension = 20;
+      const widthPerChar = 6;
+      const tilingPaddingVertical = 15;
+      const tilingPaddingHorizontal = 15;
+
+      cy.startBatch();
+
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      const processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
+      processNode.data('justAdded', true);
+
+      const offsetX = processWidth / 2 + edgeLength + macromoleculeWidth / 2;
+      let xPosOfProtein = reverse ? processPosition.x + offsetX
+                                : processPosition.x - offsetX;
+
+      const proteinCount = proteinLabels.length;
+      const stepOffsetY = macromoleculeHeight + tilingPaddingVertical;
+      const offsetY = (proteinCount - 1) / 2 * (macromoleculeHeight + tilingPaddingVertical);
+      
+      let yPosOfProtein = processPosition.y - offsetY;
+
+      proteinLabels.forEach(function(label) {
+        let nodePosition = {
+          x: xPosOfProtein,
+          y: yPosOfProtein
+        }
+        if (orientation === "vertical") {
+          nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+        }
+
+        const node = elementUtilities.addNode(xPosOfProtein, yPosOfProtein, {class: "macromolecule", language: "PD"});
+        node.data("label", label);
+        node.data("justAdded", true);
+        yPosOfProtein += stepOffsetY;
+
+        const source = reverse ? processNode.id() : node.id();
+        const target = reverse ? node.id() : processNode.id();
+        const edgeClass = reverse ? "production" : "consumption";
+        const edge = elementUtilities.addEdge(source, target, {class: edgeClass, language: "PD"});
+        edge.data("justAdded", true);
+      });
+
+      let complexPos = {
+        x: processPosition.x + (reverse ? -1 : 1) * offsetX,
+        y: processPosition.y
+      }
+
+      if (orientation === "vertical") {
+        complexPos = elementUtilities.rotate90(complexPos, processPosition); 
+      }
+
+      const complex = elementUtilities.addNode(complexPos.x, complexPos.y, {class: "complex", language: "PD"});
+      complex.data("label", complexLabel);
+      complex.data("justAdded", true);
+
+      const source = reverse ? complex.id() : processNode.id();
+      const target = reverse ? processNode.id() : complex.id();
+      const edgeClass = reverse ? "consumption" : "production";
+      const complexEdge = elementUtilities.addEdge(source, target, {class: edgeClass, language: "PD"});
+      complexEdge.data("justAdded", true);
+
+      yPosOfProtein = complex.position("y") - offsetY;
+
+      proteinLabels.forEach(function(label) {
+
+        let nodePosition = {
+          x: complex.position("x"),
+          y: yPosOfProtein
+        }
+        if (orientation === "vertical") {
+          nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+        }
+        
+        const node = elementUtilities.addNode(complex.position('x'), yPosOfProtein, {class: "macromolecule", language: "PD"}, undefined, complex.id());
+        node.data("label", label);
+        node.data("justAdded", true);
+        yPosOfProtein += stepOffsetY;
+      });
+
+      if (hasRegulator) {
+        const regulatorName = regulator.name;
+        const regulatorType = regulator.type;
+        const regulatorEdgeType = regulator.edgeType;
+        const regulatorMultimer = regulator.multimer;
+
+        let xPosOfRegulator = processPosition.x;
+        let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
+
+        nodePosition = {
+          x: xPosOfRegulator,
+          y: yPosOfRegulator
+        }
+        if (orientation === "vertical") {
+          nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+        }
+
+        let regulatorNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: regulatorType, language: 'PD'});
+        regulatorNode.data('justAdded', true);
+        regulatorNode.data('label', regulatorName);
+
+        if (regulatorMultimer.enabled) {
+          elementUtilities.setMultimerStatus(regulatorNode, true);
+
+          const cardinality = regulatorMultimer.cardinality;
+          if (cardinality != '') {
+            const infoboxLabel = "N:" + cardinality;
+            infoboxObject = {
+              clazz: "unit of information",
+              label: {
+                text: infoboxLabel
+              },
+              bbox: {
+                w: infoboxLabel.length * widthPerChar,
+                h: minInfoboxDimension
+              }
+            };
+            elementUtilities.addStateOrInfoBox(regulatorNode, infoboxObject);
+          }
+        }
+
+        let regulatorEdge = elementUtilities.addEdge(regulatorNode.id(), processNode.id(), {class: regulatorEdgeType, language: 'PD'});
+        regulatorEdge.data('justAdded', true);
+      }
+
+      cy.endBatch();
+
+      const eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles;
+
+    }
+
     elementUtilities.createMultimerization = function (macromolecule, regulator, regulatorMultimer, orientation) {
       const hasRegulator = regulator.name !== undefined;
       const macromoleculeName = macromolecule.name;
