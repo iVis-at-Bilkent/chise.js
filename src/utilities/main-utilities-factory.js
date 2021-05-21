@@ -445,6 +445,26 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createMultimerization = function(macromolecule, regulator, regulatorMultimer, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMultimerization(macromolecule, regulator, regulatorMultimer, orientation);
+    }
+    else {
+      const param = {
+        macromolecule: macromolecule,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createMultimerization", param);
+    }  
+  };
+
   mainUtilities.createConversion = function(macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;

@@ -172,6 +172,26 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createMultimerization = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createMultimerization(param.macromolecule, param.regulator, param.regulatorMultimer, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     undoRedoActionFunctions.createConversion = function(param) {
       let firstTime = param.firstTime;
       let eles;
