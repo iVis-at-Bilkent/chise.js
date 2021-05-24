@@ -772,10 +772,9 @@ module.exports = function () {
       inputEdge.data("justAdded", true);
 
       let cardinality = macromoleculeMultimerCardinality;
-      if (cardinality === '') {
-        cardinality = '2';
+      if (cardinality !== '') {
+        inputEdge.data("cardinality", cardinality);
       }
-      inputEdge.data("cardinality", cardinality)
 
       nodePosition = {
         x: xPosOfOutput,
@@ -791,19 +790,20 @@ module.exports = function () {
       outputNode.data("label", macromoleculeName);
       elementUtilities.setMultimerStatus(outputNode, true);
 
-      
-      const infoboxLabel = "N:" + cardinality;
-      infoboxObject = {
-        clazz: "unit of information",
-        label: {
-          text: infoboxLabel
-        },
-        bbox: {
-          w: infoboxLabel.length * widthPerChar,
-          h: minInfoboxDimension
-        }
-      };
-      elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+      if (cardinality !== '') {
+        const infoboxLabel = "N:" + cardinality;
+        infoboxObject = {
+          clazz: "unit of information",
+          label: {
+            text: infoboxLabel
+          },
+          bbox: {
+            w: infoboxLabel.length * widthPerChar,
+            h: minInfoboxDimension
+          }
+        };
+        elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+      }
 
       let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
       outputEdge.data("justAdded", true);
