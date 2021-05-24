@@ -555,7 +555,7 @@ module.exports = function () {
       }
     }
 
-    elementUtilities.createDegredation = function(macromolecule, orientation) {
+    elementUtilities.createDegradation = function(macromolecule, orientation) {
       const macromoleculeName = macromolecule.name;
       const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
       const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;

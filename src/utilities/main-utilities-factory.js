@@ -445,13 +445,13 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
-  mainUtilities.createDegredation = function(macromolecule, orientation) {
+  mainUtilities.createDegradation = function(macromolecule, orientation) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
 
     if (!options.undoable) {
-      elementUtilities.createDegredation(macromolecule, orientation);
+      elementUtilities.createDegradation(macromolecule, orientation);
     }
     else {
       const param = {
@@ -459,7 +459,7 @@ module.exports = function () {
         orientation: orientation
       };
 
-      cy.undoRedo().do("createDegredation", param);
+      cy.undoRedo().do("createDegradation", param);
     }  
   };
 

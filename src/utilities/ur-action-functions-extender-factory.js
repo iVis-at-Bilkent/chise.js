@@ -172,12 +172,12 @@ module.exports = function () {
       };
     };
 
-    undoRedoActionFunctions.createDegredation = function(param) {
+    undoRedoActionFunctions.createDegradation = function(param) {
       let firstTime = param.firstTime;
       let eles;
 
       if (firstTime) {
-        eles = elementUtilities.createDegredation(param.macromolecule, param.orientation);
+        eles = elementUtilities.createDegradation(param.macromolecule, param.orientation);
       }
       else {
         eles = param;
