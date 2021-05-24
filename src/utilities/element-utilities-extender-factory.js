@@ -555,12 +555,78 @@ module.exports = function () {
       }
     }
 
+    elementUtilities.createDegredation = function(macromolecule, orientation) {
+      const macromoleculeName = macromolecule.name;
+      const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
+      const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
+      const processWidth = defaultProcessProperties.width || 50;
+      const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      const edgeLength = 30;
+      const vertical = orientation === "vertical";
+      const processPortsOrdering = vertical ? "T-to-B" : "L-to-R";
+
+      cy.startBatch();
+
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      const processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
+      processNode.data('justAdded', true);
+
+      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - macromoleculeWidth / 2;
+      let xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + macromoleculeWidth / 2;
+      let yPosOfInput = processPosition.y;
+      let yPosOfOutput = processPosition.y;
+
+      let nodePosition = {
+        x: xPosOfInput,
+        y: yPosOfInput
+      }
+      if (vertical) {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      let inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'macromolecule', language: 'PD'});
+      inputNode.data("justAdded", true);
+      inputNode.data("label", macromoleculeName);
+
+      let inputEdge = elementUtilities.addEdge(inputNode.id(), processNode.id(), {class: 'consumption', language: 'PD'})
+      inputEdge.data("justAdded", true);
+
+      nodePosition = {
+        x: xPosOfOutput,
+        y: yPosOfOutput
+      }
+
+      if (vertical) {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      let outputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'source and sink', language: 'PD'});
+      outputNode.data("justAdded", true);
+
+      let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
+      outputEdge.data("justAdded", true);
+
+      cy.endBatch();
+
+      const eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles;
+    }
+
     elementUtilities.createComplexProteinFormation = function(proteinLabels, complexLabel, regulator, orientation, reverse) {
       const hasRegulator = regulator.name !== undefined;
       const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
       const defaultRegulatorProperties = hasRegulator ? elementUtilities.getDefaultProperties(regulator.type) : {};
       const defaultProcessProperties = elementUtilities.getDefaultProperties("catalytic");
-      const defaultComplexProperties = elementUtilities.getDefaultProperties("complex");
       const processWidth = defaultProcessProperties.width || 50;
       const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
       const macromoleculeHeight = defaultMacromoleculeProperties.height || 50; 

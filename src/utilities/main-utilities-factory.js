@@ -445,6 +445,24 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createDegredation = function(macromolecule, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createDegredation(macromolecule, orientation);
+    }
+    else {
+      const param = {
+        macromolecule: macromolecule,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createDegredation", param);
+    }  
+  };
+
   mainUtilities.createComplexProteinFormation = function(proteinLabels, complexLabel, regulator, orientation, reverse) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;

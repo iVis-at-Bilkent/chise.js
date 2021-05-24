@@ -172,6 +172,26 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createDegredation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createDegredation(param.macromolecule, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     undoRedoActionFunctions.createComplexProteinFormation = function(param) {
       let firstTime = param.firstTime;
       let eles;
