@@ -555,6 +555,122 @@ module.exports = function () {
       }
     }
 
+    elementUtilities.createTranscription = function(label, orientation) {
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
+      const defaultProcessProperties = elementUtilities.getDefaultProperties("process")
+      const sourceAndSinkWidth = defaultSourceAndSinkProperties.width || 50;
+      const nucleicAcidFeatureWidth = defaultNucleicAcidFeatureProperties.width || 50;
+      const nucleicAcidFeatureHeight = defaultNucleicAcidFeatureProperties.height || 50;
+      const processWidth = defaultProcessProperties.width || 50;
+      const processHeight = defaultProcessProperties.height || 50;
+      const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
+      const edgeLength = 30;
+      const vertical = orientation === "vertical";
+      const processPortsOrdering = vertical ? "T-to-B" : "L-to-R";
+      const minInfoboxDimension = 15;
+      const widthPerChar = 6;
+      const outputInfoboxLabel = "ct:mRNA";
+      const regulatorInfoboxLabel = "ct:gene";
+
+      cy.startBatch();
+
+      if (!elementUtilities.getMapType()) {
+        elementUtilities.setMapType("PD");
+      }
+
+      const processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
+      elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
+      processNode.data('justAdded', true);
+
+      let xPosOfInput = processPosition.x - edgeLength - processWidth / 2 - sourceAndSinkWidth / 2;
+      let xPosOfOutput = processPosition.x + edgeLength + processWidth / 2 + nucleicAcidFeatureWidth / 2;
+      let yPosOfInput = processPosition.y;
+      let yPosOfOutput = processPosition.y;
+
+      let nodePosition = {
+        x: xPosOfInput,
+        y: yPosOfInput
+      }
+      if (vertical) {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      const inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'source and sink', language: 'PD'});
+      inputNode.data("justAdded", true);
+      inputNode.data("label", label);
+
+      const inputEdge = elementUtilities.addEdge(inputNode.id(), processNode.id(), {class: 'consumption', language: 'PD'})
+      inputEdge.data("justAdded", true);
+
+      nodePosition = {
+        x: xPosOfOutput,
+        y: yPosOfOutput
+      }
+
+      if (vertical) {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      const outputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'nucleic acid feature', language: 'PD'});
+      outputNode.data("justAdded", true);
+      outputNode.data("label", label);
+      infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: outputInfoboxLabel
+        },
+        bbox: {
+          w: Math.max(outputInfoboxLabel.length * widthPerChar, minInfoboxDimension),
+          h: minInfoboxDimension
+        }
+      };
+      elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
+
+      const outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
+      outputEdge.data("justAdded", true);
+
+      let xPosOfRegulator = processPosition.x;
+      const dimension = vertical ? nucleicAcidFeatureWidth : nucleicAcidFeatureHeight;
+      let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (dimension / 2) + edgeLength); 
+
+      nodePosition = {
+        x: xPosOfRegulator,
+        y: yPosOfRegulator
+      }
+      if (vertical) {
+        nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
+      }
+
+      const regulatorNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: "nucleic acid feature", language: 'PD'});
+      regulatorNode.data('justAdded', true);
+      regulatorNode.data('label', label);
+      infoboxObject = {
+        clazz: "unit of information",
+        label: {
+          text: regulatorInfoboxLabel
+        },
+        bbox: {
+          w: Math.max(regulatorInfoboxLabel.length * widthPerChar, minInfoboxDimension),
+          h: minInfoboxDimension
+        }
+      };
+      elementUtilities.addStateOrInfoBox(regulatorNode, infoboxObject);
+
+      const regulatorEdge = elementUtilities.addEdge(regulatorNode.id(), processNode.id(), {class: 'necessary stimulation', language: 'PD'});
+      regulatorEdge.data('justAdded', true);
+
+      cy.endBatch();
+
+      const eles = cy.elements('[justAdded]');
+      eles.removeData('justAdded');
+
+      cy.elements().unselect();
+      eles.select();
+
+      return eles;
+    }
+
     elementUtilities.createDegradation = function(macromolecule, orientation) {
       const macromoleculeName = macromolecule.name;
       const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");

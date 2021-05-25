@@ -445,6 +445,24 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createTranscription = function(label, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranscription(label, orientation);
+    }
+    else {
+      const param = {
+        label: label,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createTranscription", param);
+    }  
+  };
+
   mainUtilities.createDegradation = function(macromolecule, orientation) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
