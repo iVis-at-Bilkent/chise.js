@@ -172,6 +172,26 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createTranslation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranslation(param.regulatorLabel, param.outputLabel, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     undoRedoActionFunctions.createTranscription = function(param) {
       let firstTime = param.firstTime;
       let eles;

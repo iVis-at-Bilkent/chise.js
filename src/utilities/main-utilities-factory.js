@@ -445,6 +445,25 @@ module.exports = function () {
       cy.undoRedo().do("createTranscriptionReaction", param);
   }};
 
+  mainUtilities.createTranslation = function(regulatorLabel, outputLabel, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranslation(regulatorLabel, outputLabel, orientation);
+    }
+    else {
+      const param = {
+        regulatorLabel: regulatorLabel,
+        outputLabel: outputLabel,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createTranslation", param);
+    }  
+  };
+
   mainUtilities.createTranscription = function(label, orientation) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
