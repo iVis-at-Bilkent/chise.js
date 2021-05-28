@@ -860,6 +860,7 @@ module.exports = function () {
       const widthPerChar = 6;
       const tilingPaddingVertical = 15;
       const tilingPaddingHorizontal = 15;
+      const multimerOffset = 6;
 
       cy.startBatch();
 
@@ -960,6 +961,9 @@ module.exports = function () {
         const regulatorMultimer = regulator.multimer;
 
         let xPosOfRegulator = processPosition.x;
+        if (regulatorMultimer.enabled && orientation === "horizontal") {
+          xPosOfRegulator -= multimerOffset;
+        }
         let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
 
         nodePosition = {
@@ -1027,6 +1031,7 @@ module.exports = function () {
       const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
       const minInfoboxDimension = 20;
       const widthPerChar = 6;
+      const multimerOffset = 6;
 
       cy.startBatch();
 
@@ -1101,6 +1106,9 @@ module.exports = function () {
         const regulatorEdgeType = regulator.edgeType;
 
         let xPosOfRegulator = processPosition.x;
+        if (regulatorMultimer.enabled && orientation === "horizontal") {
+          xPosOfRegulator -= multimerOffset;
+        }
         let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
 
         nodePosition = {
@@ -1168,6 +1176,7 @@ module.exports = function () {
       const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
       const minInfoboxDimension = 20;
       const widthPerChar = 6;
+      const multimerOffset = 6;
 
       cy.startBatch();
 
@@ -1321,6 +1330,9 @@ module.exports = function () {
         const regulatorName = regulator.name;
         const regulatorType = regulator.type;
         let xPosOfRegulator = processPosition.x;
+        if (regulatorMultimer.enabled && orientation === "horizontal") {
+          xPosOfRegulator -= multimerOffset;
+        }
         let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
 
         nodePosition = {
@@ -1397,11 +1409,11 @@ module.exports = function () {
       const regulatorHeight = defaultRegulatorProperties.height || 50;
       const processPosition = elementUtilities.convertToModelPosition({x: cy.width() / 2, y: cy.height() / 2});
       const tilingPaddingVertical = 15;
-      const tilingPaddingHorizontal = 15;
       const edgeLength = 30;
       const processLeftSideEdgeType = reversible ? "production" : "consumption";
       const processRightSideEdgeType = "production";
       const processPortsOrdering = orientation === "vertical" ? "T-to-B" : "L-to-R";
+      const multimerOffset = 6;
 
       cy.startBatch();
       if (!elementUtilities.getMapType()) {
@@ -1494,6 +1506,9 @@ module.exports = function () {
         const regulatorName = regulator.name;
         const regulatorType = regulator.type;
         let xPosOfRegulator = processPosition.x;
+        if (regulatorMultimer.enabled && orientation === "horizontal") {
+          xPosOfRegulator -= multimerOffset;
+        }
         let yPosOfRegulator = processPosition.y - ((processHeight / 2) + (regulatorHeight / 2) + edgeLength); 
 
         let nodePosition = {
