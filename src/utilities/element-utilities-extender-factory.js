@@ -389,7 +389,7 @@ module.exports = function () {
 
     elementUtilities.createTranslationReaction = function(mRnaName, proteinName, processPosition, edgeLength) {
       const defaultProcessProperties = elementUtilities.getDefaultProperties("translation");
-      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("empty set");
       const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
       const defaultMacromoleculeProperties = elementUtilities.getDefaultProperties("macromolecule");
       const macromoleculeWidth = defaultMacromoleculeProperties.width || 50;
@@ -411,7 +411,7 @@ module.exports = function () {
 
       const xPosOfSourceAndSinkNode = processPosition.x - edgeLength - processWidth / 2 - sourceAndSinkWidth / 2;
       const yPosOfSourceAndSinkNode = processPosition.y;
-      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'source and sink', language: 'PD'});
+      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'empty set', language: 'PD'});
       sourceAndSinkNode.data('justAdded', true);
 
       var consumptionEdge = elementUtilities.addEdge(sourceAndSinkNode.id(), processNode.id(), {class: 'consumption', language: 'PD'});
@@ -460,7 +460,7 @@ module.exports = function () {
 
     elementUtilities.createTranscriptionReaction = function(geneName, mRnaName, processPosition, edgeLength) {
       const defaultProcessProperties = elementUtilities.getDefaultProperties("transcription");
-      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("empty set");
       const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
       const sourceAndSinkWidth = defaultSourceAndSinkProperties.width  || 50;
       const nucleicAcidFeatureHeight = defaultNucleicAcidFeatureProperties.height || 50;
@@ -481,7 +481,7 @@ module.exports = function () {
 
       const xPosOfSourceAndSinkNode = processPosition.x - edgeLength - processWidth / 2 - sourceAndSinkWidth / 2;
       const yPosOfSourceAndSinkNode = processPosition.y;
-      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'source and sink', language: 'PD'});
+      var sourceAndSinkNode = elementUtilities.addNode(xPosOfSourceAndSinkNode, yPosOfSourceAndSinkNode, {class: 'empty set', language: 'PD'});
       sourceAndSinkNode.data('justAdded', true);
 
       var consumptionEdge = elementUtilities.addEdge(sourceAndSinkNode.id(), processNode.id(), {class: 'consumption', language: 'PD'});
@@ -556,7 +556,7 @@ module.exports = function () {
     }
 
     elementUtilities.createTranslation = function(regulatorLabel, outputLabel, orientation) {
-      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("empty set");
       const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
       const defaultMacromoleculePropeties = elementUtilities.getDefaultProperties("macromolecule")
       const defaultProcessProperties = elementUtilities.getDefaultProperties("process");
@@ -597,7 +597,7 @@ module.exports = function () {
         nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
       }
 
-      const inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'source and sink', language: 'PD'});
+      const inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'empty set', language: 'PD'});
       inputNode.data("justAdded", true);
       inputNode.data("label", label);
 
@@ -662,7 +662,7 @@ module.exports = function () {
     }
 
     elementUtilities.createTranscription = function(label, orientation) {
-      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("source and sink");
+      const defaultSourceAndSinkProperties = elementUtilities.getDefaultProperties("empty set");
       const defaultNucleicAcidFeatureProperties = elementUtilities.getDefaultProperties("nucleic acid feature");
       const defaultProcessProperties = elementUtilities.getDefaultProperties("process")
       const sourceAndSinkWidth = defaultSourceAndSinkProperties.width || 50;
@@ -702,7 +702,7 @@ module.exports = function () {
         nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
       }
 
-      const inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'source and sink', language: 'PD'});
+      const inputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'empty set', language: 'PD'});
       inputNode.data("justAdded", true);
 
       const inputEdge = elementUtilities.addEdge(inputNode.id(), processNode.id(), {class: 'consumption', language: 'PD'})
@@ -826,7 +826,7 @@ module.exports = function () {
         nodePosition = elementUtilities.rotate90(nodePosition, processPosition);
       }
 
-      let outputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'source and sink', language: 'PD'});
+      let outputNode = elementUtilities.addNode(nodePosition.x, nodePosition.y, {class: 'empty set', language: 'PD'});
       outputNode.data("justAdded", true);
 
       let outputEdge = elementUtilities.addEdge(processNode.id(), outputNode.id(), {class: 'production', language: 'PD'})
