@@ -46,7 +46,8 @@ module.exports = function () {
         }
       };
 
-      cy.undoRedo().do("addNode", param);
+      var result = cy.undoRedo().do("addNode", param);
+      return result.eles;
     }
   };
 
