@@ -23,7 +23,7 @@ module.exports = function () {
     // Add remove utilities
 
     elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
-      alert("I am adding a node");
+   
       if (typeof nodeParams != 'object'){
         var sbgnclass = nodeParams;
       } else {
@@ -166,7 +166,6 @@ module.exports = function () {
     //For reversible reactions both side of the process can be input/output
     //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
     elementUtilities.addEdge = function (source, target, edgeParams, id, visibility, groupID ) {
-      alert("I am adding an edge")
       if (typeof edgeParams != 'object'){
         var sbgnclass = edgeParams;
       } else {
@@ -2410,6 +2409,8 @@ module.exports = function () {
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
       var sourceclass = source.data('class');
       var targetclass = target.data('class');
+      //console.log("Sourceclass", sourceclass);
+      //console.log("Targetclass", targetclass);
       var mapType = elementUtilities.getMapType();
       var edgeConstraints = elementUtilities[mapType].connectivityConstraints[edgeclass];
 
