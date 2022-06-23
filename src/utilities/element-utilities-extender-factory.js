@@ -32,10 +32,12 @@ module.exports = function () {
       }
 
       var css = {};
+      //('sbgnclass', sbgnclass)
       // if there is no specific default width or height for
       // sbgnclass these sizes are used
       var defaultWidth = 50;
       var defaultHeight = 50;
+    
 
       if (visibility) {
         css.visibility = visibility;
@@ -54,6 +56,7 @@ module.exports = function () {
         ports: []
       };
 
+      //console.log("data", data)
       if(id) {
         data.id = id;
       }
@@ -68,6 +71,7 @@ module.exports = function () {
       this.extendNodeDataWithClassDefaults( data, sbgnclass );
 
       // some defaults are not set by extendNodeDataWithClassDefaults()
+      //console.log("sbgnclass", sbgnclass)
       var defaults = this.getDefaultProperties( sbgnclass );
 
       if ( defaults[ 'multimer' ] ) {
@@ -81,6 +85,7 @@ module.exports = function () {
       data.bbox[ 'w' ] = defaults[ 'width' ];
       data.bbox[ 'h' ] = defaults[ 'height' ];
 
+      //console.log("data", data)
       var eles = cy.add({
         group: "nodes",
         data: data,
@@ -90,6 +95,8 @@ module.exports = function () {
           y: y
         }
       });
+
+      //console.log('eles', eles)
 
       var newNode = eles[eles.length - 1];
       // Get the default ports ordering for the nodes with given sbgnclass
@@ -120,6 +127,7 @@ module.exports = function () {
       // node bg image was unexpectedly not rendered until it is clicked
       // use this dirty hack until finding a solution to the problem
       var bgImage = newNode.data('background-image');
+      //alert('bgImage', bgImage)
       if ( bgImage ) {
         newNode.data( 'background-image', bgImage );
       }
@@ -580,7 +588,6 @@ module.exports = function () {
       if (!elementUtilities.getMapType()) {
         elementUtilities.setMapType("PD");
       }
-
       const processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
       elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
       processNode.data('justAdded', true);
@@ -2402,6 +2409,7 @@ module.exports = function () {
     // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid
     // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
     elementUtilities.validateArrowEnds = function (edge, source, target, isReplacement) {
+
       // if map type is Unknown -- no rules applied
       if (elementUtilities.getMapType() == "HybridAny" || elementUtilities.getMapType() == "HybridSbgn" || !elementUtilities.getMapType())
         return "valid";
@@ -2409,8 +2417,6 @@ module.exports = function () {
       var edgeclass = typeof edge === 'string' ? edge : edge.data('class');
       var sourceclass = source.data('class');
       var targetclass = target.data('class');
-      //console.log("Sourceclass", sourceclass);
-      //console.log("Targetclass", targetclass);
       var mapType = elementUtilities.getMapType();
       var edgeConstraints = elementUtilities[mapType].connectivityConstraints[edgeclass];
 
@@ -2774,6 +2780,7 @@ module.exports = function () {
     }
 
     elementUtilities.getBackgroundImageURL = function (eles) {
+      ('getting background images')
       if(!eles || eles.length < 1)
         return;
 
