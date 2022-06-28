@@ -2398,6 +2398,26 @@ module.exports = function () {
       }
     };
 
+    //Need to add this to doc : TO-DO
+    elementUtilities.setActiveStatus = function (nodes, status) {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var sbgnclass = node.data('class');
+        var isActive = node.data('class').startsWith('active ');
+
+        if (status) { // Make multimer status true
+          if (!isActive) {
+            node.data('class', 'active ' + sbgnclass);
+          }
+        }
+        else { // Make multimer status false
+          if (isActive) {
+            node.data('class', sbgnclass.replace('active ', ''));
+          }
+        }
+      }
+    };
+
     // Change font properties of the given elements with given font data
     elementUtilities.changeFontProperties = function (eles, data) {
       for (var prop in data) {

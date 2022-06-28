@@ -895,6 +895,43 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.setActiveStatus = function (param) {
+      var firstTime = param.firstTime;
+      var nodes = param.nodes;
+      var status = param.status;
+      var resultStatus = {};
+
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var isActive = node.data('class').startsWith('active ');
+
+        resultStatus[node.id()] = isActive;
+      }
+
+      // If this is the first time change the status of all nodes at once.
+      // If not change status of each seperately to the values mapped to their id.
+      if (firstTime) {
+        elementUtilities.setActiveStatus(nodes, status);
+      }
+      else {
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          elementUtilities.setActiveStatus(node, status[node.id()]);
+        }
+      }
+
+    //  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+    //    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
+    //  }
+
+      var result = {
+        status: resultStatus,
+        nodes: nodes
+      };
+
+      return result;
+    };
+
     undoRedoActionFunctions.setCloneMarkerStatus = function (param) {
       var nodes = param.nodes;
       var status = param.status;
