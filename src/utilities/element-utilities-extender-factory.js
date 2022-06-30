@@ -81,6 +81,9 @@ module.exports = function () {
       if ( defaults[ 'clonemarker' ] ) {
         data[ 'clonemarker' ] = true;
       }
+      if ( defaults[ 'active' ] ) {
+        data.class = 'active '+ data.class;
+      }
 
       data.bbox[ 'w' ] = defaults[ 'width' ];
       data.bbox[ 'h' ] = defaults[ 'height' ];
@@ -167,6 +170,7 @@ module.exports = function () {
 
     //Modify aux unit layouts
     elementUtilities.modifyUnits = function (node, ele, anchorSide) {
+      console.log("elementUtilities.modifyUnits", node)
       instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
     };
 
@@ -2370,6 +2374,7 @@ module.exports = function () {
 
     //Check which anchorsides fits
     elementUtilities.checkFit = function (node, location) { //if no location given, it checks all possible locations
+      console.log("elementUtilities.checkFit", node)
       return sbgnvizInstance.classes.AuxUnitLayout.checkFit(node, cy, location);
     };
 
@@ -2408,14 +2413,17 @@ module.exports = function () {
         if (status) { // Make multimer status true
           if (!isActive) {
             node.data('class', 'active ' + sbgnclass);
+            //node.data('class', sbgnclass + ' multimer');
           }
         }
         else { // Make multimer status false
           if (isActive) {
             node.data('class', sbgnclass.replace('active ', ''));
+            //node.data('class', sbgnclass.replace(' multimer', ''));
           }
         }
       }
+      
     };
 
     // Change font properties of the given elements with given font data
