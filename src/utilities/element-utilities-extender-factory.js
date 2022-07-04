@@ -2459,6 +2459,12 @@ module.exports = function () {
         sourceclass = sourceclass.replace(/\s*multimer$/, '');
         targetclass = targetclass.replace(/\s*multimer$/, '');
       }
+      else if (mapType == "SBML"){
+        sourceclass = sourceclass.replace(/\s*multimer$/, '');
+        targetclass = targetclass.replace(/\s*multimer$/, '');
+        sourceclass = sourceclass.replace("active ", '');
+        targetclass = targetclass.replace("active ", '');
+      }
 
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
       function hasTooManyEdges(node, sourceOrTarget) {
