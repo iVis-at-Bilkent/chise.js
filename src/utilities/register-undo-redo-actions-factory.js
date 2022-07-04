@@ -46,6 +46,7 @@ module.exports = function () {
     ur.action("changeStateOrInfoBox", undoRedoActionFunctions.changeStateOrInfoBox, undoRedoActionFunctions.changeStateOrInfoBox);
     ur.action("setMultimerStatus", undoRedoActionFunctions.setMultimerStatus, undoRedoActionFunctions.setMultimerStatus);
     ur.action("setActiveStatus", undoRedoActionFunctions.setActiveStatus, undoRedoActionFunctions.setActiveStatus);
+    ur.action("setHypotheticalStatus", undoRedoActionFunctions.setHypotheticalStatus, undoRedoActionFunctions.setHypotheticalStatus);
     ur.action("setCloneMarkerStatus", undoRedoActionFunctions.setCloneMarkerStatus, undoRedoActionFunctions.setCloneMarkerStatus);
     ur.action("removeStateOrInfoBox", undoRedoActionFunctions.removeStateOrInfoBox, undoRedoActionFunctions.addStateOrInfoBox);
     ur.action("fitUnits", undoRedoActionFunctions.fitUnits, undoRedoActionFunctions.restoreUnits);

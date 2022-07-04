@@ -2426,6 +2426,38 @@ module.exports = function () {
       
     };
 
+    //Need to add this to doc : TO-DO
+    elementUtilities.setHypotheticalStatus = function (nodes, status) {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var sbgnclass = node.data('class');
+        var isHypothetical = node.data('class').includes('hypothetical');
+        var isActive = node.data('class').startsWith('active ');
+
+        if (status) { // Make multimer status true
+          if (!isHypothetical) {
+            if (isActive)
+            {
+              var tmp = sbgnclass.substring(7)
+              node.data('class', 'active hypothetical ' + tmp);
+            }
+            else{
+              node.data('class', 'hypothetical ' + sbgnclass);
+
+            }
+            //node.data('class', sbgnclass + ' multimer');
+          }
+        }
+        else { // Make multimer status false
+          if (isHypothetical) {
+            node.data('class', sbgnclass.replace('hypothetical ', ''));
+            //node.data('class', sbgnclass.replace(' multimer', ''));
+          }
+        }
+      }
+      
+    };
+
     // Change font properties of the given elements with given font data
     elementUtilities.changeFontProperties = function (eles, data) {
       for (var prop in data) {

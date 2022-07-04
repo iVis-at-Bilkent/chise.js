@@ -949,6 +949,27 @@ module.exports = function () {
     cy.style().update();
   };
 
+  mainUtilities.setHypotheticalStatus= function(nodes, status) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        status: status,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("setHypotheticalStatus", param);
+    }
+    else {
+      elementUtilities.setHypotheticalStatus(nodes, status);
+    }
+
+    cy.style().update();
+  };
+
   /**
    * Redraw clone markers on given nodes without considering undo.
    * See https://github.com/iVis-at-Bilkent/newt/issues/574 
