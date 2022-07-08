@@ -2508,6 +2508,8 @@ module.exports = function () {
       function hasTooManyEdges(node, sourceOrTarget) {
         var nodeclass = node.data('class');
         nodeclass = nodeclass.replace(/\s*multimer$/, '');
+        nodeclass = nodeclass.replace("active ", '');
+        nodeclass = nodeclass.replace("hypothetical ", '');
         if (nodeclass.startsWith("BA"))
           nodeclass = "biological activity";
 
