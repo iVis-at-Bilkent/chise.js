@@ -85,6 +85,10 @@ module.exports = function () {
         data.class = 'active '+ data.class;
       }
 
+      if ( defaults[ 'hypothetical' ] ) {
+        data.class = 'hypothetical '+ data.class;
+      }
+
       data.bbox[ 'w' ] = defaults[ 'width' ];
       data.bbox[ 'h' ] = defaults[ 'height' ];
 
@@ -2496,6 +2500,8 @@ module.exports = function () {
         targetclass = targetclass.replace(/\s*multimer$/, '');
         sourceclass = sourceclass.replace("active ", '');
         targetclass = targetclass.replace("active ", '');
+        sourceclass = sourceclass.replace("hypothetical ", '');
+        targetclass = targetclass.replace("hypothetical ", '');
       }
 
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
@@ -2692,6 +2698,7 @@ module.exports = function () {
      * a single string or an id to value map).
      */
     elementUtilities.changeData = function(eles, name, valueMap) {
+      console.log("changing data in chise")
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {

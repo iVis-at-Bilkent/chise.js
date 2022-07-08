@@ -941,9 +941,9 @@ module.exports = function () {
 
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
-        var isActive = node.data('class').includes('hypothetical');
+        var isHypothetical = node.data('class').includes('hypothetical');
 
-        resultStatus[node.id()] = isActive;
+        resultStatus[node.id()] = isHypothetical;
       }
 
       // If this is the first time change the status of all nodes at once.
@@ -955,6 +955,7 @@ module.exports = function () {
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           elementUtilities.setHypotheticalStatus(node, status[node.id()]);
+          //elementUtilities.setHypothteticalStatus
         }
       }
 
