@@ -2248,6 +2248,19 @@ module.exports = function () {
           }
           content += value;
           box.label.text = value;
+        }else  if (box.clazz == "residue variable") {
+          if (!result) {
+            result = box.residue[type];
+          }
+
+          box.residue[type] = value;
+          if (box.residue["value"] !== undefined) {
+            content += box.residue["value"];
+          }
+          if (box.residue["variable"] !== undefined && box.residue["variable"].length > 0) {
+            content += box.residue["variable"] + "@";
+          }
+
         }
 
         var min = ( sbgnclass === 'SIF macromolecule' || sbgnclass === 'SIF simple chemical' ) ? 15 : 12;
@@ -2339,6 +2352,9 @@ module.exports = function () {
         }
         else if (obj.clazz == "state variable") {
           locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
+        }
+        else if (obj.clazz == "residue variable") {
+          locationObj = sbgnvizInstance.classes.ResidueVariable.create(node, cy, obj.residue.value, obj.residue.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
       }
       return locationObj;
