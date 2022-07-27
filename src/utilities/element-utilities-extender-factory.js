@@ -2254,11 +2254,19 @@ module.exports = function () {
           }
 
           box.residue[type] = value;
-          if (box.residue["value"] !== undefined) {
-            content += box.residue["value"];
-          }
           if (box.residue["variable"] !== undefined && box.residue["variable"].length > 0) {
-            content += box.residue["variable"] + "@";
+            content += box.residue["variable"];
+          }
+
+        }
+        else  if (box.clazz == "binding region") {
+          if (!result) {
+            result = box.region[type];
+          }
+
+          box.region[type] = value;
+          if (box.region["variable"] !== undefined && box.region["variable"].length > 0) {
+            content += box.region["variable"];
           }
 
         }
