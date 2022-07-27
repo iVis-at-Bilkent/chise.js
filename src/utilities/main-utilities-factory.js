@@ -839,7 +839,6 @@ module.exports = function () {
     if (nodes.length === 0) {
       return;
     }
-
     if (!options.undoable) {
       elementUtilities.addStateOrInfoBox(nodes, obj);
     }
@@ -851,7 +850,6 @@ module.exports = function () {
 
       cy.undoRedo().do("addStateOrInfoBox", param);
     }
-
     cy.style().update();
   };
 

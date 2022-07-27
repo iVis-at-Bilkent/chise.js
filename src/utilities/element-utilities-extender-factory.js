@@ -2346,7 +2346,7 @@ module.exports = function () {
         if(obj.style){
           $.extend( style, obj.style );
         }
-       
+     
         if(obj.clazz == "unit of information") {
           locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
@@ -2355,6 +2355,9 @@ module.exports = function () {
         }
         else if (obj.clazz == "residue variable") {
           locationObj = sbgnvizInstance.classes.ResidueVariable.create(node, cy, obj.residue.value, obj.residue.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
+        }
+        else if (obj.clazz == "binding region") {
+          locationObj = sbgnvizInstance.classes.BindingRegion.create(node, cy, obj.region.value, obj.region.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
       }
       return locationObj;
