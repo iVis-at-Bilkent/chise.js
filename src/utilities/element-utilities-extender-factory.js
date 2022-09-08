@@ -73,6 +73,9 @@ module.exports = function () {
       // some defaults are not set by extendNodeDataWithClassDefaults()
       //console.log("sbgnclass", sbgnclass)
       var defaults = this.getDefaultProperties( sbgnclass );
+      console.log("sbgnclass", sbgnclass)
+
+      console.log("defaults", defaults)
 
       if ( defaults[ 'multimer' ] ) {
         data.class += ' multimer';
@@ -81,13 +84,14 @@ module.exports = function () {
       if ( defaults[ 'clonemarker' ] ) {
         data[ 'clonemarker' ] = true;
       }
+      if ( defaults[ 'hypothetical' ] ) {
+        data.class = 'hypothetical '+ data.class;
+      }
       if ( defaults[ 'active' ] ) {
         data.class = 'active '+ data.class;
       }
 
-      if ( defaults[ 'hypothetical' ] ) {
-        data.class = 'hypothetical '+ data.class;
-      }
+     
 
       data.bbox[ 'w' ] = defaults[ 'width' ];
       data.bbox[ 'h' ] = defaults[ 'height' ];
@@ -102,6 +106,7 @@ module.exports = function () {
           y: y
         }
       });
+      console.log("data.class",data.class)
 
       //console.log('eles', eles)
 
