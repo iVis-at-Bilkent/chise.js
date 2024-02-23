@@ -23,6 +23,7 @@ module.exports = function () {
     // Add remove utilities
 
     elementUtilities.addNode = function (x, y, nodeParams, id, parent, visibility) {
+   
       if (typeof nodeParams != 'object'){
         var sbgnclass = nodeParams;
       } else {
@@ -31,10 +32,12 @@ module.exports = function () {
       }
 
       var css = {};
+      //('sbgnclass', sbgnclass)
       // if there is no specific default width or height for
       // sbgnclass these sizes are used
       var defaultWidth = 50;
       var defaultHeight = 50;
+    
 
       if (visibility) {
         css.visibility = visibility;
@@ -53,6 +56,7 @@ module.exports = function () {
         ports: []
       };
 
+      //console.log("data", data)
       if(id) {
         data.id = id;
       }
@@ -67,7 +71,11 @@ module.exports = function () {
       this.extendNodeDataWithClassDefaults( data, sbgnclass );
 
       // some defaults are not set by extendNodeDataWithClassDefaults()
+      //console.log("sbgnclass", sbgnclass)
       var defaults = this.getDefaultProperties( sbgnclass );
+      console.log("sbgnclass", sbgnclass)
+
+      console.log("defaults", defaults)
 
       if ( defaults[ 'multimer' ] ) {
         data.class += ' multimer';
@@ -76,10 +84,19 @@ module.exports = function () {
       if ( defaults[ 'clonemarker' ] ) {
         data[ 'clonemarker' ] = true;
       }
+      if ( defaults[ 'hypothetical' ] ) {
+        data.class = 'hypothetical '+ data.class;
+      }
+      if ( defaults[ 'active' ] ) {
+        data.class = 'active '+ data.class;
+      }
+
+     
 
       data.bbox[ 'w' ] = defaults[ 'width' ];
       data.bbox[ 'h' ] = defaults[ 'height' ];
 
+      //console.log("data", data)
       var eles = cy.add({
         group: "nodes",
         data: data,
@@ -89,6 +106,9 @@ module.exports = function () {
           y: y
         }
       });
+      console.log("data.class",data.class)
+
+      //console.log('eles', eles)
 
       var newNode = eles[eles.length - 1];
       // Get the default ports ordering for the nodes with given sbgnclass
@@ -119,6 +139,7 @@ module.exports = function () {
       // node bg image was unexpectedly not rendered until it is clicked
       // use this dirty hack until finding a solution to the problem
       var bgImage = newNode.data('background-image');
+      //alert('bgImage', bgImage)
       if ( bgImage ) {
         newNode.data( 'background-image', bgImage );
       }
@@ -158,6 +179,7 @@ module.exports = function () {
 
     //Modify aux unit layouts
     elementUtilities.modifyUnits = function (node, ele, anchorSide) {
+      console.log("elementUtilities.modifyUnits", node)
       instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
     };
 
@@ -579,7 +601,6 @@ module.exports = function () {
       if (!elementUtilities.getMapType()) {
         elementUtilities.setMapType("PD");
       }
-
       const processNode = elementUtilities.addNode(processPosition.x, processPosition.y, {class: "process", language: "PD"});
       elementUtilities.setPortsOrdering(processNode, processPortsOrdering);
       processNode.data('justAdded', true);
@@ -2232,6 +2253,27 @@ module.exports = function () {
           }
           content += value;
           box.label.text = value;
+        }else  if (box.clazz == "residue variable") {
+          if (!result) {
+            result = box.residue[type];
+          }
+
+          box.residue[type] = value;
+          if (box.residue["variable"] !== undefined && box.residue["variable"].length > 0) {
+            content += box.residue["variable"];
+          }
+
+        }
+        else  if (box.clazz == "binding region") {
+          if (!result) {
+            result = box.region[type];
+          }
+
+          box.region[type] = value;
+          if (box.region["variable"] !== undefined && box.region["variable"].length > 0) {
+            content += box.region["variable"];
+          }
+
         }
 
         var min = ( sbgnclass === 'SIF macromolecule' || sbgnclass === 'SIF simple chemical' ) ? 15 : 12;
@@ -2317,12 +2359,18 @@ module.exports = function () {
         if(obj.style){
           $.extend( style, obj.style );
         }
-       
+     
         if(obj.clazz == "unit of information") {
           locationObj = sbgnvizInstance.classes.UnitOfInformation.create(node, cy, obj.label.text, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
         else if (obj.clazz == "state variable") {
           locationObj = sbgnvizInstance.classes.StateVariable.create(node, cy, obj.state.value, obj.state.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
+        }
+        else if (obj.clazz == "residue variable") {
+          locationObj = sbgnvizInstance.classes.ResidueVariable.create(node, cy, obj.residue.value, obj.residue.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
+        }
+        else if (obj.clazz == "binding region") {
+          locationObj = sbgnvizInstance.classes.BindingRegion.create(node, cy, obj.region.value, obj.region.variable, bbox, obj.location, obj.position, style, obj.index, obj.id);
         }
       }
       return locationObj;
@@ -2362,6 +2410,7 @@ module.exports = function () {
 
     //Check which anchorsides fits
     elementUtilities.checkFit = function (node, location) { //if no location given, it checks all possible locations
+      console.log("elementUtilities.checkFit", node)
       return sbgnvizInstance.classes.AuxUnitLayout.checkFit(node, cy, location);
     };
 
@@ -2390,6 +2439,61 @@ module.exports = function () {
       }
     };
 
+    //Need to add this to doc : TO-DO
+    elementUtilities.setActiveStatus = function (nodes, status) {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var sbgnclass = node.data('class');
+        var isActive = node.data('class').startsWith('active ');
+
+        if (status) { // Make multimer status true
+          if (!isActive) {
+            node.data('class', 'active ' + sbgnclass);
+            //node.data('class', sbgnclass + ' multimer');
+          }
+        }
+        else { // Make multimer status false
+          if (isActive) {
+            node.data('class', sbgnclass.replace('active ', ''));
+            //node.data('class', sbgnclass.replace(' multimer', ''));
+          }
+        }
+      }
+      
+    };
+
+    //Need to add this to doc : TO-DO
+    elementUtilities.setHypotheticalStatus = function (nodes, status) {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var sbgnclass = node.data('class');
+        var isHypothetical = node.data('class').includes('hypothetical');
+        var isActive = node.data('class').startsWith('active ');
+
+        if (status) { // Make multimer status true
+          if (!isHypothetical) {
+            if (isActive)
+            {
+              var tmp = sbgnclass.substring(7)
+              node.data('class', 'active hypothetical ' + tmp);
+            }
+            else{
+              node.data('class', 'hypothetical ' + sbgnclass);
+
+            }
+            //node.data('class', sbgnclass + ' multimer');
+          }
+        }
+        else { // Make multimer status false
+          if (isHypothetical) {
+            node.data('class', sbgnclass.replace('hypothetical ', ''));
+            //node.data('class', sbgnclass.replace(' multimer', ''));
+          }
+        }
+      }
+      
+    };
+
     // Change font properties of the given elements with given font data
     elementUtilities.changeFontProperties = function (eles, data) {
       for (var prop in data) {
@@ -2401,6 +2505,7 @@ module.exports = function () {
     // It may return 'valid' (that ends is valid for that edge), 'reverse' (that ends is not valid for that edge but they would be valid
     // if you reverse the source and target), 'invalid' (that ends are totally invalid for that edge).
     elementUtilities.validateArrowEnds = function (edge, source, target, isReplacement) {
+
       // if map type is Unknown -- no rules applied
       if (elementUtilities.getMapType() == "HybridAny" || elementUtilities.getMapType() == "HybridSbgn" || !elementUtilities.getMapType())
         return "valid";
@@ -2422,11 +2527,21 @@ module.exports = function () {
         sourceclass = sourceclass.replace(/\s*multimer$/, '');
         targetclass = targetclass.replace(/\s*multimer$/, '');
       }
+      else if (mapType == "SBML"){
+        sourceclass = sourceclass.replace(/\s*multimer$/, '');
+        targetclass = targetclass.replace(/\s*multimer$/, '');
+        sourceclass = sourceclass.replace("active ", '');
+        targetclass = targetclass.replace("active ", '');
+        sourceclass = sourceclass.replace("hypothetical ", '');
+        targetclass = targetclass.replace("hypothetical ", '');
+      }
 
       // given a node, acting as source or target, returns boolean wether or not it has too many edges already
       function hasTooManyEdges(node, sourceOrTarget) {
         var nodeclass = node.data('class');
         nodeclass = nodeclass.replace(/\s*multimer$/, '');
+        nodeclass = nodeclass.replace("active ", '');
+        nodeclass = nodeclass.replace("hypothetical ", '');
         if (nodeclass.startsWith("BA"))
           nodeclass = "biological activity";
 
@@ -2617,6 +2732,7 @@ module.exports = function () {
      * a single string or an id to value map).
      */
     elementUtilities.changeData = function(eles, name, valueMap) {
+      console.log("changing data in chise")
       if ( typeof valueMap === 'object' ) {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
@@ -2771,6 +2887,7 @@ module.exports = function () {
     }
 
     elementUtilities.getBackgroundImageURL = function (eles) {
+      ('getting background images')
       if(!eles || eles.length < 1)
         return;
 

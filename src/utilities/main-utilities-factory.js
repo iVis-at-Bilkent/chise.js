@@ -839,7 +839,6 @@ module.exports = function () {
     if (nodes.length === 0) {
       return;
     }
-
     if (!options.undoable) {
       elementUtilities.addStateOrInfoBox(nodes, obj);
     }
@@ -851,7 +850,6 @@ module.exports = function () {
 
       cy.undoRedo().do("addStateOrInfoBox", param);
     }
-
     cy.style().update();
   };
 
@@ -923,6 +921,48 @@ module.exports = function () {
     }
     else {
       elementUtilities.setMultimerStatus(nodes, status);
+    }
+
+    cy.style().update();
+  };
+
+  mainUtilities.setActiveStatus = function(nodes, status) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        status: status,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("setActiveStatus", param);
+    }
+    else {
+      elementUtilities.setActiveStatus(nodes, status);
+    }
+
+    cy.style().update();
+  };
+
+  mainUtilities.setHypotheticalStatus= function(nodes, status) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        status: status,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("setHypotheticalStatus", param);
+    }
+    else {
+      elementUtilities.setHypotheticalStatus(nodes, status);
     }
 
     cy.style().update();
