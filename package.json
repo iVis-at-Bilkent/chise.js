@@ -20,8 +20,8 @@
   "peer-dependencies": {
     "jquery": "^2.2.4",
     "file-saver": "^2.0.2",
-    "cytoscape": "iVis-at-Bilkent/cytoscape.js#unstable",
-    "sbgnviz": "github:iVis-at-Bilkent/sbgnviz.js#unstable",
+    "cytoscape": "iVis-at-Bilkent/cytoscape.js#GPML",
+    "sbgnviz": "github:iVis-at-Bilkent/sbgnviz.js#GPML",
     "tippy.js": "^3.4.0"
   },
   "devDependencies": {
