@@ -208,7 +208,6 @@ module.exports = function () {
       };
 
       var defaults = elementUtilities.getDefaultProperties( sbgnclass );
-
       // extend the data with default properties of edge style
       Object.keys( defaults ).forEach( function( prop ) {
         data[ prop ] = defaults[ prop ];
@@ -224,7 +223,6 @@ module.exports = function () {
       if(elementUtilities.canHaveSBGNCardinality(sbgnclass)){
         data.cardinality = 0;
       }
-
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
       var sourceHasPorts = sourceNode.data('ports').length === 2;
@@ -286,12 +284,12 @@ module.exports = function () {
           targetNodeOutputPortId = ioPorts.outputPortId;
         }
 
-        if (sbgnclass === 'consumption') {
+        if (sbgnclass === 'consumption'||sbgnclass==='translation consumption'||sbgnclass==='transcription consumption') {
           // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
           portsource = sourceNodeOutputPortId;
           porttarget = targetNodeInputPortId;
         }
-        else if (sbgnclass === 'production') {
+        else if (sbgnclass === 'production' ||sbgnclass==='translation production'||sbgnclass==='transcription production') {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
           // The below assignment satisfy all of these condition
