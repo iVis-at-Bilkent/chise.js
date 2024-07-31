@@ -5,15 +5,6 @@ var jQuery = ($ = libs.jQuery);
 module.exports = function () {
   var options, sbgnvizInstance, elementUtilities, cy;
 
-  const modulation_arcs = [
-    "unknown catalysis",
-    "catalysis",
-    "inhibition",
-    "unknown inhibition",
-    "stimulation",
-    "modulation",
-    "trigger",
-  ];
 
   function elementUtilitiesExtender(param) {
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
@@ -252,6 +243,7 @@ module.exports = function () {
       var portsource;
       var porttarget;
 
+
       /*
        * Get input/output port id's of a node with the assumption that the node has valid ports.
        */
@@ -311,8 +303,9 @@ module.exports = function () {
           sourceNodeOutputPortId = ioPorts.outputPortId;
         }
 
+        // && (elementUtilities.isModulationArcClass(sbgnclass) && )
         // If target node has ports set the variables dedicated for its IO ports
-        if (targetHasPorts) {
+        if (targetHasPorts && !(elementUtilities.isModulationArcClass(sbgnclass) && elementUtilities.isProcessNode(targetNode.data('class')))) {
           var ioPorts = getIOPortIds(targetNode);
           targetNodeInputPortId = ioPorts.inputPortId;
           targetNodeOutputPortId = ioPorts.outputPortId;
