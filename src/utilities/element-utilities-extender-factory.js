@@ -196,6 +196,13 @@ module.exports = function () {
       visibility,
       groupID
     ) {
+
+      console.log(source,
+        target,
+        edgeParams,
+        id,
+        visibility,
+        groupID);
       if (typeof edgeParams != "object") {
         var sbgnclass = edgeParams;
       } else {
@@ -318,7 +325,8 @@ module.exports = function () {
         } else if (
           sbgnclass === "production" ||
           sbgnclass === "translation production" ||
-          sbgnclass === "transcription production"
+          sbgnclass === "transcription production"||
+          sbgnclass === "transport"
         ) {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
           // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
