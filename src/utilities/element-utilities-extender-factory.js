@@ -78,9 +78,6 @@ module.exports = function () {
       // some defaults are not set by extendNodeDataWithClassDefaults()
       //console.log("sbgnclass", sbgnclass)
       var defaults = this.getDefaultProperties(sbgnclass);
-      console.log("sbgnclass", sbgnclass);
-
-      console.log("defaults", defaults);
 
       if (defaults["multimer"]) {
         data.class += " multimer";
@@ -109,7 +106,6 @@ module.exports = function () {
           y: y,
         },
       });
-      console.log("data.class", data.class);
 
       //console.log('eles', eles)
 
@@ -3361,7 +3357,6 @@ module.exports = function () {
       var mapType = elementUtilities.getMapType();
       var edgeConstraints =
         elementUtilities[mapType].connectivityConstraints[edgeclass];
-
       if (mapType == "AF") {
         if (sourceclass.startsWith("BA"))
           // we have separate classes for each biological activity
