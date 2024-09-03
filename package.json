@@ -1,6 +1,6 @@
 {
   "name": "chise",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "SBGNPD editing library",
   "main": "chise.js",
   "licence": "LGPL-3.0",
