@@ -21,7 +21,7 @@
     "jquery": "^3.3.1",
     "file-saver": "^2.0.2",
     "cytoscape": "iVis-at-Bilkent/cytoscape.js#master",
-    "sbgnviz": "^6.0.0",
+    "sbgnviz": "^7.0.0",
     "tippy.js": "^3.4.0"
   },
   "devDependencies": {
