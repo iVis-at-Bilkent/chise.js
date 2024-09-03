@@ -62,7 +62,6 @@ module.exports = function () {
         ports: [],
       };
 
-      //console.log("data", data)
       if (id) {
         data.id = id;
       } else {
@@ -76,7 +75,6 @@ module.exports = function () {
       this.extendNodeDataWithClassDefaults(data, sbgnclass);
 
       // some defaults are not set by extendNodeDataWithClassDefaults()
-      //console.log("sbgnclass", sbgnclass)
       var defaults = this.getDefaultProperties(sbgnclass);
 
       if (defaults["multimer"]) {
@@ -96,7 +94,6 @@ module.exports = function () {
       data.bbox["w"] = defaults["width"];
       data.bbox["h"] = defaults["height"];
 
-      //console.log("data", data)
       var eles = cy.add({
         group: "nodes",
         data: data,
@@ -106,8 +103,6 @@ module.exports = function () {
           y: y,
         },
       });
-
-      //console.log('eles', eles)
 
       var newNode = eles[eles.length - 1];
       // Get the default ports ordering for the nodes with given sbgnclass
@@ -182,7 +177,6 @@ module.exports = function () {
 
     //Modify aux unit layouts
     elementUtilities.modifyUnits = function (node, ele, anchorSide) {
-      console.log("elementUtilities.modifyUnits", node);
       instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
     };
 
@@ -197,12 +191,6 @@ module.exports = function () {
       groupID
     ) {
 
-      console.log(source,
-        target,
-        edgeParams,
-        id,
-        visibility,
-        groupID);
       if (typeof edgeParams != "object") {
         var sbgnclass = edgeParams;
       } else {
@@ -325,7 +313,7 @@ module.exports = function () {
         } else if (
           sbgnclass === "production" ||
           sbgnclass === "translation production" ||
-          sbgnclass === "transcription production"||
+          sbgnclass === "transcription production" ||
           sbgnclass === "transport"
         ) {
           // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
@@ -1961,7 +1949,7 @@ module.exports = function () {
       let yPosOfInput =
         processPosition.y -
         ((numOfInputNodes - 1) / 2) *
-          (simpleChemicalHeight + tilingPaddingVertical);
+        (simpleChemicalHeight + tilingPaddingVertical);
 
       inputs.forEach(function (data, index) {
         const nodeName = data.name;
@@ -1973,7 +1961,7 @@ module.exports = function () {
           yPosOfInput =
             processPosition.y -
             (simpleChemicalHeight + tilingPaddingVertical) *
-              Math.ceil(index / 2);
+            Math.ceil(index / 2);
         } else {
           yPosOfInput =
             processPosition.y +
@@ -2017,7 +2005,7 @@ module.exports = function () {
       let yPosOfOutput =
         processPosition.y -
         ((numOfOutputNodes - 1) / 2) *
-          (simpleChemicalHeight + tilingPaddingVertical);
+        (simpleChemicalHeight + tilingPaddingVertical);
 
       outputs.forEach(function (data, index) {
         const nodeName = data.name;
@@ -2029,7 +2017,7 @@ module.exports = function () {
           yPosOfOutput =
             processPosition.y -
             (simpleChemicalHeight + tilingPaddingVertical) *
-              Math.ceil(index / 2);
+            Math.ceil(index / 2);
         } else {
           yPosOfOutput =
             processPosition.y +
@@ -2193,7 +2181,7 @@ module.exports = function () {
       var yPosOfInput =
         processPosition.y -
         ((numOfInputNodes - 1) / 2) *
-          (macromoleculeHeight + tilingPaddingVertical);
+        (macromoleculeHeight + tilingPaddingVertical);
 
       // add input side nodes
       for (var i = 0; i < numOfInputNodes; i++) {
@@ -2224,7 +2212,7 @@ module.exports = function () {
       var yPosOfOutput =
         processPosition.y -
         ((numOfOutputNodes - 1) / 2) *
-          (macromoleculeHeight + tilingPaddingVertical);
+        (macromoleculeHeight + tilingPaddingVertical);
 
       // add output side nodes
       for (var i = 0; i < numOfOutputNodes; i++) {
@@ -2497,7 +2485,7 @@ module.exports = function () {
       var yPosition =
         processPosition.y -
         ((numOfMolecules - 1) / 2) *
-          (macromoleculeHeight + tilingPaddingVertical);
+        (macromoleculeHeight + tilingPaddingVertical);
 
       //Create the free molecules
       for (var i = 0; i < numOfMolecules; i++) {
@@ -2619,7 +2607,7 @@ module.exports = function () {
         yPosition =
           processPosition.y -
           ((numOfInputMacromolecules - 1) / 2) *
-            (macromoleculeHeight + tilingPaddingVertical);
+          (macromoleculeHeight + tilingPaddingVertical);
 
         for (var i = 0; i < numOfInputMacromolecules; i++) {
           if (complexName[i].type == "Simple Chemical") {
@@ -3063,7 +3051,7 @@ module.exports = function () {
 
         var min =
           sbgnclass === "SIF macromolecule" ||
-          sbgnclass === "SIF simple chemical"
+            sbgnclass === "SIF simple chemical"
             ? 15
             : 12;
         var fontFamily = box.style["font-family"];
@@ -3248,7 +3236,6 @@ module.exports = function () {
     //Check which anchorsides fits
     elementUtilities.checkFit = function (node, location) {
       //if no location given, it checks all possible locations
-      console.log("elementUtilities.checkFit", node);
       return sbgnvizInstance.classes.AuxUnitLayout.checkFit(node, cy, location);
     };
 
@@ -3595,7 +3582,6 @@ module.exports = function () {
      * a single string or an id to value map).
      */
     elementUtilities.changeData = function (eles, name, valueMap) {
-      console.log("changing data in chise");
       if (typeof valueMap === "object") {
         cy.startBatch();
         for (var i = 0; i < eles.length; i++) {
@@ -3946,28 +3932,14 @@ module.exports = function () {
       return bgObj;
     };
 
-    elementUtilities.changeBackgroundImage = function (
-      nodes,
-      oldImg,
-      newImg,
-      firstTime,
-      updateInfo,
-      promptInvalidImage,
-      validateURL
-    ) {
+    elementUtilities.changeBackgroundImage = function (nodes, oldImg, newImg, firstTime, updateInfo, promptInvalidImage, validateURL) {
       if (!nodes || nodes.length == 0 || !oldImg || !newImg) return;
 
       elementUtilities.removeBackgroundImage(nodes, oldImg);
       for (var key in newImg) {
         newImg[key]["firstTime"] = firstTime;
       }
-      elementUtilities.addBackgroundImage(
-        nodes,
-        newImg,
-        updateInfo,
-        promptInvalidImage,
-        validateURL
-      );
+      elementUtilities.addBackgroundImage(nodes, newImg, updateInfo, promptInvalidImage, validateURL);
 
       return {
         nodes: nodes,
@@ -3980,13 +3952,7 @@ module.exports = function () {
     };
 
     // Add a background image to given nodes.
-    elementUtilities.addBackgroundImage = function (
-      nodes,
-      bgObj,
-      updateInfo,
-      promptInvalidImage,
-      validateURL
-    ) {
+    elementUtilities.addBackgroundImage = function (nodes, bgObj, updateInfo, promptInvalidImage, validateURL) {
       if (!nodes || nodes.length == 0 || !bgObj) return;
 
       for (var i = 0; i < nodes.length; i++) {
