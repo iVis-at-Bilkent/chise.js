@@ -1,8 +1,8 @@
 # ChiSE
 
-ChiSE is a library with an API based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [Cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit the pathway models represented by process description (PD) and activity flow (AF) languages of [SBGN](http://sbgn.org) or in [simple interaction format (SIF)](https://www.pathwaycommons.org/pc/sif_interaction_rules.do). 
+ChiSE is a library with an API based on [SBGNViz.js](https://github.com/iVis-at-Bilkent/sbgnviz.js), which in turn is based on [Cytoscape.js](http://cytoscape.github.io/cytoscape.js/), to visualize and edit pathway models. 
 
-It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats from SIF to SBML to CellDesigner.
+It accepts the pathway models represented in enriched [SBGN-ML](https://github.com/sbgn/sbgn/wiki/SBGN_ML) format, and can save edited pathways back to the same format, including layout, style, and annotation information, as well as static image formats (PNG, JPEG, and SVG). It can also import from and export to various formats including SIF, SBML, CellDesigner and GPML.
 <br/>
 
 ## Software
@@ -84,7 +84,8 @@ edge.data('class'); // SBGN specific class of an edge.
 edge.data('cardinality'); // SBGN cardinality of an edge.
 edge.data('portsource'); // This is set if the edge is connected to its source node by a specific port of that node.
 edge.data('porttarget'); // This is set if the edge is connected to its target node by a specific port of that node.
-edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeBendEditing extension.
+edge.data('bendPointPositions'); // Bend point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeEditing extension.
+edge.data('controlPointPositions'); // Control point positions of an edge. Includes x and y coordinates. This data is to be passed to edgeEditing extension.
 edge.data('width');// 'width' style of edges are controlled by this data.
 edge.data('line-color');// 'line-color' style of edges are controlled by this data.
 ```
@@ -162,6 +163,18 @@ Considers undoable option. Parameters are explained below.<br>
 `edgeLength`: The distance between the process and the macromolecules at the both sides.<br>
 `layoutParam`: An object with key 'name' (e.g. { name: 'fcose' }) that indicates the name of the layout to be used.<br>
 
+`instance.createActivationReaction(proteinName, processPosition, edgeLength, reverse)`
+Creates an activation or deactivation type reaction (using the parameter `reverse`) for the given protein.
+
+`instance.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength)`
+Creates a metabolic catalytic activity reaction.
+
+`instance.createTranscriptionReaction(geneName, mRnaName, processPosition, edgeLength)`
+Creates a transcription reaction.
+
+`instance.createTranslationReaction(mRnaName, proteinName, processPosition, edgeLength)`
+Creates a translation reaction.
+
 `instance.resizeNodes(nodes, newParent, posDiffX, posDiffY)`
 Resize given nodes if `useAspectRatio` is truthy one of width or height should not be set. Considers undoable option.
 
@@ -200,7 +213,11 @@ Unhide given `eles` and perform given layout afterward. `layoutparam` parameter 
 Requires `viewUtilities` extension and considers undoable option.
 
 `instance.hideAndPerformLayout(eles, layoutparam)`
-Hides given `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Extend the given list of `eles` in a smart way to leave the map intact, hide the extended list of elements and and perform the given layout afterward. `layoutparam` parameter may be layout options or a function to call.
+Requires `viewUtilities` extension and considers undoable option.
+
+`instance.deleteAndPerformLayout(eles, layoutparam)`
+Delete the given list of `eles` and perform given layout afterward. `layoutparam` parameter may be layout options or a function to call.
 Requires `viewUtilities` extension and considers undoable option.
 
 `instance.showAllAndPerformLayout(eles, layoutparam)`
@@ -272,6 +289,10 @@ an extension library of chise. Extends `sbgnvizInstance.undoRedoActionFunctions`
  * `addProcessWithConvenientEdges(param)` Do/Redo function for 'addProcessWithConvenientEdges' undo redo command.
  * `createCompoundForGivenNodes(param)` Do/Undo/Redo function for 'createCompoundForGivenNodes' undo redo command.
  * `createTemplateReaction(param)` Do/Redo function for 'createTemplateReaction' undo redo command.
+ * `createActivationReaction(param)` Do/Redo function for 'createActivationReaction' undo redo command.
+ * `createMetabolicCatalyticActivity(param)` Do/Redo function for 'createMetabolicCatalyticActivity' undo redo command.
+ * `createTranscriptionReaction(param)` Do/Redo function for 'createTranscriptionReaction' undo redo command.
+ * `createTranslationReaction(param)` Do/Redo function for 'createTranslationReaction' undo redo command.
  * `resizeNodes(param)` Do/Undo/Redo function for 'resizeNodes' undo redo command.
  * `changeNodeLabel(param)` Do/Undo/Redo function for 'changeNodeLabel' undo redo command.
  * `changeData(param)` Do/Undo/Redo function for 'changeData' undo redo command.
@@ -321,7 +342,7 @@ for exact versions of dependencies refer to [package.json](https://github.com/iV
 The following extensions are used by this library if they are registered.
  * cytoscape-undo-redo
  * cytoscape-expand-collapse
- * cytoscape-edge-bend-editing
+ * cytoscape-edge-editing
  * cytoscape-view-utilities
 
 for exact versions of dependencies refer to [package.json](https://github.com/iVis-at-Bilkent/chise.js/blob/master/package.json)
@@ -364,10 +385,14 @@ In plain JS you do not need to require the libraries you just need to register c
 
 ## Publishing instructions
 
-This project is set up to automatically be published to npm.  To publish:
+This project is set up to automatically be published to npm and bower.  To publish:
 
-1. Set the version number environment variable: `export VERSION=1.2.3`
-2. Publish: `gulp publish`
+1. Build : `npm run build`
+1. Commit the build : `git commit -am "Build for release"`
+1. Bump the version number and tag: `npm version major|minor|patch`
+1. Push to origin: `git push && git push --tags`
+1. Publish to npm: `npm publish .`
+1. If publishing to bower for the first time, you'll need to run `bower register chise.js https://github.com/iVis-at-Bilkent/chise.js.git`
 
 ## Team
 

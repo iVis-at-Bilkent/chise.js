@@ -2,12 +2,12 @@
   "name": "chise",
   "version": "3.0.0",
   "description": "SBGNPD editing library",
-  "main": "src/index.js",
+  "main": "chise.js",
   "licence": "LGPL-3.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-chise-js": "gulp build",
-    "debug-js": "nodemon -e js --watch src -x \"npm run build-chise-js\""
+    "debug-js": "nodemon -e js --watch src -x \"npm run build-chise-js\"",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -18,26 +18,18 @@
   },
   "homepage": "https://github.com/iVis-at-Bilkent/chise.js/",
   "peer-dependencies": {
-    "jquery": "^2.2.4",
+    "jquery": "^3.3.1",
     "file-saver": "^2.0.2",
     "cytoscape": "iVis-at-Bilkent/cytoscape.js#master",
     "sbgnviz": "^6.0.0",
     "tippy.js": "^3.4.0"
   },
   "devDependencies": {
-    "browserify": "^11.2.0",
-    "gulp": "^3.9.0",
-    "gulp-derequire": "^2.1.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-prompt": "^0.1.2",
-    "gulp-replace": "^0.5.4",
-    "gulp-shell": "^0.5.0",
-    "gulp-util": "^3.0.6",
-    "jshint-stylish": "^2.0.1",
-    "node-notifier": "^4.3.1",
-    "run-sequence": "^1.1.4",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0"

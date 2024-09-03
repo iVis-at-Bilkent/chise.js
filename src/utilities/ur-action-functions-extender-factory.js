@@ -152,6 +152,226 @@ module.exports = function () {
       };
     };
 
+    undoRedoActionFunctions.createActivationReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createActivationReaction(param.proteinName, param.processPosition, param.edgeLength, param.reverse)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranslation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranslation(param.regulatorLabel, param.outputLabel, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranscription = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranscription(param.label, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createDegradation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createDegradation(param.macromolecule, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createComplexProteinFormation = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createComplexProteinFormation(param.proteinLabels, param.complexLabel, param.regulator, param.orientation, param.reverse);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createMultimerization = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createMultimerization(param.macromolecule, param.regulator, param.regulatorMultimer, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createConversion = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createConversion(param.macromolecule, param.regulator, param.regulatorMultimer, param.orientation, param.inputInfoboxLabels, param.outputInfoboxLabels);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createMetabolicReaction = function(param) {
+      let firstTime = param.firstTime;
+      let eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createMetabolicReaction(param.inputs, param.outputs, param.reversible, param.regulator, param.regulatorMultimer, param.orientation);
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createMetabolicCatalyticActivity = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createMetabolicCatalyticActivity(param.inputNodeList, param.outputNodeList, param.catalystName, param.catalystType, param.processPosition, param.tilingPaddingVertical, param.tilingPaddingHorizontal, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranscriptionReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranscriptionReaction(param.geneName, param.mRnaName, param.processPosition, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
+    undoRedoActionFunctions.createTranslationReaction = function(param) {
+      var firstTime = param.firstTime;
+      var eles;
+
+      if (firstTime) {
+        eles = elementUtilities.createTranslationReaction(param.mRnaName, param.proteinName, param.processPosition, param.edgeLength)
+      }
+      else {
+        eles = param;
+        cy.add(eles);
+
+        cy.elements().unselect();
+        eles.select();
+      }
+
+      return {
+        eles: eles
+      };
+    };
+
     // Section End
     // easy creation action functions
 
@@ -213,12 +433,12 @@ module.exports = function () {
         var node = nodes[i];
         if(node.isParent()){
           result.sizeMap[node.id()] = {
-            w: node.data("minWidth"),
-            h: node.data("minHeight"),
-            biasL : node.data("minWidthBiasLeft"),
-            bisaR : node.data("minWidthBiasRight"),
-            biasT : node.data("minHeightBiasTop"),
-            biasB : node.data("minHeightBiasBottom")
+            w: node.data("minWidth") || 0,
+            h: node.data("minHeight") || 0,
+            biasL : node.data("minWidthBiasLeft") || 0,
+            biasR : node.data("minWidthBiasRight") || 0,
+            biasT : node.data("minHeightBiasTop") || 0,
+            biasB : node.data("minHeightBiasBottom") || 0
            // w: node.css("minWidth") != 0?  node.data("minWidth") : node.children().boundingBox().w,
             //h: node.css("min-height") != 0?  node.data("minHeight") : node.children().boundingBox().h
           };
@@ -492,6 +712,38 @@ module.exports = function () {
         return result;
     };
 
+    /*
+     * Delete eles and perform layout.
+     */
+    undoRedoActionFunctions.deleteAndPerformLayout = function (param) {
+      var eles = param.eles;
+
+      var result = {};
+      result.positions = undoRedoActionFunctions.getNodePositions();
+
+      if (param.firstTime) {
+          result.eles = elementUtilities.deleteAndPerformLayout(param.eles, param.layoutparam);
+      }
+      else {
+          result.eles = eles.remove();
+          undoRedoActionFunctions.returnToPositions(param.positions);
+      }
+
+      return result;
+  };
+
+  undoRedoActionFunctions.undoDeleteAndPerformLayout = function (param) {
+      var eles = param.eles;
+
+      var result = {};
+      result.positions = undoRedoActionFunctions.getNodePositions();
+      result.eles = elementUtilities.restoreEles(eles); 
+
+      undoRedoActionFunctions.returnToPositions(param.positions);
+
+      return result;
+  };
+
     // Section End
     // general action functions
 
@@ -628,6 +880,82 @@ module.exports = function () {
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           elementUtilities.setMultimerStatus(node, status[node.id()]);
+        }
+      }
+
+    //  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+    //    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
+    //  }
+
+      var result = {
+        status: resultStatus,
+        nodes: nodes
+      };
+
+      return result;
+    };
+
+    undoRedoActionFunctions.setActiveStatus = function (param) {
+      var firstTime = param.firstTime;
+      var nodes = param.nodes;
+      var status = param.status;
+      var resultStatus = {};
+
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var isActive = node.data('class').startsWith('active ');
+
+        resultStatus[node.id()] = isActive;
+      }
+
+      // If this is the first time change the status of all nodes at once.
+      // If not change status of each seperately to the values mapped to their id.
+      if (firstTime) {
+        elementUtilities.setActiveStatus(nodes, status);
+      }
+      else {
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          elementUtilities.setActiveStatus(node, status[node.id()]);
+        }
+      }
+
+    //  if (!firstTime && _.isEqual(nodes, cy.nodes(':selected'))) {
+    //    $('#inspector-is-multimer').attr("checked", !$('#inspector-is-multimer').attr("checked"));
+    //  }
+
+      var result = {
+        status: resultStatus,
+        nodes: nodes
+      };
+
+      return result;
+    };
+
+
+    undoRedoActionFunctions.setHypotheticalStatus = function (param) {
+      var firstTime = param.firstTime;
+      var nodes = param.nodes;
+      var status = param.status;
+      var resultStatus = {};
+
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        var isHypothetical = node.data('class').includes('hypothetical');
+
+        resultStatus[node.id()] = isHypothetical;
+      }
+
+      // If this is the first time change the status of all nodes at once.
+      // If not change status of each seperately to the values mapped to their id.
+      if (firstTime) {
+        elementUtilities.setHypotheticalStatus(nodes, status);
+      }
+      else {
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          elementUtilities.setHypotheticalStatus(node, status[node.id()]);
+          //elementUtilities.setHypothteticalStatus
         }
       }
 
@@ -783,6 +1111,20 @@ module.exports = function () {
             return 1-element;
           });
           convertedEdge.data("cyedgebendeditingWeights", weight.reverse());
+        }
+
+        if(convertedEdge.data("cyedgecontroleditingDistances")){
+          let distance = convertedEdge.data("cyedgecontroleditingDistances");
+          distance = distance.map(function(element) {
+            return -1*element;
+          });
+          convertedEdge.data("cyedgecontroleditingDistances", distance.reverse());
+
+          let weight = convertedEdge.data("cyedgecontroleditingWeigths");
+          weight = weight.map(function(element) {
+            return 1-element;
+          });
+          convertedEdge.data("cyedgecontroleditingWeigths", weight.reverse());
         }
 
         if (convertedEdge._private.data.class === "consumption") {

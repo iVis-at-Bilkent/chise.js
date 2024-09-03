@@ -46,7 +46,8 @@ module.exports = function () {
         }
       };
 
-      cy.undoRedo().do("addNode", param);
+      var result = cy.undoRedo().do("addNode", param);
+      return result.eles;
     }
   };
 
@@ -400,6 +401,243 @@ module.exports = function () {
   };
 
   /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createTranslationReaction = function (mRnaName, proteinName, processPosition, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranslationReaction(mRnaName, proteinName, processPosition, edgeLength);
+    }
+    else {
+      var param = {
+        mRnaName: mRnaName,
+        proteinName: proteinName,
+        processPosition: processPosition,
+        edgeLength: edgeLength
+      };
+
+      cy.undoRedo().do("createTranslationReaction", param);
+  }};
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createTranscriptionReaction = function (geneName, mRnaName, processPosition, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranscriptionReaction(geneName, mRnaName, processPosition, edgeLength);
+    }
+    else {
+      var param = {
+        geneName: geneName,
+        mRnaName: mRnaName,
+        processPosition: processPosition,
+        edgeLength: edgeLength
+      };
+
+      cy.undoRedo().do("createTranscriptionReaction", param);
+  }};
+
+  mainUtilities.createTranslation = function(regulatorLabel, outputLabel, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranslation(regulatorLabel, outputLabel, orientation);
+    }
+    else {
+      const param = {
+        regulatorLabel: regulatorLabel,
+        outputLabel: outputLabel,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createTranslation", param);
+    }  
+  };
+
+  mainUtilities.createTranscription = function(label, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createTranscription(label, orientation);
+    }
+    else {
+      const param = {
+        label: label,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createTranscription", param);
+    }  
+  };
+
+  mainUtilities.createDegradation = function(macromolecule, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createDegradation(macromolecule, orientation);
+    }
+    else {
+      const param = {
+        macromolecule: macromolecule,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createDegradation", param);
+    }  
+  };
+
+  mainUtilities.createComplexProteinFormation = function(proteinLabels, complexLabel, regulator, orientation, reverse) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createComplexProteinFormation(proteinLabels, complexLabel, regulator, orientation, reverse);
+    }
+    else {
+      const param = {
+        proteinLabels: proteinLabels,
+        complexLabel: complexLabel,
+        regulator: regulator,
+        orientation: orientation,
+        reverse: reverse
+      };
+
+      cy.undoRedo().do("createComplexProteinFormation", param);
+    }  
+  };
+
+  mainUtilities.createMultimerization = function(macromolecule, regulator, regulatorMultimer, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMultimerization(macromolecule, regulator, regulatorMultimer, orientation);
+    }
+    else {
+      const param = {
+        macromolecule: macromolecule,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createMultimerization", param);
+    }  
+  };
+
+  mainUtilities.createConversion = function(macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createConversion(macromolecule, regulator, regulatorMultimer, orientation, inputInfoboxLabels, outputInfoboxLabels);
+    }
+    else {
+      const param = {
+        macromolecule: macromolecule,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation,
+        inputInfoboxLabels: inputInfoboxLabels,
+        outputInfoboxLabels: outputInfoboxLabels
+      };
+
+      cy.undoRedo().do("createConversion", param);
+    }  
+  };
+
+  mainUtilities.createMetabolicReaction = function(inputs, outputs, reversible, regulator, regulatorMultimer, orientation) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMetabolicReaction(inputs, outputs, reversible, regulator, regulatorMultimer, orientation);
+    }
+    else {
+      const param = {
+        inputs: inputs,
+        outputs: outputs,
+        reversible: reversible,
+        regulator: regulator,
+        regulatorMultimer: regulatorMultimer,
+        orientation: orientation
+      };
+
+      cy.undoRedo().do("createMetabolicReaction", param);
+    }  
+  };
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createMetabolicCatalyticActivity = function (inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createMetabolicCatalyticActivity(inputNodeList, outputNodeList, catalystName, catalystType, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength);
+    }
+    else {
+      var param = {
+        inputNodeList: inputNodeList,
+        outputNodeList: outputNodeList,
+        catalystName: catalystName,
+        catalystType: catalystType,
+        processPosition: processPosition,
+        tilingPaddingVertical: tilingPaddingVertical,
+        tilingPaddingHorizontal: tilingPaddingHorizontal,
+        edgeLength: edgeLength,
+      };
+
+      cy.undoRedo().do("createMetabolicCatalyticActivity", param);
+    }
+  };
+
+  /*
+   * Creates an activation reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
+   * in the complex. Considers undoable option. For more information see the same function in elementUtilities
+   */
+  mainUtilities.createActivationReaction = function (proteinName, processPosition, edgeLength, reverse) {
+    if ( elementUtilities.isGraphTopologyLocked() ) {
+      return;
+    }
+
+    if (!options.undoable) {
+      elementUtilities.createActivationReaction(proteinName, processPosition, edgeLength, reverse);
+    }
+    else {
+      var param = {
+        proteinName: proteinName,
+        processPosition: processPosition,
+        edgeLength: edgeLength,
+        reverse: reverse
+      };
+
+      cy.undoRedo().do("createActivationReaction", param);
+  }};
+
+  /*
    * Creates a template reaction with given parameters. Requires cose-bilkent layout to tile the free macromolecules included
    * in the complex. Considers undoable option. For more information see the same function in elementUtilities
    */
@@ -409,6 +647,9 @@ module.exports = function () {
     }
 
     if (!options.undoable) {
+      if (templateType === "reversible") {
+        elementUtilities.setMapType("HybridAny");
+      }
       elementUtilities.createTemplateReaction(templateType, macromoleculeList, complexName, processPosition, tilingPaddingVertical, tilingPaddingHorizontal, edgeLength, layoutParam);
     }
     else {
@@ -422,8 +663,15 @@ module.exports = function () {
         edgeLength: edgeLength,
         layoutParam: layoutParam
       };
-
-      cy.undoRedo().do("createTemplateReaction", param);
+      if (templateType === "reversible") {
+        var actions = [];
+        actions.push({name:"changeMapType", param: {mapType: "HybridAny", callback: function(){} }});
+        actions.push({name:"createTemplateReaction", param: param});
+        cy.undoRedo().do("batch", actions);
+      }
+      else {
+        cy.undoRedo().do("createTemplateReaction", param);
+      }
     }
   };
 
@@ -591,7 +839,6 @@ module.exports = function () {
     if (nodes.length === 0) {
       return;
     }
-
     if (!options.undoable) {
       elementUtilities.addStateOrInfoBox(nodes, obj);
     }
@@ -603,7 +850,6 @@ module.exports = function () {
 
       cy.undoRedo().do("addStateOrInfoBox", param);
     }
-
     cy.style().update();
   };
 
@@ -679,6 +925,56 @@ module.exports = function () {
 
     cy.style().update();
   };
+
+  mainUtilities.setActiveStatus = function(nodes, status) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        status: status,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("setActiveStatus", param);
+    }
+    else {
+      elementUtilities.setActiveStatus(nodes, status);
+    }
+
+    cy.style().update();
+  };
+
+  mainUtilities.setHypotheticalStatus= function(nodes, status) {
+    if (nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      var param = {
+        status: status,
+        nodes: nodes,
+        firstTime: true
+      };
+
+      cy.undoRedo().do("setHypotheticalStatus", param);
+    }
+    else {
+      elementUtilities.setHypotheticalStatus(nodes, status);
+    }
+
+    cy.style().update();
+  };
+
+  /**
+   * Redraw clone markers on given nodes without considering undo.
+   * See https://github.com/iVis-at-Bilkent/newt/issues/574 
+   */
+  mainUtilities.redrawCloneMarkers = function(nodes) {
+    elementUtilities.setCloneMarkerStatus(nodes, true);
+  }
 
   /*
    * Set clone marker status of given nodes to the given status.
@@ -824,6 +1120,31 @@ module.exports = function () {
     cy.style().update();
   };
 
+  mainUtilities.deleteAndPerformLayout = function (eles, layoutparam) {
+    var nodes = eles.nodes(); // Ensure that nodes list just include nodes
+
+    var allNodes = cy.nodes(":visible");
+    var nodesToKeep = elementUtilities.extendRemainingNodes(nodes, allNodes);
+    var nodesToRemove = allNodes.not(nodesToKeep);
+
+    if (nodesToRemove.length === 0) {
+        return;
+    }
+
+    if (!options.undoable) {
+
+        elementUtilities.deleteAndPerformLayout(nodesToRemove, layoutparam);
+    }
+    else {
+        var param = {
+            eles: nodesToRemove,
+            layoutparam: layoutparam,
+            firstTime: true
+        };
+
+        cy.undoRedo().do("deleteAndPerformLayout", param);
+    }
+  };
 
   /*
    * Hides given eles (the ones which are selected) and perform given layout afterward. Layout parameter may be layout options

@@ -31,9 +31,12 @@ module.exports = function() {
     } );
 
     // determine node groups by their topology
-  	var groups = getNodeGroups( list );
-  	// apply grouping in cy level
-  	applyGrouping( groups );
+    var groups = getNodeGroups( list );
+    
+    // apply grouping in cy level
+    var metaEdges = topologyGrouping.getMetaEdges();
+    var compounds = topologyGrouping.getGroupCompounds();
+  	applyGrouping(groups, metaEdges, compounds);
 
     topologyGrouping.applied = true;
 
@@ -150,12 +153,20 @@ module.exports = function() {
     map[ key ] = map[ key ].add( val );
   }
 
-  function applyGrouping( groups ) {
-    groups.forEach( function( group ) {
-      createGroupCompound( group );
-    } );
+  function applyGrouping(groups, metaEdges, groupCompounds) {
+    var compounds;
 
-    var compounds = topologyGrouping.getGroupCompounds();
+    if (groupCompounds.length > 0) {
+      compounds = groupCompounds;
+    }
+    else {
+      groups.forEach( function( group ) {
+        createGroupCompound( group );
+      } );
+  
+      compounds = topologyGrouping.getGroupCompounds();
+    }
+
     var childrenEdges = compounds.children().connectedEdges();
     var edgesMap = [];
 
@@ -165,13 +176,23 @@ module.exports = function() {
       edge.remove();
     } );
 
-    Object.keys( edgesMap ).forEach( function( key ) {
-      // make a dummy edge for all of edges that are mapped by key
-  		// dummy edge should have common properties of given edges
-  		// and should carry their id list in its data
-  		// for source and target it should have parent of common source and target
-      createMetaEdgeFor( edgesMap[ key ] );
-    } );
+    if (metaEdges.length > 0) {
+      Object.keys( edgesMap ).forEach( function( key ) {
+        var edges = edgesMap[key];
+        var temp = edges[0];
+        var metaEdge = metaEdges.filter(edge => {
+          return edge.source().id() === getParentOrSelf( temp.source() ).id() &&
+                  edge.target().id() === getParentOrSelf( temp.target() ).id();
+        })[0];
+        metaEdge.data( 'tg-to-restore', edges );
+        edges.remove();
+      } );
+    }
+    else {
+      Object.keys( edgesMap ).forEach( function( key ) {
+        createMetaEdgeFor( edgesMap[ key ] );
+      } );
+    }
   }
 
   function createGroupCompound( group ) {
