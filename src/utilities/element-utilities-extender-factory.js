@@ -226,6 +226,14 @@ module.exports = function () {
       if (elementUtilities.canHaveSBGNCardinality(sbgnclass)) {
         data.cardinality = 0;
       }
+
+      if (data.language && data.language === "SBML"){
+        data["simulation"] = {
+          "stoichiometry": 1,
+          "constant": true
+        }
+      }
+
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
       var sourceHasPorts = sourceNode.data("ports").length === 2;
