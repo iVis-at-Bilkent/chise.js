@@ -434,7 +434,7 @@ module.exports = function () {
       var language = nodesToMakeCompound[0].data("language");
       // if nodesToMakeCompound contain both PD and AF nodes, then set language of compound as Unknown
       for (var i = 1; i < nodesToMakeCompound.length; i++) {
-        if (nodesToMakeCompound[i] != language) {
+        if (nodesToMakeCompound[i].data("language") != language) {
           language = "Unknown";
           break;
         }
