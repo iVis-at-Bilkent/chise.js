@@ -3347,6 +3347,8 @@ module.exports = function () {
         return "valid";
 
       var edgeclass = typeof edge === "string" ? edge : edge.data("class");
+      // if the edge type is belongs_to_class -- no rules applied
+      if (edgeclass.includes("belongs")) return "valid";
       var sourceclass = source.data("class");
       var targetclass = target.data("class");
       var mapType = elementUtilities.getMapType();
