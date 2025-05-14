@@ -1673,10 +1673,12 @@ module.exports = function () {
           label.length > 0
             ? Math.max(widthPerChar * label.length, minInfoboxDimension)
             : minInfoboxDimension;
+        const atIndex = label.indexOf("@");
         let infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: label,
+          clazz: "state variable",
+          state: {
+            value: atIndex == -1 ? label : label.substring(0,atIndex),
+            variable: atIndex == -1 ? null : label.substring(atIndex+1),
           },
           bbox: {
             w: inputInfoboxWidth,
@@ -1737,10 +1739,12 @@ module.exports = function () {
           label.length > 0
             ? Math.max(widthPerChar * label.length, minInfoboxDimension)
             : minInfoboxDimension;
+        const atIndex = label.indexOf("@");
         infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: label,
+          clazz: "state variable",
+          state: {
+            value: atIndex == -1 ? label : label.substring(0,atIndex),
+            variable: atIndex == -1 ? null : label.substring(atIndex+1),
           },
           bbox: {
             w: outputInfoboxWidth,
