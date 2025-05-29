@@ -1685,7 +1685,7 @@ module.exports = function () {
             h: minInfoboxDimension,
           },
           style: {
-            "shape-name": "ellipse",
+            "shape-name": "stadium",
           },
         };
         elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
@@ -1751,7 +1751,7 @@ module.exports = function () {
             h: minInfoboxDimension,
           },
           style: {
-            "shape-name": "ellipse",
+            "shape-name": "stadium",
           },
         };
         elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
