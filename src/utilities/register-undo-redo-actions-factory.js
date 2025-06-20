@@ -21,6 +21,8 @@ module.exports = function () {
     });
 
     // register add remove actions
+    ur.action("addEdges", undoRedoActionFunctions.addEdges, undoRedoActionFunctions.deleteElesSimple);
+    ur.action("addNodes", undoRedoActionFunctions.addNodes, undoRedoActionFunctions.deleteElesSimple);
     ur.action("addNode", undoRedoActionFunctions.addNode, undoRedoActionFunctions.deleteElesSimple);
     ur.action("deleteElesSimple", undoRedoActionFunctions.deleteElesSimple, undoRedoActionFunctions.restoreEles);
     ur.action("addEdge", undoRedoActionFunctions.addEdge, undoRedoActionFunctions.deleteElesSimple);

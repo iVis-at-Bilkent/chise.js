@@ -57,6 +57,36 @@ module.exports = function () {
     // Section Start
     // add/remove action functions
 
+    undoRedoActionFunctions.addNodes = function (param) {
+      var result;
+      if (param.firstTime) {
+        var nodes = param.nodes;
+        result = elementUtilities.addNodes(nodes);
+      }
+      else {
+        result = elementUtilities.restoreEles(param);
+      }
+
+      return {
+        eles: result
+      };
+    };
+    
+    undoRedoActionFunctions.addEdges = function (param) {
+      var result;
+      if (param.firstTime) {
+        var edges = param.edges;
+        result = elementUtilities.addEdges(edges);
+      }
+      else {
+        result = elementUtilities.restoreEles(param);
+      }
+
+      return {
+        eles: result
+      };
+    };
+
     undoRedoActionFunctions.addNode = function (param) {
       var result;
       if (param.firstTime) {

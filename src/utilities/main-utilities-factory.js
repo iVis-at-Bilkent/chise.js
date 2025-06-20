@@ -14,6 +14,39 @@ module.exports = function () {
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
   };
 
+  mainUtilities.addNodesEdges = async function(nodes, edges){
+    var nodes = await elementUtilities.addNodes(nodes);
+    var edges = await elementUtilities.addEdges(edges);
+  }
+
+  mainUtilities.addNodes = async function(nodes){
+    if (!options.undoable) {
+      return elementUtilities.addNodes(nodes);
+    }
+    else {
+      var param = {
+        nodes:nodes
+      };
+
+      var result = cy.undoRedo().do("addNodes", param);
+      return result.eles;
+    }
+  };
+
+  mainUtilities.addEdges = async function(edges){
+    if (!options.undoable) {
+      return elementUtilities.addEdges(edges);
+    }
+    else {
+      var param = {
+        edges:edges
+      };
+
+      var result = cy.undoRedo().do("addEdges", param);
+      return result.eles;
+    }
+  };
+
   /*
    * Adds a new node with the given class and at the given coordinates. Considers undoable option.
    */
