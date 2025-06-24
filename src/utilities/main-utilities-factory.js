@@ -5,13 +5,62 @@ var libs = require('./lib-utilities').getLibs();
  */
 module.exports = function () {
 
-  var elementUtilities, options, cy, sbgnvizInstance;
+  var elementUtilities, options, cy, sbgnvizInstance, cb;
 
   function mainUtilities (param) {
     elementUtilities = param.elementUtilities;
     options = param.optionUtilities.getOptions();
     cy = param.sbgnvizInstanceUtilities.getCy();
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
+    cb = cy.clipboard({
+      afterPaste: function (eles) {
+        var nodeIdMap = new Map();
+
+        eles.nodes().forEach(node => {
+          var oldId = node.id();
+          var newId = oldId.startsWith("nwt") ? oldId : "nwtN_" + oldId;
+          nodeIdMap.set(oldId, newId);
+          
+          var nodeData = {...node.data()};
+          nodeData.id = newId;
+
+          if (Array.isArray(nodeData.ports)) {
+            nodeData.ports = nodeData.ports.map(port => ({
+              ...port,
+              id: port.id.startsWith("nwt") ? port.id : "nwtN_" + port.id
+            }));
+          }
+
+          mainUtilities.addNode(node.position('x'), node.position('y'), nodeData, newId, node.parent(), undefined);
+          var newNode = cy.getElementById(newId);
+          if (newNode.length > 0) {
+            newNode.data(nodeData);
+            newNode.grabbable(node.grabbable());
+            newNode.selectable(node.selectable());
+          }
+        });
+        
+        eles.edges().forEach(edge => {
+          var oldId = edge.id();
+          var newId = oldId.startsWith("nwt") ? oldId : "nwtE_" + oldId;
+
+          var sourceId = nodeIdMap.get(edge.source().id()) || edge.source().id();
+          var targetId = nodeIdMap.get(edge.target().id()) || edge.target().id();
+
+          var edgeData = {...edge.data(), id: newId, source: sourceId, target: targetId};
+
+          mainUtilities.addEdge(sourceId, targetId, edgeData, undefined, newId, undefined);
+          var newEdge = cy.getElementById(newId);
+          if (newEdge.length > 0) {
+            newEdge.data(edgeData);
+            newEdge.selectable(edge.selectable());
+            newEdge.grabbable(edge.grabbable());
+          }
+        });
+
+        eles.remove();
+      }
+    });
   };
 
   mainUtilities.addNodesEdges = async function(nodes, edges){
@@ -256,7 +305,7 @@ module.exports = function () {
    * Copy given elements to clipboard. Requires cytoscape-clipboard extension.
    */
   mainUtilities.copyElements = function (eles) {
-    cy.clipboard().copy(eles);
+    cb.copy(eles);
   };
 
   /*
@@ -273,7 +322,7 @@ module.exports = function () {
       cy.undoRedo().do("paste",{pasteAtMouseLoc: pasteAtMouseLoc});
     }
     else {
-      cy.clipboard().paste();
+      cb.paste();
     }
     cloneCollapsedNodesAndPorts(elesBefore);
     cy.nodes(":selected").emit('data');
