@@ -17,6 +17,7 @@ module.exports = function () {
   mainUtilities.addNodesEdges = async function(nodes, edges){
     var nodes = await elementUtilities.addNodes(nodes);
     var edges = await elementUtilities.addEdges(edges);
+    return true;
   }
 
   mainUtilities.addNodes = async function(nodes){
