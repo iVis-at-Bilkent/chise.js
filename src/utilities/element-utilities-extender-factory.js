@@ -225,8 +225,10 @@ module.exports = function () {
       }
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
-      var sourceHasPorts = sourceNode.data("ports").length === 2;
-      var targetHasPorts = targetNode.data("ports").length === 2;
+      var sourcePorts = sourceNode.data("ports");
+      var targetPorts = targetNode.data("ports");
+      var sourceHasPorts = Array.isArray(sourcePorts) && sourcePorts.length === 2;
+      var targetHasPorts = Array.isArray(targetPorts) && targetPorts.length === 2;
       // The portsource and porttarget variables
       var portsource;
       var porttarget;
@@ -340,11 +342,20 @@ module.exports = function () {
       data.portsource = portsource || source;
       data.porttarget = porttarget || target;
 
-      return {
+      // avoid reserved or duplicate IDs
+      if (data.id === "source" || data.id === "target" || cy.getElementById(data.id).length > 0) {
+        data.id = elementUtilities.generateEdgeId();
+      }
+
+      var eles = cy.add({
         group: "edges",
         data: data,
         css: css,
-      };
+      });
+
+      var newEdge = eles[eles.length - 1];
+
+      return newEdge;
     },
 
     elementUtilities.processNode = function(
@@ -543,8 +554,10 @@ module.exports = function () {
       }
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
-      var sourceHasPorts = sourceNode.data("ports").length === 2;
-      var targetHasPorts = targetNode.data("ports").length === 2;
+      var sourcePorts = sourceNode.data("ports");
+      var targetPorts = targetNode.data("ports");
+      var sourceHasPorts = Array.isArray(sourcePorts) && sourcePorts.length === 2;
+      var targetHasPorts = Array.isArray(targetPorts) && targetPorts.length === 2;
       // The portsource and porttarget variables
       var portsource;
       var porttarget;
@@ -657,6 +670,11 @@ module.exports = function () {
       // The portsource and porttarget are determined set them in data object.
       data.portsource = portsource || source;
       data.porttarget = porttarget || target;
+
+      // avoid reserved or duplicate IDs
+      if (data.id === "source" || data.id === "target" || cy.getElementById(data.id).length > 0) {
+        data.id = elementUtilities.generateEdgeId();
+      }
 
       var eles = cy.add({
         group: "edges",
