@@ -61,7 +61,8 @@ module.exports = function () {
       var result;
       if (param.firstTime) {
         var nodes = param.nodes;
-        result = elementUtilities.addNodes(nodes);
+        var center = param.center;
+        result = elementUtilities.addNodes(nodes,center);
       }
       else {
         result = elementUtilities.restoreEles(param);

@@ -14,19 +14,20 @@ module.exports = function () {
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
   };
 
-  mainUtilities.addNodesEdges = async function(nodes, edges){
-    var nodes = await elementUtilities.addNodes(nodes);
+  mainUtilities.addNodesEdges = async function(nodes, edges,center){
+    var nodes = await elementUtilities.addNodes(nodes,center);
     var edges = await elementUtilities.addEdges(edges);
     return true;
   }
 
-  mainUtilities.addNodes = async function(nodes){
+  mainUtilities.addNodes = async function(nodes,center){
     if (!options.undoable) {
-      return elementUtilities.addNodes(nodes);
+      return elementUtilities.addNodes(nodes,center);
     }
     else {
       var param = {
-        nodes:nodes
+        nodes:nodes,
+        center:center
       };
 
       var result = cy.undoRedo().do("addNodes", param);

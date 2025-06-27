@@ -456,7 +456,7 @@ module.exports = function () {
       cy.style().update();      
     },
 
-    elementUtilities.addNodes = async function (nodes){
+    elementUtilities.addNodes = async function (nodes,center){
       nodes = nodes || [];
 
       var modfied_nodes = await Promise.all(nodes.map(async (node)=>{
@@ -467,7 +467,9 @@ module.exports = function () {
       };
         const newtId = node.properties.newtId;
         const parent = node.properties.parent;
-        return elementUtilities.processNode(0,0,nodeParams,newtId,parent);
+        const x = center==undefined || center==false?0:$(cy.container()).width() / 2;
+        const y = center==undefined || center==false?0:$(cy.container()).height() / 2;
+        return elementUtilities.processNode(x,y,nodeParams,newtId,parent);
       }));
       cy.startBatch();
       var eles = cy.add(modfied_nodes);
