@@ -222,6 +222,14 @@ module.exports = function () {
       if (elementUtilities.canHaveSBGNCardinality(sbgnclass)) {
         data.cardinality = 0;
       }
+
+      if (data.language && data.language === "SBML"){
+        data["simulation"] = {
+          "stoichiometry": 1,
+          "constant": true
+        }
+      }
+
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
       var sourcePorts = sourceNode.data("ports");
@@ -760,7 +768,7 @@ module.exports = function () {
       var language = nodesToMakeCompound[0].data("language");
       // if nodesToMakeCompound contain both PD and AF nodes, then set language of compound as Unknown
       for (var i = 1; i < nodesToMakeCompound.length; i++) {
-        if (nodesToMakeCompound[i] != language) {
+        if (nodesToMakeCompound[i].data("language") != language) {
           language = "Unknown";
           break;
         }
