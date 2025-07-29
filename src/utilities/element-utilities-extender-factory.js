@@ -71,7 +71,6 @@ module.exports = function () {
       if (parent) {
         data.parent = parent;
       }
-
       this.extendNodeDataWithClassDefaults(data, sbgnclass);
 
       // some defaults are not set by extendNodeDataWithClassDefaults()
