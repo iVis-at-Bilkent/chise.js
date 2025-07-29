@@ -153,8 +153,10 @@ module.exports = function () {
     var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
     var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
 
-    // If source or target does not have an EPN class the operation is not valid
-    if (!elementUtilities.isEPNClass(source) || !elementUtilities.isEPNClass(target)) {
+    // Continue only if both source and target are either EPN or SBML nodes
+    const isEPNPair = elementUtilities.isEPNClass(source) && elementUtilities.isEPNClass(target);
+    const isSBMLPair = elementUtilities.isSBMLNode(source) && elementUtilities.isSBMLNode(target);
+    if (!(isEPNPair || isSBMLPair)) {
       return;
     }
 
