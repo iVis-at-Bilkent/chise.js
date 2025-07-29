@@ -71,7 +71,6 @@ module.exports = function () {
       if (parent) {
         data.parent = parent;
       }
-
       this.extendNodeDataWithClassDefaults(data, sbgnclass);
 
       // some defaults are not set by extendNodeDataWithClassDefaults()
@@ -180,17 +179,14 @@ module.exports = function () {
       instance.classes.AuxUnitLayout.modifyUnits(node, ele, anchorSide, cy);
     };
 
-    //For reversible reactions both side of the process can be input/output
-    //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
-    elementUtilities.addEdge = function (
+    elementUtilities.processEdge = function(
       source,
       target,
       edgeParams,
       id,
       visibility,
       groupID
-    ) {
-
+    ){
       if (typeof edgeParams != "object") {
         var sbgnclass = edgeParams;
       } else {
@@ -236,8 +232,10 @@ module.exports = function () {
 
       var sourceNode = cy.getElementById(source); // The original source node
       var targetNode = cy.getElementById(target); // The original target node
-      var sourceHasPorts = sourceNode.data("ports").length === 2;
-      var targetHasPorts = targetNode.data("ports").length === 2;
+      var sourcePorts = sourceNode.data("ports");
+      var targetPorts = targetNode.data("ports");
+      var sourceHasPorts = Array.isArray(sourcePorts) && sourcePorts.length === 2;
+      var targetHasPorts = Array.isArray(targetPorts) && targetPorts.length === 2;
       // The portsource and porttarget variables
       var portsource;
       var porttarget;
@@ -350,6 +348,342 @@ module.exports = function () {
       // The portsource and porttarget are determined set them in data object.
       data.portsource = portsource || source;
       data.porttarget = porttarget || target;
+
+      // avoid reserved or duplicate IDs
+      if (data.id === "source" || data.id === "target" || cy.getElementById(data.id).length > 0) {
+        data.id = elementUtilities.generateEdgeId();
+      }
+
+      var eles = cy.add({
+        group: "edges",
+        data: data,
+        css: css,
+      });
+
+      var newEdge = eles[eles.length - 1];
+
+      return newEdge;
+    },
+
+    elementUtilities.processNode = function(
+      x,
+      y,
+      nodeParams,
+      id,
+      parent,
+      visibility
+    ){
+      if (typeof nodeParams != "object") {
+        var sbgnclass = nodeParams;
+      } else {
+        var sbgnclass = nodeParams.class;
+        var language = nodeParams.language;
+        var label = nodeParams.label;
+      }
+
+      var css = {};
+      //('sbgnclass', sbgnclass)
+      // if there is no specific default width or height for
+      // sbgnclass these sizes are used
+      var defaultWidth = 50;
+      var defaultHeight = 50;
+
+      if (visibility) {
+        css.visibility = visibility;
+      }
+
+      var data = {
+        class: sbgnclass,
+        language: language,
+        bbox: {
+          w: defaultWidth,
+          h: defaultHeight,
+          x: x,
+          y: y,
+        },
+        label: label || "",
+        statesandinfos: [],
+        ports: [],
+      };
+
+      if (id) {
+        data.id = id;
+      } else {
+        data.id = elementUtilities.generateNodeId();
+      }
+
+      if (parent) {
+        data.parent = parent;
+      }
+
+      this.extendNodeDataWithClassDefaults(data, sbgnclass);
+
+      // some defaults are not set by extendNodeDataWithClassDefaults()
+      var defaults = this.getDefaultProperties(sbgnclass);
+
+      if (defaults["multimer"]) {
+        data.class += " multimer";
+      }
+
+      if (defaults["clonemarker"]) {
+        data["clonemarker"] = true;
+      }
+      if (defaults["hypothetical"]) {
+        data.class = "hypothetical " + data.class;
+      }
+      if (defaults["active"]) {
+        data.class = "active " + data.class;
+      }
+
+      data.bbox["w"] = defaults["width"];
+      data.bbox["h"] = defaults["height"];
+
+      return {
+        group: "nodes",
+        data: data,
+        css: css,
+        position: {
+          x: x,
+          y: y,
+        },
+      };
+    },
+
+    elementUtilities.addEdges = async function (edges) {
+      edges = edges || [];
+      var modfied_edges = await Promise.all(edges.map(async (edge)=>{
+        const source = edge.properties.source;
+        const target = edge.properties.target;
+        const edgeClass = edge.properties.class.replaceAll("_", " ");
+        return await elementUtilities.processEdge(source,target,edgeClass,undefined,undefined);
+      }));
+      cy.startBatch();
+      var eles = cy.add(modfied_edges);
+      cy.endBatch();
+      cy.style().update();      
+    },
+
+    elementUtilities.addNodes = async function (nodes,center){
+      nodes = nodes || [];
+
+      var modfied_nodes = await Promise.all(nodes.map(async (node)=>{
+      var nodeParams = {
+        class: node.properties.class.replaceAll("_", " "),
+        language: node.properties.language,
+        label: node.properties.entityName,
+      };
+        const newtId = node.properties.newtId;
+        const parent = node.properties.parent;
+        const x = center==undefined || center==false?0:$(cy.container()).width() / 2;
+        const y = center==undefined || center==false?0:$(cy.container()).height() / 2;
+        return elementUtilities.processNode(x,y,nodeParams,newtId,parent);
+      }));
+      cy.startBatch();
+      var eles = cy.add(modfied_nodes);
+      eles.forEach(function(ele,index){
+        let node = nodes[index].properties;
+        elementUtilities.setMultimerStatus(ele, node.multimer);
+        elementUtilities.setCloneMarkerStatus(ele, node.cloneMarker);
+        if(node.stateVariables && node.stateVariables.length > 0){
+          for(let i = 0; i < node.stateVariables.length; i++){
+            elementUtilities.addStateOrInfoBox(ele,{
+              clazz: "state variable",
+              state:{
+                value: "",
+                variable: ""
+              }
+            });
+            const [value, variable] = node.stateVariables[i].split("@");
+            elementUtilities.changeStateOrInfoBox(ele, i, value,"value");
+            elementUtilities.changeStateOrInfoBox(ele, i, variable,"variable");
+          }
+        }
+
+        if(node.unitsOfInformation && node.unitsOfInformation.length > 0){
+          for(let i = 0; i < node.unitsOfInformation.length; i++){
+            elementUtilities.addStateOrInfoBox(ele,{
+              clazz: "unit of information",
+              label: {
+                text: node.unitsOfInformation[i]
+              }
+            });
+          }
+        }
+      });
+      cy.endBatch();
+      cy.style().update();
+      return true;
+    },
+
+    //For reversible reactions both side of the process can be input/output
+    //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
+    elementUtilities.addEdge = function (
+      source,
+      target,
+      edgeParams,
+      id,
+      visibility,
+      groupID
+    ) {
+
+      if (typeof edgeParams != "object") {
+        var sbgnclass = edgeParams;
+      } else {
+        var sbgnclass = edgeParams.class;
+        var language = edgeParams.language;
+      }
+
+      var css = {};
+
+      if (visibility) {
+        css.visibility = visibility;
+      }
+
+      var data = {
+        source: source,
+        target: target,
+        class: sbgnclass,
+        language: language,
+      };
+
+      var defaults = elementUtilities.getDefaultProperties(sbgnclass);
+      // extend the data with default properties of edge style
+      Object.keys(defaults).forEach(function (prop) {
+        data[prop] = defaults[prop];
+      });
+
+      if (id) {
+        data.id = id;
+      } else {
+        data.id = elementUtilities.generateEdgeId();
+      }
+
+      if (elementUtilities.canHaveSBGNCardinality(sbgnclass)) {
+        data.cardinality = 0;
+      }
+      var sourceNode = cy.getElementById(source); // The original source node
+      var targetNode = cy.getElementById(target); // The original target node
+      var sourcePorts = sourceNode.data("ports");
+      var targetPorts = targetNode.data("ports");
+      var sourceHasPorts = Array.isArray(sourcePorts) && sourcePorts.length === 2;
+      var targetHasPorts = Array.isArray(targetPorts) && targetPorts.length === 2;
+      // The portsource and porttarget variables
+      var portsource;
+      var porttarget;
+
+
+      /*
+       * Get input/output port id's of a node with the assumption that the node has valid ports.
+       */
+      var getIOPortIds = function (node) {
+        var nodeInputPortId, nodeOutputPortId;
+        var nodePortsOrdering =
+          sbgnvizInstance.elementUtilities.getPortsOrdering(node);
+        var nodePorts = node.data("ports");
+        if (nodePortsOrdering === "L-to-R" || nodePortsOrdering === "R-to-L") {
+          var leftPortId =
+            nodePorts[0].x < 0 ? nodePorts[0].id : nodePorts[1].id; // The x value of left port is supposed to be negative
+          var rightPortId =
+            nodePorts[0].x > 0 ? nodePorts[0].id : nodePorts[1].id; // The x value of right port is supposed to be positive
+          /*
+           * If the port ordering is left to right then the input port is the left port and the output port is the right port.
+           * Else if it is right to left it is vice versa
+           */
+          nodeInputPortId =
+            nodePortsOrdering === "L-to-R" ? leftPortId : rightPortId;
+          nodeOutputPortId =
+            nodePortsOrdering === "R-to-L" ? leftPortId : rightPortId;
+        } else if (
+          nodePortsOrdering === "T-to-B" ||
+          nodePortsOrdering === "B-to-T"
+        ) {
+          var topPortId =
+            nodePorts[0].y < 0 ? nodePorts[0].id : nodePorts[1].id; // The y value of top port is supposed to be negative
+          var bottomPortId =
+            nodePorts[0].y > 0 ? nodePorts[0].id : nodePorts[1].id; // The y value of bottom port is supposed to be positive
+          /*
+           * If the port ordering is top to bottom then the input port is the top port and the output port is the bottom port.
+           * Else if it is right to left it is vice versa
+           */
+          nodeInputPortId =
+            nodePortsOrdering === "T-to-B" ? topPortId : bottomPortId;
+          nodeOutputPortId =
+            nodePortsOrdering === "B-to-T" ? topPortId : bottomPortId;
+        }
+
+        // Return an object containing the IO ports of the node
+        return {
+          inputPortId: nodeInputPortId,
+          outputPortId: nodeOutputPortId,
+        };
+      };
+      // If at least one end of the edge has ports then we should determine the ports where the edge should be connected.
+      if (sourceHasPorts || targetHasPorts) {
+        var sourceNodeInputPortId,
+          sourceNodeOutputPortId,
+          targetNodeInputPortId,
+          targetNodeOutputPortId;
+
+        // If source node has ports set the variables dedicated for its IO ports
+        if (sourceHasPorts) {
+          var ioPorts = getIOPortIds(sourceNode);
+          sourceNodeInputPortId = ioPorts.inputPortId;
+          sourceNodeOutputPortId = ioPorts.outputPortId;
+        }
+
+        // && (elementUtilities.isModulationArcClass(sbgnclass) && )
+        // If target node has ports set the variables dedicated for its IO ports
+        if (targetHasPorts && !(elementUtilities.isModulationArcClass(sbgnclass) && elementUtilities.isProcessNode(targetNode.data('class')))) {
+          var ioPorts = getIOPortIds(targetNode);
+          targetNodeInputPortId = ioPorts.inputPortId;
+          targetNodeOutputPortId = ioPorts.outputPortId;
+        }
+
+        if (
+          sbgnclass === "consumption" ||
+          sbgnclass === "translation consumption" ||
+          sbgnclass === "transcription consumption"
+        ) {
+          // A consumption edge should be connected to the input port of the target node which is supposed to be a process (any kind of)
+          portsource = sourceNodeOutputPortId;
+          porttarget = targetNodeInputPortId;
+        } else if (
+          sbgnclass === "production" ||
+          sbgnclass === "translation production" ||
+          sbgnclass === "transcription production" ||
+          sbgnclass === "transport"
+        ) {
+          // A production edge should be connected to the output port of the source node which is supposed to be a process (any kind of)
+          // A modulation edge may have a logical operator as source node in this case the edge should be connected to the output port of it
+          // The below assignment satisfy all of these condition
+          if (groupID == 0 || groupID == undefined) {
+            // groupID 0 for reversible reactions group 0
+            portsource = sourceNodeOutputPortId;
+            porttarget = targetNodeInputPortId;
+          } else {
+            //if reaction is reversible and edge belongs to group 1
+            portsource = sourceNodeInputPortId;
+          }
+        } else if (
+          elementUtilities.isModulationArcClass(sbgnclass) ||
+          elementUtilities.isAFArcClass(sbgnclass) ||
+          elementUtilities.isSBMLArcClass(sbgnclass) ||
+          elementUtilities.isLogicArc(sbgnclass)
+        ) {
+          portsource = sourceNodeOutputPortId;
+          porttarget = targetNodeInputPortId;
+        }
+      }
+
+      // The default portsource/porttarget are the source/target themselves. If they are not set use these defaults.
+      // The portsource and porttarget are determined set them in data object.
+      data.portsource = portsource || source;
+      data.porttarget = porttarget || target;
+
+      // avoid reserved or duplicate IDs
+      if (data.id === "source" || data.id === "target" || cy.getElementById(data.id).length > 0) {
+        data.id = elementUtilities.generateEdgeId();
+      }
 
       var eles = cy.add({
         group: "edges",
@@ -1681,17 +2015,19 @@ module.exports = function () {
           label.length > 0
             ? Math.max(widthPerChar * label.length, minInfoboxDimension)
             : minInfoboxDimension;
+        const atIndex = label.indexOf("@");
         let infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: label,
+          clazz: "state variable",
+          state: {
+            value: atIndex == -1 ? label : label.substring(0,atIndex),
+            variable: atIndex == -1 ? null : label.substring(atIndex+1),
           },
           bbox: {
             w: inputInfoboxWidth,
             h: minInfoboxDimension,
           },
           style: {
-            "shape-name": "ellipse",
+            "shape-name": "stadium",
           },
         };
         elementUtilities.addStateOrInfoBox(inputNode, infoboxObject);
@@ -1745,17 +2081,19 @@ module.exports = function () {
           label.length > 0
             ? Math.max(widthPerChar * label.length, minInfoboxDimension)
             : minInfoboxDimension;
+        const atIndex = label.indexOf("@");
         infoboxObject = {
-          clazz: "unit of information",
-          label: {
-            text: label,
+          clazz: "state variable",
+          state: {
+            value: atIndex == -1 ? label : label.substring(0,atIndex),
+            variable: atIndex == -1 ? null : label.substring(atIndex+1),
           },
           bbox: {
             w: outputInfoboxWidth,
             h: minInfoboxDimension,
           },
           style: {
-            "shape-name": "ellipse",
+            "shape-name": "stadium",
           },
         };
         elementUtilities.addStateOrInfoBox(outputNode, infoboxObject);
@@ -3355,6 +3693,8 @@ module.exports = function () {
         return "valid";
 
       var edgeclass = typeof edge === "string" ? edge : edge.data("class");
+      // if the edge type is belongs_to_class -- no rules applied
+      if (edgeclass.includes("belongs")) return "valid";
       var sourceclass = source.data("class");
       var targetclass = target.data("class");
       var mapType = elementUtilities.getMapType();

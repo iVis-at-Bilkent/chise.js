@@ -14,6 +14,41 @@ module.exports = function () {
     sbgnvizInstance = param.sbgnvizInstanceUtilities.getInstance();
   };
 
+  mainUtilities.addNodesEdges = async function(nodes, edges,center){
+    var nodes = await elementUtilities.addNodes(nodes,center);
+    var edges = await elementUtilities.addEdges(edges);
+    return true;
+  }
+
+  mainUtilities.addNodes = async function(nodes,center){
+    if (!options.undoable) {
+      return elementUtilities.addNodes(nodes,center);
+    }
+    else {
+      var param = {
+        nodes:nodes,
+        center:center
+      };
+
+      var result = cy.undoRedo().do("addNodes", param);
+      return result.eles;
+    }
+  };
+
+  mainUtilities.addEdges = async function(edges){
+    if (!options.undoable) {
+      return elementUtilities.addEdges(edges);
+    }
+    else {
+      var param = {
+        edges:edges
+      };
+
+      var result = cy.undoRedo().do("addEdges", param);
+      return result.eles;
+    }
+  };
+
   /*
    * Adds a new node with the given class and at the given coordinates. Considers undoable option.
    */
@@ -118,8 +153,10 @@ module.exports = function () {
     var source = typeof _source === 'string' ? cy.getElementById(_source) : _source;
     var target = typeof _target === 'string' ? cy.getElementById(_target) : _target;
 
-    // If source or target does not have an EPN class the operation is not valid
-    if (!elementUtilities.isEPNClass(source) || !elementUtilities.isEPNClass(target)) {
+    // Continue only if both source and target are either EPN or SBML nodes
+    const isEPNPair = elementUtilities.isEPNClass(source) && elementUtilities.isEPNClass(target);
+    const isSBMLPair = elementUtilities.isSBMLNode(source) && elementUtilities.isSBMLNode(target);
+    if (!(isEPNPair || isSBMLPair)) {
       return;
     }
 
