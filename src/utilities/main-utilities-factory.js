@@ -311,6 +311,33 @@ module.exports = function () {
     
   };
 
+   * Distributes given nodes according to horizontal and vertical order.
+   * orientation: horizontal | vertical
+   * mode (horizontal): left | right | center | gap
+   * mode (vertical)  : top  | bottom | center | gap
+   * Requires cytoscape-grid-guide extension and considers undoable option.
+   */
+  mainUtilities.distribute = function (nodes, orientation, mode) {
+    if (!nodes || nodes.length === 0) {
+      return;
+    }
+
+    if (options.undoable) {
+      cy.undoRedo().do("distribute", {
+        nodes: nodes,
+        orientation: orientation,
+        mode: mode,
+        firstTime: true
+      });
+    } else {
+      nodes.distribute(orientation, mode);
+    }
+
+    if (cy.edges(":selected").length === 1) {
+      cy.edges().unselect();
+    }
+  };
+
   /*
    * Create compound for given nodes. compoundType may be 'complex' or 'compartment'.
    * This method considers undoable option.
