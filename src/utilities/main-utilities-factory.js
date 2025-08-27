@@ -311,6 +311,7 @@ module.exports = function () {
     
   };
 
+  /*
    * Distributes given nodes according to horizontal and vertical order.
    * orientation: horizontal | vertical
    * mode (horizontal): left | right | center | gap
