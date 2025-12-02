@@ -465,7 +465,7 @@ module.exports = function () {
 
     elementUtilities.addNodes = async function (nodes,center){
       nodes = nodes || [];
-
+      const emptyCanvas = cy.nodes().length===0;
       var modfied_nodes = await Promise.all(nodes.map(async (node)=>{
       var nodeParams = {
         class: node.properties.class.replaceAll("_", " "),
@@ -510,6 +510,10 @@ module.exports = function () {
           }
         }
       });
+      if(!emptyCanvas){
+        const instance = cy.layoutUtilities('get');
+        instance.placeNewNodes(eles);
+      }
       cy.endBatch();
       cy.style().update();
       return true;
