@@ -465,6 +465,7 @@ module.exports = function () {
 
     elementUtilities.addNodes = async function (nodes,center){
       nodes = nodes || [];
+      let node_obj = {};
       const emptyCanvas = cy.nodes().length===0;
       var modfied_nodes = await Promise.all(nodes.map(async (node)=>{
       var nodeParams = {
@@ -476,12 +477,14 @@ module.exports = function () {
         const parent = node.properties.parent;
         const x = center==undefined || center==false?0:$(cy.container()).width() / 2;
         const y = center==undefined || center==false?0:$(cy.container()).height() / 2;
-        return elementUtilities.processNode(x,y,nodeParams,newtId,parent);
+        let new_node = elementUtilities.processNode(x,y,nodeParams,newtId,parent);
+        node_obj[newtId] = node;
+        return new_node;
       }));
       cy.startBatch();
       var eles = cy.add(modfied_nodes);
       eles.forEach(function(ele,index){
-        let node = nodes[index].properties;
+        let node = node_obj[ele.id()].properties;
         elementUtilities.setMultimerStatus(ele, node.multimer);
         elementUtilities.setCloneMarkerStatus(ele, node.cloneMarker);
         if(node.stateVariables && node.stateVariables.length > 0){
@@ -3487,7 +3490,6 @@ module.exports = function () {
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         var locationObj;
-
         var defaultProps = elementUtilities.getDefaultProperties(
           node.data("class")
         );
