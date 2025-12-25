@@ -463,65 +463,59 @@ module.exports = function () {
       cy.style().update();      
     },
 
-    elementUtilities.addNodes = async function (nodes,center){
+  elementUtilities.addNodes = async function(nodes, center) {
       nodes = nodes || [];
       let node_obj = {};
-      const emptyCanvas = cy.nodes().length===0;
-      var modfied_nodes = await Promise.all(nodes.map(async (node)=>{
-      var nodeParams = {
-        class: node.properties.class.replaceAll("_", " "),
-        language: node.properties.language,
-        label: node.properties.entityName,
-      };
-        const newtId = node.properties.newtId;
-        const parent = node.properties.parent;
-        const x = center==undefined || center==false?0:$(cy.container()).width() / 2;
-        const y = center==undefined || center==false?0:$(cy.container()).height() / 2;
-        let new_node = elementUtilities.processNode(x,y,nodeParams,newtId,parent);
-        node_obj[newtId] = node;
-        return new_node;
+      const emptyCanvas = cy.nodes().length === 0;
+      var modfied_nodes = await Promise.all(nodes.map(async (node) => {
+          var nodeParams = {
+              class: node.properties.class.replaceAll("_", " "),
+              language: node.properties.language,
+              label: node.properties.entityName,
+          };
+          const newtId = node.properties.newtId;
+          const parent = node.properties.parent;
+          const x = center == undefined || center == false ? 0 : $(cy.container()).width() / 2;
+          const y = center == undefined || center == false ? 0 : $(cy.container()).height() / 2;
+          let new_node = elementUtilities.processNode(x, y, nodeParams, newtId, parent);
+          node_obj[newtId] = node;
+          return new_node;
       }));
       cy.startBatch();
       var eles = cy.add(modfied_nodes);
-      eles.forEach(function(ele,index){
-        let node = node_obj[ele.id()].properties;
-        elementUtilities.setMultimerStatus(ele, node.multimer);
-        elementUtilities.setCloneMarkerStatus(ele, node.cloneMarker);
-        if(node.stateVariables && node.stateVariables.length > 0){
-          for(let i = 0; i < node.stateVariables.length; i++){
-            elementUtilities.addStateOrInfoBox(ele,{
-              clazz: "state variable",
-              state:{
-                value: "",
-                variable: ""
+      eles.forEach(function(ele, index) {
+          let node = node_obj[ele.id()].properties;
+          elementUtilities.setMultimerStatus(ele, node.multimer);
+          elementUtilities.setCloneMarkerStatus(ele, node.cloneMarker);
+          if (node.stateVariables && node.stateVariables.length > 0) {
+              for (let i = 0; i < node.stateVariables.length; i++) {
+                  elementUtilities.addStateOrInfoBox(ele, {
+                      clazz: "state variable",
+                      state: {
+                          value: "",
+                          variable: ""
+                      }
+                  });
+                  const [value, variable] = node.stateVariables[i].split("@");
+                  elementUtilities.changeStateOrInfoBox(ele, i, value, "value");
+                  elementUtilities.changeStateOrInfoBox(ele, i, variable, "variable");
               }
-            });
-            const [value, variable] = node.stateVariables[i].split("@");
-            elementUtilities.changeStateOrInfoBox(ele, i, value,"value");
-            elementUtilities.changeStateOrInfoBox(ele, i, variable,"variable");
           }
-        }
-
-        if(node.unitsOfInformation && node.unitsOfInformation.length > 0){
-          for(let i = 0; i < node.unitsOfInformation.length; i++){
-            elementUtilities.addStateOrInfoBox(ele,{
-              clazz: "unit of information",
-              label: {
-                text: node.unitsOfInformation[i]
+          if (node.unitsOfInformation && node.unitsOfInformation.length > 0) {
+              for (let i = 0; i < node.unitsOfInformation.length; i++) {
+                  elementUtilities.addStateOrInfoBox(ele, {
+                      clazz: "unit of information",
+                      label: {
+                          text: node.unitsOfInformation[i]
+                      }
+                  });
               }
-            });
           }
-        }
       });
-      if(!emptyCanvas){
-        const instance = cy.layoutUtilities('get');
-        instance.placeNewNodes(eles);
-      }
       cy.endBatch();
       cy.style().update();
-      return true;
-    },
-
+      return eles;
+  },
     //For reversible reactions both side of the process can be input/output
     //Group ID identifies to which group of nodes the edge is going to be connected for reversible reactions(0: group 1 ID and 1:group 2 ID)
     elementUtilities.addEdge = function (

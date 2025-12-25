@@ -17,6 +17,9 @@ module.exports = function () {
   mainUtilities.addNodesEdges = async function(nodes, edges,center){
     var nodes = await elementUtilities.addNodes(nodes,center);
     var edges = await elementUtilities.addEdges(edges);
+    console.log('Newly added nodes:',nodes);
+    const instance = cy.layoutUtilities('get');
+    instance.placeNewNodes(nodes);
     return true;
   }
 
