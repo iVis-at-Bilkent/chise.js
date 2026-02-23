@@ -159,6 +159,21 @@ module.exports = function () {
       return tempData;
     };
 
+    elementUtilities.deleteElesSimple = function (eles) {
+      if (!eles) {
+        return;
+      }
+      
+      var boundaryNodes = cy.nodes().filter(function (ele) {
+        var parentId = ele.data('boundaryParentId');
+        return typeof parentId === 'string' && eles.has(cy.getElementById(parentId));
+      });
+      var allEles = eles.union(boundaryNodes);
+
+      cy.elements().unselect();
+      return allEles.remove();
+    };
+
     //Restores from given data
     elementUtilities.restoreUnits = function (node, data) {
       var index = 0;
@@ -3571,6 +3586,127 @@ module.exports = function () {
       }
 
       return obj;
+    };
+
+    // Add a node on the boundary of another node
+    elementUtilities.addNodeOnBoundary = function (parentNode, boundaryNode) {
+
+      boundaryNode.data('boundaryParentId', parentNode.id());
+
+      var dx = 0;
+      var dy = 0;
+
+      var snap = function () {
+        var nodeBBox = parentNode.boundingBox({
+          includeLabels: false,
+          includeOverlays: false
+        });
+
+        var minX = nodeBBox.x1;
+        var maxX = nodeBBox.x2;
+        var minY = nodeBBox.y1;
+        var maxY = nodeBBox.y2;
+
+        var pos = boundaryNode.position();
+        var x = pos.x;
+        var y = pos.y;
+
+        var clampedX = Math.max(minX, Math.min(x, maxX));
+        var clampedY = Math.max(minY, Math.min(y, maxY));
+
+        var dl = Math.abs(minX - x);
+        var dr = Math.abs(maxX - x);
+        var dt = Math.abs(minY - y);
+        var db = Math.abs(maxY - y);
+
+        var min = Math.min(dl, dr, dt, db);
+        if (min === dl) clampedX = minX;
+        else if (min === dr) clampedX = maxX;
+        else if (min === dt) clampedY = minY;
+        else clampedY = maxY;
+
+        boundaryNode.position({
+          x: clampedX,
+          y: clampedY
+        });
+
+        var parentNodePos = parentNode.position();
+        dx = clampedX - parentNodePos.x;
+        dy = clampedY - parentNodePos.y;
+      };
+
+      snap();
+
+      var positionListener = function () {
+        boundaryNode.position({
+          x: parentNode.position().x + dx,
+          y: parentNode.position().y + dy
+        });
+      };
+
+      var resizeListener = function () {
+        snap();
+      };
+
+      parentNode.on('position', positionListener);
+      parentNode.on('style', resizeListener);
+
+      var isUpdating = false;
+      var childPositionListener = function () {
+        if (isUpdating) return;
+        isUpdating = true;
+        snap();
+        isUpdating = false;
+        return;
+      }
+
+      boundaryNode.on('position', childPositionListener);
+
+      boundaryNode.scratch('boundaryListeners', {
+        parentPos: positionListener,
+        childPos: childPositionListener,
+        parentResize: resizeListener
+      });
+    };
+
+    // Free a node from the boundary of another node
+    elementUtilities.freeNodeFromBoundary = function (parentNode, boundaryNode) {
+      boundaryNode.removeData('boundaryParentId');
+
+      var listeners = boundaryNode.scratch('boundaryListeners');
+      if (listeners) {
+        parentNode.off('position', listeners.parentPos);
+        parentNode.off('style', listeners.parentResize);
+        boundaryNode.off('position', listeners.childPos);
+        boundaryNode.removeScratch('boundaryListeners');
+      } else {
+        parentNode.off('position');
+        parentNode.off('style');
+        boundaryNode.off('position');
+      }
+    };
+
+    elementUtilities.isNearBoundary = function (node, position, threshold = 50) {
+      if (threshold <= 0) {
+        return false;
+      }
+      
+      var bbox = node.boundingBox();
+    
+      var distLeft = Math.abs(position.x - bbox.x1);
+      var distRight = Math.abs(position.x - bbox.x2);
+      var distTop = Math.abs(position.y - bbox.y1);
+      var distBottom = Math.abs(position.y - bbox.y2);
+      
+      var isInsideX = position.x >= bbox.x1 - threshold && position.x <= bbox.x2 + threshold;
+      var isInsideY = position.y >= bbox.y1 - threshold && position.y <= bbox.y2 + threshold;
+    
+      if (isInsideX && isInsideY) {
+        var min = Math.min(distLeft, distRight, distTop, distBottom);
+        return min <= threshold;
+      }
+    
+      return false;
     };
 
     //Tiles informations boxes for given anchorSides
