@@ -3625,10 +3625,12 @@ module.exports = function () {
         else if (min === dt) clampedY = minY;
         else clampedY = maxY;
 
-        boundaryNode.position({
-          x: clampedX,
-          y: clampedY
-        });
+        if (Math.abs(clampedX - x) > 0.0001 || Math.abs(clampedY - y) > 0.0001) {
+          boundaryNode.position({
+            x: clampedX,
+            y: clampedY
+          });
+        }
 
         var parentNodePos = parentNode.position();
         dx = clampedX - parentNodePos.x;
@@ -3638,10 +3640,17 @@ module.exports = function () {
       snap();
 
       var positionListener = function () {
-        boundaryNode.position({
-          x: parentNode.position().x + dx,
-          y: parentNode.position().y + dy
-        });
+        var parentNodePos = parentNode.position();
+        var currentPos = boundaryNode.position();
+        var newX = parentNodePos.x + dx;
+        var newY = parentNodePos.y + dy;
+
+        if (Math.abs(newX - currentPos.x) > 0.0001 || Math.abs(newY - currentPos.y) > 0.0001) {
+          boundaryNode.position({
+            x: newX,
+            y: newY
+          });
+        }
       };
 
       var resizeListener = function () {
