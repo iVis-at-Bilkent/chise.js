@@ -1601,5 +1601,56 @@ module.exports = function () {
     cy.style().update();
   }
 
+  mainUtilities.addNodeOnBoundary = function (boundaryNode, currentBoundaryParent, nextBoundaryParent, parentNode, currentPosition, nextPosition) {
+    if (options.undoable) {
+      var param = {
+        boundaryNode: boundaryNode,
+        currentBoundaryParent: currentBoundaryParent,
+        nextBoundaryParent: nextBoundaryParent,
+        parentNode: parentNode,
+        currentPosition: currentPosition,
+        nextPosition: nextPosition
+      };
+
+      cy.undoRedo().do("addNodeOnBoundary", param);
+    }
+    else {
+
+      if (currentBoundaryParent)
+        elementUtilities.freeNodeFromBoundary(currentBoundaryParent, boundaryNode);
+      if (parentNode)
+        boundaryNode = elementUtilities.changeParent(boundaryNode, null, undefined, undefined)[0];
+
+      boundaryNode.position(nextPosition);
+      elementUtilities.addNodeOnBoundary(nextBoundaryParent, boundaryNode);
+    }
+  }
+
+  mainUtilities.freeNodeFromBoundary = function (boundaryNode, currentBoundaryParent, nextBoundaryParent, parentNode, currentPosition, nextPosition) {
+
+    if (options.undoable) {
+      var param = {
+        boundaryNode: boundaryNode,
+        currentBoundaryParent: currentBoundaryParent,
+        nextBoundaryParent: nextBoundaryParent,
+        parentNode: parentNode,
+        currentPosition: currentPosition,
+        nextPosition: nextPosition
+      };
+
+      cy.undoRedo().do("freeNodeFromBoundary", param);
+    }
+    else {
+      
+      elementUtilities.freeNodeFromBoundary(currentBoundaryParent, boundaryNode);
+      boundaryNode.position(nextPosition);
+
+      if (nextBoundaryParent)
+        elementUtilities.addNodeOnBoundary(nextBoundaryParent, boundaryNode);
+      if (parentNode)
+        boundaryNode = elementUtilities.changeParent(boundaryNode, parentNode, undefined, undefined)[0];
+    }
+  }
+
   return mainUtilities;
 };

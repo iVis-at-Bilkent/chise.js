@@ -1219,6 +1219,50 @@ module.exports = function () {
       return result;
     };
 
+    undoRedoActionFunctions.addNodeOnBoundary = function (param) {
+      if (param.currentBoundaryParent)
+        elementUtilities.freeNodeFromBoundary(param.currentBoundaryParent, param.boundaryNode);
+      
+      if (param.parentNode)
+        param.boundaryNode = elementUtilities.changeParent(param.boundaryNode, null, undefined, undefined)[0];
+
+      param.boundaryNode.position(param.nextPosition);
+      elementUtilities.addNodeOnBoundary(param.nextBoundaryParent, param.boundaryNode);
+
+      var result = {
+        boundaryNode: param.boundaryNode,
+        currentBoundaryParent: param.nextBoundaryParent,
+        nextBoundaryParent: param.currentBoundaryParent,
+        parentNode: param.parentNode,
+        currentPosition: param.nextPosition,
+        nextPosition: param.currentPosition
+      }
+
+      return result;
+    };
+
+    undoRedoActionFunctions.freeNodeFromBoundary = function (param) {
+      elementUtilities.freeNodeFromBoundary(param.currentBoundaryParent, param.boundaryNode);
+      param.boundaryNode.position(param.nextPosition);
+
+      if (param.nextBoundaryParent)  
+        elementUtilities.addNodeOnBoundary(param.nextBoundaryParent, param.boundaryNode);
+      
+      if (param.parentNode)
+        param.boundaryNode = elementUtilities.changeParent(param.boundaryNode, param.parentNode, param.nextPosition.x, param.nextPosition.y)[0];
+
+      var result = {
+        boundaryNode: param.boundaryNode,
+        currentBoundaryParent: param.nextBoundaryParent,
+        nextBoundaryParent: param.currentBoundaryParent,
+        parentNode: param.parentNode,
+        currentPosition: param.nextPosition,
+        nextPosition: param.currentPosition
+      }
+
+      return result;
+    }
+
     undoRedoActionFunctions.fixError = function(param){
       
       var errorCode = param.errorCode;

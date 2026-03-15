@@ -60,6 +60,10 @@ module.exports = function () {
     ur.action("updateInfoboxStyle", undoRedoActionFunctions.updateInfoboxStyle, undoRedoActionFunctions.updateInfoboxStyle);
     ur.action("updateInfoboxObj", undoRedoActionFunctions.updateInfoboxObj, undoRedoActionFunctions.updateInfoboxObj);
 
+    // register boundary node actions 
+    ur.action("addNodeOnBoundary", undoRedoActionFunctions.addNodeOnBoundary, undoRedoActionFunctions.freeNodeFromBoundary);
+    ur.action("freeNodeFromBoundary", undoRedoActionFunctions.freeNodeFromBoundary, undoRedoActionFunctions.addNodeOnBoundary);
+
     // register easy creation actions
     ur.action("createTemplateReaction", undoRedoActionFunctions.createTemplateReaction, undoRedoActionFunctions.deleteElesSimple);
     ur.action("createActivationReaction", undoRedoActionFunctions.createActivationReaction, undoRedoActionFunctions.deleteElesSimple);
