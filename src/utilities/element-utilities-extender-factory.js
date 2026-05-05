@@ -302,7 +302,7 @@ module.exports = function () {
 
         // && (elementUtilities.isModulationArcClass(sbgnclass) && )
         // If target node has ports set the variables dedicated for its IO ports
-        if (targetHasPorts && !(elementUtilities.isModulationArcClass(sbgnclass) && elementUtilities.isProcessNode(targetNode.data('class')))) {
+        if (targetHasPorts && !((elementUtilities.isModulationArcClass(sbgnclass) || elementUtilities.isAFArcClass(sbgnclass)) && elementUtilities.isProcessNode(targetNode.data('class')))) {
           var ioPorts = getIOPortIds(targetNode);
           targetNodeInputPortId = ioPorts.inputPortId;
           targetNodeOutputPortId = ioPorts.outputPortId;
@@ -642,7 +642,7 @@ module.exports = function () {
 
         // && (elementUtilities.isModulationArcClass(sbgnclass) && )
         // If target node has ports set the variables dedicated for its IO ports
-        if (targetHasPorts && !(elementUtilities.isModulationArcClass(sbgnclass) && elementUtilities.isProcessNode(targetNode.data('class')))) {
+        if (targetHasPorts && !((elementUtilities.isModulationArcClass(sbgnclass) || elementUtilities.isAFArcClass(sbgnclass)) && elementUtilities.isProcessNode(targetNode.data('class')))) {
           var ioPorts = getIOPortIds(targetNode);
           targetNodeInputPortId = ioPorts.inputPortId;
           targetNodeOutputPortId = ioPorts.outputPortId;
@@ -3695,7 +3695,6 @@ module.exports = function () {
       // if map type is Unknown -- no rules applied
       if (
         elementUtilities.getMapType() == "HybridAny" ||
-        elementUtilities.getMapType() == "HybridSbgn" ||
         !elementUtilities.getMapType()
       )
         return "valid";
@@ -3708,7 +3707,7 @@ module.exports = function () {
       var mapType = elementUtilities.getMapType();
       var edgeConstraints =
         elementUtilities[mapType].connectivityConstraints[edgeclass];
-      if (mapType == "AF") {
+      if (mapType == "AF" || mapType == "HybridPDAF") {
         if (sourceclass.startsWith("BA"))
           // we have separate classes for each biological activity
           sourceclass = "biological activity"; // but same rule applies to all of them
@@ -3716,7 +3715,7 @@ module.exports = function () {
         if (targetclass.startsWith("BA"))
           // we have separate classes for each biological activity
           targetclass = "biological activity"; // but same rule applies to all of them
-      } else if (mapType == "PD") {
+      } else if (mapType == "PD" || mapType == "HybridPDAF") {
         sourceclass = sourceclass.replace(/\s*multimer$/, "");
         targetclass = targetclass.replace(/\s*multimer$/, "");
       } else if (mapType == "SBML") {
