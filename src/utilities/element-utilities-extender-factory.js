@@ -3976,6 +3976,39 @@ module.exports = function () {
         return "invalid";
       }
 
+      // Below three if statements are for hybrid pd-af specific checks
+      if (mapType == "HybridPDAF" && edgeclass == "necessary stimulation") {
+        if (sourceclass == "biological activity" && (targetclass != "biological activity" && !elementUtilities.processTypes.includes(targetclass))) {
+          return "invalid";
+        } else if (targetclass == "biological activity" && (sourceclass != "biological activity" && !elementUtilities.logicalOperatorTypes.includes(sourceclass))) {
+          return "invalid";
+        }
+      }
+
+      if (mapType == "HybridPDAF" && elementUtilities.isModulationArcClass(edge)) {
+        if (elementUtilities.logicalOperatorTypes.includes(sourceclass) && targetclass == "biological activity" ) {
+          let incomingNodesOfSource = source.incomers().nodes();
+          let check = false;
+          incomingNodesOfSource.forEach(node => {
+            if (elementUtilities.isEPNClass(node)) {
+              check = true;
+            }
+          });
+          if (check == true) {
+            return "invalid";
+          }
+        }
+      }
+
+      if (mapType == "HybridPDAF" && elementUtilities.isLogicArc(edge)) {
+        if (elementUtilities.logicalOperatorTypes.includes(targetclass)) {
+          let outgoerNodeOfTarget = target.outgoers().nodes()[0];
+          if (elementUtilities.isBiologicalActivity(outgoerNodeOfTarget) && elementUtilities.isEPNClass(sourceclass)) {
+            return "invalid";
+          }
+        }
+      }
+
       // check nature of connection
       if (
         edgeConstraints[sourceclass].asSource.isAllowed &&
