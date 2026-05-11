@@ -3852,7 +3852,7 @@ module.exports = function () {
       var mapType = elementUtilities.getMapType();
       var edgeConstraints =
         elementUtilities[mapType].connectivityConstraints[edgeclass];
-      if (mapType == "AF" || mapType == "HybridPDAF") {
+      if (mapType == "AF") {
         if (sourceclass.startsWith("BA"))
           // we have separate classes for each biological activity
           sourceclass = "biological activity"; // but same rule applies to all of them
@@ -3860,7 +3860,18 @@ module.exports = function () {
         if (targetclass.startsWith("BA"))
           // we have separate classes for each biological activity
           targetclass = "biological activity"; // but same rule applies to all of them
-      } else if (mapType == "PD" || mapType == "HybridPDAF") {
+      } else if (mapType == "PD") {
+        sourceclass = sourceclass.replace(/\s*multimer$/, "");
+        targetclass = targetclass.replace(/\s*multimer$/, "");
+      } else if (mapType == "HybridPDAF") {
+        if (sourceclass.startsWith("BA")) {
+          // we have separate classes for each biological activity
+          sourceclass = "biological activity"; // but same rule applies to all of them
+        }
+        if (targetclass.startsWith("BA")) {
+          // we have separate classes for each biological activity
+          targetclass = "biological activity"; // but same rule applies to all of them
+        }
         sourceclass = sourceclass.replace(/\s*multimer$/, "");
         targetclass = targetclass.replace(/\s*multimer$/, "");
       } else if (mapType == "SBML") {
@@ -3976,7 +3987,7 @@ module.exports = function () {
         return "invalid";
       }
 
-      // Below three if statements are for hybrid pd-af specific checks
+      // Below four if statements are for hybrid pd-af specific checks
       if (mapType == "HybridPDAF" && edgeclass == "necessary stimulation") {
         if (sourceclass == "biological activity" && (targetclass != "biological activity" && !elementUtilities.processTypes.includes(targetclass))) {
           return "invalid";
@@ -4006,6 +4017,27 @@ module.exports = function () {
           if (elementUtilities.isBiologicalActivity(outgoerNodeOfTarget) && elementUtilities.isEPNClass(sourceclass)) {
             return "invalid";
           }
+        }
+      }
+
+      if (mapType == "HybridPDAF" && edgeclass == "performance arc") {
+        if ((sourceclass == "macromolecule" && target.data("class") != "BA plain" && target.data("class") != "BA macromolecule") || (targetclass == "macromolecule" && source.data("class") != "BA plain" && source.data("class") != "BA macromolecule")) {
+          return "invalid";
+        }
+        if ((sourceclass == "simple chemical" && target.data("class") != "BA plain" && target.data("class") != "BA simple chemical") || (targetclass == "simple chemical" && source.data("class") != "BA plain" && source.data("class") != "BA simple chemical")) {
+          return "invalid";
+        }
+        if ((sourceclass == "nucleic acid feature" && target.data("class") != "BA plain" && target.data("class") != "BA nucleic acid feature") || (targetclass == "nucleic acid feature" && source.data("class") != "BA plain" && source.data("class") != "BA nucleic acid feature")) {
+          return "invalid";
+        }
+        if ((sourceclass == "unspecified entity" && target.data("class") != "BA plain" && target.data("class") != "BA unspecified entity") || (targetclass == "unspecified entity" && source.data("class") != "BA plain" && source.data("class") != "BA unspecified entity")) {
+          return "invalid";
+        }
+        if ((sourceclass == "complex" && target.data("class") != "BA plain" && target.data("class") != "BA complex") || (targetclass == "complex" && source.data("class") != "BA plain" && source.data("class") != "BA complex")) {
+          return "invalid";
+        }
+        if ((sourceclass == "perturbing agent" && target.data("class") != "BA plain" && target.data("class") != "BA perturbing agent") || (targetclass == "perturbing agent" && source.data("class") != "BA plain" && source.data("class") != "BA perturbing agent")) {
+          return "invalid";
         }
       }
 
