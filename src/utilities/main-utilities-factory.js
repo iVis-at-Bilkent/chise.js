@@ -92,7 +92,7 @@ module.exports = function () {
   /*
    * Adds a new edge with the given class and having the given source and target ids. Considers undoable option.
    */
-  mainUtilities.addEdge = function(source, target, edgeParams, invalidEdgeCallback, id, visibility) {
+  mainUtilities.addEdge = function(source, target, edgeParams, invalidEdgeCallback, id, visibility, reversedEdgeCallback) {
     if ( elementUtilities.isGraphTopologyLocked() ) {
       return;
     }
@@ -119,6 +119,10 @@ module.exports = function () {
 
     // If validation result is 'reverse' reverse the source-target pair before creating the edge
     if (validation === 'reverse') {
+      // show a warning
+      if(typeof reversedEdgeCallback === "function"){
+        reversedEdgeCallback();
+      }
       var temp = source;
       source = target;
       target = temp;
@@ -141,6 +145,7 @@ module.exports = function () {
       var result = cy.undoRedo().do("addEdge", param);
       return result.eles;
     }
+
   };
 
   /*
